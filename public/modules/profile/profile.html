@@ -1,0 +1,120 @@
+<link rel="stylesheet" href="modules/profile/profile.css">
+<link rel="stylesheet" href="modules/submissions/submissions.css">
+<div class="profile submissions">
+
+    <div ng-show="vm.error" class="alert dont-break-out alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" ng-click="vm.clearError()"><span>&times;</span></button>
+        {{ vm.error }}
+    </div>
+
+    <div class="info col-md-5 info-box">
+        <div class="full-width">
+            <h4 ng-bind="vm.user.username"></h4>
+            <hr />
+            <div class="col-md-6 col-xs-6">Current streak:</div> <div class="col-md-6" ng-bind="vm.user.streak.current"></div>
+            <div class="col-md-6 col-xs-6">Created:</div> <div class="col-md-6" ng-bind="vm.user.created_at_readable"></div>
+            <div class="col-md-6 col-xs-6">Last seen:</div> <div class="col-md-6" ng-bind="vm.user.last_seen_readable"></div>
+
+            <div class="badge-image" ng-show="vm.user.streak.best">
+                <img src="resources/streaks/streak_background.png" />
+            </div>
+            <div class="badge-image" ng-show="vm.user.streak.best">
+                <span tooltip-placement="right" uib-tooltip="Your best streak">
+                    <img ng-src="{{vm.streakBadge}}" />
+                    <div class="badge-text" ng-bind="vm.user.streak.best"></div>
+                </span>
+            </div>
+
+            <i class="fa fa-cog fa-fw" ng-show="vm.mine" ng-click="vm.openPasswordModal()"></i>
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <div class="info-box centered badge-container">
+            <div ng-show="vm.badgeMode" class="badge-panel">
+                <h4>Badges<small ng-click="vm.badgeMode = !vm.badgeMode" class="badge-selector-text">Locked <i class="fa fa-fw fa-arrow-right"></i></small></h4>
+                <hr />
+                <div ng-show="vm.user.badges.length == 0"> None! </div>
+                <div class="user-badge" ng-repeat="badge in vm.user.badges">
+                    <badge data="badge"></badge>
+                </div>
+            </div>
+
+            <div ng-show="!vm.badgeMode" class="badge-panel">
+                <h4><small ng-click="vm.badgeMode = !vm.badgeMode" class="badge-selector-text left"><i class="fa fa-fw fa-arrow-left"></i>Unlocked</small>Locked badges</h4>
+                <hr />
+                <div class="user-badge" ng-repeat="badge in vm.user.locked_badges">
+                    <badge class="locked-popover" locked="true" data="badge"></badge>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 info-box submissions" ng-show="vm.user.highlights.length > 0">
+        <h4>Monthly highlights</h4>
+        <ul class="rig">
+            <li ng-repeat="submission in vm.user.highlights | orderBy: 'time_period'">
+                <div class="rig-cell-title" ng-bind="submission.time_period_readable"></div>
+                <a ng-show="!vm.highlightMode" class="rig-cell" ui-sref="submission({id: submission.submission.id})">
+                    <img class="rig-img" ng-src="{{submission.submission.secureThumb}}">
+                    <span class="rig-overlay"></span>
+                    <span ng-show="submission.submission.title" class="rig-text" ng-bind="submission.submission.title"></span>
+                    <span ng-show="!submission.submission.title" class="rig-text">No title</span>
+                </a>
+
+                <a ng-show="vm.highlightMode" class="rig-cell highligh-pickable" ng-click="vm.unhighlight(submission.submission.id)">
+                    <img class="rig-img" ng-src="{{submission.submission.secureThumb}}">
+                    <span class="rig-overlay-highlight rig-overlay-highlight-delete"></span>
+                    <span ng-show="submission.submission.title" class="rig-text" ng-bind="submission.submission.title"></span>
+                    <span ng-show="!submission.submission.title" class="rig-text">No title</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="col-md-12 submissions info-box" ng-show="vm.submissions.length != 0">
+        <div class="row">
+            <div class="col-xs-5">
+                <h4>Submissions <span class="badge" ng-bind="vm.user.total_submissions"></span></h4>
+            </div>
+            <div class="col-xs-3">
+                <select class="form-control" ng-options="option.title for option in vm.user.submission_counts | orderBy: '-date'"
+                        ng-model="vm.selectedMonth" ng-change="vm.getSubmissionsFromMonth()"></select>
+            </div>
+            <div class="col-xs-4">
+                <div class="btn-group pull-right" data-toggle="buttons">
+                    <label class="btn" ng-class="vm.nsfw == false ? 'btn-success' : 'btn-default'" ng-click="vm.setNsfw(false)">
+                        <input type="radio" ng-model="vm.nsfw" name="options" id="swf" autocomplete="off" value="false"> SFW
+                    </label>
+                    <label class="btn" ng-class="vm.nsfw == true ? 'btn-danger' : 'btn-default'" ng-click="vm.setNsfw(true)">
+                        <input type="radio" ng-model="vm.nsfw" name="options" id="nsfw" autocomplete="off" value="true"> NSFW
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <input type="button"
+                   ng-show="vm.mine"
+                   class="highlighter-button btn form-control"
+                   ng-class="vm.highlightMode ? 'btn-danger' : 'btn-success'"
+                   ng-value="vm.highlightMode ? 'Stop selecting' : 'Select monthly highlights'" ng-click="vm.toggleHighlightMode()">
+        </div>
+
+        <ul class="rig">
+            <li ng-repeat="submission in vm.submissions">
+                <a ng-show="!vm.highlightMode" class="rig-cell" ui-sref="submission({id: submission.id})">
+                    <img class="rig-img" ng-src="{{submission.secureThumb}}">
+                    <span class="rig-overlay"></span>
+                    <span class="rig-text" ng-bind="submission.title||'No title'"></span>
+                </a>
+
+                <a ng-show="vm.highlightMode" class="rig-cell highlight-pickable" ng-click="vm.highlight(submission.id)">
+                    <img class="rig-img" ng-src="{{submission.secureThumb}}">
+                    <span class="rig-overlay-highlight"></span>
+                    <span class="rig-text" ng-bind="submission.title||'No title'"></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

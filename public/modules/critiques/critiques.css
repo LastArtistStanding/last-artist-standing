@@ -1,0 +1,66 @@
+.critiques .crit-box {
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.critiques .crit-box hr {
+   margin: 5px;
+}
+
+.critiques .crit-box .form-group .btn {
+    margin-top: 6px;
+}
+
+.critiques .reply {
+    border-radius: 4px;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.critiques .user-box {
+    padding: 5px 10px;
+    display: inline-block;
+    width: auto;
+    margin: 10px;
+    border-radius: 4px;
+}
+
+.critiques .user-box:hover {
+    text-decoration: none;
+}
+
+/* COLOR */
+
+.critiques .crit-box {
+    border: 1px solid black;
+    background-color: white;
+    -webkit-box-shadow: 1px 2px 0 0 rgba(117, 117, 117, 0.5);
+    -moz-box-shadow: 1px 2px 0 0 rgba(117, 117, 117, 0.5);
+    box-shadow: 1px 2px 0 0 rgba(117, 117, 117, 0.5);
+}
+
+.critiques .reply {
+    border: 1px solid black;
+    background-color: white;
+    -webkit-box-shadow: 1px 2px 0 0 rgba(117, 117, 117, 0.5);
+    -moz-box-shadow: 1px 2px 0 0 rgba(117, 117, 117, 0.5);
+    box-shadow: 1px 2px 0 0 rgba(117, 117, 117, 0.5);
+}
+
+.critiques .reply a {
+    color: black;
+}
+
+.critiques .user-box {
+    background-color: white;
+    border: 1px solid black;
+    color: black;
+}
+
+.critiques .user-box:hover {
+    background-color: #e3dee5;
+}
+
+.critiques .anonymous-reply {
+    color: #ddd;
+}

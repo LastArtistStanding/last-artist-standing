@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="modules/changelog/changelog.css">
+<div class="changelog col-md-12">
+    <ul class="list-group col-md-6">
+        <li class="list-group-item active">Roadmap / TODO</li>
+        <li class="list-group-item less-active">Got ideas? Contact me</li>
+
+        <li class="list-group-item" ng-repeat="plan in vm.plans" ng-bind="plan"></li>
+    </ul>
+
+    <ul class="list-group col-md-6">
+        <li class="list-group-item active">Changelog</li>
+        <li class="list-group-item" ng-repeat="change in vm.changelog">
+            <span class="badge pull-left" ng-bind="change.v"></span>
+            <ul>
+                <li ng-repeat="feature in change.features" ng-bind="feature"></li>
+            </ul>
+        </li>
+    </ul>
+</div>

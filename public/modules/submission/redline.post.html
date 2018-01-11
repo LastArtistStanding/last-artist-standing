@@ -1,0 +1,26 @@
+<div class="redline_post">
+    <div class="modal-header">
+        <h4>Redline / Feedback</h4>
+    </div>
+    <form>
+        <div class="modal-body">
+
+            <div class="form-group form-container">
+                <div ng-show="vm.error" class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" ng-click="vm.clearError()"><span>&times;</span></button>
+                    {{ vm.error }}
+                </div>
+
+                <input type="text" ng-model="vm.redline.image_link" class="form-control redlineImageLink"
+                        placeholder="Redline / paintover direct image link (optional)" maxlength="255">
+
+                <textarea class="form-control redline-comment" ng-model="vm.redline.comment"
+                        placeholder="Comment" rows="5" maxlength="5000"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="button" class="btn btn-default pull-left" value="Cancel" ng-click="vm.cancel()">
+            <input type="submit" class="btn btn-success" value="Save" ng-click="vm.save()">
+        </div>
+    </form>
+</div>

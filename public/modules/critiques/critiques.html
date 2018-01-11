@@ -1,0 +1,73 @@
+<link rel="stylesheet" href="modules/critiques/critiques.css">
+<div class="critiques">
+
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">Information</div>
+            <div class="panel-body">
+                If you want feedback from the communtiy, you can request that here. Anyone can ask for a critique and anyone can answer.
+                <br />You can only have a single request open at any given time. A critique request will be active for one week, and when this period is over the critique will be archived and no longer be open for replies.
+                <br />Should you want it, you can allow people to give you feedback anonymously. If you enable this, people will have the option to withhold their name.
+                <br />You should specify what you're looking for feedback for, whether it be a selection of your submissions or more general. Know that giving critique is much easier when you tell people what your goals are.
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="vm.error" class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" ng-click="vm.clearError()"><span>&times;</span></button>
+        {{ vm.error }}
+    </div>
+
+    <div class="col-md-7">
+        <div class="col-md-12 crit-box" ng-show="!vm.haveCritique">
+            <div ng-show="!vm.isLoggedIn">
+                Logged in users can ask for critiques based on their submissions.
+            </div>
+            <div ng-show="vm.isLoggedIn">
+                <h4>Ask to be critiqued</h4>
+                <hr />
+                <div class="form-group">
+                    <textarea class="form-control" ng-model="vm.newCritique.description"
+                              placeholder="Explain why and what you want critiqued." rows="3" maxlength="1000"></textarea>
+                    <div class="checkbox col-md-8">
+                        <label><input type="checkbox" ng-model="vm.newCritique.allow_anonymous">Allow anonymous replies</label>
+                    </div>
+
+                    <div class="col-md-4">
+                        <input type="button" value="Submit" class="btn btn-success pull-right" ng-click="vm.askForCritique()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12" ng-show="vm.haveCritique">
+            <h4>Replies to your active critique:</h4>
+
+            <div ng-show="vm.replies.length > 0" ng-repeat="reply in vm.replies" class="reply dont-break-out">
+
+                <b ng-show="reply.user"><a ui-sref="profile({id: reply.user_id})">{{ reply.user.username }}</a>:</b>
+                <b ng-show="!reply.user">(Anonymous)</b>
+
+                <span ng-bind-html="reply.text"></span>
+            </div>
+
+            <div ng-show="vm.replies.length == 0" class="crit-box">
+                No replies!
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <h4>Active:</h4>
+        <div ng-show="vm.critiques.active.length == 0">None!</div>
+        <a class="user-box" ui-sref="critique({id: critique.id})" ng-repeat="critique in vm.critiques.active">
+            {{ critique.username }}
+        </a>
+
+        <h4>Inactive:</h4>
+        <div ng-show="vm.critiques.inactive.length == 0">None!</div>
+        <a class="user-box" ui-sref="critique({id: critique.id})" ng-repeat="critique in vm.critiques.inactive">
+            {{ critique.username }}
+        </a>
+    </div>
+</div>

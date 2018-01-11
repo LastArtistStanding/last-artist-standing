@@ -1,0 +1,48 @@
+<div class="submission_put">
+    <div class="modal-header">
+        <h4>Edit</h4>
+    </div>
+    <form>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <input type="text" ng-model="vm.submission.title" class="form-control" placeholder="Title" maxlength="50">
+                </div>
+
+                <div class="col-md-8">
+                    <input type="text" ng-model="vm.submission.description" class="form-control" placeholder="Short text" maxlength="255">
+                </div>
+            </div>
+
+            <div class="row second-row">
+                <div class="col-xs-2 feedback-button" tooltip-placement="top" uib-tooltip="Allow redlines / feedback.">
+                    <button type="button" class="no-padding form-control btn"
+                            ng-class="vm.submission.redline ? 'btn-success' : 'btn-danger'"
+                            ng-click="vm.submission.redline = !vm.submission.redline">
+                        <i class="fa fa-fw" ng-class="vm.submission.redline ? 'fa-commenting-o' : 'fa-ban'"></i>
+                    </button>
+                </div>
+
+                <div class="nsfwToggle btn-group pull-right" data-toggle="buttons">
+                    <label class="btn" ng-class="vm.submission.nsfw == false ? 'btn-success' : 'btn-default'">
+                        <input type="radio" ng-model="vm.submission.nsfw"
+                               ng-click="vm.submission.nsfw = false"
+                               name="options" id="swf" autocomplete="off"> SFW
+                    </label>
+                    <label class="btn" ng-class="vm.submission.nsfw == true ? 'btn-danger' : 'btn-default'">
+                        <input type="radio" ng-model="vm.submission.nsfw"
+                               ng-click="vm.submission.nsfw = true"
+                               name="options" id="nsfw" autocomplete="off"> NSFW
+                    </label>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <input type="button" class="btn btn-danger pull-left" value="Delete" ng-click="vm.deleteSubmission()">
+
+            <input type="button" class="btn btn-default" value="Cancel" ng-click="vm.cancel()">
+            <input type="submit" class="btn btn-success" value="Save" ng-click="vm.save()">
+        </div>
+    </form>
+</div>

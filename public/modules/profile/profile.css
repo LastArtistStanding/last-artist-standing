@@ -1,0 +1,225 @@
+.profile .info-box {
+    text-align: left;
+    margin: 25px 0;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.profile .badge-image {
+    position: absolute;
+    display: inline-block;
+    top: -65px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.profile .full-width {
+    width: 100%;
+}
+
+.profile .badge-image img {
+    max-width: 125px;
+}
+
+.profile .badge-image .badge-text {
+    top: 53px;
+    position: absolute;
+    font-weight: bold;
+    width: 100%;
+}
+
+.profile > div > .info-box .user-badge {
+    padding: 10px;
+    display: inline-block;
+}
+
+.profile .highlighter-button {
+    padding: 2px;
+    height: 25px;
+    margin-bottom: 10px;
+}
+
+.profile .rig-overlay-highlight {
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    background-size: 50px 50px;
+    opacity: 0;
+    transition: all .7s;
+}
+
+.profile .rig-cell-title {
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+
+.profile .rig-cell:hover .rig-overlay-highlight {
+    opacity:0.8;
+}
+
+@media (max-width: 991px) {
+    .profile .col-md-7 {
+        padding: 0;
+    }
+}
+
+.profile .badge-popover {
+    text-align: center;
+    padding: 5px;
+    width: 250px;
+}
+
+.profile .badge-popover .content {
+    padding-top: 50px;
+    padding-bottom: 10px;
+}
+
+.profile .popover-inner .popover-content {
+    padding: 0;
+}
+
+.profile .badge-popover .timestamp {
+    margin-top: 15px;
+}
+
+.profile .badge-popover .top {
+    height: 50px;
+    margin-bottom: 5px;
+}
+
+.profile .badge-popover .top img {
+    position: absolute;
+    top: 25px;
+    left: 95px;
+}
+
+.profile .user-badge >badge > div {
+    border-radius: 0;
+}
+
+.profile .badge-selector-text {
+    margin-top: 2px;
+    position: absolute;
+    right: 25px;
+    cursor: pointer;
+}
+
+.profile .left {
+    left: 25px;
+    right: auto;
+}
+
+.profile .disabled-image {
+    opacity: 0.5;
+}
+
+.profile .info-box .fa-cog {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+.password_put h4 {
+    margin: 0;
+}
+
+.password_put .modal-footer {
+    margin-top: 85px;
+}
+
+.password_put .current_password {
+    margin-bottom: 15px;
+}
+
+.profile .rig-cell {
+    cursor: pointer;
+}
+
+/* COLOR */
+
+.profile .highlight-pickable {
+    border: 1px black dashed;
+}
+
+.profile .rig-overlay-highlight {
+    background-color: #449d44;
+}
+
+.profile .rig-overlay-highlight-delete {
+    background-color: #c9302c;
+}
+
+.profile .rig-cell-title {
+    color: white;
+    background: #68a3d5;
+}
+
+.profile .badge {
+    background-color: #68a3d5;
+}
+
+.profile .info-box {
+    background-color: white;
+    border-top: 4px solid #68a3d5;
+    -webkit-box-shadow: 1px 2px 0 0 rgba(117, 117, 117, 0.5);
+    -moz-box-shadow: 1px 2px 0 0 rgba(117, 117, 117, 0.5);
+    box-shadow: 1px 2px 0 0 rgba(117, 117, 117, 0.5);
+}
+
+.profile .info-box hr {
+    border-top: 1px solid #ccc;
+}
+
+.profile .badge-popover {
+    border: 5px solid #68A5DA;
+}
+
+.profile .badge-popover .content {
+    background-color: white;
+    border: 1px solid #dedede;
+}
+
+.profile .popover-inner .popover-content {
+    background-color: #ececec;
+}
+
+.profile .badge-popover .timestamp {
+    color: #a2a2a2;
+}
+
+.profile .badge-popover .top {
+    background-color: #e6ffff;
+    border: 1px solid #dedede;
+}
+
+.profile .user-badge > badge > div {
+    border: 1px solid #68A5DA;
+}
+
+.profile .user-badge > badge > div > .arrow {
+    border-bottom-color: #1166af;
+}
+
+.profile .user-badge > .locked-popover > div >.arrow {
+    border-bottom-color: black;
+}
+
+.profile .user-badge > .locked-popover > div {
+    border: 1px solid black;
+}
+
+.profile .locked-popover .badge-popover {
+    border: 5px solid #e2e2e2;
+}
+
+.profile .locked-popover .badge-popover .top {
+    background-color: #e2e2e2;
+}

@@ -1,0 +1,162 @@
+.challenge .thumbimage .info {
+    height: 20px;
+    overflow: hidden;
+    top: 0;
+    position: absolute;
+    width: 100%;
+    padding: 0 5px;
+    font-size: 15px;
+}
+
+.challenge .thumbimage .title {
+    text-align: right;
+}
+
+.challenge .thumbimage img {
+    position: absolute;
+}
+
+.challenge .thumbimage {
+    position: relative;
+    display: inline-block;
+    height: 115px;
+    width: 225px;
+    overflow: hidden;
+    padding: 0;
+    border-radius: 2px;
+    cursor: pointer;
+    margin: 3px;
+}
+
+.challenge .vote-box .vote-name {
+    margin: 5px 10px;
+}
+
+.challenge .vote-box .disclaimer {
+    margin-bottom: 15px;
+}
+
+.challenge .vote-box {
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+.challenge .vote-box img {
+    max-width: 100%;
+}
+
+.challenge .vote-box .winner-title {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.challenge .info-panel {
+    margin-top: 10px;
+}
+
+.challenge .info-panel .creator {
+    float: right;
+    text-align: right;
+}
+
+.challenge .fa-cog {
+    position: absolute;
+    right: 15px;
+    top: 20px;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+.challenge .panel-heading {
+    position: relative;
+}
+
+.challenge_put h4 {
+    margin: 0;
+}
+
+.challenge_put .modal-footer {
+    margin-top: 40px;
+}
+
+.challenge_put .title {
+    margin: 0 0 15px 0;
+}
+
+.challenge_put .rules {
+    margin-top: 15px;
+}
+
+.challenge_put textarea {
+    max-width: 100%;
+}
+
+.challenge_put .duration {
+    padding-right: 0;
+}
+
+.challenge .rig-cell-title {
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+
+.challenge .top-title {
+    margin-top: 7px;
+}
+
+/* COLOR */
+
+.challenge .info-panel .creator a {
+    color: black;
+}
+
+.challenge .vote-box .selected {
+    background-color: #ddd;
+}
+
+.challenge .thumbimage {
+    border: 1px solid #ddd;
+}
+
+.challenge .thumbimage:hover {
+    border: 1px solid #000;
+}
+
+.challenge .thumbimage .info {
+    background-color: rgba(0, 0, 0, 0.35);
+    color: white;
+}
+
+.challenge .list-group-item.active {
+    background: #467398;
+    background: linear-gradient(to top, #467398, #4e80a9);
+    color: white;
+}
+
+.challenge .panel-heading-blue {
+    background: #467398;
+    background: linear-gradient(to top, #467398, #4e80a9);
+    color: white;
+    border-bottom: 1px solid #ccc;
+}
+
+.challenge .panel {
+    border: 1px solid #e2e2e2;
+    background-color: white;
+}
+
+.challenge .vote-box {
+    border: 1px solid #91917d;
+}
+
+.challenge .vote-box .winner-title a {
+    color: black;
+}
+
+.challenge .rig-cell-title {
+    color: white;
+    background: #68a3d5;
+}
