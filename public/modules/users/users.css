@@ -1,0 +1,106 @@
+.users tr th:hover {
+    cursor: pointer;
+}
+
+.users tr td {
+    border-top: 0 !important;
+    padding: 10px;
+}
+
+.users .clickable-row:hover {
+    cursor: pointer;
+}
+
+.users .clickable-row a {
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.users .search-box {
+    margin-bottom: 15px;
+}
+
+.users .pagination {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.users table {
+    border-collapse: separate !important;
+    border-radius: 6px;
+}
+
+.users table th:first-child {
+    -moz-border-radius: 6px 0 0 0;
+    -webkit-border-radius: 6px 0 0 0;
+    border-radius: 6px 0 0 0;
+}
+.users table th:last-child {
+    -moz-border-radius: 0 6px 0 0;
+    -webkit-border-radius: 0 6px 0 0;
+    border-radius: 0 6px 0 0;
+}
+
+.users table tr:last-child td:first-child {
+    -moz-border-radius: 0 0 0 6px;
+    -webkit-border-radius: 0 0 0 6px;
+    border-radius: 0 0 0 6px;
+}
+.users table tr:last-child td:last-child {
+    -moz-border-radius: 0 0 6px 0;
+    -webkit-border-radius: 0 0 6px 0;
+    border-radius: 0 0 6px 0;
+}
+
+/* COLOR */
+
+.users .clickable-row a {
+   color: black;
+}
+
+.users .selectedChunk {
+    color: #23527c;
+    background-color: #eee;
+    border-color: #ddd;
+}
+
+.users table {
+    -webkit-box-shadow: 1px 2px 0 0 rgba(117, 117, 117, 0.5);
+    -moz-box-shadow: 1px 2px 0 0 rgba(117, 117, 117, 0.5);
+    box-shadow: 1px 2px 0 0 rgba(117, 117, 117, 0.5);
+}
+
+.users tr th:hover {
+    background: #426c8f;
+    background: linear-gradient(to top, #416b8e, #48779d);
+}
+
+.users tr th {
+    background: #467398;
+    background: linear-gradient(to top, #467398, #4e80a9);
+    color: white;
+    border-top: 1px solid #e2e2e2 !important;
+    border-right: 1px solid #68A5DA;
+    font-weight: 500;
+}
+
+.users .table {
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+}
+
+.users .clickable-row {
+    background-color: white;
+}
+
+.users .clickable-row:hover {
+    background-color: #ddd;
+}
+
+.users .table .disabled {
+    color: #a5a5a5;
+}

@@ -1,0 +1,113 @@
+.challenges tr td {
+    border-top: 0 !important;
+    padding: 10px;
+}
+
+.challenges .clickable-row:hover {
+    cursor: pointer;
+}
+
+.challenges .clickable-row a {
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.challenges table {
+    border-collapse: separate !important;
+    border-radius: 6px;
+}
+
+.challenges table td {
+    max-width: 250px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    -ms-word-break: break-all;
+}
+
+.challenges table th:first-child {
+    -moz-border-radius: 6px 0 0 0;
+    -webkit-border-radius: 6px 0 0 0;
+    border-radius: 6px 0 0 0;
+}
+.challenges table th:last-child {
+    -moz-border-radius: 0 6px 0 0;
+    -webkit-border-radius: 0 6px 0 0;
+    border-radius: 0 6px 0 0;
+}
+
+.challenges table tr:last-child td:first-child {
+    -moz-border-radius: 0 0 0 6px;
+    -webkit-border-radius: 0 0 0 6px;
+    border-radius: 0 0 0 6px;
+}
+.challenges table tr:last-child td:last-child {
+    -moz-border-radius: 0 0 6px 0;
+    -webkit-border-radius: 0 0 6px 0;
+    border-radius: 0 0 6px 0;
+}
+
+.challenges .add {
+    margin-top: 28px;
+    background-color: #5cb85c;
+    color: white;
+    cursor: pointer;
+}
+
+.challenges .title {
+    display: inline-block;
+}
+
+.challenges_post h4 {
+    margin: 0;
+}
+
+.challenges_post .title {
+    margin: 0 0 15px 0;
+}
+
+.challenges_post .checkbox {
+    margin-top: 6px;
+}
+
+.challenges_post .rules {
+    margin-top: 15px;
+}
+
+.challenges_post textarea {
+    max-width: 100%;
+}
+
+.challenges_post .duration {
+    padding-right: 0;
+}
+
+/* COLOR */
+
+.challenges tr th {
+    background: #467398;
+    background: linear-gradient(to top, #467398, #4e80a9);
+    color: white;
+    border-top: 1px solid #e2e2e2 !important;
+    border-right: 1px solid #68A5DA;
+    font-weight: 500;
+}
+
+.challenges .table {
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+}
+
+.challenges .clickable-row {
+    background-color: white;
+}
+
+.challenges .clickable-row a {
+    color: black;
+}
+
+.challenges .clickable-row:hover {
+    background-color: #ddd;
+}

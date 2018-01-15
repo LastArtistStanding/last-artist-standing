@@ -1,0 +1,299 @@
+.slider {
+    height: 450px;
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+}
+
+.slide {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    -webkit-transition: opacity 0.5s ease-in-out;
+    -moz-transition: opacity 0.5s ease-in-out;
+    -o-transition: opacity 0.5s ease-in-out;
+    transition: opacity 0.5s ease-in-out;
+    opacity:0;
+}
+
+.slide img {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.slide.active {
+    opacity:1;
+    z-index: 2;
+}
+
+.arrow {
+    position: absolute;
+    z-index: 3;
+    display: block;
+    top: 50%;
+    margin-top: -35px;
+    width: 36px;
+    height: 71px;
+    outline: none;
+    cursor: pointer;
+}
+
+.arrow.prev {
+    opacity: 0.35;
+    left: 20px;
+    background-image: url(../../resources/paddle_prev.png);
+    transition: 0.3s linear all;
+}
+
+.arrow.next {
+    opacity: 0.35;
+    right: 20px;
+    background-image: url(../../resources/paddle_next.png);
+    transition: 0.3s linear all;
+}
+
+.arrow.prev:hover {
+    opacity: 0.9;
+}
+
+.arrow.next:hover {
+    opacity: 0.9;
+}
+
+.dots {
+    text-align: center;
+    display: block;
+    position: absolute;
+    z-index: 3;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 15px;
+}
+
+.dashboard .dots .dot {
+    display: inline-block;
+    cursor: pointer;
+
+}
+
+.dashboard .dots .dot a {
+    display: inline-block;
+    margin: 0 12px;
+    width: 6px;
+    height: 6px;
+    outline: none;
+    border: 1px solid #5a5a5a;
+
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+
+    -webkit-transition: background-color 0.25s, border-color 0.25s;
+    -moz-transition: background-color 0.25s, border-color 0.25s;
+    transition: background-color 0.25s, border-color 0.25s;
+}
+
+.dashboard .dots .dot a.active {
+    background-color: #68a3d5;
+    border: 0;
+}
+
+.dashboard .btn-pill {
+    padding: 0 8px;
+}
+
+.dashboard table .border-bottom {
+    border-bottom: 1px solid #ddd;
+}
+
+.dashboard table .border-right {
+    border-right: 1px solid #ddd;
+}
+
+.dashboard table {
+    width: 100%;
+}
+
+.dashboard table th {
+    padding: 4px;
+}
+
+.dashboard .submission_no i {
+    color: red;
+    margin-right: 2px;
+}
+
+.dashboard .submission_yes i {
+    color: #6c4;
+    margin-right: 2px;
+}
+
+.dashboard .disabled {
+    display: none;
+}
+
+.dashboard .preview {
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.dashboard .panel-heading {
+    font-size: 1.3em;
+    background-color: white;
+    color: black;
+    border-bottom: 1px dashed #ddd;
+}
+
+.dashboard .panel-heading .fa {
+    font-size: 0.8em;
+}
+
+.dashboard .submit-text {
+    padding: 5px 15px;
+}
+
+.dashboard .submit-final {
+    margin-top: 5px;
+    padding: 0;
+}
+
+@media (max-width: 991px) {
+    .dashboard .challenge-button {
+        padding-right: 15px;
+    }
+}
+
+.dashboard .submit-final .image-info {
+    margin-bottom: 10px;
+}
+
+.dashboard .btn:focus {
+    outline:0;
+}
+
+.dashboard .stream-preview {
+    display: inline-block;
+    position: relative;
+    margin: 10px;
+    background-color: black;
+}
+
+.dashboard .stream-preview:hover img {
+    opacity: 0.75;
+}
+
+.dashboard .stream-preview .viewers {
+    width: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0,0,0.3);
+    color: white;
+}
+
+.dashboard .stream-preview .viewers span {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.dashboard .stream-preview .info {
+    width: 100px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding-left: 2px;
+    overflow: hidden;
+    background-color: rgba(0,0,0,0.3);
+    color: white;
+}
+
+.dashboard .btn-respect {
+    border-radius: 15px;
+    transform: scale(0.6, 0.6);
+}
+
+.dashboard .clickable-header {
+    color: black;
+}
+
+.dashboard .list-group {
+    margin: 0;
+}
+
+.dashboard .list-group-item a {
+    color: black;
+}
+
+.dashboard .list-group-item {
+    border: 0;
+}
+
+.dashboard .list-group-item.active {
+    font-weight: 500;
+    border: 0;
+}
+
+.dashboard .list-group-item a {
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.dashboard .list-group-item:hover {
+    cursor: pointer;
+    margin-bottom: 2px;
+    border-bottom: 1px dashed #8e8e8e;
+}
+
+.dashboard .list-group-item .badge {
+    background-color: #68a3d5;
+}
+
+.dashboard .countDown {
+    font-size: 100px;
+    padding-bottom: 25px;
+    text-align: center;
+}
+
+.dashboard .panel-default {
+    border: 2px solid #e2e2e2;
+    border-top: 4px solid #68a3d5;
+    margin: 10px 0;
+}
+
+.dashboard .panel-default .title {
+    display: inline-block;
+}
+
+.dashboard .panel-default .title-text {
+    display: inline-block;
+    float: right;
+    font-size: 0.8em;
+    padding-top: 3px;
+}
+
+.challenges_active .well {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+.challenges_active .challenge-item:hover {
+    cursor: pointer;
+}
+
+.challenges_active .challenge-item .badge {
+    margin-right: 10px;
+    background-color: #68a3d5;
+}
+
+.challenges_active .selected {
+    background-color: #5cb85c;
+    color: white;
+}

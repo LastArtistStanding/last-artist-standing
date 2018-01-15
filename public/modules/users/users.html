@@ -1,0 +1,52 @@
+<link rel="stylesheet" href="modules/users/users.css">
+
+<div class="users">
+    <div class="col-md-12">
+
+        <div class="col-xs-4 col-sm-7 col-md-8 no-padding">
+            <h4>Users</h4>
+        </div>
+        <div class="col-xs-8 col-sm-5 col-md-4 pull-right">
+            <input class="form-control search-box" placeholder="Search" ng-model="userFilter">
+        </div>
+
+        <table class="table">
+            <tr>
+                <th ng-click="vm.setOrderString('username')">Username
+                    <i class="pull-right fa fa-wa"
+                       ng-class="{'disabled fa-caret-down': vm.orderString != 'username' && vm.orderString != '-username',
+                                  'fa-caret-down': vm.orderString == 'username',
+                                  'fa-caret-up': vm.orderString == '-username'}"></i>
+                </th>
+                <th ng-click="vm.setOrderString('last_seen_hours')">Last seen
+                    <i class="pull-right fa fa-wa"
+                       ng-class="{'disabled fa-caret-down': vm.orderString != 'last_seen_hours' && vm.orderString != '-last_seen_hours',
+                                  'fa-caret-down': vm.orderString == 'last_seen_hours',
+                                  'fa-caret-up': vm.orderString == '-last_seen_hours'}"></i>
+                </th>
+                <th ng-click="vm.setOrderString('created_at')">Registered
+                    <i class="pull-right fa fa-wa"
+                       ng-class="{'disabled fa-caret-down': vm.orderString != 'created_at' && vm.orderString != '-created_at',
+                                  'fa-caret-down': vm.orderString == 'created_at',
+                                  'fa-caret-up': vm.orderString == '-created_at'}"></i>
+                </th>
+            </tr>
+            <tr ng-show="userFilter" ng-repeat="user in vm.users | orderBy: vm.orderString | filter: userFilter" class="clickable-row">
+                <td><a ui-sref="profile({id: user.id})" ng-bind="user.username"></a></td>
+                <td><a ui-sref="profile({id: user.id})" ng-bind="user.last_seen_readable"></a></td>
+                <td><a ui-sref="profile({id: user.id})" ng-bind="user.created_at_readable"></a></td>
+            </tr>
+            <tr ng-hide="userFilter" ng-repeat="user in vm.paginated[vm.selectedChunk]" class="clickable-row">
+                <td><a ui-sref="profile({id: user.id})" ng-bind="user.username"></a></td>
+                <td><a ui-sref="profile({id: user.id})" ng-bind="user.last_seen_readable"></a></td>
+                <td><a ui-sref="profile({id: user.id})" ng-bind="user.created_at_readable"></a></td>
+            </tr>
+        </table>
+
+        <div ng-hide="userFilter" class="pagination pull-right">
+            <li ng-repeat="(key, value) in vm.paginated" >
+                <a ng-class="{'selectedChunk':vm.selectedChunk == key}" ng-click="vm.selectChunk(key)" ng-bind="key"></a>
+            </li>
+        </div>
+    </div>
+</div>

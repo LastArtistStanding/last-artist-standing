@@ -1,0 +1,111 @@
+<link rel="stylesheet" href="modules/submissions/submissions.css">
+<link rel="stylesheet" href="modules/challenge/challenge.css">
+
+<div class="challenge submissions">
+    <div class="col-md-12">
+        <div class="panel">
+            <div class="panel-heading panel-heading-blue">
+                <i class="fa fa-cog fa-fw" ng-show="vm.mine && vm.challenge.status == 'active'" ng-click="vm.openEditModal()"></i>
+                <h3 class="dont-break-out" ng-bind="vm.challenge.title"></h3>
+            </div>
+
+            <div class="panel-body">
+
+                <div ng-show="vm.error" class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" ng-click="vm.clearError()"><span>&times;</span></button>
+                    {{ vm.error }}
+                </div>
+
+                <div class="col-md-12 vote-box" ng-show="vm.challenge.status == 'inactive' && vm.challenge.contest">
+                    <div ng-show="vm.winner">
+                        <div class="winner-title">
+                            <b><u>
+                                <a ui-sref="profile({id: vm.winner.user.id})" ng-bind="vm.winner.user.username"></a>
+                            </u></b>
+                            <span ng-bind="'has won with a total of ' + vm.winner.votes + 'votes!'"></span>
+                        </div>
+
+                        <img ng-src="api/submissions/{{vm.winner.submission.id}}/image">
+                    </div>
+                    <div ng-show="!vm.winner">
+                        <div class="winner-title">
+                            Nobody won this contest.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 vote-box" ng-show="vm.challenge.status == 'voting' && vm.isLoggedIn">
+                    <div class="disclaimer">Voting is in progress! Place your vote by clicking on the name of your favorite entrant</div>
+
+                    <button class="btn btn-default vote-name" ng-repeat="entry in vm.challenge.entries"
+                            ng-click="vm.vote(entry)"
+                            ng-class="vm.myVote.voted_for == entry.id ? 'btn-success' : ''" ng-bind="entry.user.username">
+                    </button>
+                </div>
+
+                <div class="col-md-6 info-panel">
+                    <div class="panel">
+                        <div class="panel-heading panel-heading-blue">
+                            Info
+                        </div>
+                        <div class="panel-body">
+                            <div ng-bind="vm.challenge.description"></div>
+
+                            <hr class="smaller-divider"/>
+
+                            <span ng-show="vm.challenge.status == 'active'">
+                                <i class="fa fa-fw fa-clock-o"></i><span ng-bind="'Time left: ' + vm.challenge.end_date_readable"></span>
+                            </span>
+                            <span ng-show="vm.challenge.status == 'voting'">Status: In voting</span>
+                            <span ng-show="vm.challenge.status == 'inactive'">Status: Ended</span>
+
+                            <span class="creator">Challenge made by
+                                <a ui-sref="profile({id: vm.challenge.user.id})" ng-bind="vm.challenge.user.username"></a>
+                            </span>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-6 info-panel">
+                    <ul class="list-group">
+                        <li class="list-group-item active">Rules</li>
+                        <li class="list-group-item user-item" ng-repeat="rule in vm.challenge.rules" ng-bind="rule"></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h4>Entries <div class="badge" ng-bind="vm.challenge.entry_count"></div></h4>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="btn-group pull-right" data-toggle="buttons">
+                                <label class="btn" ng-class="vm.nsfw == false ? 'btn-success' : 'btn-default'" ng-click="vm.setNsfw(false)">
+                                    <input type="radio" ng-model="vm.nsfw" name="options" id="swf" autocomplete="off" value="false"> SFW
+                                </label>
+                                <label class="btn" ng-class="vm.nsfw == true ? 'btn-danger' : 'btn-default'" ng-click="vm.setNsfw(true)">
+                                    <input type="radio" ng-model="vm.nsfw" name="options" id="nsfw" autocomplete="off" value="true"> NSFW
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="vm.challenge.entries.length == 0">None!</div>
+
+                    <ul class="rig">
+                        <li ng-repeat="submission in vm.challenge.entries">
+                            <a class="rig-cell-title top-title" ui-sref="profile({id: submission.user.id})" ng-bind="submission.user.username"></a>
+                            <a class="rig-cell" ui-sref="submission({id: submission.submission.id})">
+                                <img class="rig-img" ng-src="{{ submission.submission.secureThumb }}">
+                                <span class="rig-overlay"></span>
+                                <span class="rig-text" ng-bind="submission.submission.title||'No title'"></span>
+                            </a>
+                            <div class="rig-cell-title" ng-bind="submission.created_at_readable"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

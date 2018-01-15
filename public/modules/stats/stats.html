@@ -1,0 +1,73 @@
+<link rel="stylesheet" href="modules/stats/stats.css">
+<div class="stats">
+
+    <div ng-show="vm.error" class="alert dont-break-out alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" ng-click="vm.clearError()"><span>&times;</span></button>
+        {{ vm.error }}
+    </div>
+
+    <div class="col-xs-12">
+        <h4>Leaderboards</h4>
+        <hr class="smaller-divider" />
+
+        <div class="col-md-12">
+            <ul class="list-group">
+                <li class="list-group-item active">Total activity
+                    <i class="fa fa-fw fa-question-circle" tooltip-placement="right" uib-tooltip="Best streak, critique replies and challenge entries combined."></i>
+                </li>
+                <li class="list-group-item" ng-repeat="user in vm.totalActivity">
+                    <span class="badge" ng-bind="user.total"></span>
+                    <a ui-sref="profile({id: user.user_id})" ng-bind="user.username"></a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-xs-6 col-md-3">
+            <ul class="list-group">
+                <li class="list-group-item active">Most submissions</li>
+                <li class="list-group-item" ng-repeat="user in vm.mostSubmissions">
+                    <span class="badge" ng-bind="user.total"></span>
+                    <a ui-sref="profile({id: user.user.id})" ng-bind="user.user.username"></a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-xs-6 col-md-3">
+            <ul class="list-group">
+                <li class="list-group-item active">Best streak</li>
+                <li class="list-group-item" ng-repeat="user in vm.bestStreak">
+                    <span class="badge" ng-bind="user.best"></span>
+                    <a ui-sref="profile({id: user.user.id})" ng-bind="user.user.username"></a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-xs-6 col-md-3">
+            <ul class="list-group">
+                <li class="list-group-item active">Most challenge entries</li>
+                <li class="list-group-item" ng-repeat="user in vm.mostChallengeEntries">
+                    <span class="badge" ng-bind="user.total"></span>
+                    <a ui-sref="profile({id: user.user.id})" ng-bind="user.user.username"></a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-xs-6 col-md-3">
+            <ul class="list-group">
+                <li class="list-group-item active">Most critique replies
+                    <i class="fa fa-fw fa-question-circle" tooltip-placement="top" uib-tooltip="Anonymous replies don't count."></i>
+                </li>
+                <li class="list-group-item" ng-repeat="user in vm.mostCritReplies">
+                    <span class="badge" ng-bind="user.total"></span>
+                    <a ui-sref="profile({id: user.user.id})" ng-bind="user.user.username"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-xs-12">
+        <h4>Site statistics</h4>
+        <hr class="smaller-divider" />
+        <small>not implemented</small>
+    </div>
+</div>
