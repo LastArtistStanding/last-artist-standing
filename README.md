@@ -1,24 +1,30 @@
+# Ruby on Rails AWL Site
 
-     ,-----.,--.                  ,--. ,---.   ,--.,------.  ,------.
-    '  .--./|  | ,---. ,--.,--. ,-|  || o   \  |  ||  .-.  \ |  .---'
-    |  |    |  || .-. ||  ||  |' .-. |`..'  |  |  ||  |  \  :|  `--, 
-    '  '--'\|  |' '-' ''  ''  '\ `-' | .'  /   |  ||  '--'  /|  `---.
-     `-----'`--' `---'  `----'  `---'  `--'    `--'`-------' `------'
-    ----------------------------------------------------------------- 
+## Getting started
 
+To get started with the app, clone the repo and then install the needed gems:
 
-Welcome to your Rails project on Cloud9 IDE!
+```
+$ bundle install --without production
+```
 
-To get started, just do the following:
+Next, migrate the database:
 
-1. Run the project with the "Run Project" button in the menu bar on top of the IDE.
-2. Preview your new app by clicking on the URL that appears in the Run panel below (https://HOSTNAME/).
+```
+$ rails db:migrate
+```
 
-Happy coding!
-The Cloud9 IDE team
+Finally, run the test suite to verify that everything is working correctly:
 
+```
+$ rails test
+```
 
-## Support & Documentation
+If the test suite passes, you'll be ready to run the app in a local server:
 
-Visit http://docs.c9.io for support, or to learn more about using Cloud9 IDE. 
-To watch some training videos, visit http://www.youtube.com/user/c9ide
+```
+$ rails server
+```
+
+For more information, see the
+[*Ruby on Rails Tutorial* book](http://www.railstutorial.org/book).
