@@ -5,9 +5,8 @@ gem 'rails', '>= 5.0.0.rc2', '< 5.1'
 #Use Rails controller testing for testing stability and error-proneness of site.
 gem 'rails-controller-testing'
 #Use bcrypt for Password hashing to protect against attackers
-gem 'bcrypt',         '3.1.11'
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3'
+gem 'bcrypt'
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
@@ -29,6 +28,8 @@ gem 'mini_magick', '~> 4.3'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
+gem 'rake', '< 11.0'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 gem 'puma'
@@ -42,6 +43,8 @@ gem 'puma'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
+  gem 'sqlite3'
+  gem 'rspec-rails', '2.13.1'
 end
 
 group :development do
@@ -52,3 +55,14 @@ group :development do
   gem 'spring'
 end
 
+group :production do
+  ###########################
+  # 1/21/18 - - Use Postgres as the database for Active Record
+  # Fix found based off of: 
+  #https://stackoverflow.com/questions/39261996/heroku-and-rails-gem-load-error-with-postgres-however-it-is-specified-in-gemfi
+  #https://stackoverflow.com/questions/24755673/gemloaderror-specified-postgresql-for-database-adapter-but-the-gem-is-not/24755814
+  
+  ###########################
+  gem 'pg', '0.20'
+  gem 'rails_12factor'
+end
