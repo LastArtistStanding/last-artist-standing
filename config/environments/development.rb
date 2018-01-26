@@ -38,4 +38,7 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+  
+  # Whitelist for Cloud 9 development
+  config.web_console.whitelisted_ips = '174.82.225.107'
 end

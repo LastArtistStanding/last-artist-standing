@@ -1,27 +1,52 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
     <!-- Font Awesome -->
     
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <%= csrf_meta_tags %>
-</head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <%= csrf_meta_tags %>
+  
+    <!-- Permit Unique Titles -->
+    <title> <%= yield(:title) %> </title>
+  
+  </head>
 
-<body>
-  <% flash.each do |message_type, message| %>
+  <body>
+    <% flash.each do |message_type, message| %>
     <div class="alert alert-<%= message_type %>"><%= message %></div>
-  <% end %>
+    <% end %>
   
-  <%= yield %>
+    <nav class="navbar navbar-expand-sm navbar-dark" style="background: coral;">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-content" aria-controls="nav-content" aria-expanded="false" aria-label="Toggle navigation">
+	      <span class="navbar-toggler-icon"></span>
+	    </button>
+
+  	  <!-- Brand -->
+	    <a class="navbar-brand" href="/">DAD</a>
+	
+	
+	    <div id="navbarNavDropdown" class="navbar-collapse collapse">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active"><a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a></li>
+        </ul>
+            
+        <ul class=" navbar-nav">
+          <li><a class="nav-link" href="/signup"><span class="fa fa-edit"></span> Sign Up</a></li>
+          <li><a class="nav-link" href="/login"><span class="fa fa-external-link"></span> Login</a></li>
+        </ul>
+      </div>
+	  </nav>
   
-  <%= render 'layouts/footer' %>
-</body>
+    <%= yield %>
+  
+    <%= render 'layouts/footer' %>
+  </body>
 </html>
