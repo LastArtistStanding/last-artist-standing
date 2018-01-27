@@ -14,27 +14,32 @@
  *= require_self
  */
 
-/* footer */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  margin: 0;
+  margin-bottom: 30px; /* Margin bottom by footer height */
+}
 
-footer {
-  position: fixed;
-  left: 0;
+.footer {
+  position: absolute;
   bottom: 0;
   width: 100%;
-  margin-top: 45px;
-  padding-top: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
-  border-top: 1px solid #eaeaea;
-  color: #777;
+  height: 30px; /* Set the fixed height of the footer here */
+  line-height: 30px;
+  background-color: SkyBlue;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
 footer a {
-  color: #555;
+  color: #448;
 }
 
 footer a:hover {
-  color: #222;
+  color: #113;
 }
 
 footer small {
@@ -44,10 +49,14 @@ footer small {
 footer ul {
   float: right;
   list-style: none;
+  margin-bottom: 0;
 }
 
 footer ul li {
   float: left;
   margin-left: 15px;
-  
+}
+
+.card {
+  margin-bottom: 1.5rem;
 }
