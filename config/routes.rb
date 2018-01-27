@@ -3,11 +3,17 @@ Rails.application.routes.draw do
   
   
 
+  get 'sessions/new'
+
   root 'pages#home'
   
   get 'users/new'
   
-  get 'login' => "pages#login"
+  get 'login' => "sessions#new"
+  
+  post 'login' => "sessions#create"
+  
+  delete 'logout' => 'sessions#destroy'
   
   get 'signup' => "users#new"
   
