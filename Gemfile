@@ -7,6 +7,7 @@ gem 'rails-controller-testing'
 #Use bcrypt for Password hashing to protect against attackers
 gem 'bcrypt'
 
+gem 'bootstrap-sass', '3.3.7'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets

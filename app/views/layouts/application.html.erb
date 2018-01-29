@@ -20,30 +20,12 @@
   </head>
 
   <body>
+    
+    <%= render 'layouts/header' %>
+    
     <% flash.each do |message_type, message| %>
     <div class="alert alert-<%= message_type %>"><%= message %></div>
     <% end %>
-  
-    <nav class="navbar navbar-expand-sm navbar-dark" style="background: coral;">
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-content" aria-controls="nav-content" aria-expanded="false" aria-label="Toggle navigation">
-	      <span class="navbar-toggler-icon"></span>
-	    </button>
-
-  	  <!-- Brand -->
-	    <a class="navbar-brand" href="/">DAD</a>
-	
-	
-	    <div id="navbarNavDropdown" class="navbar-collapse collapse">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active"><a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a></li>
-        </ul>
-            
-        <ul class=" navbar-nav">
-          <li><a class="nav-link" href="/signup"><span class="fa fa-edit"></span> Sign Up</a></li>
-          <li><a class="nav-link" href="/login"><span class="fa fa-external-link"></span> Login</a></li>
-        </ul>
-      </div>
-	  </nav>
   
     <%= yield %>
   
