@@ -8,7 +8,8 @@ gem 'rails-controller-testing'
 # Pulling directly from the author's github to solve a Windows issue
 gem 'bcrypt', git: 'https://github.com/codahale/bcrypt-ruby.git', :require => 'bcrypt'
 
-gem 'bootstrap-sass', '3.3.7'
+gem 'bootstrap', '>= 4'
+gem 'autoprefixer-rails'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
