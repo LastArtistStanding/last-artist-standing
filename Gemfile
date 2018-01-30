@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 gem 'rails', '>= 5.0.0.rc2', '< 5.1'
 #Use Rails controller testing for testing stability and error-proneness of site.
 gem 'rails-controller-testing'
-#Use bcrypt for Password hashing to protect against attackers
+# Use bcrypt for Password hashing to protect against attackers
 gem 'bcrypt', git: 'https://github.com/codahale/bcrypt-ruby.git', :require => 'bcrypt'
 
 # Use SCSS for stylesheets
@@ -29,21 +29,21 @@ gem 'mini_magick', '~> 4.3'
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'rake', '< 11.0'
-
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
+# Puma for the app server
 gem 'puma'
 
-# Use Unicorn as the app server
-# gem 'unicorn'
-
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
+###########################
+  # 1/21/18 - - Use Postgres as the database for Active Record
+  # Fix found based off of: 
+  #https://stackoverflow.com/questions/39261996/heroku-and-rails-gem-load-error-with-postgres-however-it-is-specified-in-gemfi
+  #https://stackoverflow.com/questions/24755673/gemloaderror-specified-postgresql-for-database-adapter-but-the-gem-is-not/24755814
+  
+###########################
+gem 'pg', '0.21'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
-  gem 'sqlite3'
   gem 'rspec-rails', '2.13.1'
 end
 
@@ -56,17 +56,8 @@ group :development do
 end
 
 group :production do
-  ###########################
-  # 1/21/18 - - Use Postgres as the database for Active Record
-  # Fix found based off of: 
-  #https://stackoverflow.com/questions/39261996/heroku-and-rails-gem-load-error-with-postgres-however-it-is-specified-in-gemfi
-  #https://stackoverflow.com/questions/24755673/gemloaderror-specified-postgresql-for-database-adapter-but-the-gem-is-not/24755814
-  
-  ###########################
-  #gem 'pg', '0.20'
   gem 'rails_12factor'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-gem 'pg', '0.21'
