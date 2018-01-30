@@ -1,6 +1,7 @@
 threads_count = Integer(ENV['RAILS_MAX_THREADS'] || 5)
 threads threads_count, threads_count
 
+# Windows sucks and doesn't like workers
 if RUBY_PLATFORM != 'x64-mingw32'
   workers Integer(ENV['WEB_CONCURRENCY'] || 2)
   preload_app!

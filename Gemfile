@@ -5,8 +5,10 @@ gem 'rails', '>= 5.0.0.rc2', '< 5.1'
 #Use Rails controller testing for testing stability and error-proneness of site.
 gem 'rails-controller-testing'
 # Use bcrypt for Password hashing to protect against attackers
+# Pulling directly from the author's github to solve a Windows issue
 gem 'bcrypt', git: 'https://github.com/codahale/bcrypt-ruby.git', :require => 'bcrypt'
 
+gem 'bootstrap-sass', '3.3.7'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets

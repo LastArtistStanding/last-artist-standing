@@ -11,11 +11,18 @@
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active"><a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a></li>
             </ul>
-            
+        <% if logged_in? %>
+          <li><%= link_to "Users", '#' %></li>
+              <li><%= link_to "Profile", current_user %></li>
+              <li>
+                <%= link_to "Log out", logout_path, method: :delete %>
+              </li>
+        <% else %>
             <ul class=" navbar-nav">
               <li><a class="nav-link" href="/signup"><span class="fa fa-edit"></span> Sign Up</a></li>
               <li><a class="nav-link" href="/login"><span class="fa fa-external-link"></span> Login</a></li>
             </ul>
+        <% end %>
         </div>
     </nav>
 </header>
