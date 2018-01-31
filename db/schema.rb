@@ -10,10 +10,79 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180120032445) do
+ActiveRecord::Schema.define(version: 20180131051723) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "awards", force: :cascade do |t|
+    t.integer  "badge_id"
+    t.integer  "user_id"
+    t.integer  "prestige"
+    t.date     "date_received"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  create_table "badge_maps", force: :cascade do |t|
+    t.integer  "badge_id"
+    t.integer  "challenge_id"
+    t.integer  "required_score"
+    t.integer  "prestige"
+    t.string   "description"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  create_table "badges", force: :cascade do |t|
+    t.string   "name"
+    t.string   "avatar"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_badges_on_name", unique: true, using: :btree
+  end
+
+  create_table "challenge_entries", force: :cascade do |t|
+    t.integer  "challenge_id"
+    t.integer  "submission_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  create_table "challenges", force: :cascade do |t|
+    t.string   "name"
+    t.string   "description"
+    t.date     "start_date"
+    t.date     "end_date"
+    t.boolean  "streak_based"
+    t.boolean  "rejoinable"
+    t.integer  "postfrequency"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["name"], name: "index_challenges_on_name", using: :btree
+  end
+
+  create_table "participations", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "challenge_id"
+    t.boolean  "active"
+    t.integer  "score"
+    t.boolean  "eliminated"
+    t.date     "start_date"
+    t.date     "end_date"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "submissions", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "drawing"
+    t.string   "thumbnail"
+    t.integer  "nsfw_level"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["drawing"], name: "index_submissions_on_drawing", unique: true, using: :btree
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "name"
@@ -21,7 +90,9 @@ ActiveRecord::Schema.define(version: 20180120032445) do
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.string   "password_digest"
+    t.string   "avatar"
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
+    t.index ["name"], name: "index_users_on_name", unique: true, using: :btree
   end
 
 end
