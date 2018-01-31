@@ -19,6 +19,7 @@ default: &default
 development:
   <<: *default
   database: database_development
+  url: <%= ENV['DATABASE_URL'] %> # this happens implicitly already, but add for documentation purposes
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -26,8 +27,9 @@ development:
 test:
   <<: *default
   database: database_test
-  
+  url: <%= ENV['DATABASE_URL'] %>
 
 production:
   <<: *default
   database: database_production
+  url: <%= ENV['DATABASE_URL'] %>
