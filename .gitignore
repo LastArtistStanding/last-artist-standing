@@ -11,8 +11,7 @@
 /db/*.sqlite3
 /db/*.sqlite3-journal
 
-database_development
-database_test
+.vscode
 
 # Ignore all logfiles and tempfiles.
 /log/*
