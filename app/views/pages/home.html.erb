@@ -5,8 +5,9 @@
   <h1>Welcome to Do Art Daily!</h1>
         
   <h2>This is the home page for the website.</h2>
-        
-  <a class="btn btn-lg btn-primary" href="#login-modal" data-toggle="modal">Sign up now!</a>
+  <% if !logged_in? %>
+    <a class="btn btn-lg btn-primary" href="#login-modal" data-toggle="modal">Sign up now!</a>
+  <% end %>
 </div>
   
 <div class="container-fluid">
