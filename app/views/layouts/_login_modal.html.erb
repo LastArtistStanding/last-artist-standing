@@ -1,0 +1,31 @@
+<div class="modal-dialog modal-lg" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Login/Register</h4>
+      <button type="button" class="close" data-dismiss="modal">
+        <span>&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-header">Login</div>
+            <div class="card-body" id="login-form">
+              <%= render "layouts/login_form" %>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-header">Register</div>
+            <div class="card-body" id="signup-form">
+              <%= render "layouts/signup_form" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
