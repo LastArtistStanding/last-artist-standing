@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   
+  resources :submissions
   root   'pages#home'
   get 'signup' => "users#new"
   get 'about' => "pages#about"
