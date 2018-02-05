@@ -1,0 +1,29 @@
+<%= form_for(submission) do |f| %>
+  <% if submission.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(submission.errors.count, "error") %> prohibited this submission from being posted:</h2>
+
+      <ul>
+      <% submission.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :drawing %> <br>
+    <%= f.file_field :drawing %>
+  </div>
+
+  
+
+  <div class="field">
+    <%= f.label :nsfw_level %>
+    <%= f.number_field :nsfw_level %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

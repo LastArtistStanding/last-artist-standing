@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Today's Drawings:</strong>
+   <%= image_tag @submission.drawing.thumb.url %>
+</p>
+
+
+<p>
+  <strong>Thumbnail:</strong>
+  <%= @submission.thumbnail %>
+</p>
+
+<p>
+  <strong>Nsfw level:</strong>
+  <%= @submission.nsfw_level %>
+</p>
+
+<%= link_to 'Edit', edit_submission_path(@submission) %> |
+<%= link_to 'Back', submissions_path %>
