@@ -6,13 +6,20 @@ class Challenge < ApplicationRecord
     has_many :users, through: :participations
     has_many :badges, through: :badge_maps
     
-    NOT_ALL_WHITESPACE_REGEX = /^\s*$/
+    NO_EXCESS_WHITESPACE = /\A(\S\s?)*\S\z/
     
-    validates :name, presence: true, length: { maximum: 255 }, format: { with: NOT_ALL_WHITESPACE_REGEX }, uniqueness: {case_sensitive: false }
-    validates :description, presence: true, length: { maximum: 1000 }, format: { with: NOT_ALL_WHITESPACE_REGEX }
+    validates :name, presence: true, length: { maximum: 50 }, format: { with: NO_EXCESS_WHITESPACE }, uniqueness: {case_sensitive: false }
+    validates :description, presence: true, length: { maximum: 1000 }
     validates :start_date, presence: true
     #There is no required end date, indicating an indefinte challenge (should only apply to the primary DED challenge).
-    validates :streak_based, presence: true
-    validates :rejoinable, presence: true
+    validates :postfrequency, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than: 7 }
+    
+    validate :end_date_cannot_precede_start_date
+    
+    def end_date_cannot_precede_start_date
+        if end_date.present? && end_date < start_date
+            errors.add(:end_date, "End date cannot precede start date.")
+        end
+    end 
     
 end

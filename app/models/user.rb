@@ -8,10 +8,10 @@ class User < ActiveRecord::Base
     
     before_save { self.email = email.downcase }
     
-    NOT_ALL_WHITESPACE_REGEX = /^\s*$/
+    NO_EXCESS_WHITESPACE = /\A(\S\s?)*\S\z/
     VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
     
-    validates :name, presence: true, length: { maximum: 50 }, format: { with: NOT_ALL_WHITESPACE_REGEX }, uniqueness: {case_sensitive: false }
+    validates :name, presence: true, length: { maximum: 50 }, format: { with: NO_EXCESS_WHITESPACE }, uniqueness: {case_sensitive: false }
     validates :email, presence: true, length: { maximum: 255 }, format: { with: VALID_EMAIL_REGEX }, uniqueness: { case_sensitive: false }
 
     has_secure_password
