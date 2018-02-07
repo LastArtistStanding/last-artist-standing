@@ -16,8 +16,8 @@ ActiveRecord::Schema.define(version: 20180204023144) do
   enable_extension "plpgsql"
 
   create_table "submissions", force: :cascade do |t|
+    t.string   "user_id"
     t.string   "drawing"
-    t.string   "thumbnail"
     t.integer  "nsfw_level"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

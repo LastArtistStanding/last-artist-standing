@@ -1,15 +1,10 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <strong>Today's Drawings:</strong>
-   <%= image_tag @submission.drawing.thumb.url %>
+  <strong>Drawing:</strong>
+  <%= image_tag @submission.drawing.url unless @submission.drawing.blank? %>
 </p>
 
-
-<p>
-  <strong>Thumbnail:</strong>
-  <%= @submission.thumbnail %>
-</p>
 
 <p>
   <strong>Nsfw level:</strong>

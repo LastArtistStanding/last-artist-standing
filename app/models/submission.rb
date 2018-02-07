@@ -1,12 +1,12 @@
 class Submission < ApplicationRecord
     
-    mount_uploader :image, ImageUploader
+    mount_uploader :drawing, ImageUploader
     
-    validates_processing_of :image
+    validates_processing_of :drawing
     validate :image_size_validation
  
     private
       def image_size_validation
-        errors[:image] << "should be less than 500KB" if image.size > 0.5.megabytes
+        errors[:drawing] << "should be less than 1.0 MB" if drawing.size > 1.0 .megabytes
       end
 end
