@@ -10,8 +10,8 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
                                          password:              "foo",
                                          password_confirmation: "bar" } }
     end
-    assert_template 'shared/_error_messages'
     assert_template 'layouts/_signup_form'
+    assert_template 'users/create'
   end
   
   
