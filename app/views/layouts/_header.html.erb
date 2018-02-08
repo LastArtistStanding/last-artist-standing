@@ -1,28 +1,49 @@
 <header>
-    <nav class="navbar navbar-expand-sm navbar-dark" style="background: coral;">
-        <!-- Brand -->
-	    <a class="navbar-brand" href="/">DAD</a>
-        
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-content" aria-controls="nav-content" aria-expanded="false" aria-label="Toggle navigation">
-	      <span class="navbar-toggler-icon"></span>
-	    </button>
-	
-	    <div id="nav-content" class="navbar-collapse collapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active"><a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a></li>
-            </ul>
-        <% if logged_in? %>
-          <li><%= link_to "Users", '#' %></li>
-              <li><%= link_to "Profile", current_user %></li>
-              <li>
-                <%= link_to "Log out", logout_path, method: :delete %>
-              </li>
-        <% else %>
-            <ul class=" navbar-nav">
-              <li><a class="nav-link" href="/signup"><span class="fa fa-edit"></span> Sign Up</a></li>
-              <li><a class="nav-link" href="/login"><span class="fa fa-external-link"></span> Login</a></li>
-            </ul>
-        <% end %>
-        </div>
-    </nav>
+  <nav class="navbar navbar-expand-sm navbar-dark" style="background: coral;">
+      <!-- Brand -->
+    <a class="navbar-brand" href="/">DAD</a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-content" aria-controls="nav-content" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="nav-content" class="navbar-collapse collapse">
+      <ul class="navbar-nav mr-auto">
+          <li class="nav-item active"><a class="nav-link" href="/"><span class="fa fa-home"></span> Home <span class="sr-only">(current)</span></a></li>
+      </ul>
+      <ul class="navbar-nav">
+      <% if logged_in? %>
+        <li class="nav-item">
+          <a class="nav-link" href=" <%= submissions_path %> ">
+            <span class="fa fa-clock-o"></span> Submit
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">
+            <span class="fa fa-users"></span> Users
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="<%= user_path(current_user) %>">
+            <span class="fa fa-user"></span> Profile
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="<%= logout_path %>" data-method="delete">
+            <span class="fa fa-sign-out"></span> Log out
+          </a>
+        </li>
+      <% else %>
+        <li class="nav-item">
+          <a class="nav-link" href="#login-modal" data-toggle="modal">
+            <span class="fa fa-sign-in"></span> Login/Register
+          </a>
+        </li>
+      </ul>
+      <% end %>
+    </div>
+  </nav>
 </header>
+<div class="modal hide fade" id="login-modal" role="dialog" title="Login/Register">
+  <%= render 'layouts/login_modal' %>
+</div>

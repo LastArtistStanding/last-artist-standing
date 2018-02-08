@@ -81,6 +81,19 @@ input {
     margin: 0 0 30px 0;
   }
 }
+
+.invalid-feedback-rails {
+  width: 100%;
+  margin-top: -15px;
+  padding-bottom: 5px;
+  font-size: 80%;
+  color: #dc3545;
+}
+
+.field_with_errors {
+  @extend .is-invalid;
+}
+
 /*
 .field_with_errors {
   @extend .has-error;

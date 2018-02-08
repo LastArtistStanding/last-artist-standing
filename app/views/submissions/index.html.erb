@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Today's Submissions</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Drawing</th>
+      <th>Artist</th>
+      <th> Timestamp</th>
+      <th>Nsfw level</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @submissions.each do |submission| %>
+      <tr>
+        <td><%= image_tag submission.drawing.thumb.url unless submission.drawing.blank? %></td>
+        <td> <%= 'Artist name here'  %> </td>
+        <td> <%= submission.created_at.strftime("Posted at %I:%M%p") %></td>
+        <td><%= submission.nsfw_level %></td>
+        <td><%= link_to 'Show', submission %></td>
+        <td><%= link_to 'Edit', edit_submission_path(submission) %></td>
+        <td><%= link_to 'Destroy', submission, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Submission', new_submission_path %>

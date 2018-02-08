@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   
+  resources :submissions
   root   'pages#home'
   get 'signup' => "users#new"
   get 'about' => "pages#about"
@@ -8,6 +9,7 @@ Rails.application.routes.draw do
   get    '/login'   => "sessions#new"
   post   '/login'   => "sessions#create"
   delete '/logout'   => "sessions#destroy"
+  get "submissions" => "submissions#index"
   resources :users
 
 

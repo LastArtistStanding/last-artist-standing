@@ -1,0 +1,9 @@
+<% if logged_in? %>
+<%# close the modal and reload whatever page we were on %>
+  $('#login-modal').modal('hide');
+  window.location.reload()
+<% else %>
+<%# render a warning message on top of the login form %>
+  $('#login-form').html('<div class="alert alert-danger">Invalid email/password combination</div> \
+    <%=j render("layouts/login_form") %>')
+<% end %>

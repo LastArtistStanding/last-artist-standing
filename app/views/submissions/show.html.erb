@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Drawing:</strong>
+  <%= image_tag @submission.drawing.url unless @submission.drawing.blank? %>
+</p>
+
+
+<p>
+  <strong>Nsfw level:</strong>
+  <%= @submission.nsfw_level %>
+</p>
+
+<%= link_to 'Edit', edit_submission_path(@submission) %> |
+<%= link_to 'Back', submissions_path %>

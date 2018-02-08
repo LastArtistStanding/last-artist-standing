@@ -82,6 +82,7 @@ ActiveRecord::Schema.define(version: 20180131051723) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["drawing"], name: "index_submissions_on_drawing", unique: true, using: :btree
+
   end
 
   create_table "users", force: :cascade do |t|
