@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180131051723) do
+ActiveRecord::Schema.define(version: 20180309051424) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,8 +57,9 @@ ActiveRecord::Schema.define(version: 20180131051723) do
     t.boolean  "streak_based"
     t.boolean  "rejoinable"
     t.integer  "postfrequency"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.boolean  "seasonal",      default: false
     t.index ["name"], name: "index_challenges_on_name", using: :btree
   end
 
@@ -87,10 +88,11 @@ ActiveRecord::Schema.define(version: 20180131051723) do
   create_table "users", force: :cascade do |t|
     t.string   "name"
     t.string   "email"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.string   "password_digest"
     t.string   "avatar"
+    t.integer  "longest_streak",  default: 0
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["name"], name: "index_users_on_name", unique: true, using: :btree
   end

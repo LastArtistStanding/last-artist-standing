@@ -12,7 +12,8 @@ class Challenge < ApplicationRecord
     validates :description, presence: true, length: { maximum: 1000 }
     validates :start_date, presence: true
     #There is no required end date, indicating an indefinte challenge (should only apply to the primary DED challenge).
-    validates :postfrequency, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than: 7 }
+    #NOTE: End date should be EXCLUSIVE, not INCLUSIVE
+    validates :postfrequency, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: -1, less_than: 7 }
     
     validate :end_date_cannot_precede_start_date
     

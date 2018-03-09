@@ -1,7 +1,9 @@
 class PagesController < ApplicationController
     
     
-    def home 
+    def home
+        @activeChallenges = Challenge.where('start_date <= ?', Date.current)
+        @upcomingChallenges = Challenge.where('start_date > ?', Date.current)
     end
     
     def login

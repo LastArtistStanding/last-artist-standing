@@ -16,42 +16,84 @@
     <div class="col-lg-1"></div>
     
 	  <div class="col-lg-5">
+	    
 	    <div class="card">
-	    <div class="card-header"><b>Exciting Things are in Development!</b></div>
-	    <div id="websiteProgressContent" class="collapse show" role="tabcard" aria-labelledby="websiteProgress">
-        <div class="card-body">
-          <p>the1banana, NicNac and fluff are collaborating to create the third iteration of the Last Artist Standing website. 
-          Where the original LAS and Draw Every Day (DED) have fallen, <b>Do Art Daily (DAD)</b> shall rise. We hope that this will become 
-          the permanent home for the journeys of aspiring artists.</p>
-          <div class="progress">
-            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%"></div>
-          </div>
-          <p>
-            <h5 class="text-center">40% Complete</h5>
-          </p>
+	      <div class="card-header"><b>Active Challenges</b></div>
+        <div class="card-body table-responsive">
+          <table class="table table-sm">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Start Date</th>
+                <th scope="col">End Date</th>
+                <th scope="col">Frequency</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @activeChallenges.each do |challenge| %>
+                <tr style="cursor: pointer;" class="accordion-toggle" data-toggle="collapse" data-target="#<%= challenge.id %>">
+                  <td><%= challenge.name %></td>
+                  <td><%= dateToString(challenge.start_date) %></td>
+                  <td><%= dateToString(challenge.end_date) %></td>
+                  <td><%= postfrequencyToString(challenge.postfrequency) %></td>
+                </tr>
+                <tr id="<%= challenge.id %>" class="collapse in">
+                  <td colspan="4" class="small"><%= raw challenge.description.gsub("\n","<br>") %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
         </div>
       </div>
+      
+      <div class="card">
+	      <div class="card-header"><b>Upcoming Challenges</b></div>
+        <div class="card-body table-responsive">
+          
+          <table class="table table-sm">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Start Date</th>
+                <th scope="col">End Date</th>
+                <th scope="col">Frequency</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @upcomingChallenges.each do |challenge| %>
+                <tr style="cursor: pointer;" class="accordion-toggle" data-toggle="collapse" data-target="#<%= challenge.id %>">
+                  <td><%= challenge.name %> </td>
+                  <td><%= dateToString(challenge.start_date) %></td>
+                  <td><%= dateToString(challenge.end_date) %></td>
+                  <td><%= postfrequencyToString(challenge.postfrequency) %></td>
+                </tr>
+                <tr id="<%= challenge.id %>" class="collapse in">
+                  <td colspan="4" class="small"><%= raw challenge.description %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          
+        </div>
       </div>
+      
     </div>
     
     <div class="col-lg-5">
       <div class="card">
-        <div class="card-header"><b>Completed Work</b></div>
+        <div class="card-header"><b>Quick Submit</b></div>
         <div class="card-body">
           <p class="card-text">
-            Hosting, domain and database logistics<br>
-            User sign-up<br>
-	    Login functionality
+            To do: make this!
           </p>
         </div>
       </div>
       
       <div class="card">
-        <div class="card-header"><b>Up Next</b></div>
+        <div class="card-header"><b>Latest Announcement</b></div>
         <div class="card-body">
           <p class="card-text">
-            Image uploading and validation<br>
-            Streak tracking
+            Here's where announcements would go!
           </p>
         </div>
       </div>

@@ -84,7 +84,7 @@ class ChallengeTest < ActiveSupport::TestCase
         assert_not @challenge.valid?
     end
     
-    test "postfrequency should not be less than 0" do
+    test "postfrequency should not be less than -1" do
         @challenge.postfrequency = -2
         assert_not @challenge.valid?
     end
