@@ -9,55 +9,55 @@ DADBadgeMap2:
     badge_id: 1
     challenge_id: 1 
     required_score: 5
-    prestige: 1
+    prestige: 2
     description: "Level 2 - 5 submissions"
 DADBadgeMap3:
     badge_id: 1
     challenge_id: 1 
     required_score: 11
-    prestige: 1
+    prestige: 3
     description: "Level 3 - 11 submissions"
 DADBadgeMap4:
     badge_id: 1
     challenge_id: 1 
     required_score: 19
-    prestige: 1
+    prestige: 4
     description: "Level 4 - 19 submissions"
 DADBadgeMap5:
     badge_id: 1
     challenge_id: 1 
     required_score: 29
-    prestige: 1
+    prestige: 5
     description: "Level 5 - 29 submissions"
 DADBadgeMap6:
     badge_id: 1
     challenge_id: 1 
     required_score: 41
-    prestige: 2
+    prestige: 6
     description: "Level 6 - 41 submissions"
 DADBadgeMap7:
     badge_id: 1
     challenge_id: 1 
     required_score: 55
-    prestige: 2
+    prestige: 7
     description: "Level 7 - 55 submissions"
 DADBadgeMap8:
     badge_id: 1
     challenge_id: 1 
     required_score: 71
-    prestige: 2
+    prestige: 8
     description: "Level 8 - 71 submissions"
 DADBadgeMap9:
     badge_id: 1
     challenge_id: 1 
     required_score: 89
-    prestige: 2
+    prestige: 9
     description: "Level 9 - 89 submissions"
 DADBadgeMap10:
     badge_id: 1
     challenge_id: 1
     required_score: 109
-    prestige: 2
+    prestige: 10
     description: "Level 10 - 109 submissions"
 #Spring 2018 Badges
 Spring2018BadgeMap1:
