@@ -34,6 +34,7 @@ module MigrationHelper
     end
     
     def updateBadgeMaps
+        BadgeMap.delete_all
         badgeMapData = YAML.load_file('db/data/badgemaps.yaml')
         badgeMapData.each do |currentBadgeMap,details|
             BadgeMap.find_or_create_by(badge_id: details["badge_id"], challenge_id: details["challenge_id"], required_score: details["required_score"]) do |newBadgeMap|
