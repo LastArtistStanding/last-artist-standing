@@ -1,0 +1,18 @@
+Challenge1:
+    name: "Do Art Daily"
+    description: "DAD's primary challenge. Select a frequency at which you are willing to draw, and build your streak which each submission!<br><br>Some important caveats:<br>You can submit as many times as you'd like within your designated deadline, but only the first submission counts towards your streak.<br>You can change your streak frequency at any time.<br>There's no penalty for choosing to submit more often, but decreasing the amount you submit will reset your streak!"
+    start_date: 2018-02-10
+    end_date:
+    streak_based: true
+    rejoinable: true
+    seasonal: false
+    postfrequency: -1
+Challenge2:
+    name: "Spring Challenge 2018"
+    description: "Can you draw every day of the spring?<br>Unlike the DAD challenge, these seasonal challenges are not streak based. Feel free to submit as much as you can this season, up to a maximum of once per day. You will receive a rotating season badge based on your peformance."
+    start_date: 2018-03-20
+    end_date: 2018-06-21
+    streak_based: false
+    rejoinable: true
+    seasonal: true
+    postfrequency: 1

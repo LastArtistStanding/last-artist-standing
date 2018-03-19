@@ -11,18 +11,24 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :drawing %> <br>
-    <%= f.file_field :drawing %>
+  <div class="form-group row">
+    <%= f.label :drawing, :class => "col-2 col-form-label" %> <br>
+    <div class="col-10">
+      <%= f.file_field :drawing %>
+    </div>
   </div>
 
     
-  <div class="field">
-    <%= f.label :nsfw_level %>
-    <%= f.number_field :nsfw_level %>
+  <div class="form-group row">
+    <%= f.label :nsfw_level, :class => "col-2 col-form-label" %>
+    <div class="col-10">
+      <%= f.select :nsfw_level, options_for_select([['Safe', 1], ['Questionable', 2], ['Explicit', 3]], 1), {}, { :class => 'custom-select' } %>
+    </div>
   </div>
 
-  <div class="actions">
-    <%= f.submit %>
+  <div class="form-group row">
+    <div class="offset-sm-6 col-sm-6">
+      <%= f.submit :class => 'btn btn-primary', :style => "margin-bottom: 0;" %>
+    </div>
   </div>
 <% end %>
