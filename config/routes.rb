@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get 'about' => "pages#about"
   get 'help' => "pages#help"
   get "welcome" => "pages#home"
+  get 'redirection' => "pages#redirect"
   get    '/login'   => "sessions#new"
   post   '/login'   => "sessions#create"
   delete '/logout'   => "sessions#destroy"

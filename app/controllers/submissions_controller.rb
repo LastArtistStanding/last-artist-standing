@@ -1,4 +1,5 @@
 class SubmissionsController < ApplicationController
+  before_action :unauth, only: [:new, :edit, :update, :destroy]
   before_action :set_submission, only: [:show, :edit, :update, :destroy]
 
   # GET /submissions
@@ -65,6 +66,10 @@ class SubmissionsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_submission
       @submission = Submission.find(params[:id])
+    end
+    # Check in place to see if user is logged in. If not, redirect user to redirection page. Could also be swaped out with root_path
+    def unauth
+      redirect_to redirection_path unless logged_in?
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
