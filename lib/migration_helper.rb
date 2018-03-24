@@ -27,18 +27,17 @@ module MigrationHelper
     def updateBadges
         badgeData = YAML.load_file('db/data/badges.yaml')
         badgeData.each do |currentBadge,details|
-            Badge.find_or_create_by(name: details["name"]) do |newBadge|
-                newBadge.avatar = details["avatar"]
+            Badge.find_or_create_by(name: details["name"], direct_image: details["direct_image"]) do |newBadge|
             end
         end
     end
     
     def updateBadgeMaps
-        BadgeMap.delete_all
         badgeMapData = YAML.load_file('db/data/badgemaps.yaml')
         badgeMapData.each do |currentBadgeMap,details|
-            BadgeMap.find_or_create_by(badge_id: details["badge_id"], challenge_id: details["challenge_id"], required_score: details["required_score"]) do |newBadgeMap|
-                newBadgeMap.prestige = details["prestige"]
+            challenge = Challenge.find_by(name: details["challenge_name"])
+            badge = Badge.find_by(name: details["badge_name"])
+            BadgeMap.find_or_create_by(badge_id: badge.id, prestige: details["prestige"], challenge_id: challenge.id, required_score: details["required_score"]) do |newBadgeMap|
                 newBadgeMap.description = details["description"]
             end
         end

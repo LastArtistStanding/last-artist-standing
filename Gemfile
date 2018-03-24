@@ -26,7 +26,7 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 # Gems for assisting with Image Upload on the site.
-gem 'carrierwave', '~> 0.10.0'
+gem 'carrierwave'
 gem 'mini_magick', '~> 4.8.0'
 #Formating timestamps for site 
 gem 'strftime', '~>1.0.0'
@@ -45,6 +45,9 @@ gem 'puma'
   
 ###########################
 gem 'pg', '0.21'
+gem 'figaro'
+gem 'fog-aws'
+gem 'fog'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

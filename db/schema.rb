@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180309051424) do
+ActiveRecord::Schema.define(version: 20180323132444) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,8 +37,9 @@ ActiveRecord::Schema.define(version: 20180309051424) do
   create_table "badges", force: :cascade do |t|
     t.string   "name"
     t.string   "avatar"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "direct_image"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
     t.index ["name"], name: "index_badges_on_name", unique: true, using: :btree
   end
 
@@ -60,6 +61,7 @@ ActiveRecord::Schema.define(version: 20180309051424) do
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
     t.boolean  "seasonal",      default: false
+    t.integer  "creator_id"
     t.index ["name"], name: "index_challenges_on_name", using: :btree
   end
 
@@ -78,11 +80,9 @@ ActiveRecord::Schema.define(version: 20180309051424) do
   create_table "submissions", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "drawing"
-    t.string   "thumbnail"
     t.integer  "nsfw_level"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["drawing"], name: "index_submissions_on_drawing", unique: true, using: :btree
   end
 
   create_table "users", force: :cascade do |t|

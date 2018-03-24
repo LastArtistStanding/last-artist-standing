@@ -1,13 +1,12 @@
 
 <% provide(:title, "Do Art Daily") %>
   
-<div class="center jumbotron">
-  <h1>Welcome to Do Art Daily!</h1>
-        
-  <h2>This is the home page for the website.</h2>
-  <% if !logged_in? %>
-    <a class="btn btn-lg btn-primary" href="#login-modal" data-toggle="modal">Sign up now!</a>
-  <% end %>
+<div class="center jumbotron" style="padding: 1.5rem 1rem;">
+  <div style="font-family: Fira Mono, monospace;">
+    <div style="font-size: 6rem; line-height: 6rem;">
+      DoArt<br>Daily
+    </div>
+  </div>
 </div>
   
 <div class="container-fluid">
@@ -15,7 +14,7 @@
     <!-- Spacing Column -->
     <div class="col-lg-1"></div>
     
-	  <div class="col-lg-5">
+	  <div class="col-lg-6">
 	    
 	    <div class="card">
 	      <div class="card-header"><b>Active Challenges</b></div>
@@ -23,22 +22,26 @@
           <table class="table table-sm">
             <thead class="thead-light">
               <tr>
+                <th scope="col">ICO</th>
                 <th scope="col">Name</th>
                 <th scope="col">Start Date</th>
                 <th scope="col">End Date</th>
                 <th scope="col">Frequency</th>
+                <th scope="col">Creator</th>
               </tr>
             </thead>
             <tbody>
               <% @activeChallenges.each do |challenge| %>
                 <tr style="cursor: pointer;" class="accordion-toggle" data-toggle="collapse" data-target="#<%= challenge.id %>">
+                  <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "25px" %></td>
                   <td><%= challenge.name %></td>
                   <td><%= dateToString(challenge.start_date) %></td>
                   <td><%= dateToString(challenge.end_date) %></td>
                   <td><%= postfrequencyToString(challenge.postfrequency) %></td>
+                  <td><%= getChallengeCreator(challenge.creator_id) %></td>
                 </tr>
                 <tr id="<%= challenge.id %>" class="collapse in">
-                  <td colspan="4" class="small"><%= raw challenge.description.gsub("\n","<br>") %></td>
+                  <td colspan="6" class="small"><%= raw challenge.description.gsub("\n","<br>") %></td>
                 </tr>
               <% end %>
             </tbody>
@@ -47,28 +50,37 @@
       </div>
       
       <div class="card">
-	      <div class="card-header"><b>Upcoming Challenges</b></div>
+	      <div class="card-header">
+	        <b>Upcoming Challenges</b>
+	        <a class="btn btn-primary" style="float: right; margin-top: -0.375rem; margin-bottom: -0.375rem;" href="<%= new_challenge_path %>">
+	          <span class="fa fa-plus"></span> Create
+	        </a>
+	      </div>
         <div class="card-body table-responsive">
           
           <table class="table table-sm">
             <thead class="thead-light">
               <tr>
+                <th scope="col">ICO</th>
                 <th scope="col">Name</th>
                 <th scope="col">Start Date</th>
                 <th scope="col">End Date</th>
                 <th scope="col">Frequency</th>
+                <th scope="col">Creator</th>
               </tr>
             </thead>
             <tbody>
               <% @upcomingChallenges.each do |challenge| %>
                 <tr style="cursor: pointer;" class="accordion-toggle" data-toggle="collapse" data-target="#<%= challenge.id %>">
+                  <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "25px" %></td>
                   <td><%= challenge.name %> </td>
                   <td><%= dateToString(challenge.start_date) %></td>
                   <td><%= dateToString(challenge.end_date) %></td>
                   <td><%= postfrequencyToString(challenge.postfrequency) %></td>
+                  <td><%= getChallengeCreator(challenge.creator_id) %></td>
                 </tr>
                 <tr id="<%= challenge.id %>" class="collapse in">
-                  <td colspan="4" class="small"><%= raw challenge.description %></td>
+                  <td colspan="6" class="small"><%= raw challenge.description %></td>
                 </tr>
               <% end %>
             </tbody>
@@ -79,21 +91,29 @@
       
     </div>
     
-    <div class="col-lg-5">
-      <div class="card">
-        <div class="card-header"><b>Quick Submit</b></div>
-        <div class="card-body">
-          <p class="card-text">
-            To do: make this!
-          </p>
-        </div>
-      </div>
+    <div class="col-lg-4">
       
       <div class="card">
         <div class="card-header"><b>Latest Announcement</b></div>
         <div class="card-body">
           <p class="card-text">
-            Here's where announcements would go!
+            <b>The site has been released on partial launch!</b><br><br>
+            At this time, please feel free to create your account. If you have a particularly creative idea for a challenge, feel free to make it. 
+            I initially considered putting a restriction on who can create challenges (based on max streak and current participation), but you guys should have something to sink your teeth into. Just don't go too nuts. We don't want forty challenges up and going on our first submission day, right?
+            <br>
+            As always, some things are missing, some things look ugly, and some things might be broken (though I've done my best to fix any problems in exposed functionality). <b>If you see anything at all that could be a bug, exploit or other problem, please report it ASAP to lastartiststanding3 (at) g m a i l (dot) com.</b>
+            <br><br>
+            Lastly, I wanted to write something of a personal note, here. A larger letter to DAD will come later.
+            <br>
+            I'm not sure how good I feel about this, now that it's all said and done. The more I work, the more it feels like someone else might've been a better candidate to build it.
+            I will be the first to admit I grossly underestimated the time commitment, my capabilities and my life obligations. The end result is continued, and rightful frustration on the part of the lasso (daddy?) hopefuls and among some of my collaborators.
+            <br>However, now that I have been the one to step up and do it, I will not shirk the task that I almost selfishly took on. /las/ meant a lot to me, and so long as I'm alive and not comatose or paralyzed, I'll continue my flimsy, yet earnest efforts to preserve the only art community I really felt at home at.
+            <br>
+            <br>
+            Special thanks to NicNac and fluff, and everyone else for putting up with me.
+            <br>
+            <br>
+            <i>the1banana</i>
           </p>
         </div>
       </div>
