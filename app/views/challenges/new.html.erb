@@ -3,13 +3,24 @@
     <!-- Spacing Column -->
     <div class="col-lg-1"></div>
     
+    <% if logged_in? %>
     <div class="col-lg-10">
       <%= render 'form', challenge: @challenge %>
     </div>
-    
+    <% else %>
+    <div class="col-lg-10">
+      <div class="card">
+	        <div class="card-header"><b>Locked</b></div>
+          <div class="card-body">
+            You must be logged in to make a challenge.
+            <a class="btn btn-primary" style="float: right" href="/submissions">
+              <span class="fa fa-undo"></span> Back
+            </a>
+          </div>
+        </div>
+    </div>
+    <% end %>
     <!-- Spacing Column -->
     <div class="col-lg-1"></div>
   </div>
 </div>
-
-<%= link_to 'Back', root_path %>
