@@ -41,7 +41,7 @@
         </td>
         <td><%= getChallengeCreator(challenge.creator_id) %></td>
         <td><%= link_to '', challenge, :class => "btn btn-primary fa fa-eye" %></td>
-        <% if logged_in? && !challenge.creator_id.nil? && challenge.creator_id = current_user.id %>
+        <% if logged_in? && !challenge.creator_id.nil? && challenge.creator_id == current_user.id %>
           <td><%= link_to '', edit_challenge_path(challenge), :class => "btn btn-primary fa fa-edit" %></td>
           <td><%= link_to '', challenge, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-primary fa fa-trash" %></td>
         <% else %>
@@ -67,7 +67,7 @@
         </td>
         <td><%= getChallengeCreator(challenge.creator_id) %></td>
         <td><%= link_to '', challenge, :class => "btn btn-primary fa fa-eye" %></td>
-        <% if logged_in? && !challenge.creator_id.nil? && challenge.creator_id = current_user.id %>
+        <% if logged_in? && !challenge.creator_id.nil? && challenge.creator_id == current_user.id %>
           <td><%= link_to '', edit_challenge_path(challenge), :class => "btn btn-primary fa fa-edit" %></td>
           <td><%= link_to '', challenge, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-primary fa fa-trash" %></td>
         <% else %>
@@ -93,7 +93,7 @@
         </td>
         <td><%= getChallengeCreator(challenge.creator_id) %></td>
         <td><%= link_to "", challenge, :class => "btn btn-primary fa fa-eye" %></td>
-        <% if logged_in? && !challenge.creator_id.nil? && challenge.creator_id = current_user.id %>
+        <% if logged_in? && !challenge.creator_id.nil? && challenge.creator_id == current_user.id %>
           <td></td>
           <td></td>
         <% else %>
