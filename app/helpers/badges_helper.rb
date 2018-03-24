@@ -1,15 +1,10 @@
 module BadgesHelper
     
-    def getBadgeImage(id)
-        currentBadge = Badge.find_by(id: id)
-        if currentBadge.nil?
-            ""
+    def getBadgeImage(badge)
+        if badge.direct_image.present?
+            badge.direct_image
         else
-            if currentBadge.direct_image.present?
-                currentBadge.direct_image
-            else
-                currentBadge.avatar.avatar.url
-            end
+            badge.avatar.avatar.url
         end
     end
     
