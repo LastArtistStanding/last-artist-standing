@@ -34,15 +34,11 @@ class ImageUploader < CarrierWave::Uploader::Base
   # Process files as they are uploaded:
 
   # Create different versions of your uploaded files:
-  version :thumb, :if => :is_submission? do
+  version :thumb do
     process :resize_to_fill => [100, 100]
   end
   
-  version :avatar, :if => :is_badge? do
-    process :resize_to_fill => [50, 50]
-  end
-  
-  version :avatar, :if => :is_user? do
+  version :avatar do
     process :resize_to_fill => [50, 50]
   end
   
