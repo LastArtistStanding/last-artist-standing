@@ -1,0 +1,109 @@
+<div class="container-fluid">
+<br>
+
+<p class="h2">
+  Challenge List
+  <a class="btn btn-primary" style="margin-bottom: 0.5rem;" href="<%= new_challenge_path %>">
+	  <span class="fa fa-plus"></span> Create Challenge
+	</a>
+</p>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">ICO</th>
+      <th scope="col">Name</th>
+      <th scope="col">Status</th>
+      <th scope="col">Start Date</th>
+      <th scope="col">End Date</th>
+      <th scope="col">Frequency</th>
+      <th scope="col">Eliminations?</th>
+      <th scope="col">Creator</th>
+      <th scope="col" colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @activeChallenges.each do |challenge| %>
+      <tr>
+        <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "25px" %></td>
+        <td><%= challenge.name %></td>
+        <td>Active</td>
+        <td><%= dateToString(challenge.start_date) %></td>
+        <td><%= dateToString(challenge.end_date) %></td>
+        <td><%= postfrequencyToString(challenge.postfrequency) %></td>
+        <td>
+          <% if challenge.streak_based %>
+            Yes
+          <% else %>
+            No
+          <% end %>
+        </td>
+        <td><%= getChallengeCreator(challenge.creator_id) %></td>
+        <td><%= link_to '', challenge, :class => "btn btn-primary fa fa-eye" %></td>
+        <% if logged_in? && !challenge.creator_id.nil? && challenge.creator_id = current_user.id %>
+          <td><%= link_to '', edit_challenge_path(challenge), :class => "btn btn-primary fa fa-edit" %></td>
+          <td><%= link_to '', challenge, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-primary fa fa-trash" %></td>
+        <% else %>
+          <td></td>
+          <td></td>
+        <% end %>
+      </tr>
+    <% end %>
+    <% @upcomingChallenges.each do |challenge| %>
+      <tr>
+        <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "25px" %></td>
+        <td><%= challenge.name %></td>
+        <td>Upcoming</td>
+        <td><%= dateToString(challenge.start_date) %></td>
+        <td><%= dateToString(challenge.end_date) %></td>
+        <td><%= postfrequencyToString(challenge.postfrequency) %></td>
+        <td>
+          <% if challenge.streak_based %>
+            Yes
+          <% else %>
+            No
+          <% end %>
+        </td>
+        <td><%= getChallengeCreator(challenge.creator_id) %></td>
+        <td><%= link_to '', challenge, :class => "btn btn-primary fa fa-eye" %></td>
+        <% if logged_in? && !challenge.creator_id.nil? && challenge.creator_id = current_user.id %>
+          <td><%= link_to '', edit_challenge_path(challenge), :class => "btn btn-primary fa fa-edit" %></td>
+          <td><%= link_to '', challenge, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-primary fa fa-trash" %></td>
+        <% else %>
+          <td></td>
+          <td></td>
+        <% end %>
+      </tr>
+    <% end %>
+    <% @completedChallenges.each do |challenge| %>
+      <tr style="color: grey;">
+        <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "25px" %></td>
+        <td><%= challenge.name %></td>
+        <td>Completed</td>
+        <td><%= dateToString(challenge.start_date) %></td>
+        <td><%= dateToString(challenge.end_date) %></td>
+        <td><%= postfrequencyToString(challenge.postfrequency) %></td>
+        <td>
+          <% if challenge.streak_based %>
+            Yes
+          <% else %>
+            No
+          <% end %>
+        </td>
+        <td><%= getChallengeCreator(challenge.creator_id) %></td>
+        <td><%= link_to "", challenge, :class => "btn btn-primary fa fa-eye" %></td>
+        <% if logged_in? && !challenge.creator_id.nil? && challenge.creator_id = current_user.id %>
+          <td></td>
+          <td></td>
+        <% else %>
+          <td></td>
+          <td></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+</div>

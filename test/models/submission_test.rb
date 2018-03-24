@@ -3,7 +3,7 @@ require 'test_helper'
 class SubmissionTest < ActiveSupport::TestCase
     
     def setup 
-        @submission = Submission.new(user_id: 1, drawing: "imglink", thumbnail: "imglink", nsfw_level: 1)
+        @submission = Submission.new(user_id: 1, drawing: "imglink", nsfw_level: 1)
     end
     
     #VALID CASE
@@ -24,13 +24,6 @@ class SubmissionTest < ActiveSupport::TestCase
     
     test "drawing should be present" do
         @submission.drawing = "  "
-        assert_not @submission.valid?        
-    end
-    
-    #thumbnail
-    
-    test "thumbnail should be present" do
-        @submission.thumbnail = "  "
         assert_not @submission.valid?        
     end
     
@@ -57,14 +50,5 @@ class SubmissionTest < ActiveSupport::TestCase
     end
     
     #UNIQUENESS
-    
-    test "drawing should be unique" do 
-        duplicate_submission = @submission.dup
-        duplicate_submission.user_id = 2
-        duplicate_submission.thumbnail = "newthumb"
-        duplicate_submission.nsfw_level = 2
-        @submission.save
-        assert_not duplicate_submission.valid?
-    end
     
 end

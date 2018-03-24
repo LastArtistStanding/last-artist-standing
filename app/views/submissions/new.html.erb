@@ -3,33 +3,24 @@
     <!-- Spacing Column -->
     <div class="col-lg-1"></div>
     
-	<div class="col-lg-5">
-	    
-	  <div class="card">
-	    <div class="card-header"><b>New Submission</b></div>
-        <div class="card-body">
-          <%= render 'form', submission: @submission %>
-        </div>
-      </div>
-      
-      </div>
-    
-      <div class="col-lg-5">
+    <div class="col-lg-10">
+      <% if Date.current < Date.new(2018,3,26) %>
         <div class="card">
-          <div class="card-header"><b>Eligible Challenges</b></div>
+	        <div class="card-header"><b>Locked</b></div>
           <div class="card-body">
-            <p class="card-text">
-              You can submit to the following challenges:<br>
-              Note that you will always submit to the DAD and seasonal challenges by default, but you can change your submission period here.
-            </p>
+            Challenge submissions are temporarily locked until March 26th, 2018, GMT/UTC.<br>
+            If someone does manage to submit something before then, that's really not good and you should let me know as soon as possible.<br>
+            <a class="btn btn-primary" style="float: right" href="/submissions">
+              <span class="fa fa-undo"></span> Back
+            </a>
           </div>
         </div>
-      
-      </div>
+      <% else %>
+        <%= render 'form', submission: @submission %>
+      <% end %>
+    </div>
     
     <!-- Spacing Column -->
     <div class="col-lg-1"></div>
   </div>
 </div>
-
-<%= link_to 'Back', submissions_path %>
