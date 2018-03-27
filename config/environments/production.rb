@@ -80,7 +80,7 @@ Rails.application.configure do
   # The host url setting for email reset links
  config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
-  host = 'las-staging.herokuapp.com'
+  host = ENV['SENDGRID_DOMAIN']
   config.action_mailer.default_url_options = { host: host }
   ActionMailer::Base.smtp_settings = {
     :address        => 'smtp.sendgrid.net',
@@ -88,7 +88,7 @@ Rails.application.configure do
     :authentication => :plain,
     :user_name      => ENV['SENDGRID_USERNAME'],
     :password       => ENV['SENDGRID_PASSWORD'],
-    :domain         => 'heroku.com',
+    :domain         => ENV['SENDGRID_DOMAIN'],
     :enable_starttls_auto => true
   }
 
