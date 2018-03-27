@@ -3,7 +3,6 @@ Rails.application.routes.draw do
   resources :submissions
   resources :users
   resources :challenges
-  resources :password_resets,     only: [:new, :create, :edit, :update]
   
   root   'pages#home'
   get 'signup' => "users#new"
