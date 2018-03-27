@@ -77,11 +77,11 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
   
-  #Added per active admin install instructions
+  # The host url setting for email reset links
   config.action_mailer.default_url_options = { :host => 'las-staging.herokuapp.com' }
   
   
-  #These settings are for the sending out email for active admin and consequently the   devise mailer
+  #These settings are for the sending out the emails
   ActionMailer::Base.delivery_method = :smtp
   ActionMailer::Base.perform_deliveries = true
   ActionMailer::Base.raise_delivery_errors = true
