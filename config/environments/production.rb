@@ -95,4 +95,3 @@ Rails.application.configure do
     :password           => 'XXXXXXX'
   }
 end
-end
