@@ -95,4 +95,5 @@ Rails.application.configure do
     :user_name          => 'XXXXX@gmail.com',
     :password           => 'XXXXXXX'
   }
+
 end
