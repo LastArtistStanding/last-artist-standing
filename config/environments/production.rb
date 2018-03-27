@@ -76,6 +76,7 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+  
   # The host url setting for email reset links
   config.action_mailer.default_url_options = { :host => 'las-staging.herokuapp.com' }
   
@@ -94,4 +95,5 @@ Rails.application.configure do
     :user_name          => 'XXXXX@gmail.com',
     :password           => 'XXXXXXX'
   }
+
 end
