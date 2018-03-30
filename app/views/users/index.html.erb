@@ -1,0 +1,44 @@
+<div class="container-fluid">
+<br>
+
+<p class="h2">User List</p>
+
+<table class="table">
+  <thead>
+    <tr style="border-bottom: none;">
+      <th scope="col" colspan="2"></th>
+      <th scope="col" colspan="3" style="text-align: center;">DAD Participation</th>
+      <th scope="col" colspan="4" style="text-align: center;">Seasonal Participation</th>
+    </tr>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Current Streak</th>
+      <th scope="col">Max Streak</th>
+      <th scope="col">Post Frequency</th>
+      <th scope="col">Spring</th>
+      <th scope="col">Summer</th>
+      <th scope="col">Fall</th>
+      <th scope="col">Winter</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.id %></td>
+        <td><%= link_to user.name, user %></td>
+        <td>0</td>
+        <td>0</td>
+        <td>None</td></td>
+        <td>0/0</td>
+        <td>0/0</td>
+        <td>0/0</td>
+        <td>0/0</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+</div>

@@ -4,90 +4,90 @@ DADBadgeMap1:
     challenge_name: "Do Art Daily" 
     required_score: 1
     prestige: 1
-    description: "Level 1 - 1 submission"
+    description: "Level 1 - 1 submission submitted"
 DADBadgeMap2:
     badge_name: "DAD Streak Badge"
     challenge_name: "Do Art Daily" 
     required_score: 5
     prestige: 2
-    description: "Level 2 - 5 submissions"
+    description: "Level 2 - 5 submissions streak"
 DADBadgeMap3:
     badge_name: "DAD Streak Badge"
     challenge_name: "Do Art Daily" 
     required_score: 11
     prestige: 3
-    description: "Level 3 - 11 submissions"
+    description: "Level 3 - 11 submissions streak"
 DADBadgeMap4:
     badge_name: "DAD Streak Badge"
     challenge_name: "Do Art Daily" 
     required_score: 19
     prestige: 4
-    description: "Level 4 - 19 submissions"
+    description: "Level 4 - 19 submissions streak"
 DADBadgeMap5:
     badge_name: "DAD Streak Badge"
     challenge_name: "Do Art Daily" 
     required_score: 29
     prestige: 5
-    description: "Level 5 - 29 submissions"
+    description: "Level 5 - 29 submissions streak"
 DADBadgeMap6:
     badge_name: "DAD Streak Badge"
     challenge_name: "Do Art Daily" 
     required_score: 41
     prestige: 6
-    description: "Level 6 - 41 submissions"
+    description: "Level 6 - 41 submissions streak"
 DADBadgeMap7:
     badge_name: "DAD Streak Badge"
     challenge_name: "Do Art Daily" 
     required_score: 55
     prestige: 7
-    description: "Level 7 - 55 submissions"
+    description: "Level 7 - 55 submissions streak"
 DADBadgeMap8:
     badge_name: "DAD Streak Badge"
     challenge_name: "Do Art Daily" 
     required_score: 71
     prestige: 8
-    description: "Level 8 - 71 submissions"
+    description: "Level 8 - 71 submissions streak"
 DADBadgeMap9:
     badge_name: "DAD Streak Badge"
     challenge_name: "Do Art Daily" 
     required_score: 89
     prestige: 9
-    description: "Level 9 - 89 submissions"
+    description: "Level 9 - 89 submissions streak"
 DADBadgeMap10:
     badge_name: "DAD Streak Badge"
     challenge_name: "Do Art Daily"
     required_score: 109
     prestige: 10
-    description: "Level 10 - 109 submissions"
+    description: "Level 10 - 109 submissions streak"
 #Spring 2018 Badges
 Spring2018BadgeMap1:
     badge_name: "Spring 2018 Participation Badge"
     challenge_name: "Spring Challenge 2018"
-    required_score: 12
+    required_score: 11
     prestige: 1
     description: "WEEKLY - This artist submitted at least once a week this season."
 Spring2018BadgeMap2:
     badge_name: "Spring 2018 Participation Badge"
     challenge_name: "Spring Challenge 2018"
-    required_score: 37
+    required_score: 34
     prestige: 2
     description: "HOBBYIST - This artist submitted at least once a day on the weekends."
 Spring2018BadgeMap3:
     badge_name: "Spring 2018 Participation Badge"
     challenge_name: "Spring Challenge 2018"
-    required_score: 62
+    required_score: 57
     prestige: 3
     description: "BUSINESS - This artist submitted at least once a business day."
 Spring2018BadgeMap4:
     badge_name: "Spring 2018 Participation Badge"
     challenge_name: "Spring Challenge 2018"
-    required_score: 74
+    required_score: 69
     prestige: 4
     description: "ELITE - This artist submitted almost daily this season!"
 Spring2018BadgeMap5:
     badge_name: "Spring 2018 Participation Badge"
     challenge_name: "Spring Challenge 2018"
-    required_score: 87
+    required_score: 81
     prestige: 5
     description: "FLAWLESS - This artist submitted daily this season!"
 #Summer 2018 Badges
@@ -100,7 +100,7 @@ Summer2018BadgeMap1:
 Summer2018BadgeMap2:
     badge_name: "Summer 2018 Participation Badge"
     challenge_name: "Summer Challenge 2018"
-    required_score: 40
+    required_score: 39
     prestige: 2
     description: "HOBBYIST - This artist submitted at least once a day on the weekends."
 Summer2018BadgeMap3:

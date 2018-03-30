@@ -4,7 +4,7 @@ module PagesHelper
         if date.nil?
             "None"
         else
-            date.strftime("%B %d, %Y")
+            date.strftime("%D")
         end
     end
     

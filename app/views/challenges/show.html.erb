@@ -35,7 +35,7 @@
             <%= label_tag :start_date %>
           </div>
           <div class="col-9">
-            <%= @challenge.start_date.strftime("%B %e, %Y") %>
+            <%= dateToString(@challenge.start_date) %>
           </div>
         </div>
         
@@ -44,7 +44,7 @@
             <%= label_tag :end_date %>
           </div>
           <div class="col-9">
-            <%= @challenge.end_date.strftime("%B %e, %Y") %>
+            <%= dateToString(@challenge.end_date) %>
           </div>
         </div>
 
