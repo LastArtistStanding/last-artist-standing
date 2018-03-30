@@ -7,4 +7,5 @@ module ChallengesHelper
             "Site Challenge"
         end
     end
+    
 end

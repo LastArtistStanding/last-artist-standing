@@ -1,14 +1,53 @@
 <% provide(:title, @user.name) %>
-<div class="row">
-  <aside class="col-md-4">
-    <section class="user_info">
-        <h4>
-          <%= gravatar_for @user %>
-          <%= @user.name %>
-        </h4>
-        Longest Streak: <%= @user.longest_streak %>
-    </section>
-  </aside>
-</div>
+<div class="container-fluid" style="margin-top: 2rem;">
+  <div class="row">
+    <!-- Spacing Column -->
+    <div class="col-lg-1"></div>
+    
+	  <div class="col-lg-2">
+      
+      <div class="card">
+	      <div class="card-header" style="text-align: center;"><b><%= @user.name %></b></div>
+        <div class="card-body table-responsive" style="text-align: center;">
+          <%= image_tag getUserThumb(@user) %><br><br>
+          Longest Streak: <%= @user.longest_streak %>
+          <% if logged_in? && current_user.id == @user.id %>
+            <br><br>
+            <a class="btn btn-primary" href="<%= edit_user_path(@user) %>">
+	            <span class="fa fa-edit"></span> Edit Profile
+	          </a>
+	        <% end %>
+        </div>
+      </div>
+      
+    </div>
+    
+    <div class="col-lg-4">
+      
+      <div class="card">
+        <div class="card-header"><b>Badges Awarded</b></div>
+        <div class="card-body">
+          <p class="card-text">
+          </p>
+        </div>
+      </div>
+      
+    </div>
+    
+    <div class="col-lg-4">
+      
+      <div class="card">
+        <div class="card-header"><b>Submissions</b></div>
+        <div class="card-body">
+          <p class="card-text">
+          </p>
+        </div>
+      </div>
+      
+    </div>
+    
+    <!-- Spacing Column -->
+    <div class="col-lg-1"></div>
+  </div>
 
-User pages currently under construction. Please bear with us.
+</div>

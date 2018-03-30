@@ -4,9 +4,9 @@ class ChallengesController < ApplicationController
   # GET /challenges
   # GET /challenges.json
   def index
-    @activeChallenges = Challenge.where('start_date <= ?', Date.current)
-    @upcomingChallenges = Challenge.where('start_date > ?', Date.current)
-    @completedChallenges = Challenge.where('end_date <= ?', Date.current)
+    @activeChallenges = Challenge.where('start_date <= ?', Date.current).order("start_date ASC, end_date DESC")
+    @upcomingChallenges = Challenge.where('start_date > ?', Date.current).order("start_date ASC, end_date DESC")
+    @completedChallenges = Challenge.where('end_date <= ?', Date.current).order("start_date ASC, end_date DESC")
   end
 
   # GET /challenge/1

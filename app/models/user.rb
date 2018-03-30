@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+    mount_uploader :avatar, ImageUploader
+  
     attr_accessor :remember_token, :reset_token
     has_many :awards
     has_many :submissions

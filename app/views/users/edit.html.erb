@@ -4,14 +4,14 @@
     <div class="col-lg-1"></div>
     
     <div class="col-lg-10">
-      <% if logged_in? && !@challenge.creator_id.nil? && @challenge.creator_id == current_user.id %>
-        <%= render 'editform', challenge: @challenge %>
+      <% if logged_in? && @user.id == current_user.id %>
+        <%= render 'editform', challenge: @user %>
       <% else %>
       <div class="card">
-	    <div class="card-header"><b>Locked</b></div>
+	      <div class="card-header"><b>Locked</b></div>
         <div class="card-body">
-          You are not the creator of this challenge; you may not edit it.
-          <a class="btn btn-primary" style="float: right" href="/challenges">
+          You can't edit someone else's user page.
+          <a class="btn btn-primary" style="float: right" href="/users">
             <span class="fa fa-undo"></span> Back
           </a>
         </div>

@@ -4,13 +4,14 @@
     <div class="col-lg-1"></div>
     
     <div class="col-lg-10">
-      <% if Date.current < Date.new(2018,3,31) %>
+      <% if Date.current < Date.new(2018,4,1) %>
         <div class="card">
-	  <div class="card-header"><b>Locked</b></div>
+	      <div class="card-header"><b>Locked</b></div>
           <div class="card-body">
-	    Challenge submissions are temporarily locked until <b>March 31st, 2018, GMT/UTC</b>.<br>
-            <b>Sorry mates, I've been rather ill. Going to not try to miss this deadline.</b> I'll let you know if it somehow opens up sooner.<br>
-            If someone does manage to submit something before then, that's really not good and you should let me know as soon as possible.<br>
+            <%= image_tag "https://s3.us-east-2.amazonaws.com/do-art-daily-public/TOMORROW+I+SWEAR.jpg" %>
+	          <b>TOMORROW I SWEAR</b><br>
+	          No real excuse for this one, I'm feeling better, things just took a little longer than anticipated.
+	          In the meantime, why not upload an avatar and check out the list of users in the top right?
             <a class="btn btn-primary" style="float: right" href="/submissions">
               <span class="fa fa-undo"></span> Back
             </a>
