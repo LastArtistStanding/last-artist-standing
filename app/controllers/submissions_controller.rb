@@ -16,10 +16,12 @@ class SubmissionsController < ApplicationController
   # GET /submissions/new
   def new
     @submission = Submission.new
+    @participations = Participation.where("user_id = :current_user_id AND :todays_date >= start_date AND :todays_date < end_date", {current_user_id: current_user.id, todays_date: Date.current})
   end
 
   # GET /submissions/1/edit
   def edit
+    @participations = Participation.where("user_id = :current_user_id AND :todays_date >= start_date AND :todays_date < end_date", {current_user_id: current_user.id, todays_date: Date.current})
   end
 
   # POST /submissions
@@ -30,6 +32,33 @@ class SubmissionsController < ApplicationController
     
     respond_to do |format|
       if @submission.save
+        submission_date = @submission.created_at.to_date
+        newFrequency = params[:postfrequency].to_i
+        current_user.new_frequency = newFrequency
+        dadChallenge = Challenge.find(1)
+        seasonalChallenge = Challenge.where(":todays_date >= start_date AND :todays_date < end_date AND seasonal = true", {todays_date: Date.current}).first
+        
+        # Manage DAD/Seasonal Participation
+        dadPart = Participation.find_by(:user_id => current_user.id, :challenge_id => dadChallenge.id, :active => true)
+        if dadPart.blank?
+          dadPart = Participation.create({:user_id => current_user.id, :challenge_id => dadChallenge.id, :active => true, :eliminated => false, :score => 0, :start_date => submission_date, :last_submission_date => submission_date})
+        end
+        dadPart.next_submission_date = dadPart.last_submission_date + newFrequency.days
+        dadPart.save
+        
+        seasonPart = Participation.find_by(:user_id => current_user.id, :challenge_id => seasonalChallenge.id, :active => true)
+        if seasonPart.blank?
+          seasonPart = Participation.create({:user_id => current_user.id, :challenge_id => seasonalChallenge.id, :active => true, :eliminated => false, :score => 0, :start_date => submission_date, :last_submission_date => submission_date})
+        end
+        seasonPart.next_submission_date = seasonPart.last_submission_date + 1.day
+        seasonPart.save
+        
+        # Add submission to DAD/Current Seasonal Challenge
+        ChallengeEntry.create({:challenge_id => dadChallenge.id, :submission_id => @submission.id})
+        ChallengeEntry.create({:challenge_id => seasonalChallenge.id, :submission_id => @submission.id})
+        
+        # Last, manage all custom challenge submissions selected (to do).
+        
         format.html { redirect_to @submission }
         format.json { render :show, status: :created, location: @submission }
       else
@@ -55,13 +84,13 @@ class SubmissionsController < ApplicationController
 
   # DELETE /submissions/1
   # DELETE /submissions/1.json
-  def destroy
-    @submission.destroy
-    respond_to do |format|
-      format.html { redirect_to submissions_url }
-      format.json { head :no_content }
-    end
-  end
+  # def destroy
+  #  @submission.destroy
+  #  respond_to do |format|
+  #    format.html { redirect_to submissions_url }
+  #    format.json { head :no_content }
+  #  end
+  #end
 
   private
     # Use callbacks to share common setup or constraints between actions.

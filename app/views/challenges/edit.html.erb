@@ -5,7 +5,19 @@
     
     <div class="col-lg-10">
       <% if logged_in? && !@challenge.creator_id.nil? && @challenge.creator_id == current_user.id %>
-        <%= render 'editform', challenge: @challenge %>
+        <% if Date.current >= @challenge.end_date %>
+          <div class="card">
+            <div class="card-header"><b>Locked</b></div>
+            <div class="card-body">
+              This challenge has been completed. If you wish to update anything, contact an administrator.
+              <a class="btn btn-primary" style="float: right" href="/challenges">
+                <span class="fa fa-undo"></span> Back
+              </a>
+            </div>
+          </div>
+        <% else %>
+          <%= render 'editform', challenge: @challenge %>
+        <% end %>
       <% else %>
       <div class="card">
 	    <div class="card-header"><b>Locked</b></div>

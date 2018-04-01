@@ -1,5 +1,5 @@
 class ChallengesController < ApplicationController
-  before_action :set_challenge, only: [:show, :edit, :update, :destroy]
+  before_action :set_challenge, only: [:show, :edit, :update, :destroy, :join]
   
   # GET /challenges
   # GET /challenges.json
@@ -12,6 +12,21 @@ class ChallengesController < ApplicationController
   # GET /challenge/1
   # GET /challenge/1.json
   def show
+    # You can't join or leave a challenge after the start date.
+    if Date.current < @challenge.start_date 
+      if params[:join]
+        Participation.find_or_create_by({ :user_id => current_user.id, :challenge_id => @challenge.id, :score => 0, :start_date => @challenge.start_date })
+      end
+    
+      if params[:leave]
+        participation = Participation.find_by({ :user_id => current_user.id, :challenge_id => @challenge.id })
+        if !participation.blank?
+          participation.destroy
+        end
+      end
+    end
+    
+    @currentParticipants = Participation.where("challenge_id = ?", @challenge.id).order("score DESC")
   end
   
   # GET /challenge/new
@@ -87,12 +102,15 @@ class ChallengesController < ApplicationController
   end
 
   def destroy
-    @badge_map.destroy
-    @badge.destroy
-    @challenge.destroy
-    respond_to do |format|
-      format.html { redirect_to challenges_url }
-      format.json { head :no_content }
+    if @challenge.creator_id == current_user.id
+      Participation.where(challenge_id: @challenge.id).destroy_all
+      @badge_map.destroy
+      @badge.destroy
+      @challenge.destroy
+      respond_to do |format|
+        format.html { redirect_to challenges_url }
+        format.json { head :no_content }
+      end
     end
   end
   
@@ -101,6 +119,7 @@ class ChallengesController < ApplicationController
     def set_challenge
       @challenge = Challenge.find(params[:id])
       @badge_map = BadgeMap.find_by(challenge_id: @challenge.id)
+      @badge_maps = BadgeMap.where(challenge_id: @challenge.id)
       @badge = Badge.find(@badge_map.badge_id)
     end
   

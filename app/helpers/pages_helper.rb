@@ -25,4 +25,8 @@ module PagesHelper
         end
     end
     
+    def getCurrentDateTime
+        Time.now
+    end
+    
 end

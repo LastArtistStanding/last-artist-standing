@@ -1,13 +1,65 @@
+<script>
+  function pad(n) {
+    return (n < 10) ? ("0" + n) : n;
+  }
+  var interval;
+  $(document).ready(function(){
+    if (interval != null) {
+      clearInterval(interval);
+    }
+    var timeInfo = $('.time_information').data('time');
+   
+    var rubyDate = new Date(timeInfo);
+    var javascriptDate = Date.now();
+    var offset = rubyDate - javascriptDate;
+  
+    var rubyNextDate = new Date(Date.UTC(rubyDate.getUTCFullYear(), rubyDate.getUTCMonth(), rubyDate.getUTCDate() + 1, 0, 0, 0));
+    var currentTime = new Date(offset + Date.now());
+    var timeToNextDay = rubyNextDate - currentTime;
+    
+    var seconds = Math.floor(timeToNextDay / (1000)) % 60;
+    var minutes = Math.floor(timeToNextDay / (1000*60)) % 60;
+    var hours = Math.floor(timeToNextDay / (1000*60*60)) % 24
+    var days = Math.floor(timeToNextDay / (1000*60*60*24))
+    
+    $('#TimeDisplay').html(currentTime.toUTCString())
+    $('#NextDayDisplay').html(days+" day(s) "+pad(hours)+":"+pad(minutes)+":"+pad(seconds))
+    
+    interval = setInterval(function() {
+      currentTime = new Date(offset + Date.now());
+      timeToNextDay = rubyNextDate - currentTime;
+      
+      seconds = Math.floor(timeToNextDay / (1000)) % 60;
+      minutes = Math.floor(timeToNextDay / (1000*60)) % 60;
+      hours = Math.floor(timeToNextDay / (1000*60*60)) % 24
+      days = Math.floor(timeToNextDay / (1000*60*60*24))
+      
+      $('#TimeDisplay').html(currentTime.toUTCString())
+      $('#NextDayDisplay').html(days+" day(s) "+pad(hours)+":"+pad(minutes)+":"+pad(seconds))
+    }, 1000);
+  });
+</script>
+
 <%= form_for @submission, html: { multipart: true } do |f| %>
   <div class="row">
   <div class="col-lg-6">
+    <div class="card">
+	    <%= content_tag :div, :class => "time_information", data: {time: Time.now.to_f * 1000 } do %>
+	      <% end %>
+	      <div class="card-header"><b>Site Timers</b></b></div>
+	      <div class="card-body">
+	        <b>Current Site Time: </b><span id="TimeDisplay"></span><br>
+	        <b>Time to Next Submission Day: </b><span id="NextDayDisplay"></span><br>
+	      </div>
+	    </div>
+    
 	  <div class="card">
 	    <div class="card-header"><b>New Submission</b></div>
       <div class="card-body">
     
         <% if @submission.errors.any? %>
           <div id="error_explanation">
-            <h2><%= pluralize(@submission.errors.count, "error") %> prohibited this submission from being posted:</h2>
+            <h3><%= pluralize(@submission.errors.count, "error") %> prohibited this submission from being posted:</h3>
             <ul>
               <% @submission.errors.full_messages.each do |message| %>
                 <li><%= message %></li>
@@ -17,7 +69,9 @@
         <% end %>
 
         <div class="form-group row">
-          <%= f.label :drawing, :class => "col-3 col-form-label" %> <br>
+          <div class="col-3">
+            <%= f.label :drawing %><br>
+          </div>
           <div class="col-9">
             <%= f.file_field :drawing %>
           </div>
@@ -25,7 +79,9 @@
 
     
         <div class="form-group row">
-          <%= f.label :nsfw_level, :class => "col-3 col-form-label" %>
+          <div class="col-3">
+            <%= f.label :nsfw_level %>
+          </div>
           <div class="col-9">
             <%= f.select :nsfw_level, options_for_select([['Safe', 1], ['Questionable', 2], ['Explicit', 3]], 1), {}, { :class => 'custom-select' } %>
           </div>
@@ -46,14 +102,36 @@
       <div class="card-header"><b>Eligible Challenges</b></div>
       <div class="card-body">
         <p class="card-text">
-          You can submit to the following challenges:<br>
-          <div class="form-group row">
-            <%= label_tag :postfrequency, "DAD Post Frequency", :class => "col-3 col-form-label" %>
-            <div class="col-9">
-            <%= select_tag :postfrequency, options_for_select([['Daily', 1], ['Every Other Day', 2], ['Every 3 Days', 3], ['Every 4 Days', 4], ['Every 5 Days', 5], ['Every 6 Days', 6], ['Weekly', 7]], 1), { :class => 'custom-select' } %>
+          You can submit to the following challenges. All submissions are entered into the Do Art Daily and current seasonal challenge.
+          <br>
+          <small style="color: grey;">(<b>You can increase your frequency, but lowering your post frequency will reset your streak!</b>)</small>
+          <div class="form-group row" style="margin-bottom: 0;">
+            <div class="col-3">
+              <%= label_tag :postfrequency, "DAD Post Frequency" %>
             </div>
-          </div><br>
-          <small style="color: grey;">(<b>Note:</b> You will always submit to the DAD and the current seasonal challenges.)</small>
+            <div class="col-9">
+              <%= select_tag :postfrequency, options_for_select([['Daily', 1], ['Every Other Day', 2], ['Every 3 Days', 3], ['Every 4 Days', 4], ['Every 5 Days', 5], ['Every 6 Days', 6], ['Weekly', 7]], (current_user.dad_frequency.blank? ? 1 : current_user.dad_frequency)), { :class => 'custom-select' } %>
+            </div>
+          </div>
+          
+          <div class="form-group row">
+            <div class="col-3">
+              Seasonal Challenge:
+            </div>
+            <div class="col-9">
+              <%= Challenge.where(":todays_date >= start_date AND :todays_date < end_date AND seasonal = true", {todays_date: Date.current}).first.name %>
+            </div>
+          </div>
+          <% @participations.each do |participation| %>
+            <div class="form-group row">
+              <div class="col-3">
+                <%= label_tag participation.challenge.name %>
+              </div>
+              <div class="col-9">
+                <%= check_box_tag participation.challenge.name, participation.challenge_id %>
+              </div>
+            </div>
+          <% end %>
         </p>
       </div>
     </div>

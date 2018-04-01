@@ -15,7 +15,7 @@
       <th scope="col">Artist</th>
       <th scope="col">Timestamp</th>
       <th scope="col">Nsfw level</th>
-      <th scope="col" colspan="3"></th>
+      <th scope="col"></th>
     </tr>
   </thead>
 
@@ -28,13 +28,6 @@
         <td><%= submission.created_at.strftime("%T") %></td>
         <td><%= getNsfwString(submission.nsfw_level) %></td>
         <td><%= link_to 'Show', submission %></td>
-        <% if logged_in? && submission.user.id = current_user.id %>
-          <td><%= link_to 'Edit', edit_submission_path(submission) %></td>
-          <td><%= link_to 'Destroy', submission, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        <% else %>
-          <td></td>
-          <td></td>
-        <% end %>
       </tr>
     <% end %>
   </tbody>

@@ -17,7 +17,7 @@ class ImageUploader < CarrierWave::Uploader::Base
       user = User.find(model.user_id)
       "submissions/#{user.name}/#{mounted_as}/#{model.id}"
     elsif is_badge?("")
-      "badges/#{model.name}/#{mounted_as}"
+      "badges/#{model.id}/#{mounted_as}"
     elsif is_user?("")
       "users/#{model.name}/#{mounted_as}"
     end
