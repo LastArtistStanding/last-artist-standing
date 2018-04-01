@@ -8,4 +8,16 @@ module ChallengesHelper
         end
     end
     
+    def userIsInChallenge(user, challenge)
+        !Participation.find_by(:user_id => user.id, :challenge_id => challenge.id).blank?
+    end
+    
+    def getDADChallenge
+        Challenge.find(1)
+    end
+    
+    def getCurrentSeasonalChallenge
+        Challenge.where(":todays_date >= start_date AND :todays_date < end_date AND seasonal = true", {todays_date: Date.current}).first
+    end
+    
 end

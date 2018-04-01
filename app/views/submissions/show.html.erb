@@ -1,15 +1,27 @@
-<b><p id="notice"><%=notice %></p></b>
-
-<p>
-  <strong>Drawing:</strong>
-  <%= image_tag @submission.drawing.url unless @submission.drawing.blank? %>
-</p>
-
-
-<p>
-  <strong>Nsfw level:</strong>
-  <%= @submission.nsfw_level %>
-</p>
-
-<%= link_to 'Edit', edit_submission_path(@submission) %> |
-<%= link_to 'Back', submissions_path %>
+<div class="container-fluid" style="margin-top: 2rem;">
+  <div class="row">
+    <b><p id="notice"><%=notice %></p></b>
+    <div class="col-lg-2">
+      <div class="card">
+	      <div class="card-header" style="text-align: center;"><b>Submission Info</b></div>
+        <div class="card-body" style="text-align: center;">
+          <%= image_tag getUserThumb(@submission.user) %><br><br>
+          Submitted by: <b><%= @submission.user.name %></b><br>
+          Content Level: <b><%= getNsfwString(@submission.nsfw_level) %></b><br><br>
+          <a class="btn btn-primary" href="/submissions">
+            <span class="fa fa-undo"></span> Back
+          </a>
+       </div>
+	   </div>
+	 </div>
+	 
+	 <div class="col-lg-10">
+	   <div class="card">
+	      <div class="card-header"><b>Submission</b></div>
+        <div class="card-body" style="text-align: center;">
+          <%= image_tag (@submission.drawing.url unless @submission.drawing.blank?), :style => "max-width: 100%; max-height: 800px;" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

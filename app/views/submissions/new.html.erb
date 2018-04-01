@@ -17,6 +17,16 @@
             </a>
           </div>
         </div>
+      <% elsif !logged_in? %>
+        <div class="card">
+	      <div class="card-header"><b>Locked</b></div>
+          <div class="card-body">
+            You have to be logged in to submit.
+            <a class="btn btn-primary" style="float: right" href="/submissions">
+              <span class="fa fa-undo"></span> Back
+            </a>
+          </div>
+        </div>
       <% else %>
         <%= render 'form', submission: @submission %>
       <% end %>

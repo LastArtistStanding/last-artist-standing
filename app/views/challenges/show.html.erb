@@ -72,9 +72,7 @@
   
       </div>
     </div>
-  </div>
-  
-  <div class="col-lg-6">
+    
     <div class="card">
       <div class="card-header"><b>Reward</b></div>
       <div class="card-body">
@@ -97,32 +95,72 @@
             </div>
           </div>
           
-          <div class="form-group row">
-            <div class="col-3">
-              <%= label_tag :required_score %>
-            </div>
-            <div class="col-9">
-              <%= @badge_map.required_score %>
-            </div>
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">Score</th>
+                  <th scope="col">Prestige</th>
+                  <th scope="col">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @badge_maps.each do |badgemap| %>
+                  <tr>
+                    <td><%= badgemap.required_score %></td>
+                    <td><%= badgemap.prestige %></td>
+                    <td><%= badgemap.description %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
           </div>
           
-          <div class="form-group row">
-            <div class="col-3">
-              <%= label_tag :prestige %>
-            </div>
-            <div class="col-9">
-              <%= @badge_map.prestige %>
-            </div>
-          </div>
-          
-          <div class="form-group row">
-            <div class="col-3">
-              <%= label_tag :description %>
-            </div>
-            <div class="col-9">
-              <%= @badge_map.description %>
-            </div>
-          </div>
+      </div>
+    </div>
+    
+  </div>
+  
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-header">
+        <b>Current Participant List</b>
+        <% if !@challenge.creator_id.blank? %>
+          <% if userIsInChallenge(current_user, @challenge) %>
+            <%= link_to "Leave Challenge", challenge_path(@challenge, :leave => true), :class => "btn btn-primary", :style => 'float: right; margin-top: -0.375rem; margin-bottom: -0.375rem;' %>
+          <% else %>
+            <%= link_to "Join Challenge", challenge_path(@challenge, :join => true), :class => "btn btn-primary", :style => 'float: right; margin-top: -0.375rem; margin-bottom: -0.375rem;' %>
+          <% end %>
+        <% end %>
+      </div>
+      <div class="card-body table-responsive">
+        
+        <table class="table table-sm">
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">User</th>
+                <th scope="col">Join Date</th>
+                <th scope="col">End Date</th>
+                <th scope="col">Current Score</th>
+                <% if @challenge.streak_based %>
+                  <th scope="col">Eliminated?</th>
+                <% end %>
+              </tr>
+            </thead>
+            <tbody>
+              <% @currentParticipants.each do |participation| %>
+                <tr>
+                  <td><%= participation.user.name %></td>
+                  <td><%= dateToString(participation.created_at.to_date) %></td>
+                  <td><%= dateToString(participation.end_date) %></td>
+                  <td><%= participation.score %></td>
+                  <% if @challenge.streak_based %>
+                    <td><%= participation.eliminated %></td>
+                  <% end %>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
           
       </div>
     </div>

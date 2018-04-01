@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180329040127) do
+ActiveRecord::Schema.define(version: 20180401221934) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -73,8 +73,10 @@ ActiveRecord::Schema.define(version: 20180329040127) do
     t.boolean  "eliminated"
     t.date     "start_date"
     t.date     "end_date"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.date     "next_submission_date"
+    t.date     "last_submission_date"
   end
 
   create_table "submissions", force: :cascade do |t|
@@ -98,6 +100,7 @@ ActiveRecord::Schema.define(version: 20180329040127) do
     t.integer  "nsfw_level"
     t.boolean  "is_admin"
     t.integer  "dad_frequency"
+    t.integer  "new_frequency"
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["name"], name: "index_users_on_name", unique: true, using: :btree
   end

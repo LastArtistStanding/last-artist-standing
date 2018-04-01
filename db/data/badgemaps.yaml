@@ -81,13 +81,13 @@ Spring2018BadgeMap3:
 Spring2018BadgeMap4:
     badge_name: "Spring 2018 Participation Badge"
     challenge_name: "Spring Challenge 2018"
-    required_score: 69
+    required_score: 68
     prestige: 4
     description: "ELITE - This artist submitted almost daily this season!"
 Spring2018BadgeMap5:
     badge_name: "Spring 2018 Participation Badge"
     challenge_name: "Spring Challenge 2018"
-    required_score: 81
+    required_score: 80
     prestige: 5
     description: "FLAWLESS - This artist submitted daily this season!"
 #Summer 2018 Badges
