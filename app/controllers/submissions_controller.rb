@@ -33,8 +33,10 @@ class SubmissionsController < ApplicationController
     respond_to do |format|
       if @submission.save
         submission_date = @submission.created_at.to_date
+        nextDay = submission_date + 1.day
         newFrequency = params[:postfrequency].to_i
-        current_user.new_frequency = newFrequency
+        current_user.update_attribute(:new_frequency, newFrequency)
+        
         dadChallenge = Challenge.find(1)
         seasonalChallenge = Challenge.where(":todays_date >= start_date AND :todays_date < end_date AND seasonal = true", {todays_date: Date.current}).first
         
@@ -48,9 +50,8 @@ class SubmissionsController < ApplicationController
         
         seasonPart = Participation.find_by(:user_id => current_user.id, :challenge_id => seasonalChallenge.id, :active => true)
         if seasonPart.blank?
-          seasonPart = Participation.create({:user_id => current_user.id, :challenge_id => seasonalChallenge.id, :active => true, :eliminated => false, :score => 0, :start_date => submission_date, :last_submission_date => submission_date})
+          seasonPart = Participation.create({:user_id => current_user.id, :challenge_id => seasonalChallenge.id, :active => true, :eliminated => false, :score => 0, :start_date => submission_date, :last_submission_date => submission_date, :next_submission_date => nextDay})
         end
-        seasonPart.next_submission_date = seasonPart.last_submission_date + 1.day
         seasonPart.save
         
         # Add submission to DAD/Current Seasonal Challenge
