@@ -19,7 +19,8 @@
 	   <div class="card">
 	      <div class="card-header"><b>Submission</b></div>
         <div class="card-body" style="text-align: center;">
-          <%= image_tag (@submission.drawing.url unless @submission.drawing.blank?), :style => "max-width: 100%; max-height: 800px;" %>
+          <% submissionUrl = @submission.drawing.url unless @submission.drawing.blank? %>
+          <%= image_tag submissionUrl, :style => "max-width: 100%; max-height: 800px;" %>
         </div>
       </div>
     </div>
