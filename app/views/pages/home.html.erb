@@ -30,14 +30,18 @@
     interval = setInterval(function() {
       currentTime = new Date(offset + Date.now());
       timeToNextDay = rubyNextDate - currentTime;
-      
-      seconds = Math.floor(timeToNextDay / (1000)) % 60;
-      minutes = Math.floor(timeToNextDay / (1000*60)) % 60;
-      hours = Math.floor(timeToNextDay / (1000*60*60)) % 24
-      days = Math.floor(timeToNextDay / (1000*60*60*24))
-      
-      $('#TimeDisplay').html(currentTime.toUTCString())
-      $('#NextDayDisplay').html(days+" day(s) "+pad(hours)+":"+pad(minutes)+":"+pad(seconds))
+    
+      if (timeToNextDay >= 0) { 
+        seconds = Math.floor(timeToNextDay / (1000)) % 60;
+        minutes = Math.floor(timeToNextDay / (1000*60)) % 60;
+        hours = Math.floor(timeToNextDay / (1000*60*60)) % 24
+        days = Math.floor(timeToNextDay / (1000*60*60*24))
+        
+        $('#TimeDisplay').html(currentTime.toUTCString())
+        $('#NextDayDisplay').html(days+" day(s) "+pad(hours)+":"+pad(minutes)+":"+pad(seconds))
+      } else {
+        $('#NextDayDisplay').html("0 day(s) 00:00:00")
+      }
     }, 1000);
   });
 </script>
