@@ -18,13 +18,30 @@ module UsersHelper
         user.nsfw_level
     end
     
+    def postfrequencyToString(postfrequency)
+        
+    end
+    
     def getUserDADFrequency(user)
         if !user.new_frequency.blank?
-            postFrequencyToString(user.new_frequency)
+            postfrequency = user.new_frequency
         elsif !user.dad_frequency.blank?
-            postFrequencyToString(user.dad_frequency)
+            postfrequency = user.dad_frequency
         else
+            postfrequency = "None"
+        end
+        
+        case postfrequency
+        when 1
+            "Daily"
+        when 2
+            "Every Other Day"
+        when 7
+            "Weekly"
+        when 0
             "None"
+        else
+            "Every #{postfrequency} Days"
         end
     end
     
