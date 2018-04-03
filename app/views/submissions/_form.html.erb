@@ -126,16 +126,6 @@
               <%= Challenge.where(":todays_date >= start_date AND :todays_date < end_date AND seasonal = true", {todays_date: Date.current}).first.name %>
             </div>
           </div>
-          <% @participations.each do |participation| %>
-            <div class="form-group row">
-              <div class="col-3">
-                <%= label_tag participation.challenge.name %>
-              </div>
-              <div class="col-9">
-                <%= check_box_tag participation.challenge.name, participation.challenge_id %>
-              </div>
-            </div>
-          <% end %>
         </p>
       </div>
     </div>
