@@ -24,20 +24,7 @@ module UsersHelper
         elsif !user.dad_frequency.blank?
             postfrequency = user.dad_frequency
         else
-            postfrequency = "None"
-        end
-        
-        case postfrequency
-        when 1
-            "Daily"
-        when 2
-            "Every Other Day"
-        when 7
-            "Weekly"
-        when 0
-            "None"
-        else
-            "Every #{postfrequency} Days"
+            postfrequency = 0
         end
     end
     

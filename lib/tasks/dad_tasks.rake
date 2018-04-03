@@ -11,11 +11,12 @@ namespace :dad_tasks do
             user = p.user
             challenge = p.challenge
             isDAD = p.challenge.id == 1
+            scoreChanged = false
         
             challengeEntries = ChallengeEntry.where("challenge_id = :challengeId AND user_id = :userId AND created_at >= :last_date AND created_at < :next_date", {challengeId: challenge.id, userId: user.id, last_date: lastDate, next_date: nextDate})
             
             # Eliminate anyone who failed to post in a streak_based challenge
-            if challengeEntries.count == 0 && challenge.streak_based
+            if Date.current == nextDate && challengeEntries.count == 0 && challenge.streak_based
                 p.active = false
                 p.eliminated = true
                 p.end_date = Date.current - 1.day
@@ -26,29 +27,33 @@ namespace :dad_tasks do
                 if challengeEntries.count > 0
                     if challenge.postfrequency == 0
                         p.score = challengeEntries.count
+                        scoreChanged = true
                     elsif !p.submitted
                         p.score += 1
                         p.submitted = true
+                        scoreChanged = true
                     end
                 end 
                 
-                # Check if the score has exceeded the user's previous record, replace it if so
-                if isDAD && p.score > user.longest_streak
-                    user.update_attribute(:longest_streak, p.score)
-                end
-                
-                # Award and/or update badges
-                badgeToAward = BadgeMap.where("required_score <= :current_score AND challenge_id = :challengeId", {current_score: p.score, challengeId: challenge.id}).order("required_score DESC").first
-                if !badgeToAward.blank?
-                    previousAward = Award.find_by(:user_id => user.id, :badge_id => badgeToAward.badge_id)
-                    if previousAward.blank?
-                        Award.create({:user_id => user.id, :badge_id => badgeToAward.badge_id, :date_received => Date.current, :prestige => badgeToAward.prestige})
-                    elsif previousAward.prestige < badgeToAward.prestige
-                        previousAward.prestige = badgeToAward.prestige
-                        previousAward.date_received = Date.current
-                        previousAward.save
+                if scoreChanged
+                    # Check if the score has exceeded the user's previous record, replace it if so
+                    if isDAD && p.score > user.longest_streak
+                        user.update_attribute(:longest_streak, p.score)
                     end
-                end
+                    
+                    # Award and/or update badges
+                    badgeToAward = BadgeMap.where("required_score <= :current_score AND challenge_id = :challengeId", {current_score: p.score, challengeId: challenge.id}).order("required_score DESC").first
+                    if !badgeToAward.blank?
+                        previousAward = Award.find_by(:user_id => user.id, :badge_id => badgeToAward.badge_id)
+                        if previousAward.blank?
+                            Award.create({:user_id => user.id, :badge_id => badgeToAward.badge_id, :date_received => Date.current, :prestige => badgeToAward.prestige})
+                        elsif previousAward.prestige < badgeToAward.prestige
+                            previousAward.prestige = badgeToAward.prestige
+                            previousAward.date_received = Date.current
+                            previousAward.save
+                        end
+                    end
+                end 
                 
                 # If we've reached the last date of the challenge, deactivate it.
                 if !challenge.end_date.blank? && Date.current >= challenge.end_date

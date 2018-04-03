@@ -11,7 +11,7 @@
         <div class="card-body table-responsive" style="text-align: center;">
           <%= image_tag getUserThumb(@user) %><br><br>
           Longest Streak: <%= @user.longest_streak %><br>
-	  DAD Frequency: <%= getUserDADFrequency(@user) %>
+	        DAD Frequency: <%= postfrequencyToString(getUserDADFrequency(@user)) %>
           <% if logged_in? && current_user.id == @user.id %>
             <br><br>
             <a class="btn btn-primary" href="<%= edit_user_path(@user) %>">
