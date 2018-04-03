@@ -55,8 +55,8 @@ class SubmissionsController < ApplicationController
         seasonPart.save
         
         # Add submission to DAD/Current Seasonal Challenge
-        ChallengeEntry.create({:challenge_id => dadChallenge.id, :submission_id => @submission.id})
-        ChallengeEntry.create({:challenge_id => seasonalChallenge.id, :submission_id => @submission.id})
+        ChallengeEntry.create({:challenge_id => dadChallenge.id, :submission_id => @submission.id, :user_id => current_user.id})
+        ChallengeEntry.create({:challenge_id => seasonalChallenge.id, :submission_id => @submission.id, :user_id => current_user.id})
         
         # Last, manage all custom challenge submissions selected (to do).
         
