@@ -18,10 +18,6 @@ module UsersHelper
         user.nsfw_level
     end
     
-    def postfrequencyToString(postfrequency)
-        
-    end
-    
     def getUserDADFrequency(user)
         if !user.new_frequency.blank?
             postfrequency = user.new_frequency
