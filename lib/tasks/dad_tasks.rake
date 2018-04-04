@@ -73,13 +73,15 @@ namespace :dad_tasks do
                             else
                                 user.update_attribute(:dad_frequency, user.new_frequency)
                             end
-                        # If the new frequency is easier, reset the streak
                         else
-                            if user.dad_frequency < user.new_frequency
-                                # The only way a frequency can be changed is through a submission, so you start with a score of 1.
-                                p.score = 1
+                            if !user.new_frequency.blank?
+                                # If the new frequency is easier, reset the streak
+                                if user.dad_frequency < user.new_frequency
+                                    # The only way a frequency can be changed is through a submission, so you start with a score of 1.
+                                    p.score = 1
+                                end
+                                user.update_attribute(:dad_frequency, user.new_frequency)
                             end
-                            user.update_attribute(:dad_frequency, user.new_frequency)
                         end
                     end
                     
