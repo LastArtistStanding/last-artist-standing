@@ -46,6 +46,9 @@ class SubmissionsController < ApplicationController
           dadPart = Participation.create({:user_id => current_user.id, :challenge_id => dadChallenge.id, :active => true, :eliminated => false, :score => 0, :start_date => submission_date, :last_submission_date => submission_date})
         end
         dadPart.next_submission_date = dadPart.last_submission_date + newFrequency.days
+        if dadPart.next_submission_date < nextDay
+          dadPart.next_submission_date = nextDay
+        end
         dadPart.save
         
         seasonPart = Participation.find_by(:user_id => current_user.id, :challenge_id => seasonalChallenge.id, :active => true)
