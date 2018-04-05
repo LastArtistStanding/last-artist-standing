@@ -14,16 +14,36 @@
     var offset = rubyDate - javascriptDate;
   
     var rubyNextDate = new Date(Date.UTC(rubyDate.getUTCFullYear(), rubyDate.getUTCMonth(), rubyDate.getUTCDate() + 1, 0, 0, 0));
+    var rubyNextSubmissionDate = new Date(Date.UTC(rubyDate.getUTCFullYear(), rubyDate.getUTCMonth(), rubyDate.getUTCDate() + $('.time_information').data('daysleft'), 0, 0, 0));
     var currentTime = new Date(offset + Date.now());
     var timeToNextDay = rubyNextDate - currentTime;
+    var timeToNextSubmissionDate = rubyNextSubmissionDate - currentTime;
+    var submitted = $('.time_information').data('submitted')
     
     var seconds = Math.floor(timeToNextDay / (1000)) % 60;
     var minutes = Math.floor(timeToNextDay / (1000*60)) % 60;
-    var hours = Math.floor(timeToNextDay / (1000*60*60)) % 24
-    var days = Math.floor(timeToNextDay / (1000*60*60*24))
+    var hours = Math.floor(timeToNextDay / (1000*60*60)) % 24;
+    var days = Math.floor(timeToNextDay / (1000*60*60*24));
     
-    $('#TimeDisplay').html(currentTime.toUTCString())
-    $('#NextDayDisplay').html(days+" day(s) "+pad(hours)+":"+pad(minutes)+":"+pad(seconds))
+    $('#TimeDisplay').html(currentTime.toUTCString());
+    $('#NextDayDisplay').html(days+" day(s) "+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
+    
+    if (submitted != -1) {
+      if (submitted == 0) {
+        $('#StreakStatus').html("Time left before your streak is reset: ");
+      } else if (submitted == 1) {
+        $('#StreakStatus').html("Your streak is safe for: ");
+      }
+      
+      seconds = Math.floor(timeToNextSubmissionDate / (1000)) % 60;
+      minutes = Math.floor(timeToNextSubmissionDate / (1000*60)) % 60;
+      hours = Math.floor(timeToNextSubmissionDate / (1000*60*60)) % 24;
+      days = Math.floor(timeToNextSubmissionDate / (1000*60*60*24));
+      
+      $('#NextSubmissionDisplay').html(days+" day(s) "+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
+    } else {
+      $('#StreakStatus').html("You currently don't have an active streak.");
+    }
     
     interval = setInterval(function() {
       currentTime = new Date(offset + Date.now());
@@ -32,14 +52,38 @@
       if (timeToNextDay >= 0) { 
         seconds = Math.floor(timeToNextDay / (1000)) % 60;
         minutes = Math.floor(timeToNextDay / (1000*60)) % 60;
-        hours = Math.floor(timeToNextDay / (1000*60*60)) % 24
-        days = Math.floor(timeToNextDay / (1000*60*60*24))
+        hours = Math.floor(timeToNextDay / (1000*60*60)) % 24;
+        days = Math.floor(timeToNextDay / (1000*60*60*24));
         
-        $('#TimeDisplay').html(currentTime.toUTCString())
-        $('#NextDayDisplay').html(days+" day(s) "+pad(hours)+":"+pad(minutes)+":"+pad(seconds))
+        $('#TimeDisplay').html(currentTime.toUTCString());
+        $('#NextDayDisplay').html(days+" day(s) "+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
       } else {
-        $('#NextDayDisplay').html("0 day(s) 00:00:00")
+        $('#NextDayDisplay').html("0 day(s) 00:00:00");
       }
+      
+      if (submitted != -1) {
+        if (submitted == 0) {
+          $('#StreakStatus').html("Time left before your streak is reset: ");
+        } else if (submitted == 1) {
+          $('#StreakStatus').html("Your streak is safe for: ");
+        }
+        
+        timeToNextSubmissionDate = rubyNextSubmissionDate - currentTime;
+        
+        if (timeToNextSubmissionDate >= 0) {
+          seconds = Math.floor(timeToNextSubmissionDate / (1000)) % 60;
+          minutes = Math.floor(timeToNextSubmissionDate / (1000*60)) % 60;
+          hours = Math.floor(timeToNextSubmissionDate / (1000*60*60)) % 24;
+          days = Math.floor(timeToNextSubmissionDate / (1000*60*60*24));
+      
+          $('#NextSubmissionDisplay').html(days+" day(s) "+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
+        } else {
+          $('#NextSubmissionDisplay').html("0 day(s) 00:00:00");
+        }
+      } else {
+        $('#StreakStatus').html("You currently don't have an active streak.");
+      }
+      
     }, 1000);
   });
 </script>
@@ -48,12 +92,14 @@
   <div class="row">
   <div class="col-lg-6">
     <div class="card">
-	    <%= content_tag :div, :class => "time_information", data: {time: Time.now.to_f * 1000 } do %>
+      <% timeinfo = userSubmittedToDAD %>
+	    <%= content_tag :div, :class => "time_information", data: {time: Time.now.to_f * 1000, submitted: timeinfo[0], daysleft: timeinfo[1] } do %>
 	      <% end %>
 	      <div class="card-header"><b>Site Timers</b></b></div>
 	      <div class="card-body">
 	        <b>Current Site Time: </b><span id="TimeDisplay"></span><br>
 	        <b>Time to Next Submission Day: </b><span id="NextDayDisplay"></span><br>
+	        <b><span id="StreakStatus"></span></b><span id="NextSubmissionDisplay"></span><br>
 	      </div>
 	    </div>
     
