@@ -26,7 +26,11 @@ class ChallengesController < ApplicationController
       end
     end
     
-    @currentParticipants = Participation.where({:challenge_id => @challenge.id, :active => true}).order("score DESC")
+    if Date.current >= @challenge.start_date
+      @currentParticipants = Participation.where({:challenge_id => @challenge.id, :active => true}).order("score DESC")
+    else
+      @currentParticipants = Participation.where({:challenge_id => @challenge.id}).order("created_at ASC")
+    end
     if @challenge.streak_based
       if @challenge.id == 1
         @latestEliminations = Participation.where("challenge_id = 1 AND eliminated AND end_date <= :endDate AND end_date >= :startDate", {endDate: Date.current, startDate: (Date.current - 7.days)}).order("end_date DESC")
