@@ -50,4 +50,44 @@ module PagesHelper
         end
     end
     
+    def getLatestSeasonalChallenges
+        seasonalChallenges = Challenge.where(:seasonal => true).order("start_date ASC")
+        seasonCount = seasonalChallenges.count
+        #spring
+        baseIndex = (seasonCount - 1) - ((seasonCount - 1) % 4)
+        if seasonCount > 0
+            spring = seasonalChallenges[baseIndex]
+        else
+            spring = nil
+        end
+        if seasonCount > 1
+            baseIndex += 1
+            if baseIndex >= seasonCount
+                baseIndex -= 4
+            end
+            summer = seasonalChallenges[baseIndex]
+        else
+            summer = nil
+        end
+        if seasonCount > 2
+            baseIndex += 1
+            if baseIndex >= seasonCount
+                baseIndex -= 4
+            end
+            autumn = seasonalChallenges[baseIndex]
+        else
+            autumn = nil
+        end
+        if seasonCount > 3
+            baseIndex += 1
+            if baseIndex >= seasonCount
+                baseIndex -= 4
+            end
+            winter = seasonalChallenges[baseIndex]
+        else
+            winter = nil
+        end
+        [spring,summer,autumn,winter]
+    end
+    
 end

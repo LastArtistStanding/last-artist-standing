@@ -14,7 +14,7 @@
       <ul class="navbar-nav">
       <% if logged_in? %>
         <li class="nav-item">
-          <a class="nav-link" href=" <%= submissions_path %> ">
+          <a class="nav-link" href=" <%= submissions_path(:date => Date.current) %> ">
             <span class="fa fa-clock-o"></span> Submit
           </a>
         </li>

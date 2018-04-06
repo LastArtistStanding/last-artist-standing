@@ -26,7 +26,14 @@ class ChallengesController < ApplicationController
       end
     end
     
-    @currentParticipants = Participation.where("challenge_id = ?", @challenge.id).order("score DESC")
+    @currentParticipants = Participation.where({:challenge_id => @challenge.id, :active => true}).order("score DESC")
+    if @challenge.streak_based
+      if @challenge.id == 1
+        @latestEliminations = Participation.where("challenge_id = 1 AND eliminated AND end_date <= :endDate AND end_date >= :startDate", {endDate: Date.current, startDate: (Date.current - 7.days)}).order("end_date DESC")
+      else
+        @allEliminations = Participation.where({:challenge_id => @challenge.id, :eliminated => true}).order("end_date DESC")
+      end
+    end
   end
   
   # GET /challenge/new
@@ -69,8 +76,11 @@ class ChallengesController < ApplicationController
         @challenge.errors.add(:streak_based, " challenges cannot have a post frequency of 'None'.")
         failure = true;
       end
-      if @challenge.postfrequency != 0 && !@badge_map.required_score.nil? && @badge_map.required_score > ((@challenge.end_date - @challenge.start_date) / @challenge.postfrequency)
-        @badge_map.errors.add(:required_score, " is impossible to achieve within the dates and post frequency specified.")
+      if @challenge.postfrequency != 0 && !@badge_map.required_score.blank? 
+        possibleScore = ((@challenge.end_date - @challenge.start_date) / @challenge.postfrequency).to_i
+        if @badge_map.required_score > possibleScore
+          @badge_map.errors.add(:required_score, " is impossible to achieve within the dates and post frequency specified (only #{possibleScore} submissions possible).")
+        end
       end
       
       if failure

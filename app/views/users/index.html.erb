@@ -11,7 +11,7 @@
       <th scope="col" colspan="4" style="text-align: center;">Seasonal Participation</th>
     </tr>
     <tr>
-      <th scope="col">#</th>
+      <th scope="col">ICO</th>
       <th scope="col">Name</th>
       <th scope="col">Current Streak</th>
       <th scope="col">Max Streak</th>
@@ -24,17 +24,18 @@
   </thead>
 
   <tbody>
+    <% seasonChallengeIds = getLatestSeasonalChallenges %>
     <% @users.each do |user| %>
       <tr>
-        <td><%= user.id %></td>
+        <td><%= image_tag getUserThumb(user), :width => "25px" %></td>
         <td><%= link_to user.name, user %></td>
-        <td>0</td>
-        <td>0</td>
-        <td>None</td></td>
-        <td>0/0</td>
-        <td>0/0</td>
-        <td>0/0</td>
-        <td>0/0</td>
+        <td><%= getUserCurrentDADScore(user) %></td>
+        <td><%= user.longest_streak %></td>
+        <td><%= postfrequencyToString(getUserDADFrequency(user)) %></td></td>
+        <td><%= "#{getUserScoreByChallenge(user, seasonChallengeIds[0])}/#{getDaysInChallenge(seasonChallengeIds[0])}" %></td>
+        <td><%= "#{getUserScoreByChallenge(user, seasonChallengeIds[1])}/#{getDaysInChallenge(seasonChallengeIds[1])}" %></td>
+        <td><%= "#{getUserScoreByChallenge(user, seasonChallengeIds[2])}/#{getDaysInChallenge(seasonChallengeIds[2])}" %></td>
+        <td><%= "#{getUserScoreByChallenge(user, seasonChallengeIds[3])}/#{getDaysInChallenge(seasonChallengeIds[3])}" %></td>
       </tr>
     <% end %>
   </tbody>
