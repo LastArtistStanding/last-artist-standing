@@ -135,7 +135,6 @@
               <th scope="col">Final Score</th>
               <th scope="col">Join Date</th>
               <th scope="col">End Date</th>
-              <th scope="col">Post Frequency</th>
             </tr>
           </thead>
           <tbody>
@@ -145,7 +144,6 @@
                 <td><%= participation.score %></td>
                 <td><%= dateToString(participation.created_at.to_date) %></td>
                 <td><%= dateToString(participation.end_date) %></td>
-                <td><%= postfrequencyToString(getUserDADFrequency(participation.user)) %></td>
               </tr>
             <% end %>
           </tbody>
