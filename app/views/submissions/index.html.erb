@@ -1,7 +1,7 @@
 <div class="container-fluid">
 <br>
 
-<p class="h2">Today's Submissions
+<p class="h2"><%= @date == Date.current ? "Today's" : @date.strftime("%B %e, %Y") %> Submissions
   <a class="btn btn-primary" style="margin-bottom: 0.5rem;" href="<%= new_submission_path %>">
 	  <span class="fa fa-plus"></span> Submit Your Art!
 	</a>

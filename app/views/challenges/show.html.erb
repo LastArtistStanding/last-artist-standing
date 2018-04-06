@@ -122,6 +122,38 @@
   </div>
   
   <div class="col-lg-6">
+    <% if @challenge.id == 1 && !@latestEliminations.blank? %>
+    <div class="card">
+      <div class="card-header" style="color: red;">
+        <b>Last Week's Eliminations</b>
+      </div>
+      <div class="card-body table-responsive">
+        <table class="table table-sm">
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">User</th>
+              <th scope="col">Final Score</th>
+              <th scope="col">Join Date</th>
+              <th scope="col">End Date</th>
+              <th scope="col">Post Frequency</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @latestEliminations.each do |participation| %>
+              <tr>
+                <td><%= participation.user.name %></td>
+                <td><%= participation.score %></td>
+                <td><%= dateToString(participation.created_at.to_date) %></td>
+                <td><%= dateToString(participation.end_date) %></td>
+                <td><%= postfrequencyToString(getUserDADFrequency(participation.user)) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <% end %>
+    
     <div class="card">
       <div class="card-header">
         <b>Current Participant List</b>
@@ -136,32 +168,52 @@
       <div class="card-body table-responsive">
         
         <table class="table table-sm">
-            <thead class="thead-light">
-              <tr>
-                <th scope="col">User</th>
-                <th scope="col">Join Date</th>
+          <thead class="thead-light">
+            <tr>
+              <th scope="col">User</th>
+              <th scope="col">Current Score</th>
+              <th scope="col">Join Date</th>
+              <% if @challenge.id != 1 %>
                 <th scope="col">End Date</th>
-                <th scope="col">Current Score</th>
-                <% if @challenge.streak_based %>
-                  <th scope="col">Eliminated?</th>
+              <% end %>
+              <% if @challenge.id == 1 %>
+                <th scope="col">Post Frequency</th>
+              <% end %>
+              <% if @challenge.streak_based && @challenge.id != 1 %>
+                <th scope="col">Eliminated?</th>
+              <% end %>
+            </tr>
+          </thead>
+          <tbody>
+            <% @currentParticipants.each do |participation| %>
+              <tr>
+                <td><%= participation.user.name %></td>
+                <td><%= participation.score %></td>
+                <td><%= dateToString(participation.created_at.to_date) %></td>
+                <% if @challenge.id != 1 %>
+                  <td><%= dateToString(participation.end_date) %></td>
+                <% end %>
+                <% if @challenge.id == 1 %>
+                  <td><%= postfrequencyToString(getUserDADFrequency(participation.user)) %></td>
+                <% end %>
+                <% if @challenge.streak_based && @challenge.id != 1 %>
+                  <td></td>
                 <% end %>
               </tr>
-            </thead>
-            <tbody>
-              <% @currentParticipants.each do |participation| %>
-                <tr>
-                  <td><%= participation.user.name %></td>
-                  <td><%= dateToString(participation.created_at.to_date) %></td>
-                  <td><%= dateToString(participation.end_date) %></td>
-                  <td><%= participation.score %></td>
-                  <% if @challenge.streak_based %>
-                    <td><%= participation.eliminated %></td>
-                  <% end %>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-          
+            <% end %>
+            <% if !@allEliminations.blank? %>
+              <% @allEliminations.each do |participation| %>
+              <tr>
+                <td><%= participation.user.name %></td>
+                <td><%= participation.score %></td>
+                <td><%= dateToString(participation.created_at.to_date) %></td>
+                <td><%= dateToString(participation.end_date) %></td>
+                <td><%= "Eliminated" %></td>
+              </tr>
+            <% end %>
+            <% end %>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

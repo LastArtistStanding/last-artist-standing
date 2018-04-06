@@ -5,7 +5,15 @@ class SubmissionsController < ApplicationController
   # GET /submissions
   # GET /submissions.json
   def index
-    @submissions = Submission.order('created_at DESC')
+    @date = Date.current
+    if !params[:date].blank?
+      begin
+        @date = Date.parse(params[:date])
+      rescue ArgumentError
+        @date = Date.current
+      end
+    end
+    @submissions = Submission.where(created_at: @date.midnight..@date.end_of_day).order('created_at DESC')
   end
 
   # GET /submissions/1

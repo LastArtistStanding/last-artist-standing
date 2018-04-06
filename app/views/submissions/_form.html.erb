@@ -20,13 +20,7 @@
     var timeToNextSubmissionDate = rubyNextSubmissionDate - currentTime;
     var submitted = $('.time_information').data('submitted')
     
-    var seconds = Math.floor(timeToNextDay / (1000)) % 60;
-    var minutes = Math.floor(timeToNextDay / (1000*60)) % 60;
-    var hours = Math.floor(timeToNextDay / (1000*60*60)) % 24;
-    var days = Math.floor(timeToNextDay / (1000*60*60*24));
-    
     $('#TimeDisplay').html(currentTime.toUTCString());
-    $('#NextDayDisplay').html(days+" day(s) "+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
     
     if (submitted != -1) {
       if (submitted == 0) {
@@ -35,10 +29,10 @@
         $('#StreakStatus').html("Your streak is safe for: ");
       }
       
-      seconds = Math.floor(timeToNextSubmissionDate / (1000)) % 60;
-      minutes = Math.floor(timeToNextSubmissionDate / (1000*60)) % 60;
-      hours = Math.floor(timeToNextSubmissionDate / (1000*60*60)) % 24;
-      days = Math.floor(timeToNextSubmissionDate / (1000*60*60*24));
+      var seconds = Math.floor(timeToNextSubmissionDate / (1000)) % 60;
+      var minutes = Math.floor(timeToNextSubmissionDate / (1000*60)) % 60;
+      var hours = Math.floor(timeToNextSubmissionDate / (1000*60*60)) % 24;
+      var days = Math.floor(timeToNextSubmissionDate / (1000*60*60*24));
       
       $('#NextSubmissionDisplay').html(days+" day(s) "+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
     } else {
@@ -48,18 +42,7 @@
     interval = setInterval(function() {
       currentTime = new Date(offset + Date.now());
       timeToNextDay = rubyNextDate - currentTime;
-    
-      if (timeToNextDay >= 0) { 
-        seconds = Math.floor(timeToNextDay / (1000)) % 60;
-        minutes = Math.floor(timeToNextDay / (1000*60)) % 60;
-        hours = Math.floor(timeToNextDay / (1000*60*60)) % 24;
-        days = Math.floor(timeToNextDay / (1000*60*60*24));
-        
-        $('#TimeDisplay').html(currentTime.toUTCString());
-        $('#NextDayDisplay').html(days+" day(s) "+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
-      } else {
-        $('#NextDayDisplay').html("0 day(s) 00:00:00");
-      }
+      $('#TimeDisplay').html(currentTime.toUTCString());
       
       if (submitted != -1) {
         if (submitted == 0) {
@@ -98,7 +81,6 @@
 	      <div class="card-header"><b>Site Timers</b></b></div>
 	      <div class="card-body">
 	        <b>Current Site Time: </b><span id="TimeDisplay"></span><br>
-	        <b>Time to Next Submission Day: </b><span id="NextDayDisplay"></span><br>
 	        <b><span id="StreakStatus"></span></b><span id="NextSubmissionDisplay"></span><br>
 	      </div>
 	    </div>

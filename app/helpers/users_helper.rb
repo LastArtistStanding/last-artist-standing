@@ -28,4 +28,25 @@ module UsersHelper
         end
     end
     
+    def getUserCurrentDADScore(user)
+        participation = Participation.find_by({:user_id => user.id, :active => true, :challenge_id => 1})
+        if participation.blank?
+            "None"
+        else
+            participation.score
+        end
+    end
+    
+    def getUserScoreByChallenge(user, challenge)
+        if user.blank? || challenge.blank?
+            return 0
+        end
+        participation = Participation.find_by({:user_id => user.id, :challenge_id => challenge.id})
+        if participation.blank?
+            0
+        else
+            participation.score
+        end
+    end
+    
 end

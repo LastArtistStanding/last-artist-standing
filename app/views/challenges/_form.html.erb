@@ -44,7 +44,7 @@
           </div>
         </div>
         
-        <small style="color: grey;">(End dates are <b>exclusive</b>; the last submission day is the one prior.)</small>
+        <small style="color: grey;">End dates are <b>exclusive</b>; the last submission day is the one prior.</small>
         <div class="form-group row">
           <div class="col-3">
             <%= f.label :end_date %>
@@ -54,7 +54,7 @@
           </div>
         </div>
 
-        <small style="color: grey;">(If enabled, you can be eliminated from the challenge.)</small>
+        <small style="color: grey;">If enabled, you can be eliminated from the challenge.</small>
         <div class="form-group row">
           <div class="col-3">
             <%= f.label :streak_based %>
@@ -64,10 +64,10 @@
           </div>
         </div>
         
-        <small style="color: grey;">(A post frequency of "None" indicates that participants can submit as many times as they want per day to the challenge. Cannot be used with a streak-based/elimination challenge.)</small>
+        <small style="color: grey;">Submission frequency indicates how often participants can make submissions. For example, a submission frequency of "weekly" means that one submission per week can be made. More submissions can be made in the same period fort the challenge, but will not count towards their required submissions for badge progress. To permit users to submit as many submissions at whatever point they would like during the challenge, use the frequency "None". <b>It is very important to clarify what users are expected to submit to the challenge (final products, WIPs, etc) in your challenge description.</b></small>
         <div class="form-group row">
           <div class="col-3">
-            <%= f.label :postfrequency %>
+            <%= f.label :postfrequency, "Submission Frequency" %>
           </div>
           <div class="col-9">
             <%= f.select :postfrequency, options_for_select([['None', 0], ['Daily', 1], ['Every Other Day', 2], ['Every 3 Days', 3], ['Every 4 Days', 4], ['Every 5 Days', 5], ['Every 6 Days', 6], ['Weekly', 7]], @challenge.postfrequency), { :class => 'custom-select' } %>
@@ -102,7 +102,7 @@
           </div>
           <% end %>
           
-          Design the badge earned for participating in your challenge!<br>
+          Design the badge earned for participating in your challenge!<br><br>
           
           <%= fields_for @badge do |v| %>
           
@@ -130,14 +130,15 @@
           
           <div class="form-group row">
             <div class="col-3">
-              <%= u.label :required_score %>
+              <%= u.label :required_score, "Submissions Required" %>
             </div>
             <div class="col-9">
               <%= u.number_field :required_score, :max => 2000 %>
             </div>
           </div>
           
-          <small style="color: grey;">(Prestige indicates the level of achievement for a badge, 1 being the lowest and 5 being the highest. 4 and 5 are reserved for extremely challenging tasks. Please employ restraint when designating the badge's prestige.)</small>
+          <small style="color: grey;">Prestige indicates the level of achievement for a badge, 1 being the lowest and 5 being the highest.</small><br>
+          <small style="color: red;"><b>4 and 5 are reserved for extremely challenging tasks. Please employ restraint when designating the badge's prestige.</b></small>
           <div class="form-group row">
             <div class="col-3">
               <%= u.label :prestige %>

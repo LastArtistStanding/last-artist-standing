@@ -20,4 +20,12 @@ module ChallengesHelper
         Challenge.where(":todays_date >= start_date AND :todays_date < end_date AND seasonal = true", {todays_date: Date.current}).first
     end
     
+    def getDaysInChallenge(challenge)
+        if challenge.blank?
+            0
+        else
+            (challenge.end_date - challenge.start_date).to_i
+        end
+    end
+    
 end

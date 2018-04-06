@@ -68,7 +68,7 @@
         
         <div class="form-group row">
           <div class="col-3">
-            <%= f.label :postfrequency %>
+            <%= f.label :postfrequency, "Submission Frequency" %>
           </div>
           <div class="col-9">
             <%= postfrequencyToString(@challenge.postfrequency) %>
@@ -103,7 +103,7 @@
           </div>
           <% end %>
           
-          Design the badge earned for participating in your challenge!<br>
+          Design the badge earned for participating in your challenge!<br><br>
           
           <%= fields_for @badge do |v| %>
           
@@ -131,14 +131,13 @@
           
           <div class="form-group row">
             <div class="col-3">
-              <%= u.label :required_score %>
+              <%= u.label :required_score, "Submissions Required" %>
             </div>
             <div class="col-9">
               <%= @badge_map.required_score %>
             </div>
           </div>
           
-          <small style="color: grey;">(Prestige indicates the level of achievement for a badge, 1 being the lowest and 5 being the highest. 4 and 5 are reserved for extremely challenging tasks. Please employ restraint when designating the badge's prestige.)</small>
           <div class="form-group row">
             <div class="col-3">
               <%= u.label :prestige %>
