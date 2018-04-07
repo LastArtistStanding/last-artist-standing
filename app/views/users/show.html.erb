@@ -1,3 +1,9 @@
+<script>
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
+</script>
+
 <% provide(:title, @user.name) %>
 <div class="container-fluid" style="margin-top: 2rem;">
   <div class="row">
@@ -29,6 +35,14 @@
         <div class="card-header"><b>Badges Awarded</b></div>
         <div class="card-body">
           <p class="card-text">
+            <% @awards.each do |award| %>
+              <% badgeURL = getBadgeImage(award.badge) %>
+              <% prestigeCalc = award.prestige %>
+              <% if award.badge.id == 1 %>
+                <% prestigeCalc = (prestigeCalc + 1)/2 %>
+              <% end %>
+              <%= image_tag badgeURL, :title => "#{award.badge.name}", :class => "prestige#{prestigeCalc}", :data => { :content => "#{BadgeMap.find_by({:badge_id => award.badge_id, :prestige => award.prestige}).description} (Prestige Level: #{prestigeCalc})", :trigger => "hover", :toggle => "popover", :placement => "top" } %>
+            <% end %>
           </p>
         </div>
       </div>
@@ -41,6 +55,10 @@
         <div class="card-header"><b>Submissions</b></div>
         <div class="card-body">
           <p class="card-text">
+            <% @submissions.each do |submission| %>
+              <% submissionUrl = getSubmissionAvatar(submission) %>
+              <%= link_to image_tag(submissionUrl), url_for({:controller => 'submissions', :action => 'show', :id => submission.id}), :class => 'quick' %>
+            <% end %>
           </p>
         </div>
       </div>

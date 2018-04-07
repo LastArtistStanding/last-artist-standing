@@ -9,6 +9,9 @@ gem 'rails-controller-testing'
 gem 'bcrypt', git: 'https://github.com/codahale/bcrypt-ruby.git', :require => 'bcrypt'
 
 gem 'bootstrap', '>= 4'
+# For popovers
+gem 'popper_js', '~> 1.12.9'
+gem 'rails-assets-tether', '>= 1.3.3', source: 'https://rails-assets.org'
 gem 'autoprefixer-rails'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
