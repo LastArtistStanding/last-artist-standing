@@ -23,7 +23,7 @@
     <% @submissions.each do |submission| %>
       <tr>
         <td><%= submission.id %></td>
-        <td><%= image_tag submission.drawing.thumb.url unless submission.drawing.blank? %></td>
+        <td><%= image_tag getSubmissionThumb(submission) %></td>
         <td><%= submission.user.name %> </td>
         <td><%= submission.created_at.strftime("%T") %></td>
         <td><%= getNsfwString(submission.nsfw_level) %></td>
