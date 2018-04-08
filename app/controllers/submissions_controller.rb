@@ -19,17 +19,18 @@ class SubmissionsController < ApplicationController
   # GET /submissions/1
   # GET /submissions/1.json
   def show
+    @challenge_entries = ChallengeEntry.where(:submission_id => @submission.id)
   end
 
   # GET /submissions/new
   def new
     @submission = Submission.new
-    @participations = Participation.where("user_id = :current_user_id AND :todays_date >= start_date AND :todays_date < end_date", {current_user_id: current_user.id, todays_date: Date.current})
+    @participations = Participation.where({:user_id => current_user.id, :active => true}).order("challenge_id ASC")
   end
 
   # GET /submissions/1/edit
   def edit
-    @participations = Participation.where("user_id = :current_user_id AND :todays_date >= start_date AND :todays_date < end_date", {current_user_id: current_user.id, todays_date: Date.current})
+    @participations = Participation.where({:user_id => current_user.id, :active => true}).order("challenge_id ASC")
   end
 
   # POST /submissions
@@ -37,6 +38,7 @@ class SubmissionsController < ApplicationController
   def create
     @submission = Submission.new(submission_params)
     @submission.user_id = current_user.id
+    @participations = Participation.where({:user_id => current_user.id, :active => true}).order("challenge_id ASC")
     
     respond_to do |format|
       if @submission.save
@@ -70,6 +72,11 @@ class SubmissionsController < ApplicationController
         ChallengeEntry.create({:challenge_id => seasonalChallenge.id, :submission_id => @submission.id, :user_id => current_user.id})
         
         # Last, manage all custom challenge submissions selected (to do).
+        @participations.each do |p|
+          if !params[p.challenge_id.to_s].blank?
+            ChallengeEntry.create({:challenge_id => p.challenge.id, :submission_id => @submission.id, :user_id => current_user.id})
+          end
+        end
         
         format.html { redirect_to @submission }
         format.json { render :show, status: :created, location: @submission }

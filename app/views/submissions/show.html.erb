@@ -8,6 +8,11 @@
           <%= image_tag getUserThumb(@submission.user) %><br><br>
           Submitted by: <b><%= @submission.user.name %></b><br>
           Content Level: <b><%= getNsfwString(@submission.nsfw_level) %></b><br><br>
+          <b>Submitted to Challenges:</b><br>
+          <% @challenge_entries.each do |ce| %>
+            <%= ce.challenge.name %><br>
+          <% end %>
+          <br>
           <a class="btn btn-primary" href="/submissions">
             <span class="fa fa-undo"></span> Back
           </a>
