@@ -108,7 +108,36 @@ namespace :dad_tasks do
         end
         
         # Initialize any participations if the start_date has been reached
-        startingParticipations = Participation.where(active: false, start_date: Date.current)
+        startingParticipations = Participation.where(active: nil, start_date: Date.current)
+        
+        startingParticipations.each do |s|
+            
+            challenge = s.challenge
+            
+            s.active = true
+            s.score = 0
+            s.eliminated = false
+            
+            # If the user can submit whenever, the submission period is the full duration of the challenge.
+            if challenge.postfrequency == 0
+                s.last_submission_date = challenge.start_date
+                s.next_submission_date = challenge.end_date
+            # Otherwise, the deadline is dictated by challenge postfrequency
+            else
+                s.last_submission_date = challenge.start_date
+                s.next_submission_date = challenge.start_date + challenge.postfrequency.days
+            end
+            
+            # Save changes to participation.
+            s.save
+            
+        end
+    end
+    
+    desc "Patch fix for orphaned participations."
+    task :fix_inactive_participations => :environment do
+        # Initialize any participations if the start_date has been reached
+        startingParticipations = Participation.where(active: nil, start_date: Date.current)
         
         startingParticipations.each do |s|
             
