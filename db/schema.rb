@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180407211750) do
+ActiveRecord::Schema.define(version: 20180418215425) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -79,6 +79,23 @@ ActiveRecord::Schema.define(version: 20180407211750) do
     t.date     "next_submission_date"
     t.date     "last_submission_date"
     t.boolean  "submitted"
+  end
+
+  create_table "patch_entries", force: :cascade do |t|
+    t.integer  "patchnote_id"
+    t.string   "body"
+    t.integer  "importance"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "patch_notes", force: :cascade do |t|
+    t.string   "before"
+    t.string   "after"
+    t.string   "patch"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["patch"], name: "index_patch_notes_on_patch", unique: true, using: :btree
   end
 
   create_table "submissions", force: :cascade do |t|

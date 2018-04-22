@@ -1,0 +1,48 @@
+<% provide(:title, "Site News") %>
+  
+<div class="container-fluid">
+  <br>
+  <div class="row">
+    <!-- Spacing Column -->
+    <div class="col-lg-1"></div>
+    
+	  <div class="col-lg-5">
+	    
+	    <div class="card">
+	      <div class="card-header"><b>Latest Patch: <%= @latestPatchNote.patch %> (<%= dateToString(@latestPatchNote.created_at.to_date) %>)</b></div>
+        <div class="card-body">
+          <%= @latestPatchNote.before %>
+          <br><br>
+          <small><ul class="list-group">
+          <% @latestPatchEntries.each do |patchEntry| %>
+          <li class="list-group-item <%= patchImportanceToClass(patchEntry.importance) %>">
+            <%= patchImportanceToString(patchEntry.importance) %><%= patchEntry.body %>
+          </li>
+          <% end %>
+          </ul></small>
+          <br>
+          <%= @latestPatchNote.after %>
+        </div>
+      </div>
+      
+    </div>
+    
+    <div class="col-lg-5">
+      
+      <div class="card">
+        <div class="card-header"><b>Latest Announcement - the1banana (April 18, 2018)</b></div>
+        <div class="card-body">
+            I had been intending to push these changes for a really long time now. A variety of very small, but important changes have been pushed in.
+            <br>
+            This new site news page will soon act as a liason between the dev team and the users to discuss what features are most important to you. You will soon be able to express and vote on the change you want to see on the site.
+            <br>
+            <br>
+            Thanks, and apologies for everything!
+        </div>
+      </div>
+    </div>
+    
+    <!-- Spacing Column -->
+    <div class="col-lg-1"></div>
+  </div>
+</div>
