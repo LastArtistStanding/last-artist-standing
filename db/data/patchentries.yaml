@@ -1,0 +1,20 @@
+PatchEntry1:
+    patchnote_id: 1
+    body: "Added the site news page, the new home for patch information and annoucements."
+    importance: 2
+PatchEntry2:
+    patchnote_id: 1
+    body: "Updated all date displays to be in <MONTHNAME> <DATE>, <YYYY> format to temporarily alleviate ambiguity for users in countries that do not use MM/DD/YYYY."
+    importance: 1
+PatchEntry3:
+    patchnote_id: 1
+    body: "Improved wording of streak timer. Added colors to also help add even more contextual clarity."
+    importance: 1
+PatchEntry4:
+    patchnote_id: 1
+    body: "Added site activity announcements to the front page. This will document things such as DAD eliminations, receiving badges, basic leaderboard, challenges starting and ending."
+    importance: 2
+PatchEntry5:
+    patchnote_id: 1
+    body: "Fixed a bug where challenges would incorrectly appear as 'active' well after the end date."
+    importance: 1

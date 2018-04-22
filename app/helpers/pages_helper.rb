@@ -4,7 +4,7 @@ module PagesHelper
         if date.nil?
             "None"
         else
-            date.strftime("%D")
+            date.strftime("%B %-d, %Y")
         end
     end
     
@@ -32,7 +32,7 @@ module PagesHelper
     def userSubmittedToDAD
         # -1, not participating or logged in, display nothing
         if !logged_in?
-            return [-1,0]
+            return [-2,0]
         end
         
         currentParticipation = Participation.find_by(:active => true, :challenge_id => 1, :user_id => current_user.id)
@@ -48,6 +48,10 @@ module PagesHelper
         else
             return [0,daysToNextSubmission.to_i]
         end
+    end
+    
+    def getCurrentSeasonalChallenge
+        Challenge.where(":todays_date >= start_date AND :todays_date < end_date AND seasonal = true", {todays_date: Date.current}).first
     end
     
     def getLatestSeasonalChallenges
@@ -88,6 +92,32 @@ module PagesHelper
             winter = nil
         end
         [spring,summer,autumn,winter]
+    end
+    
+    def patchImportanceToString(importance)
+        case importance
+        when 1
+            ""
+        when 2
+            "<b>[Important]</b> ".html_safe
+        when 3
+            "<b>[CRITICAL]</b> ".html_safe
+        else
+            ""
+        end
+    end
+    
+    def patchImportanceToClass(importance)
+        case importance
+        when 1
+            "list-group-item-info"
+        when 2
+            "list-group-item-warning"
+        when 3
+            "list-group-item-danger"
+        else
+            ""
+        end
     end
     
 end

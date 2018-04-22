@@ -35,6 +35,7 @@ module MigrationHelper
     
     def updateBadgeMaps
         badgeMapData = YAML.load_file('db/data/badgemaps.yaml')
+        
         badgeMapData.each do |currentBadgeMap,details|
             challenge = Challenge.find_by(name: details["challenge_name"])
             badge = Badge.find_by(name: details["badge_name"])
@@ -44,4 +45,22 @@ module MigrationHelper
             newBadgeMap.save
         end
     end
+    
+    def updatePatchInfo
+        patchNoteData = YAML.load_file('db/data/patchnotes.yaml')
+        patchEntriesData = YAML.load_file('db/data/patchentries.yaml')
+        
+        patchNoteData.each do |currentPatchNote,noteDetails|
+            patchNote = PatchNote.find_by(patch: noteDetails["patch"])
+            if patchNote.blank?
+                patchNote = PatchNote.create({ :before => noteDetails["before"], :after => noteDetails["after"], :patch => noteDetails["patch"] })
+                patchEntriesData.each do |currentPatchEntry,entryDetails|
+                    if patchNote.id == entryDetails["patchnote_id"]
+                        PatchEntry.create({ :patchnote_id => entryDetails["patchnote_id"], :body => entryDetails["body"], :importance => entryDetails["importance"] })
+                    end
+                end
+            end
+        end
+    end
+    
 end

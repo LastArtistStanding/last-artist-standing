@@ -20,13 +20,22 @@
     var timeToNextSubmissionDate = rubyNextSubmissionDate - currentTime;
     var submitted = $('.time_information').data('submitted')
     
-    $('#TimeDisplay').html(currentTime.toUTCString());
-    
-    if (submitted != -1) {
+    if (submitted == -2) {
+      $('#TimeDisplay').html(currentTime.toUTCString());
+      $('#StreakStatus').css("display", "none")
+      $('#NextSubmissionDisplay').css("display", "none")
+    } else if (submitted == -1) {
+      $('#TimeDisplay').html(currentTime.toUTCString() + "<br>");
+      $('#StreakStatus').html("You currently don't have an active streak.");
+    } else {
+      $('#TimeDisplay').html(currentTime.toUTCString() + "<br>");
+      
       if (submitted == 0) {
         $('#StreakStatus').html("Time left before your streak is reset: ");
+        $('#StreakStatus').css("color", "red")
       } else if (submitted == 1) {
-        $('#StreakStatus').html("Your streak is safe for: ");
+        $('#StreakStatus').html("You're good to go! Next submission period in: ");
+        $('#StreakStatus').css("color", "green")
       }
       
       var seconds = Math.floor(timeToNextSubmissionDate / (1000)) % 60;
@@ -35,20 +44,24 @@
       var days = Math.floor(timeToNextSubmissionDate / (1000*60*60*24));
       
       $('#NextSubmissionDisplay').html(days+" day(s) "+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
-    } else {
-      $('#StreakStatus').html("You currently don't have an active streak.");
     }
     
     interval = setInterval(function() {
       currentTime = new Date(offset + Date.now());
       timeToNextDay = rubyNextDate - currentTime;
-      $('#TimeDisplay').html(currentTime.toUTCString());
       
-      if (submitted != -1) {
+      if (submitted == -2) {
+        $('#TimeDisplay').html(currentTime.toUTCString());
+      } else if (submitted == -1) {
+        $('#TimeDisplay').html(currentTime.toUTCString() + "<br>");
+        $('#StreakStatus').html("You currently don't have an active streak.");
+      } else {
+        $('#TimeDisplay').html(currentTime.toUTCString() + "<br>");
+        
         if (submitted == 0) {
           $('#StreakStatus').html("Time left before your streak is reset: ");
         } else if (submitted == 1) {
-          $('#StreakStatus').html("Your streak is safe for: ");
+          $('#StreakStatus').html("You're good to go! Next submission period in: ");
         }
         
         timeToNextSubmissionDate = rubyNextSubmissionDate - currentTime;
@@ -63,8 +76,6 @@
         } else {
           $('#NextSubmissionDisplay').html("0 day(s) 00:00:00");
         }
-      } else {
-        $('#StreakStatus').html("You currently don't have an active streak.");
       }
       
     }, 1000);
@@ -80,8 +91,8 @@
 	    <% end %>
 	    <div class="card-header"><b>Site Timers</b></b></div>
 	    <div class="card-body">
-	      <b>Current Site Time: </b><span id="TimeDisplay"></span><br>
-	      <b><span id="StreakStatus"></span></b><span id="NextSubmissionDisplay"></span><br>
+	      <b>Current Site Time: </b><span id="TimeDisplay"></span>
+	      <b><span id="StreakStatus"></span></b><span id="NextSubmissionDisplay"></span>
 	    </div>
 	  </div>
     
@@ -127,7 +138,7 @@
               Seasonal Challenge:
             </div>
             <div class="col-9">
-              <%= Challenge.where(":todays_date >= start_date AND :todays_date < end_date AND seasonal = true", {todays_date: Date.current}).first.name %>
+              <%= getCurrentSeasonalChallenge.name %>
             </div>
           </div>
           <br>
