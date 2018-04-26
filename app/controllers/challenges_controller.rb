@@ -26,10 +26,10 @@ class ChallengesController < ApplicationController
       end
     end
     
-    if Date.current >= @challenge.start_date
+    if Date.current >= @challenge.start_date && (@challenge.end_date.blank? || Date.current < @challenge.end_date)
       @currentParticipants = Participation.where({:challenge_id => @challenge.id, :active => true}).order("score DESC")
     else
-      @currentParticipants = Participation.where({:challenge_id => @challenge.id}).order("created_at ASC")
+      @currentParticipants = Participation.where({:challenge_id => @challenge.id}).order("score DESC, created_at ASC")
     end
     if @challenge.streak_based
       if @challenge.id == 1
@@ -97,7 +97,7 @@ class ChallengesController < ApplicationController
         @badge_map.badge_id = @badge.id
         @badge_map.save
         
-        format.html { redirect_to root_path }
+        format.html { redirect_to @challenge }
       end
     end
   end

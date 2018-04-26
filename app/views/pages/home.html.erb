@@ -160,7 +160,7 @@
                   <td><%= postfrequencyToString(challenge.postfrequency) %></td>
                 </tr>
                 <tr id="<%= challenge.id %>" class="collapse in">
-                  <td colspan="6" class="small"><%= raw challenge.description.gsub("\n","<br>") %></td>
+                  <td colspan="6" class="small"><%= simple_format(challenge.description) %></td>
                 </tr>
               <% end %>
             </tbody>
@@ -197,7 +197,7 @@
                   <td><%= postfrequencyToString(challenge.postfrequency) %></td>
                 </tr>
                 <tr id="<%= challenge.id %>" class="collapse in">
-                  <td colspan="6" class="small"><%= raw challenge.description %></td>
+                  <td colspan="6" class="small"><%= simple_format(challenge.description) %></td>
                 </tr>
               <% end %>
             </tbody>
@@ -218,7 +218,7 @@
         <% @latestEliminations.each do |elim| %>
           <% user = User.find(elim.user_id) %>
           <% avatarURL = getUserThumb(user) %>
-          <%= image_tag avatarURL, :title => "#{user.name} (Streak: #{elim.score})", :style => "width: 50px; margin: 0.25rem;", :data => { :toggle => "tooltip", :placement => "top" } %>
+          <%= link_to image_tag(avatarURL, :title => "#{user.name} (Streak: #{elim.score})", :style => "width: 50px; margin: 0.25rem;", :data => { :toggle => "tooltip", :placement => "top" }), user %>
         <% end %>
         </div>
         </div>
@@ -251,13 +251,13 @@
                 <% prestigeCalc = (prestigeCalc + 1)/2 %>
               <% end %>
               <div style="height: 100%; width: 90px; float: left;">
-              <%= image_tag badgeURL, :title => "#{award.badge.name}", :class => "prestige#{prestigeCalc}", :data => { :content => "#{BadgeMap.find_by({:badge_id => award.badge_id, :prestige => award.prestige}).description} (Prestige Level: #{prestigeCalc})", :trigger => "hover", :toggle => "popover", :placement => "top" } %>
+              <%= image_tag badgeURL, :title => "#{award.badge.name}", :class => "prestige#{prestigeCalc}", :data => { :content => "#{simple_format(BadgeMap.find_by({:badge_id => award.badge_id, :prestige => award.prestige}).description)} (Prestige Level: #{prestigeCalc})", :trigger => "hover", :toggle => "popover", :placement => "top", :html => "true" } %>
               </div>
               <div style="width: calc(100% - 90px); float: left;">
           <% end %>
           <% user = User.find(award.user_id) %>
           <% avatarURL = getUserThumb(user) %>
-          <%= image_tag avatarURL, :title => "#{user.name}", :style => "width: 50px; margin-right: 0.5rem; margin-bottom: 0.5rem;", :data => { :toggle => "tooltip", :placement => "top" } %>
+          <%= link_to image_tag(avatarURL, :title => "#{user.name}", :style => "width: 50px; margin-right: 0.5rem; margin-bottom: 0.5rem;", :data => { :toggle => "tooltip", :placement => "top" }), user %>
           <% if index == (@latestAwards.size - 1) %>
             </div></div></div>
           <% end %>
@@ -288,7 +288,7 @@
           <% end %>
           <% user = User.find(seasonPart.user_id) %>
           <% avatarURL = getUserThumb(user) %>
-          <%= image_tag avatarURL, :title => "#{user.name}", :style => "width: 25px; margin: 0.125rem;", :data => { :toggle => "tooltip", :placement => "top" } %>
+          <%= link_to image_tag(avatarURL, :title => "#{user.name}", :style => "width: 25px; margin: 0.125rem;", :data => { :toggle => "tooltip", :placement => "top" }), user %>
           <% if index == (@seasonalLeaderboard.size - 1) %>
             </td><td><%= seasonPart.score %></td></tr>
           <% end %>

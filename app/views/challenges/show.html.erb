@@ -26,7 +26,7 @@
             <%= label_tag :description %>
           </div>
           <div class="col-9">
-            <%= @challenge.description %>
+            <%= simple_format(@challenge.description) %>
           </div>
         </div>
         
@@ -109,7 +109,7 @@
                   <tr>
                     <td><%= badgemap.required_score %></td>
                     <td><%= badgemap.prestige %></td>
-                    <td><%= badgemap.description %></td>
+                    <td><%= simple_format(badgemap.description) %></td>
                   </tr>
                 <% end %>
               </tbody>
@@ -140,7 +140,7 @@
           <tbody>
             <% @latestEliminations.each do |participation| %>
               <tr>
-                <td><%= participation.user.name %></td>
+                <td><%= link_to participation.user.name, participation.user %></td>
                 <td><%= participation.score %></td>
                 <td><%= dateToString(participation.created_at.to_date) %></td>
                 <td><%= dateToString(participation.end_date) %></td>
@@ -167,9 +167,45 @@
       </div>
       <div class="card-body table-responsive">
         
+        <% if Date.current < @challenge.start_date %>
+          <% userParticipation = getUserParticipationLevel(current_user, @challenge, false) %>
+          <%= raw getParticipationIcon(userParticipation) %> - 
+          <% if userParticipation == 0 %>
+            You have not signed up for this challenge.
+          <% elsif userParticipation == 1 %>
+            You have signed up for this challenge!
+          <% else %>
+            You definitely cheated, or something weird happened. Either way, report this to banana ASAP.
+          <% end %>
+          <br><br>
+        <% elsif Date.current >= @challenge.start_date && (@challenge.end_date.blank? || Date.current < @challenge.end_date) %>
+          <% userParticipation = getUserParticipationLevel(current_user, @challenge, true) %>
+          <%= raw getParticipationIcon(userParticipation) %> - 
+          <% if userParticipation == 0 %>
+            You are not participating in this challenge.
+          <% elsif userParticipation == 1 %>
+            You are currently participating in this challenge!
+          <% else %>
+            You are participating in this challenge, and have earned a badge for your efforts!
+          <% end %>
+          <br><br>
+        <% else %>
+          <% userParticipation = getUserParticipationLevel(current_user, @challenge, false) %>
+          <%= raw getParticipationIcon(userParticipation) %> - 
+          <% if userParticipation == 0 %>
+            You did not participate in this challenge.
+          <% elsif userParticipation == 1 %>
+            You participated in this challenge, but did not earn a badge.
+          <% else %>
+            You are participated in this challenge, and earned a badge for your efforts!
+          <% end %>
+          <br><br>
+        <% end %>
+        
         <table class="table table-sm">
           <thead class="thead-light">
             <tr>
+              <th scope="col"></th>
               <th scope="col">User</th>
               <th scope="col">Current Score</th>
               <th scope="col">Join Date</th>
@@ -187,7 +223,12 @@
           <tbody>
             <% @currentParticipants.each do |participation| %>
               <tr>
-                <td><%= participation.user.name %></td>
+                <td>
+                  <% if getParticipationLevel(participation, @challenge) == 2 %>
+                    <i class="fa fa-trophy" aria-hidden="true"></i>
+                  <% end %>
+                </td>
+                <td><%= link_to participation.user.name, participation.user %></td>
                 <td><%= participation.score %></td>
                 <td><%= dateToString(participation.created_at.to_date) %></td>
                 <% if @challenge.id != 1 %>
@@ -204,7 +245,12 @@
             <% if !@allEliminations.blank? %>
               <% @allEliminations.each do |participation| %>
               <tr>
-                <td><%= participation.user.name %></td>
+                <td>
+                  <% if getParticipationLevel(participation, @challenge) == 2 %>
+                    <i class="fa fa-trophy" aria-hidden="true"></i>
+                  <% end %>
+                </td>
+                <td><%= link_to participation.user.name, participation.user %></td>
                 <td><%= participation.score %></td>
                 <td><%= dateToString(participation.created_at.to_date) %></td>
                 <td><%= dateToString(participation.end_date) %></td>
