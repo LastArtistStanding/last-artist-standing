@@ -3,8 +3,34 @@
 
 <p class="h2"><%= @date == Date.current ? "Today's" : @date.strftime("%B %e, %Y") %> Submissions
   <a class="btn btn-primary" style="margin-bottom: 0.5rem;" href="<%= new_submission_path %>">
-	  <span class="fa fa-plus"></span> Submit Your Art!
+	  <i class="fa fa-plus" aria-hidden="true"></i> Submit Your Art!
 	</a>
+	<span style="float: right;">
+	  <a class="btn btn-primary" style="margin-bottom: 0.5rem;" href=" <%= submissions_path(:date => @date - 1.month) %> ">
+      <i class="fa fa-chevron-left" aria-hidden="true"></i>
+      <i class="fa fa-chevron-left" aria-hidden="true" style="margin-left: -0.5rem;"></i>
+      <i class="fa fa-chevron-left" aria-hidden="true" style="margin-left: -0.5rem;"></i>
+    </a>
+	  <a class="btn btn-primary" style="margin-bottom: 0.5rem;" href=" <%= submissions_path(:date => @date - 7.day) %> ">
+      <i class="fa fa-chevron-left" aria-hidden="true"></i>
+      <i class="fa fa-chevron-left" aria-hidden="true" style="margin-left: -0.5rem;"></i>
+    </a>
+	  <a class="btn btn-primary" style="margin-bottom: 0.5rem;" href=" <%= submissions_path(:date => @date - 1.day) %> ">
+      <i class="fa fa-chevron-left" aria-hidden="true"></i>
+    </a>
+    <a class="btn btn-primary" style="margin-bottom: 0.5rem;" href=" <%= submissions_path(:date => @date + 1.day) %> ">
+      <i class="fa fa-chevron-right" aria-hidden="true"></i>
+    </a>
+    <a class="btn btn-primary" style="margin-bottom: 0.5rem;" href=" <%= submissions_path(:date => @date + 7.day) %> ">
+      <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      <i class="fa fa-chevron-right" aria-hidden="true" style="margin-left: -0.5rem;"></i>
+    </a>
+    <a class="btn btn-primary" style="margin-bottom: 0.5rem;" href=" <%= submissions_path(:date => @date + 1.month) %> ">
+      <i class="fa fa-chevron-right" aria-hidden="true"></i>
+      <i class="fa fa-chevron-right" aria-hidden="true" style="margin-left: -0.5rem;"></i>
+      <i class="fa fa-chevron-right" aria-hidden="true" style="margin-left: -0.5rem;"></i>
+    </a>
+  </span>
 </p>
 
 <table class="table">
@@ -15,7 +41,6 @@
       <th scope="col">Artist</th>
       <th scope="col">Timestamp</th>
       <th scope="col">Nsfw level</th>
-      <th scope="col"></th>
     </tr>
   </thead>
 
@@ -23,11 +48,10 @@
     <% @submissions.each do |submission| %>
       <tr>
         <td><%= submission.id %></td>
-        <td><%= image_tag getSubmissionThumb(submission) %></td>
-        <td><%= submission.user.name %> </td>
+        <td><%= link_to image_tag(getSubmissionThumb(submission)), submission %></td>
+        <td><%= link_to submission.user.name, submission.user %> </td>
         <td><%= submission.created_at.strftime("%T") %></td>
         <td><%= getNsfwString(submission.nsfw_level) %></td>
-        <td><%= link_to 'Show', submission %></td>
       </tr>
     <% end %>
   </tbody>

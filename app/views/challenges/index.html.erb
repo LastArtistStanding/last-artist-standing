@@ -12,6 +12,7 @@
   <thead>
     <tr>
       <th scope="col">ICO</th>
+      <th scope="col">PAR</th>
       <th scope="col">Name</th>
       <th scope="col">Status</th>
       <th scope="col">Start Date</th>
@@ -19,7 +20,8 @@
       <th scope="col">Frequency</th>
       <th scope="col">Eliminations?</th>
       <th scope="col">Creator</th>
-      <th scope="col" colspan="3"></th>
+      <th scope="col"><i class="fa fa-pencil" aria-hidden="true"></i></th>
+      <th scope="col"><i class="fa fa-trash" aria-hidden="true"></i></th>
     </tr>
   </thead>
 
@@ -27,7 +29,8 @@
     <% @activeChallenges.each do |challenge| %>
       <tr>
         <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "25px" %></td>
-        <td><%= challenge.name %></td>
+        <td><%= raw getParticipationIcon(getUserParticipationLevel(current_user, challenge, true)) %></td>
+        <td><%= link_to challenge.name, challenge %></td>
         <td>Active</td>
         <td><%= dateToString(challenge.start_date) %></td>
         <td><%= dateToString(challenge.end_date) %></td>
@@ -40,7 +43,6 @@
           <% end %>
         </td>
         <td><%= getChallengeCreator(challenge.creator_id) %></td>
-        <td><%= link_to '', challenge, :class => "btn btn-primary fa fa-eye" %></td>
         <% if logged_in? && !challenge.creator_id.nil? && challenge.creator_id == current_user.id %>
           <td><%= link_to '', edit_challenge_path(challenge), :class => "btn btn-primary fa fa-edit" %></td>
           <td><%= link_to '', challenge, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-primary fa fa-trash" %></td>
@@ -53,7 +55,8 @@
     <% @upcomingChallenges.each do |challenge| %>
       <tr>
         <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "25px" %></td>
-        <td><%= challenge.name %></td>
+        <td><%= raw getParticipationIcon(getUserParticipationLevel(current_user, challenge, false)) %></td>
+        <td><%= link_to challenge.name, challenge %></td>
         <td>Upcoming</td>
         <td><%= dateToString(challenge.start_date) %></td>
         <td><%= dateToString(challenge.end_date) %></td>
@@ -66,20 +69,19 @@
           <% end %>
         </td>
         <td><%= getChallengeCreator(challenge.creator_id) %></td>
-        <td><%= link_to '', challenge, :class => "btn btn-primary fa fa-eye" %></td>
         <% if logged_in? && !challenge.creator_id.nil? && challenge.creator_id == current_user.id %>
           <td><%= link_to '', edit_challenge_path(challenge), :class => "btn btn-primary fa fa-edit" %></td>
-          <td><%= link_to '', challenge, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-primary fa fa-trash" %></td>
         <% else %>
           <td></td>
-          <td></td>
         <% end %>
+        <td></td>
       </tr>
     <% end %>
     <% @completedChallenges.each do |challenge| %>
       <tr style="color: grey;">
         <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "25px" %></td>
-        <td><%= challenge.name %></td>
+        <td><%= raw getParticipationIcon(getUserParticipationLevel(current_user, challenge, false)) %></td>
+        <td><%= link_to challenge.name, challenge %></td>
         <td>Completed</td>
         <td><%= dateToString(challenge.start_date) %></td>
         <td><%= dateToString(challenge.end_date) %></td>
@@ -92,14 +94,8 @@
           <% end %>
         </td>
         <td><%= getChallengeCreator(challenge.creator_id) %></td>
-        <td><%= link_to "", challenge, :class => "btn btn-primary fa fa-eye" %></td>
-        <% if logged_in? && !challenge.creator_id.nil? && challenge.creator_id == current_user.id %>
-          <td></td>
-          <td></td>
-        <% else %>
-          <td></td>
-          <td></td>
-        <% end %>
+        <td></td>
+        <td></td>
       </tr>
     <% end %>
   </tbody>

@@ -1,3 +1,4 @@
+#Patch 0.9
 PatchEntry1:
     patchnote_id: 1
     body: "Added the site news page, the new home for patch information and annoucements."
@@ -17,4 +18,41 @@ PatchEntry4:
 PatchEntry5:
     patchnote_id: 1
     body: "Fixed a bug where challenges would incorrectly appear as 'active' well after the end date."
+    importance: 1
+#Patch 0.9.1
+PatchEntry6:
+    patchnote_id: 2
+    body: "Patches now have titles. Whee."
+    importance: 1
+PatchEntry7:
+    patchnote_id: 2
+    body: "A massive number of new links have been added! Now, most places that should intuitively link to other places, now do so. Look around and find out for yourself!"
+    importance: 3
+PatchEntry8:
+    patchnote_id: 2
+    body: "You can no longer delete a challenge after it has started."
+    importance: 2
+PatchEntry9:
+    patchnote_id: 2
+    body: "Participations now display properly for completed challenges."
+    importance: 2
+PatchEntry10:
+    patchnote_id: 2
+    body: "Newlines will now render correctly for challenge and badge descriptions."
+    importance: 1
+PatchEntry11:
+    patchnote_id: 2
+    body: "After creating a challenge, you will be redirected to the newly created challenges instead of the home page."
+    importance: 1
+PatchEntry12:
+    patchnote_id: 2
+    body: "Current patch displays properly in the footer; clicking it links directly to the news page. Also, fluff's name, Contact and Want to Help? are now functional links."
+    importance: 1
+PatchEntry13:
+    patchnote_id: 2
+    body: "Icons and text have been added to indicate whether you're participating in a challenge or not."
+    importance: 1
+PatchEntry14:
+    patchnote_id: 2
+    body: "Added date navigation buttons to the submission index page. Something prettier and more efficient will be implemented later, but this is a placeholder to temporarily improve usability."
     importance: 1

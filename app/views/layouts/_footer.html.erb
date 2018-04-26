@@ -1,16 +1,16 @@
 <footer class="footer">
   <small>
-    Do Art Daily v0.1
+    Do Art Daily <%= link_to PatchNote.last.patch, "/news" %>
     by <a href="https://github.com/the1banana">the1banana</a>,
     <a href="https://github.com/shawsey">NicNac</a>
-    and fluff
+    and <a href="https://github.com/fluffdotexe">fluff</a>
   </small>
   <nav>
     <ul>
       <small>
         <li><%= link_to "About",   '#' %></li>
-        <li><%= link_to "Contact", '#' %></li>
-        <li><a href="https://github.com/LastArtistStanding/last-artist-standing/tree/rails-development">Want to Help?</a></li>
+        <li><%= mail_to "lastartiststanding3@gmail.com", "Contact" %></li>
+        <li><a href="https://github.com/LastArtistStanding/last-artist-standing/">Want to Help?</a></li>
       </small>
     </ul>
   </nav>

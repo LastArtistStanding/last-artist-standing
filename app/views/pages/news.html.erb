@@ -9,7 +9,7 @@
 	  <div class="col-lg-5">
 	    
 	    <div class="card">
-	      <div class="card-header"><b>Latest Patch: <%= @latestPatchNote.patch %> (<%= dateToString(@latestPatchNote.created_at.to_date) %>)</b></div>
+	      <div class="card-header"><b>Latest Patch: <%= @latestPatchNote.patch %> <%= getPatchTitle(@latestPatchNote) %> (<%= dateToString(@latestPatchNote.created_at.to_date) %>)</b></div>
         <div class="card-body">
           <%= @latestPatchNote.before %>
           <br><br>
@@ -30,11 +30,13 @@
     <div class="col-lg-5">
       
       <div class="card">
-        <div class="card-header"><b>Latest Announcement - the1banana (April 18, 2018)</b></div>
+        <div class="card-header"><b>Latest Announcement - the1banana (April 26, 2018)</b></div>
         <div class="card-body">
-            I had been intending to push these changes for a really long time now. A variety of very small, but important changes have been pushed in.
+            Even if I'm not in the thread or discord 24/7, I'm doing my best to listen in on your concerns. As part of what I've surveyed, it would seem that intuitive links between pages make for some frustrating navigation. Hopefully, a great deal of that should be fixed, but if there's a flow that still annoys you, let me know as soon as possible!
             <br>
-            This new site news page will soon act as a liason between the dev team and the users to discuss what features are most important to you. You will soon be able to express and vote on the change you want to see on the site.
+            Next up on my docket is likely adding and deleting submissions. An update to this news page to make it a place to discuss new functionality and the path of the website may come before then, and will hopefully be used to discuss complex updates like that one.
+            <br>
+            As usual, thank you for all your patience.
             <br>
             <br>
             Thanks, and apologies for everything!

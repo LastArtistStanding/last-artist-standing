@@ -120,4 +120,12 @@ module PagesHelper
         end
     end
     
+    def getPatchTitle(patch)
+        if patch.blank? || patch.title.blank?
+            ""
+        else
+            " - #{patch.title}"
+        end
+    end
+    
 end

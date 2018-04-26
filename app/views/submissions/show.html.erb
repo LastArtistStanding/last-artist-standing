@@ -6,11 +6,11 @@
 	      <div class="card-header" style="text-align: center;"><b>Submission Info</b></div>
         <div class="card-body" style="text-align: center;">
           <%= image_tag getUserThumb(@submission.user) %><br><br>
-          Submitted by: <b><%= @submission.user.name %></b><br>
+          Submitted by: <b><%= link_to @submission.user.name, @submission.user, :style => "color: black;" %></b><br>
           Content Level: <b><%= getNsfwString(@submission.nsfw_level) %></b><br><br>
           <b>Submitted to Challenges:</b><br>
           <% @challenge_entries.each do |ce| %>
-            <%= ce.challenge.name %><br>
+            <%= link_to ce.challenge.name, ce.challenge, :style => "color: black;" %><br>
           <% end %>
           <br>
           <a class="btn btn-primary" href="/submissions">

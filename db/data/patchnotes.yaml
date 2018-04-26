@@ -2,3 +2,9 @@ PatchNote1:
     patch: "0.9"
     before: "A huge number of small improvements have been pushed to the site!"
     after: "This patch was intended to hit much sooner, but I have been sick with stomach flu for an extended period of time. Sincere apologies for the delays!"
+    title:
+PatchNote2:
+    patch: "0.9.1"
+    before: "Ever get frustrated with navigating the website sometimes? A few changes have been pushed that might fix that."
+    after: "The next patch should attend to expanding this news zone and/or attending to to editing/deleting submissions."
+    title: "Linktopia"

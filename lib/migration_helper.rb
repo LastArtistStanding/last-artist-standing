@@ -54,6 +54,10 @@ module MigrationHelper
             patchNote = PatchNote.find_by(patch: noteDetails["patch"])
             if patchNote.blank?
                 patchNote = PatchNote.create({ :before => noteDetails["before"], :after => noteDetails["after"], :patch => noteDetails["patch"] })
+                if PatchNote.column_names.include?("title")
+                    patchNote.title = noteDetails["title"]
+                    patchNote.save
+                end
                 patchEntriesData.each do |currentPatchEntry,entryDetails|
                     if patchNote.id == entryDetails["patchnote_id"]
                         PatchEntry.create({ :patchnote_id => entryDetails["patchnote_id"], :body => entryDetails["body"], :importance => entryDetails["importance"] })

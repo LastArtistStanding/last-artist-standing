@@ -41,7 +41,7 @@ $(function () {
               <% if award.badge.id == 1 %>
                 <% prestigeCalc = (prestigeCalc + 1)/2 %>
               <% end %>
-              <%= image_tag badgeURL, :title => "#{award.badge.name}", :class => "prestige#{prestigeCalc}", :data => { :content => "#{BadgeMap.find_by({:badge_id => award.badge_id, :prestige => award.prestige}).description} (Prestige Level: #{prestigeCalc})", :trigger => "hover", :toggle => "popover", :placement => "top" } %>
+              <%= image_tag badgeURL, :title => "#{award.badge.name}", :class => "prestige#{prestigeCalc}", :data => { :content => "#{simple_format(BadgeMap.find_by({:badge_id => award.badge_id, :prestige => award.prestige}).description)} (Prestige Level: #{prestigeCalc})", :trigger => "hover", :toggle => "popover", :placement => "top", :html => "true"} %>
             <% end %>
           </p>
         </div>
