@@ -12,6 +12,8 @@
               <% if @challenge.id != 1 %>
                 <% if @challengeEntries.count == 0 %>
                   No entries made yet!
+		<% elsif @challengeEntries.count > 500 %>
+                  Too many entries to load.
                 <% else %>
                   <% @challengeEntries.each do |challengeEntry| %>
                     <% if @challengeEntries.count > 140 %>
