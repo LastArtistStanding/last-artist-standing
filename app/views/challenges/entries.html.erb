@@ -21,7 +21,7 @@
                     <% else %>
                       <% submissionUrl = getSubmissionThumb(Submission.find(challengeEntry.submission_id)) %>
                     <% end %>
-                    <%= link_to image_tag(submissionUrl, :style => "margin: 0.125rem;"), url_for({:controller => 'submissions', :action => 'show', :id => challengeEntry.id}), :class => 'quick' %>
+                    <%= link_to image_tag(submissionUrl, :style => "margin: 0.125rem;"), url_for({:controller => 'submissions', :action => 'show', :id => challengeEntry.submission_id}), :class => 'quick' %>
                   <% end %>
                 <% end %>
               <% else %>
