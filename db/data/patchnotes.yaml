@@ -8,3 +8,8 @@ PatchNote2:
     before: "Ever get frustrated with navigating the website sometimes? A few changes have been pushed that might fix that."
     after: "The next patch should attend to expanding this news zone and/or attending to to editing/deleting submissions."
     title: "Linktopia"
+PatchNote3:
+    patch: "0.9.1a"
+    before: "Small improvement."
+    after: "Patch 1.0 is coming soon! Get excited!"
+    title: 

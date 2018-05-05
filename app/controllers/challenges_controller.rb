@@ -1,5 +1,5 @@
 class ChallengesController < ApplicationController
-  before_action :set_challenge, only: [:show, :edit, :update, :destroy, :join]
+  before_action :set_challenge, only: [:show, :edit, :update, :destroy, :join, :entries]
   
   # GET /challenges
   # GET /challenges.json
@@ -7,6 +7,11 @@ class ChallengesController < ApplicationController
     @activeChallenges = Challenge.where('start_date <= ? AND (end_date > ? OR end_date IS NULL)', Date.current, Date.current).order("start_date ASC, end_date DESC")
     @upcomingChallenges = Challenge.where('start_date > ?', Date.current).order("start_date ASC, end_date DESC")
     @completedChallenges = Challenge.where('end_date <= ?', Date.current).order("start_date ASC, end_date DESC")
+  end
+  
+  # GET
+  def entries
+    @challengeEntries = ChallengeEntry.where(:challenge_id => @challenge.id)
   end
 
   # GET /challenge/1

@@ -56,3 +56,8 @@ PatchEntry14:
     patchnote_id: 2
     body: "Added date navigation buttons to the submission index page. Something prettier and more efficient will be implemented later, but this is a placeholder to temporarily improve usability."
     importance: 1
+#Patch 0.9.1a
+PatchEntry15:
+    patchnote_id: 3
+    body: "You can now view the submissions for a particular challenge. It's not perfect, aesthetically, but this is a placeholder until the next patch."
+    importance: 2
