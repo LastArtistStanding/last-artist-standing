@@ -4,7 +4,7 @@ $(function () {
 })
 </script>
 
-<% provide(:title, @user.name) %>
+<% provide(:title, @curruser.name) %>
 <div class="container-fluid" style="margin-top: 2rem;">
   <div class="row">
     <!-- Spacing Column -->
@@ -13,14 +13,14 @@ $(function () {
 	  <div class="col-lg-2">
       
       <div class="card">
-	      <div class="card-header" style="text-align: center;"><b><%= @user.name %></b></div>
+	      <div class="card-header" style="text-align: center;"><b><%= @curruser.name %></b></div>
         <div class="card-body table-responsive" style="text-align: center;">
-          <%= image_tag getUserThumb(@user) %><br><br>
-          Longest Streak: <%= @user.longest_streak %><br>
-	        DAD Frequency: <%= postfrequencyToString(getUserDADFrequency(@user)) %>
-          <% if logged_in? && current_user.id == @user.id %>
+          <%= image_tag getUserThumb(@curruser) %><br><br>
+          Longest Streak: <%= @curruser.longest_streak %><br>
+	        DAD Frequency: <%= postfrequencyToString(getUserDADFrequency(@curruser)) %>
+          <% if logged_in? && current_user.id == @curruser.id %>
             <br><br>
-            <a class="btn btn-primary" href="<%= edit_user_path(@user) %>">
+            <a class="btn btn-primary" href="<%= edit_user_path(@curruser) %>">
 	            <span class="fa fa-edit"></span> Edit Profile
 	          </a>
 	        <% end %>
