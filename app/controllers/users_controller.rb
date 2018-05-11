@@ -6,8 +6,8 @@ class UsersController < ApplicationController
 
   def show
     @curruser = User.find(params[:id])
-    @awards = Award.where({user_id: @user.id}).order("prestige DESC")
-    @submissions = Submission.where({user_id: @user.id}).order("created_at DESC")
+    @awards = Award.where({user_id: @curruser.id}).order("prestige DESC")
+    @submissions = Submission.where({user_id: @curruser.id}).order("created_at DESC")
   end
 
   def new
