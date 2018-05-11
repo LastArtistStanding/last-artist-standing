@@ -4,8 +4,8 @@
     <div class="col-lg-1"></div>
     
     <div class="col-lg-10">
-      <% if logged_in? && @user.id == current_user.id %>
-        <%= render 'editform', challenge: @user %>
+      <% if logged_in? && @curruser.id == current_user.id %>
+        <%= render 'editform', challenge: @curruser %>
       <% else %>
       <div class="card">
 	      <div class="card-header"><b>Locked</b></div>
