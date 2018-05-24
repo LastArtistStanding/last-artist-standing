@@ -1,4 +1,4 @@
-<%= form_for(@user ||= User.new, html: { novalidate: true }) do |f| %>
+<%= form_for(@curruser ||= User.new, html: { novalidate: true }) do |f| %>
 
   <div class="row">
     <div class="col-lg-6">
@@ -7,34 +7,34 @@
         <div class="card-body">
 
           <%= f.label :email %>
-          <%= f.email_field :email, class: "form-control #{@user.errors.any? ? (@user.errors.key?(:email) ? 'is-invalid' : 'is-valid') : '' }" %>
-          <% if @user.errors.key?(:email) %>
+          <%= f.email_field :email, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:email) ? 'is-invalid' : 'is-valid') : '' }" %>
+          <% if @curruser.errors.key?(:email) %>
             <div class="invalid-feedback-rails" >
-              Email <%= @user.errors[:email][0] %>
+              Email <%= @curruser.errors[:email][0] %>
             </div>
           <% end %>
 
           <%= f.label :password, "New Password" %>
-          <%= f.password_field :password, class: "form-control #{@user.errors.any? ? (@user.errors.key?(:password) ? 'is-invalid' : 'is-valid') : '' }" %>
-          <% if @user.errors.key?(:password) %>
+          <%= f.password_field :password, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:password) ? 'is-invalid' : 'is-valid') : '' }" %>
+          <% if @curruser.errors.key?(:password) %>
             <div class="invalid-feedback-rails" >
-              Password <%= @user.errors[:password][0] %>
+              Password <%= @curruser.errors[:password][0] %>
             </div>
           <% end %>
 
           <%= f.label :password_confirmation, "New Password Confirmation" %>
-          <%= f.password_field :password_confirmation, class: "form-control #{@user.errors.any? ? (@user.errors.key?(:password_confirmation) ? 'is-invalid' : 'is-valid') : '' }" %>
-          <% if @user.errors.key?(:password_confirmation) %>
+          <%= f.password_field :password_confirmation, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:password_confirmation) ? 'is-invalid' : 'is-valid') : '' }" %>
+          <% if @curruser.errors.key?(:password_confirmation) %>
             <div class="invalid-feedback-rails" >
-              Password confirmation <%= @user.errors[:password_confirmation][0] %>
+              Password confirmation <%= @curruser.errors[:password_confirmation][0] %>
             </div>
           <% end %>
   
           <%= label_tag :oldpassword, "Old Password" %>
-          <%= password_field_tag :oldpassword, class: "form-control #{@user.errors.any? ? (@user.errors.key?(:oldpassword) ? 'is-invalid' : 'is-valid') : '' }" %>
-          <% if @user.errors.key?(:oldpassword) %>
+          <%= password_field_tag :oldpassword, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:oldpassword) ? 'is-invalid' : 'is-valid') : '' }" %>
+          <% if @curruser.errors.key?(:oldpassword) %>
             <div class="invalid-feedback-rails" >
-              <%= @user.errors[:oldpassword][0] %>
+              <%= @curruser.errors[:oldpassword][0] %>
             </div>
           <% end %>
 
@@ -49,18 +49,18 @@
         <div class="card-body">
             
           <%= f.label :avatar %>
-          <%= f.file_field :avatar, class: "form-control #{@user.errors.any? ? (@user.errors.key?(:avatar) ? 'is-invalid' : 'is-valid') : '' }"  %>
-          <% if @user.errors.key?(:avatar) %>
+          <%= f.file_field :avatar, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:avatar) ? 'is-invalid' : 'is-valid') : '' }"  %>
+          <% if @curruser.errors.key?(:avatar) %>
             <div class="invalid-feedback-rails" >
-              Avatar <%= @user.errors[:avatar][0] %>
+              Avatar <%= @curruser.errors[:avatar][0] %>
             </div>
           <% end %>
 
           <%= f.label :nsfw_level, "Content Filter Level" %>
-          <%= f.select :nsfw_level,  options_for_select([['Safe', 1], ['Questionable', 2], ['Explicit', 3]], @user.nsfw_level), {}, class: "form-control #{@user.errors.any? ? (@user.errors.key?(:nsfw_level) ? 'is-invalid' : 'is-valid') : '' }" %>
-          <% if @user.errors.key?(:nsfw_level) %>
+          <%= f.select :nsfw_level,  options_for_select([['Safe', 1], ['Questionable', 2], ['Explicit', 3]], @curruser.nsfw_level), {}, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:nsfw_level) ? 'is-invalid' : 'is-valid') : '' }" %>
+          <% if @curruser.errors.key?(:nsfw_level) %>
             <div class="invalid-feedback-rails" >
-              NSFW Level <%= @user.errors[:nsfw_level][0] %>
+              NSFW Level <%= @curruser.errors[:nsfw_level][0] %>
             </div>
           <% end %>
 

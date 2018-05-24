@@ -25,21 +25,21 @@ class UsersController < ApplicationController
   end
   
   def update
-    @user = User.find(params[:id])
+    @curruser = User.find(params[:id])
     oldpassword = params[:oldpassword]
-    if !!@user.authenticate(oldpassword)
+    if !!@curruser.authenticate(oldpassword)
       if params[:user][:password].blank? && params[:user][:password_confirmation].blank?
         params[:user][:password] = oldpassword
         params[:user][:password_confirmation] = oldpassword
       end
-      if @user.update_attributes(user_params)
+      if @curruser.update_attributes(user_params)
         flash[:success] = "Profile updated."
-        redirect_to @user
+        redirect_to @curruser
       else
         render 'edit'
       end
     else
-      @user.errors[:oldpassword][0] = "Invalid password."
+      @curruser.errors[:oldpassword][0] = "Invalid password."
       render 'edit'
     end
   end
@@ -57,7 +57,6 @@ class UsersController < ApplicationController
   end
 
   private
-
     def user_params
       params.require(:user).permit(:name, :email, :password, :password_confirmation, :avatar, :nsfw_level)
     end
