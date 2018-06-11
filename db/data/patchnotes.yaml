@@ -13,3 +13,8 @@ PatchNote3:
     before: "Small improvement."
     after: "Patch 1.0 is coming soon! Get excited!"
     title: 
+PatchNote4:
+    patch: "0.9.9"
+    before: "..."
+    after: 
+    title: "Meaningless Timer?"
