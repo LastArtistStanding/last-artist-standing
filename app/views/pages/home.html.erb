@@ -14,6 +14,8 @@
   }
   var interval;
   $(document).ready(function(){
+    var seconds, minutes, hours, days;
+    
     if (interval != null) {
       clearInterval(interval);
     }
@@ -25,9 +27,12 @@
   
     var rubyNextDate = new Date(Date.UTC(rubyDate.getUTCFullYear(), rubyDate.getUTCMonth(), rubyDate.getUTCDate() + 1, 0, 0, 0));
     var rubyNextSubmissionDate = new Date(Date.UTC(rubyDate.getUTCFullYear(), rubyDate.getUTCMonth(), rubyDate.getUTCDate() + $('.time_information').data('daysleft'), 0, 0, 0));
+    var rubyMeaninglessDate = new Date(Date.UTC(rubyDate.getUTCFullYear(), rubyDate.getUTCMonth(), 21, 0, 0, 0));
     var currentTime = new Date(offset + Date.now());
+    
     var timeToNextDay = rubyNextDate - currentTime;
     var timeToNextSubmissionDate = rubyNextSubmissionDate - currentTime;
+    var timeToMeaninglessDate = rubyMeaninglessDate - currentTime;
     var submitted = $('.time_information').data('submitted')
     
     if (submitted == -2) {
@@ -48,13 +53,19 @@
         $('#StreakStatus').css("color", "green")
       }
       
-      var seconds = Math.floor(timeToNextSubmissionDate / (1000)) % 60;
-      var minutes = Math.floor(timeToNextSubmissionDate / (1000*60)) % 60;
-      var hours = Math.floor(timeToNextSubmissionDate / (1000*60*60)) % 24;
-      var days = Math.floor(timeToNextSubmissionDate / (1000*60*60*24));
+      seconds = Math.floor(timeToNextSubmissionDate / (1000)) % 60;
+      minutes = Math.floor(timeToNextSubmissionDate / (1000*60)) % 60;
+      hours = Math.floor(timeToNextSubmissionDate / (1000*60*60)) % 24;
+      days = Math.floor(timeToNextSubmissionDate / (1000*60*60*24));
       
       $('#NextSubmissionDisplay').html(days+" day(s) "+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
     }
+    
+    seconds = Math.floor(timeToMeaninglessDate / (1000)) % 60;
+    minutes = Math.floor(timeToMeaninglessDate / (1000*60)) % 60;
+    hours = Math.floor(timeToMeaninglessDate / (1000*60*60)) % 24;
+    days = Math.floor(timeToMeaninglessDate / (1000*60*60*24));
+    $('#MeaninglessTimer').html("<i>Something</i> is coming in "+days+" day(s), "+hours+" hour(s), "+minutes+" minute(s), "+pad(seconds) + " seconds.<br>");
     
     interval = setInterval(function() {
       currentTime = new Date(offset + Date.now());
@@ -88,6 +99,13 @@
         }
       }
       
+      timeToMeaninglessDate = rubyMeaninglessDate - currentTime;
+      seconds = Math.floor(timeToMeaninglessDate / (1000)) % 60;
+      minutes = Math.floor(timeToMeaninglessDate / (1000*60)) % 60;
+      hours = Math.floor(timeToMeaninglessDate / (1000*60*60)) % 24;
+      days = Math.floor(timeToMeaninglessDate / (1000*60*60*24));
+      $('#MeaninglessTimer').html("<i>Something</i> is coming in "+days+" day(s), "+hours+" hour(s), "+minutes+" minute(s), "+pad(seconds) + " seconds.<br>");
+      
     }, 1000);
   });
 </script>
@@ -113,6 +131,7 @@
 	      <% end %>
 	      <div class="card-header"><b>Site Timers</b></b></div>
 	      <div class="card-body">
+	        <b>Meaningless Timer: </b><span id="MeaninglessTimer"></span>
 	        <b>Current Site Time: </b><span id="TimeDisplay"></span>
 	        <b><span id="StreakStatus"></span></b><span id="NextSubmissionDisplay"></span>
 	      </div>
