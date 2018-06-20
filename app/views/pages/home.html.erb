@@ -27,7 +27,7 @@
   
     var rubyNextDate = new Date(Date.UTC(rubyDate.getUTCFullYear(), rubyDate.getUTCMonth(), rubyDate.getUTCDate() + 1, 0, 0, 0));
     var rubyNextSubmissionDate = new Date(Date.UTC(rubyDate.getUTCFullYear(), rubyDate.getUTCMonth(), rubyDate.getUTCDate() + $('.time_information').data('daysleft'), 0, 0, 0));
-    var rubyMeaninglessDate = new Date(Date.UTC(rubyDate.getUTCFullYear(), rubyDate.getUTCMonth(), 21, 0, 0, 0));
+    var rubyMeaninglessDate = new Date(Date.UTC(2018, 6, 1, 0, 0, 0));
     var currentTime = new Date(offset + Date.now());
     
     var timeToNextDay = rubyNextDate - currentTime;
