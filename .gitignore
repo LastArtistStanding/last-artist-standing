@@ -4,6 +4,9 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
+# Generic OS files
+.DS_STORE
+
 # Ignore bundler config.
 /.bundle
 
@@ -11,7 +14,9 @@
 /db/*.sqlite3
 /db/*.sqlite3-journal
 
+# Ignore IDE setting folders.
 .vscode
+.idea
 
 # Ignore all logfiles and tempfiles.
 /log/*
@@ -20,3 +25,6 @@
 
 # Ignore application configuration
 /config/application.yml
+
+# Ignore file upload folder.
+/public/uploads/*
