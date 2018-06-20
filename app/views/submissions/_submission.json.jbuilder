@@ -1,4 +1,4 @@
-json.extract! submission, :id, :drawing, :nsfw_level, :created_at, :updated_at
+json.extract! submission, :id, :drawing, :nsfw_level, :api_command, :created_at, :updated_at
 json.url submission_url(submission, format: :json)
 
 json.set! :user do

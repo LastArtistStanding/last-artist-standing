@@ -64,6 +64,10 @@
             </div>
           <% end %>
 
+          <%= f.label :external_api do %>
+            <%= f.check_box :enabled_api, class: "inline-checkbox" %>
+            Enable External API
+          <% end %>
         </div>
       </div>
     </div>
