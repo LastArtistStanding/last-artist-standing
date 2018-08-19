@@ -65,7 +65,7 @@ module PagesHelper
     end
     
     def getLatestSeasonalChallenges
-        seasonalChallenges = Challenge.where(:seasonal => true).order("start_date ASC")
+        seasonalChallenges = Challenge.where("seasonal = true AND :todays_date >= start_date", {todays_date: Date.current}).order("start_date ASC")
         seasonCount = seasonalChallenges.count
         #spring
         baseIndex = (seasonCount - 1) - ((seasonCount - 1) % 4)
