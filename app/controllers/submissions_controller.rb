@@ -128,6 +128,11 @@ class SubmissionsController < ApplicationController
     @participations = Participation.where({:user_id => current_user.id, :active => true}).order("challenge_id ASC")
     
     if @submission.user_id == current_user.id
+      if @submission.created_at.to_date == Date.current
+        usedParams = submission_params
+      else
+        usedParams = limited_params
+      end
       respond_to do |format|
         if @submission.update(submission_params)
           #This sort of information (challenge submissions) shouldn't ever change after the day it was submitted.
@@ -181,10 +186,10 @@ class SubmissionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def submission_params
-      if Submission.find(params[:id]).created_at.to_date == Date.current
-        params.require(:submission).permit(:drawing, :user_id, :nsfw_level, :api_command, :title, :description, :time)
-      else
-        params.require(:submission).permit(:nsfw_level, :title, :description)
-      end
+      params.require(:submission).permit(:drawing, :user_id, :nsfw_level, :api_command, :title, :description, :time)
+    end
+  
+    def limited_params
+      params.require(:submission).permit(:nsfw_level, :title, :description)
     end
 end
