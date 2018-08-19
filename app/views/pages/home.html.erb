@@ -150,7 +150,7 @@
 	       </div>
 	     </div>
 	     
-	     <div class="card homeCardStyle purpleCard">
+	     <div class="card homeCardStyle blueCard">
         <div class="card-body" style="text-align: center;">
           <div style="margin-bottom: 0.5em;"><h5>Latest Submission</h5></div>
 	         <% latestSubmission = getLatestSubmission %>
@@ -269,7 +269,7 @@
       
         <% numAwards = @latestAwards.count %>
         <% if numAwards > 0 %>
-        <div class="card homeCardStyle greenCard">
+        <div class="card homeCardStyle blueCard">
           <div class="card-header">
             <b><%= pluralize(numAwards, "Badge") %> Awarded Today!</b>
           </div>
@@ -304,7 +304,7 @@
         <% end %>
       
         <% if !@seasonalLeaderboard.blank? %>
-        <div class="card homeCardStyle yellowCard">
+        <div class="card homeCardStyle blueCard">
           <div class="card-header"><b><%= getCurrentSeasonalChallenge.name %> Leaderboard</b></div>
           <div class="card-body table-responsive">
             <table class="table table-sm">
