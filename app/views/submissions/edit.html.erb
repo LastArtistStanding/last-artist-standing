@@ -14,7 +14,7 @@
             </a>
           </div>
         </div>
-      <% elsif @submission.created_at.to_date <= Date.current %>
+      <% elsif @submission.created_at.to_date >= Date.current %>
         <%= render 'editform', submission: @submission %>
       <% else %>
         <%= render 'partialeditform', submission: @submission %>
