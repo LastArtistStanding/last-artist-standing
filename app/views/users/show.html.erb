@@ -51,7 +51,7 @@ $(function () {
                 <% end %>
               </div>
               <div class="progress" >
-                <% barPercent = (userDADScore == "None") ? 0 : (100.0*(userDADScore - prevLvl.required_score).to_f)/(nextLvl.required_score - prevLvl.required_score).to_f %>
+                <% barPercent = (userDADScore == "None") ? 0 : (100.0*(userDADScore - (prevLvl.blank? ? 0 : prevLvl.required_score)).to_f)/(nextLvl.required_score - (prevLvl.blank? ? 0 : prevLvl.required_score)).to_f %>
                 <div class="progress-bar progress-bar-experience" role="progressbar" style="width: <%= barPercent %>%" aria-valuenow="<%= barPercent %>" aria-valuemin="0" aria-valuemax="100"></div>
               </div>
             </div>
