@@ -66,3 +66,76 @@ PatchEntry16:
     patchnote_id: 4
     body: "A completely meaningless timer has been added."
     importance: 1
+#Patch 1.0
+PatchEntry17:
+    patchnote_id: 5
+    body: "The visual appearance of the site has been overhauled."
+    importance: 3
+PatchEntry18:
+    patchnote_id: 5
+    body: "Added the Submit navigation button, and renamed the old Submit button to Browse."
+    importance: 1
+PatchEntry19:
+    patchnote_id: 5
+    body: "The arrangement of the home page has been adjusted. Some things have been reworded, condensed or modified."
+    importance: 1
+PatchEntry20:
+    patchnote_id: 5
+    body: "New submission and DAD Level Up cards have been added to the front page."
+    importance: 1
+PatchEntry21:
+    patchnote_id: 5
+    body: "Random safe-level submissions will now be highlighted in the background of the main page."
+    importance: 1
+PatchEntry22:
+    patchnote_id: 5
+    body: "Site timers now include a day counter for the current seasonal challenge."
+    importance: 1
+PatchEntry23:
+    patchnote_id: 5
+    body: "A help page has been added, which should hopefully clarify a lot of the confusions for new users."
+    importance: 2
+PatchEntry24:
+    patchnote_id: 5
+    body: "Full-sized user avatars are displayed with their seasonal challenge accomplishments and DAD progress."
+    importance: 1
+PatchEntry25:
+    patchnote_id: 5
+    body: "Seasonal Leaderboard is now limited to the top 10 score groups."
+    importance: 1
+PatchEntry26:
+    patchnote_id: 5
+    body: "Pagination has been applied to improve performance of things like the user list and challenge entries."
+    importance: 2
+PatchEntry27:
+    patchnote_id: 5
+    body: "Some images have had their massive default alt-text from Amazon replaced with something more appropriate. This should result in heavier image requests not looking like a complete mess while loading. Many still remain."
+    importance: 1
+PatchEntry28:
+    patchnote_id: 5
+    body: "Fixed a bug where you can delete active challenges, while being unable to delete upcoming ones."
+    importance: 2
+PatchEntry29:
+    patchnote_id: 5
+    body: "Fixed a small bug where the encrypted old password would be auto-filled in the Edit Profile page. Rearranged the page for clarity."
+    importance: 1
+PatchEntry30:
+    patchnote_id: 5
+    body: "Editing logic of challenges has been overhauled. Editing an upcoming challenge allows you to edit any aspect of the challenge, with the restriction that you provide another week of advance notice so that participants know of the changes. Editing an active challenge will heavily restrict what you can change."
+    importance: 2
+PatchEntry31:
+    patchnote_id: 5
+    body: "Submissions now show the timestamp of submission."
+    importance: 1
+PatchEntry32:
+    patchnote_id: 5
+    body: "A band-aid safeguard has been added to the submission logic, which should hopefully prevent the majority of rollover-related streak bugs."
+    importance: 2
+PatchEntry33:
+    patchnote_id: 5
+    body: "Submissions are now displayed by icon view! The old list view may return as an option after some revamping."
+    importance: 2
+PatchEntry34:
+    patchnote_id: 5
+    body: "You can now EDIT and DELETE submissions! Bear in mind, after the day of submission, editing options will be severely limited, and deletion will be impossible."
+    importance: 3

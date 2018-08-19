@@ -9,11 +9,12 @@
 	  <div class="card">
 	  <div class="card-header">
 	    <b>Challenge Details</b>
-	    <% if @challenge.id != 1 %>
-	      <a class="btn btn-primary" style="float: right; margin-top: -0.375rem; margin-bottom: -0.375rem;" href="<%= @challenge.id %>/entries">
-	        <i class="fa fa-picture-o" aria-hidden="true"></i> Show Entries
-	      </a>
-      <% end %>
+	    <a class="btn btn-primary" style="float: right; margin-left: 0.5rem; margin-top: -0.25rem; margin-bottom: -0.5rem;" href=<%="/challenges"%>>
+        <i class="fa fa-undo"></i> Back
+      </a>
+	    <a class="btn btn-primary" style="float: right; margin-top: -0.25rem; margin-bottom: -0.5rem;" href="<%= @challenge.id %>/entries">
+	      <i class="fa fa-picture-o" aria-hidden="true"></i> Show Entries
+	    </a>
 	  </div>
       <div class="card-body">
 
@@ -72,7 +73,7 @@
             <%= label_tag :postfrequency %>
           </div>
           <div class="col-9">
-            <%= postfrequencyToString(@challenge.postfrequency) %>
+            <%= postfrequencyToString(@challenge.postfrequency, false) %>
           </div>
         </div>
   
@@ -124,7 +125,6 @@
           
       </div>
     </div>
-    
   </div>
   
   <div class="col-lg-6">
@@ -241,7 +241,7 @@
                   <td><%= dateToString(participation.end_date) %></td>
                 <% end %>
                 <% if @challenge.id == 1 %>
-                  <td><%= postfrequencyToString(getUserDADFrequency(participation.user)) %></td>
+                  <td><%= postfrequencyToString(getUserDADFrequency(participation.user), false) %></td>
                 <% end %>
                 <% if @challenge.streak_based && @challenge.id != 1 %>
                   <td></td>
@@ -277,5 +277,3 @@
     <div class="col-lg-1"></div>
   </div>
 </div>
-
-<%= link_to 'Back', root_path %>

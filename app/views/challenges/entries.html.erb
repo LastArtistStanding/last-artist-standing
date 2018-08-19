@@ -1,41 +1,52 @@
 <div class="container-fluid" style="margin-top: 2rem;">
+  
   <div class="row">
+    
     <!-- Spacing Column -->
     <div class="col-lg-1"></div>
     
     <div class="col-lg-10">
+      
+      <div class="digg_pagination">
+        <div class="page_info">
+          <%= page_entries_info @challengeEntries %>
+        </div>
+        <%= will_paginate @challengeEntries, :container => false %>
+      </div>
+      
       <div class="row">
         <div class="col-lg-12">
 	        <div class="card">
 	          <div class="card-header"><b>Challenge Entries</b></div>
             <div class="card-body">
-              <% if @challenge.id != 1 %>
-                <% if @challengeEntries.count == 0 %>
-                  No entries made yet!
-		<% elsif @challengeEntries.count > 500 %>
-                  Too many entries to load.
-                <% else %>
-                  <% @challengeEntries.each do |challengeEntry| %>
-                    <% if @challengeEntries.count > 140 %>
-                      <% submissionUrl = getSubmissionAvatar(Submission.find(challengeEntry.submission_id)) %>
-                    <% else %>
-                      <% submissionUrl = getSubmissionThumb(Submission.find(challengeEntry.submission_id)) %>
-                    <% end %>
-                    <%= link_to image_tag(submissionUrl, :style => "margin: 0.125rem;"), url_for({:controller => 'submissions', :action => 'show', :id => challengeEntry.submission_id}), :class => 'quick' %>
-                  <% end %>
-                <% end %>
+              <% if @challengeEntries.count == 0 %>
+                No entries made yet!
               <% else %>
-                Are you insane? You want to load EVERY single submission ever uploaded? Don't do this, bro.
+                <% @challengeEntries.each do |challengeEntry| %>
+                  <% if @challengeEntries.count > 140 %>
+                    <% submissionUrl = getSubmissionAvatar(Submission.find(challengeEntry.submission_id)) %>
+                  <% else %>
+                    <% submissionUrl = getSubmissionThumb(Submission.find(challengeEntry.submission_id)) %>
+                  <% end %>
+                  <%= link_to image_tag(submissionUrl, :style => "margin: 0.125rem;"), url_for({:controller => 'submissions', :action => 'show', :id => challengeEntry.submission_id}), :class => 'quick' %>
+                <% end %>
               <% end %>
             </div>
           </div>
         </div>
       </div>
+      
+      <a class="btn btn-primary" href=<%="/challenges/#{@challenge.id}"%>>
+        <span class="fa fa-undo"></span> Back
+      </a>
     </div>
     
     <!-- Spacing Column -->
     <div class="col-lg-1"></div>
+    
   </div>
+  
 </div>
 
-<%= link_to 'Back', root_path %>
+
+

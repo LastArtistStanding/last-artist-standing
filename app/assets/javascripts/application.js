@@ -17,4 +17,13 @@
 //= require bootstrap-sprockets
 //= require jquery_ujs
 //= require turbolinks
-//= require_tree .
+//= require_tree
+//= require paper-kit/jquery-3.2.1
+//= require paper-kit/jquery-ui-1.12.1.custom.min
+//= require paper-kit/popper
+//= require paper-kit/bootstrap.min
+//= require paper-kit/bootstrap-switch.min
+//= require paper-kit/nouislider
+//= require paper-kit/moment.min
+//= require paper-kit/bootstrap-datetimepicker.min
+//= require paper-kit/paper-kit

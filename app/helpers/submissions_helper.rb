@@ -57,4 +57,28 @@ module SubmissionsHelper
         end
     end
     
+    def getSubmissionTimeText(submission)
+        if submission.time.blank?
+            "unspecified"
+        else
+            "#{submission.time} minutes"
+        end
+    end
+    
+    def getSubmissionTitle(submission)
+        if submission.title.blank?
+            "Untitled"
+        else
+            submission.title
+        end
+    end
+    
+    def getSubmissionDescription(submission)
+        if submission.description.blank?
+            "No description provided."
+        else
+            submission.description
+        end
+    end
+    
 end

@@ -8,20 +8,30 @@ module PagesHelper
         end
     end
     
-    def postfrequencyToString(postfrequency)
+    def dateToShortString(date)
+        if date.nil?
+            "None"
+        elsif date.year == Date.current.year
+            date.strftime("%b %-d")
+        else
+            date.strftime("%b %-d, %Y")
+        end
+    end
+    
+    def postfrequencyToString(postfrequency, phrase)
         case postfrequency
         when -1
-            "Custom"
+            phrase ? "Custom Frequency" : "Custom"
         when 1
-            "Daily"
+            phrase ? "Posts Daily" : "Daily"
         when 2
-            "Every Other Day"
+            phrase ? "Posts Every Other Day" : "Every Other Day"
         when 7
-            "Weekly"
+            phrase ? "Posts Weekly" : "Weekly"
         when 0
-            "None"
+            phrase ? "Inactive" : "None"
         else
-            "Every #{postfrequency} Days"
+            phrase ? "Posts Every #{postfrequency} Days" : "Every #{postfrequency} Days"
         end
     end
     
@@ -59,35 +69,35 @@ module PagesHelper
         seasonCount = seasonalChallenges.count
         #spring
         baseIndex = (seasonCount - 1) - ((seasonCount - 1) % 4)
-        if seasonCount > 0
+        if seasonCount > 1
+            if baseIndex == (seasonCount - 1)
+                baseIndex -= 4
+            end
             spring = seasonalChallenges[baseIndex]
         else
             spring = nil
         end
-        if seasonCount > 1
-            baseIndex += 1
-            if baseIndex >= seasonCount
+        if seasonCount > 2
+            if baseIndex == (seasonCount - 2)
                 baseIndex -= 4
             end
-            summer = seasonalChallenges[baseIndex]
+            summer = seasonalChallenges[baseIndex + 1]
         else
             summer = nil
         end
-        if seasonCount > 2
-            baseIndex += 1
-            if baseIndex >= seasonCount
+        if seasonCount > 3
+            if baseIndex == (seasonCount - 3)
                 baseIndex -= 4
             end
-            autumn = seasonalChallenges[baseIndex]
+            autumn = seasonalChallenges[baseIndex + 2]
         else
             autumn = nil
         end
-        if seasonCount > 3
-            baseIndex += 1
-            if baseIndex >= seasonCount
+        if seasonCount > 4
+            if baseIndex == (seasonCount - 4)
                 baseIndex -= 4
             end
-            winter = seasonalChallenges[baseIndex]
+            winter = seasonalChallenges[baseIndex + 3]
         else
             winter = nil
         end
@@ -126,6 +136,31 @@ module PagesHelper
         else
             " - #{patch.title}"
         end
+    end
+    
+    def getRandomSafeSubmission
+        safeSubmission = Submission.where("nsfw_level = 1").sample
+        if safeSubmission.drawing.blank?
+            nil
+        else
+            safeSubmission
+        end
+    end
+    
+    def getLatestSubmission
+        Submission.last
+    end
+    
+    def cluster
+        cluster = []
+        each do |element|
+            if cluster.last && yield(cluster.last.last) == yield(element)
+                cluster.last << element
+            else
+                cluster << [element]
+            end
+        end
+        cluster
     end
     
 end

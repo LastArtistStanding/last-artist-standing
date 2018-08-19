@@ -1,45 +1,76 @@
-<div class="container-fluid">
-<br>
+<script>
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
 
-<p class="h2">User List</p>
-
-<table class="table">
-  <thead>
-    <tr style="border-bottom: none;">
-      <th scope="col" colspan="2"></th>
-      <th scope="col" colspan="3" style="text-align: center;">DAD Participation</th>
-      <th scope="col" colspan="4" style="text-align: center;">Seasonal Participation</th>
-    </tr>
-    <tr>
-      <th scope="col">ICO</th>
-      <th scope="col">Name</th>
-      <th scope="col">Current Streak</th>
-      <th scope="col">Max Streak</th>
-      <th scope="col">Post Frequency</th>
-      <th scope="col">Spring</th>
-      <th scope="col">Summer</th>
-      <th scope="col">Fall</th>
-      <th scope="col">Winter</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% seasonChallengeIds = getLatestSeasonalChallenges %>
-    <% @users.each do |user| %>
-      <tr>
-        <td><%= image_tag getUserThumb(user), :width => "25px" %></td>
-        <td><%= link_to user.name, user %></td>
-        <td><%= getUserCurrentDADScore(user) %></td>
-        <td><%= user.longest_streak %></td>
-        <td><%= postfrequencyToString(getUserDADFrequency(user)) %></td></td>
-        <td><%= "#{getUserScoreByChallenge(user, seasonChallengeIds[0])}/#{getDaysInChallenge(seasonChallengeIds[0])}" %></td>
-        <td><%= "#{getUserScoreByChallenge(user, seasonChallengeIds[1])}/#{getDaysInChallenge(seasonChallengeIds[1])}" %></td>
-        <td><%= "#{getUserScoreByChallenge(user, seasonChallengeIds[2])}/#{getDaysInChallenge(seasonChallengeIds[2])}" %></td>
-        <td><%= "#{getUserScoreByChallenge(user, seasonChallengeIds[3])}/#{getDaysInChallenge(seasonChallengeIds[3])}" %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
+<div class="container-fluid mainPageSplash">
+  <div class="row">
+  <div class="col-lg-2"></div>
+  <div class="col-lg-8">
+  <div class="tim-title" style="margin-bottom: 1rem;">
+    <p class="h2">User List</p>
+    <div class="digg_pagination">
+      <div class="page_info">
+        <%= page_entries_info @users %>
+      </div>
+      <%= will_paginate @users, :container => false %>
+    </div>
+  </div>
+  
+    
+    <div class="card">
+      <div class="card-body">
+        <% @users.each do |user| %>
+        <div class="avatarWithName">
+        <div class="avatarUserName"><%= user.name %></div>
+        
+        <a href=<%="users/#{user.id}"%>>
+        <span class="fullSizeAvatar">
+            <% seasonChallengeIds = getLatestSeasonalChallenges %>
+            <% userDADScore = getUserCurrentDADScore(user) %>
+            
+            <% if userDADScore != "None" %>
+              <% nextLvl = BadgeMap.where("required_score > :current_score AND challenge_id = :challengeId", {current_score: userDADScore, challengeId: 1}).order("required_score ASC").first %>
+              <% prevLvl = BadgeMap.where("required_score <= :current_score AND challenge_id = :challengeId", {current_score: userDADScore, challengeId: 1}).order("required_score DESC").first %>
+            <% else %>
+              <% toNextLvl = 0 %>
+              <% prevLvl = 0 %>
+            <% end %>
+            
+            <% winterAward = getAwardByUserAndChallenge(seasonChallengeIds[3], user) %>
+            <% springAward = getAwardByUserAndChallenge(seasonChallengeIds[0], user) %>
+            <% summerAward = getAwardByUserAndChallenge(seasonChallengeIds[1], user) %>
+            <% autumnAward = getAwardByUserAndChallenge(seasonChallengeIds[2], user) %>
+            
+            <%= image_tag getUserThumb(user), :title => "#{postfrequencyToString(getUserDADFrequency(user), true)}", :alt => "#{user.name}", :data => { :toggle => "tooltip", :placement => "top" } %>
+            <div class=<%= "winter#{winterAward.prestige unless winterAward.blank?}" %>></div>
+            <div class=<%= "spring#{springAward.prestige unless springAward.blank?}" %>></div>
+            <div class=<%= "summer#{summerAward.prestige unless summerAward.blank?}" %>></div>
+            <div class=<%= "autumn#{autumnAward.prestige unless autumnAward.blank?}" %>></div>
+            
+            <div style="margin-top: 5px;" data-toggle="tooltip" data-placement="top" title="Record Streak: <%= user.longest_streak %> (Level <%= getUserMaxLevel(user) %>)" >
+              <div class="levelOverlay unselectable">
+                <% if userDADScore != "None" %>
+                  <%= "#{userDADScore}/#{nextLvl.required_score} to lvl #{nextLvl.prestige}" %>
+                <% else %>
+                  No Active Streak
+                <% end %>
+              </div>
+              <div class="progress" >
+                <% barPercent = (userDADScore == "None") ? 0 : (100.0*(userDADScore - prevLvl.required_score).to_f)/(nextLvl.required_score - prevLvl.required_score).to_f %>
+                <div class="progress-bar progress-bar-experience" role="progressbar" style="width: <%= barPercent %>%" aria-valuenow="<%= barPercent %>" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+            
+          </span>
+          </a>
+          </div>
+          
+        <% end %>
+      </div>
+    </div>
+    </div>
+    <div class="col-lg-2"></div>
+  </div>
 </div>

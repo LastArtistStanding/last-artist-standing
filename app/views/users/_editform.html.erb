@@ -29,19 +29,27 @@
               Password confirmation <%= @curruser.errors[:password_confirmation][0] %>
             </div>
           <% end %>
-  
+          
+        </div>
+      </div>
+      
+      <div class="card">
+      <div class="card-header"><b>Enter your old password to confirm changes.</b></div>
+        <div class="card-body">
           <%= label_tag :oldpassword, "Old Password" %>
-          <%= password_field_tag :oldpassword, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:oldpassword) ? 'is-invalid' : 'is-valid') : '' }" %>
+          <%= password_field_tag :oldpassword, '', class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:oldpassword) ? 'is-invalid' : 'is-valid') : '' }" %>
           <% if @curruser.errors.key?(:oldpassword) %>
             <div class="invalid-feedback-rails" >
               <%= @curruser.errors[:oldpassword][0] %>
             </div>
           <% end %>
-
+          
           <%= f.submit "Save Changes", class: "btn btn-primary" %>
         </div>
       </div>
     </div>
+    
+    
     
     <div class="col-lg-6">
 	  <div class="card">

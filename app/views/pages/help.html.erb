@@ -1,2 +1,219 @@
-<h1>Pages#help</h1>
-<p>Find me in app/views/pages/help.html.erb</p>
+<div class="container" style="padding-bottom: 1rem;">
+  <div class="tim-title" style="margin-bottom: 1rem;">
+    <h3>DAD Help Center</h3>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <div class="nav-tabs-navigation">
+        <div class="nav-tabs-wrapper">
+          <ul id="tabs" class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" data-toggle="tab" href="#introduction" role="tab">Introduction</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#basics" role="tab">Basics</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#submissions" role="tab">Submissions</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#challenges" role="tab">Challenges</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div id="my-tab-content" class="tab-content text-center leftAlign">
+        <div class="tab-pane active" id="introduction" role="tabpanel">
+          <h5>What is Do Art Daily?</h5>
+          <p>Do Art Daily is the third, and hopefully last, iteration of the "Last Artist Standing" 
+            endeavor. In essence, the mission of this project, and by extension, this website is to 
+            encourage the artistic growth of all its participants. This is done by reinforcing the habit 
+            of practicing, facilitated by simply tracking your "streak", or consecutive periods in which 
+            you worked on your art. Moreover, users are a part of a community that continues to provide 
+            friendly competition, constructive criticism and inspiration.<br><br>
+            Over time, additional features, such as badges, challenges, and topic prompts (to be
+            implemented soon) have been implemented across the sites, helping keep users out of their
+            comfort zone, allowing users to explore subjects they are interested in, or simply acting 
+            as additional impetuses to just keep drawing.<br><br>
+            <span style="font-weight: 600">To put it simply, our mission is to encourage all artists, 
+            of all disciplines and skill levels, to persist in their craft, and find fulfillment in 
+            the process.</span>
+          </p>
+        </div>
+        <div class="tab-pane" id="basics" role="tabpanel">
+          <h5>Submitting</h5>
+          <p>It's pretty easy to get started. All you really have to do draw something (for at least 30 minutes and upload it.
+            Before you do so, you need to determine how frequently you are willing to commit to the habit
+            of drawing. To this end, DAD will automatically associate your submission with your 
+            participation in two challenges, Do Art Daily and the current Seasonal Challenge.
+          </p>
+          <br>
+          <h5>Do Art Daily Challenge</h5>
+          <p>Before you submit your first submission, you should seriously meditate on how much you are
+            willing to commit to drawing. You can choose to submit as frequently as every single day,
+            to as infrequently as once a week. Each time you make a submission in your chosen submission
+            period, your streak will increase by 1. Failure to submit at least once during your submission 
+            period will result in your streak being reset to 0. The time remaining in your submission
+            is prominently displayed on a timer found on the home page and submission form.
+          </p>
+          <p>You can submit as many times as you'd like during your submission period, but this won't 
+            increase your score by more than 1. Still, this can be useful if you want to split your work 
+            into individual pieces for aesthetic reasons or cleaner association with custom challenges 
+            (for more on challenges, see the designated help tab).
+          </p>
+          <p>Moreover, whenever you make a submission, you can always elect to change your designated
+            submission period. Changing from a lower frequency to a higher one (such as going from
+            weekly submissions, to submitting every other day), can be done without penalty. However, 
+            changing from a higher frequency to a lower one will result in your streak being reset.
+          </p>
+          <br>
+          <h5>Seasonal Challenge</h5>
+          <p>The second form of participation/habit tracking comes in the form of the four Seasonal
+            Challenges that occur each year. Each season starts at the year's designated solstice and
+            equinox dates, and keeps track of every single day that you've made a submission. Depending
+            on how many of the days in the season you've participated, you'll receive a badge for your
+            efforts. Don't worry, all submissions are also automatically submitted to the current
+            seasonal challenge.
+          </p>
+          <br>
+          <h5>Rollover</h5>
+          <p>One important detail to keep in mind is that your score will not increment immediately.
+            Instead, you have to wait until the end of day (00:00 GMT) before it will. The reason for
+            this is for the system to be agnostic towards your personal time zone in the context of
+            presenting leaderboards for the two challenges. Obviously, Greenwich Mean Time is not
+            a common time zone, so a site timer is provided so that you know when each day ends relative
+            to this website.
+          </p>
+        </div>
+        <div class="tab-pane" id="submissions" role="tabpanel">
+          <h5>By submitting, you agree to follow these rules:</h5>
+          <p>
+          <ul class="smallList">
+            <li><i>TIME REQUIREMENT</i> - All submissions are expected to represent at least 30 minutes of concentrated effort on the submission as a whole
+              or as far as progress is made on the work.
+            </li>
+            <li><i>NO WORKING AHEAD</i> - Your submission, or the progress represented on said submission, must have been made within one day of your submission period.</li>
+            <li><i>OWNERSHIP</i> - Any image you upload must represent your own work.</li>
+            <li><i>WIPS PERMITTED</i> - It's ok to submit the same piece in succession over multiple days if each subsequent submission represents
+              sufficient additional time being spent on the piece as it comes together.
+            </li>
+            <li><i>CHALLENGES</i> - When attaching a submission to a challenge, double check to see if it meets the criteria for the challenge. For example, some challenges
+              require you to submit completed pieces only, others permit sketches, WIPS and so on.
+            </li>
+            <li><i>OBJECTIONABLE CONTENT</i> - Please use tact in what you create. Erotic depictions of what appear to be minors, works that reflect extreme or hateful ideologies,
+              or direct attacks on other members of the website may be removed and the creators warned or reprimanded.
+            </li>
+            <li><i>NOT A GALLERY</i> - DAD is geared towards the documentation and formation of your drawing habits. This is not a place to display every art piece you've ever made, or
+              commemorate another artist.
+            </li>
+          </ul>
+          </p>
+          <br>
+          <h5>Editing and Deleting</h5>
+          <p>On the day of submission, you may edit any aspect of your submission, or delete it in its entirety.
+             However, be wary! The day after a submission is made (i.e., after rollover), <i>you may no longer
+             delete said submission, and editing will be heavily limited.</i> The reason for this is to prevent
+             certain abuse cases. For instance, people submitting garbage images and replacing them with their
+             actual work after the deadline, in an effort to extend their deadline. Thorough purges of all your 
+             work can be requested by reaching out to the DAD admins.
+          </p>
+        </div>
+        <div class="tab-pane" id="challenges" role="tabpanel">
+          <h5>Challenges</h5>
+          <p>Outside of the default challenges DAD and the rotating Seasonal Challenges, users may create
+            and join community-made ones. These challenges are great for exploring mediums and subjects
+            you wouldn't normally try, discipline your practice and push yourself further, or just to
+            have some fun. These challenges can embody anything from a Secret Santa art exchange, to a
+            rigorous creative project, like designing a comic or making a long animation.
+          </p>
+          <p>Each challenge has a given start date, end date, and a designated submission frequency (much 
+            like the options given for the DAD challenge). Some challenges will be labeled as having a 
+            frequency of "None", which means you can make as many submissions to the challenge at any time 
+            and they will all count towards your point total, as long as you've submitted it while the 
+            challenge is still active. Keep in mind: the end date is exclusive, and NOT inclusive. This 
+            means that you cannot submit on the end date, only before.
+          </p>
+          <p>
+            Besides adding a bit of variety, entertainment or difficulty to your artistic endeavors,
+            challenges also provide prizes for successful participants. If you meet the required number 
+            of submissions to the challenge, you will receive a badge for your efforts! 
+          </p>
+          <br>
+          <h5>Joining/Leaving</h5>
+          <p>Joining and leaving a challenge is pretty easy. All you need to do is access the challenge
+            page, and then click the "Join Challenge" button. Similarly, to leave a challenge, you can
+            click "Leave Challenge" on the same page. You cannot join a challenge or leave a challenge
+            that has already begun.
+          </p>
+          <br>
+          <h5>Submit to a Challenge</h5>
+          <p>To submit a particular challenge, make sure the challenge has actually started and that 
+            you've joined it. Then, on the submission upload page, simply choose the challenges that 
+            it is meant for by checking the checkboxes listed under the "Eligible Challenges" box. If
+            you don't see the challenge listed, it can mean one of three things: the challenge hasn't
+            started, you haven't actually joined it, or the challenge has already ended.
+          </p>
+          <br>
+          <h5>Tips for Creating Challenges</h5>
+          <p>There is pretty much no limit on the concepts you can conceive of for creating challenges,
+            but there are important guidelines on how to create one.
+          <ul class="smallList">
+            <li>Avoid simple, uninteresting "habitual" challenges. We have the DAD/Seasonal Challenges 
+              for a reason, there's no reason to have the same challenge with more strenous conditions.
+              "Draw 8 hours a day" is not good challenge design.
+            </li>
+            <li>Try to keep the challenge skill-agnostic. DAD is host to a vareity of skill levels. Avoid prompts 
+              like "produce five pieces of professional-level character concept art", and gravitate towards, 
+              "design five unique fantasy races, with front, side and back views".
+            </li>
+            <li>Understand the prestige levels and how to apply them. For your reference, they are listed below.</li>
+            <li>Designing "challenges" around lesson plans is touchy. To that end, keep in mind two things. 1 - Try 
+              to set realistic expectations for completion time. Not everyone can pick up concepts so quickly. 2 - 
+              Do NOT use and link paid content. I don't want to host paid material illegally, or force users
+              to purchase an online course so that they can get a random badge. 
+            </li>
+            <li>Try to avoid forcing a particular tool or medium on the participants. Exceptions include things like
+              Inktober, where the medium is so remarkably common and readily available.
+            </li>
+            <li>Don't be too specific, and be as flexible/inclusive as possible. For instance, "draw a dragon a day for 
+              a week" is not bad for a concept. "Draw an ice wyvern roosting on top of a mountain majestically" is 
+              not. Don't expect people to share your absurdly specific interests.
+            </li>
+            <li>Similarly, this is NOT the place to solicit free art or commissions through your prompt. Go ask for
+              dragon lewds somewhere else.
+            </li>
+            <li>Lastly, be creative! This is an opportunity for you to compete and share in a productive and inspiring process!
+            </li>
+          </ul>
+          </p>
+          <br>
+          <h5>Choosing a Prestige Level</h5>
+          <p>How do you know what difficulty a challenge is to complete, and thus, what prestige would be
+            appropriate? Follow the following guidelines:
+          <ul class="smallList">
+            <li>Prestige 1 - For-fun events, low frequency/intensity challenges.</li>
+            <li>Prestige 2 - Studies of medium duration or intensity, or a quick/unrefined project (scope 
+              of two weeks) that requires significant creative input on part of the artist.
+            </li>
+            <li>Prestige 3 - High duration/frequency/intensity studies, or a good-sized project
+              (scope should be about a month or two) that would require initial planning and foresight,
+              consistent effort on the piece throughout the challenge.
+            </li>
+            <li>Prestige 4 - For studies, rigorous and thorough academic examination of complex subject matter 
+              explored during over extended period of time (think challenging art course level), or a
+              large project that requires extensive planning, dedicated effort on the piece, may have many 
+              possible pitfalls throughout the process and as high of a level of polish on the final product as 
+              one can muster at their current skill level.
+            </li>
+            <li>Prestige 5 - Like prestige 4, but going even further above and beyond. Anyone who participated in
+              this challenge should have been pushed to their absolute limit and then some.
+            </li>
+          </ul>
+          Each increment in prestige value should correspond to a magnitude of increased effort. Admins reserve the 
+          right to change prestige values as they see fit.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

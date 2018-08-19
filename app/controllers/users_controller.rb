@@ -1,12 +1,12 @@
 class UsersController < ApplicationController
 
   def index
-    @users = User.all.order("id ASC")
+    @users = User.order("id DESC").paginate(:page => params[:page], :per_page => 50)
   end
 
   def show
     @curruser = User.find(params[:id])
-    @awards = Award.where({user_id: @curruser.id}).order("prestige DESC")
+    @awards = Award.where("user_id = ? AND badge_id <> 1", @curruser.id).order("prestige DESC")
     @submissions = Submission.where({user_id: @curruser.id}).order("created_at DESC")
   end
 

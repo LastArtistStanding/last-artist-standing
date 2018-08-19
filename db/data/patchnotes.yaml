@@ -18,3 +18,8 @@ PatchNote4:
     before: "..."
     after: 
     title: "Meaningless Timer?"
+PatchNote5:
+    patch: "1.0"
+    before: "I peered beyond the horizon, beyond delays, and the delays of the delays, and caught glimpse of the faintest gasp of light in the darkness."
+    after: "There's more to come. Stay tuned!"
+    title: "Release Patch!"

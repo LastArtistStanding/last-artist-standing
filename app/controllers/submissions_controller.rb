@@ -47,12 +47,36 @@ class SubmissionsController < ApplicationController
   # POST /submissions
   # POST /submissions.json
   def create
+    initialDateTime = DateTime.current
+    tenMinuteGuard = ((initialDateTime - Date.current.to_datetime)*24*60).to_i
+    failure = false
     @submission = Submission.new(submission_params)
     @submission.user_id = current_user.id
     @participations = Participation.where({:user_id => current_user.id, :active => true}).order("challenge_id ASC")
     
+    #Prevent submissions on the first 10 minutes
+    if tenMinuteGuard < 10
+      @submission.errors[:base] << " To prevent rollover problems, you cannot submit in the first ten minutes of the day. This is a temporary measure to prevent erroneous participation tracking, and will be replaced in the future iwth a more robust solution."
+      failure = true
+    else 
+      if !@submission.time.blank?
+        if !@submission.time.is_a? Integer
+          @submission.errors.add(:time, " specified has to be an integer.")
+          failure = true;
+        end
+      end
+    end
+    
     respond_to do |format|
-      if @submission.save
+      if failure
+        format.html { render :new }
+        format.json { render json: @submission.errors, status: :unprocessable_entity }
+      elsif @submission.save
+      
+        #lock in time to account for lag time
+        @submission.created_at = initialDateTime
+        @submission.save
+        
         submission_date = @submission.created_at.to_date
         nextDay = submission_date + 1.day
         newFrequency = params[:postfrequency].to_i
@@ -101,26 +125,49 @@ class SubmissionsController < ApplicationController
   # PATCH/PUT /submissions/1
   # PATCH/PUT /submissions/1.json
   def update
-    respond_to do |format|
-      if @submission.update(submission_params)
-        format.html { redirect_to @submission }
-        format.json { render :show, status: :ok, location: @submission }
-      else
-        format.html { render :edit }
-        format.json { render json: @submission.errors, status: :unprocessable_entity }
+    @participations = Participation.where({:user_id => current_user.id, :active => true}).order("challenge_id ASC")
+    
+    if @submission.user_id == current_user.id
+      respond_to do |format|
+        if @submission.update(submission_params)
+          #This sort of information (challenge submissions) shouldn't ever change after the day it was submitted.
+          if @submission.created_at.to_date == Date.current
+            @participations.each do |p|
+              if p.challenge.id != 1 && !p.challenge.seasonal
+                entry = ChallengeEntry.find_by({:challenge_id => p.challenge.id, :submission_id => @submission.id, :user_id => current_user.id})
+                #If we selected the checkbox, check if an extry exists before creating it.
+                if !params[p.challenge_id.to_s].blank? && entry.blank?
+                  ChallengeEntry.create({:challenge_id => p.challenge.id, :submission_id => @submission.id, :user_id => current_user.id})
+                #If we unchecked the box, check if an entry doesn't exist before deleting it.
+                elsif params[p.challenge_id.to_s].blank? && !entry.blank?
+                  entry.destroy
+                end
+              end
+            end
+          end
+          format.html { redirect_to @submission }
+          format.json { render :show, status: :ok, location: @submission }
+        else
+          format.html { render :edit }
+          format.json { render json: @submission.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
 
   # DELETE /submissions/1
   # DELETE /submissions/1.json
-  # def destroy
-  #  @submission.destroy
-  #  respond_to do |format|
-  #    format.html { redirect_to submissions_url }
-  #    format.json { head :no_content }
-  #  end
-  #end
+  def destroy
+    #Only the creator can delete a submission, and only on the day he submitted it.
+    if @submission.user_id == current_user.id && (@submission.created_at.to_date == Date.current)
+      ChallengeEntry.where(submission_id: @submission.id).destroy_all
+      @submission.destroy
+      respond_to do |format|
+        format.html { redirect_to submissions_url }
+        format.json { head :no_content }
+      end
+    end
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -134,6 +181,10 @@ class SubmissionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def submission_params
-      params.require(:submission).permit(:drawing, :user_id, :nsfw_level, :api_command)
+      if @submission.created_at.to_date == Date.current
+        params.require(:submission).permit(:drawing, :user_id, :nsfw_level, :api_command, :title, :description, :time)
+      else
+        params.require(:submission).permit(:nsfw_level, :title, :description)
+      end
     end
 end

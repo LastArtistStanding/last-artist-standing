@@ -49,4 +49,16 @@ module UsersHelper
         end
     end
     
+    def getUserMaxLevel(user)
+        if user.blank?
+            return 0
+        end
+        award = Award.find_by({:user_id => user.id, :badge_id => 1})
+        if award.blank?
+            0
+        else
+            award.prestige
+        end
+    end
+    
 end

@@ -7,3 +7,6 @@ Badge2:
 Badge3:
     name: "Summer 2018 Participation Badge"
     direct_image: "https://s3.us-east-2.amazonaws.com/do-art-daily-public/Summer+Badge.png"
+Badge4:
+    name: "Autumn 2018 Participation Badge"
+    direct_image: "https://s3.us-east-2.amazonaws.com/do-art-daily-public/Autumn+Badge.png"

@@ -25,3 +25,12 @@ Challenge3:
     rejoinable: true
     seasonal: true
     postfrequency: 1
+Challenge4:
+    name: "Autumn Challenge 2018"
+    description: "Can you draw every day of the autumn?<br>Unlike the DAD challenge, these seasonal challenges are not streak based. Feel free to submit as much as you can this season, up to a maximum of once per day. You will receive a rotating season badge based on your peformance."
+    start_date: 2018-09-22
+    end_date: 2018-12-21
+    streak_based: false
+    rejoinable: true
+    seasonal: true
+    postfrequency: 1

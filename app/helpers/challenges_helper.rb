@@ -62,4 +62,15 @@ module ChallengesHelper
         end
     end
     
+    def getAwardByUserAndChallenge(challenge, user)
+        if challenge.blank?
+            nil
+        elsif user.blank?
+            nil
+        else
+            badge_map = BadgeMap.find_by(challenge_id: challenge.id)
+            Award.find_by(:user_id => user.id, :badge_id => badge_map.badge_id)
+        end
+    end
+    
 end
