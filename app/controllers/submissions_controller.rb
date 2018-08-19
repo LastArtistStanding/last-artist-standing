@@ -181,7 +181,7 @@ class SubmissionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def submission_params
-      if @submission.created_at.to_date == Date.current
+      if Submission.find(params[:id]).created_at.to_date == Date.current
         params.require(:submission).permit(:drawing, :user_id, :nsfw_level, :api_command, :title, :description, :time)
       else
         params.require(:submission).permit(:nsfw_level, :title, :description)
