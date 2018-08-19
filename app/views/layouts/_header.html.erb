@@ -1,55 +1,88 @@
 <header>
-  <nav class="navbar navbar-expand-sm navbar-dark" style="background: coral;">
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #DF5F25;">
+    <div class="container">
       <!-- Brand -->
-    <a class="navbar-brand" href="/">DAD</a>
+      <div class="navbar-translate">
+        <a class="navbar-brand" href="/" style="font-size: 30px; color: white;">
+          <span style="text-align: center; background: white; width: 40px; height: 40px; display: inline-block; border-radius: 50%;">
+            <img style="width: 30px; margin-bottom: 10px;" src="https://s3.us-east-2.amazonaws.com/do-art-daily-public/DAD+Badge.png"></img>
+          </span>
+          DAD
+        </a>
+        
+        <button class="navbar-toggler navbar-toggler-right navbar-burger" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-bar"></span>
+          <span class="navbar-toggler-bar"></span>
+          <span class="navbar-toggler-bar"></span>
+        </button>
+      </div>
 
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-content" aria-controls="nav-content" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div id="nav-content" class="navbar-collapse collapse">
-      <ul class="navbar-nav mr-auto">
-          <li class="nav-item active"><a class="nav-link" href="/"><span class="fa fa-home"></span> Home <span class="sr-only">(current)</span></a></li>
-          <li class="nav-item active"><a class="nav-link" href="/news"><span class="fa fa-newspaper-o"></span> News <span class="sr-only">(current)</span></a></li>
+    <div class="collapse navbar-collapse" id="navbarToggler">
+      <ul class="navbar-nav ml-auto">
+        <% if logged_in? %>
+        <li class="nav-item">
+          <a class="nav-link" href=" <%= new_submission_path %> " title="Submit your art!" style="color: yellow;">
+            <i class="fa fa-upload"></i>
+            Submit
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href=" <%= submissions_path(:date => Date.current) %> " title="See today's submissions.">
+            <i class="fa fa-eye"></i>
+            Browse
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href=" <%= challenges_path %> " title="Join and create challenges.">
+            <i class="fa fa-bolt"></i>
+            Challenges
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/news" rel="tooltip" title="Get info on the latest updates and development news.">
+            <i class="fa fa-newspaper-o"></i>
+            News
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href=" <%= users_path %>" title="Peruse the user list and leaderboards.">
+            <i class="fa fa-users"></i>
+            Users
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="<%= user_path(current_user) %>" title="Preview and modify your profile.">
+            <i class="fa fa-user"></i>
+            Profile
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/help" title="New or lost? Get help here!">
+            <i class="fa fa-question-circle"></i>
+            Help
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="<%= logout_path %>" data-method="delete" title="Log out of your account.">
+            <i class="fa fa-sign-out"></i>
+            Log out
+          </a>
+        </li>
+        <% else %>
+        <li class="nav-item">
+          <a class="nav-link" href="#login-modal" data-toggle="modal" title="Sign in, or create an account on DAD!">
+            <i class="fa fa-sign-in"></i>
+            Login/Register
+          </a>
+        </li>
+        <% end %>
       </ul>
-      <ul class="navbar-nav">
-      <% if logged_in? %>
-        <li class="nav-item">
-          <a class="nav-link" href=" <%= submissions_path(:date => Date.current) %> ">
-            <span class="fa fa-clock-o"></span> Submit
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href=" <%= challenges_path %> ">
-            <span class="fa fa-bolt"></span> Challenges
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href=" <%= users_path %>">
-            <span class="fa fa-users"></span> Users
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="<%= user_path(current_user) %>">
-            <span class="fa fa-user"></span> Profile
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="<%= logout_path %>" data-method="delete">
-            <span class="fa fa-sign-out"></span> Log out
-          </a>
-        </li>
-      <% else %>
-        <li class="nav-item">
-          <a class="nav-link" href="#login-modal" data-toggle="modal">
-            <span class="fa fa-sign-in"></span> Login/Register
-          </a>
-        </li>
-      </ul>
-      <% end %>
+    </div>
     </div>
   </nav>
+
 </header>
+
 <div class="modal hide fade" id="login-modal" role="dialog" title="Login/Register">
   <%= render 'layouts/login_modal' %>
 </div>

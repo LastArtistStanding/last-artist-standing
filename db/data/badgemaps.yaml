@@ -59,6 +59,36 @@ DADBadgeMap10:
     required_score: 109
     prestige: 10
     description: "Level 10 - 109 submissions streak"
+DADBadgeMap11:
+    badge_name: "DAD Streak Badge"
+    challenge_name: "Do Art Daily"
+    required_score: 131
+    prestige: 11
+    description: "Level 11 - 131 submissions streak"
+DADBadgeMap12:
+    badge_name: "DAD Streak Badge"
+    challenge_name: "Do Art Daily"
+    required_score: 155
+    prestige: 12
+    description: "Level 12 - 155 submissions streak"
+DADBadgeMap13:
+    badge_name: "DAD Streak Badge"
+    challenge_name: "Do Art Daily"
+    required_score: 181
+    prestige: 13
+    description: "Level 13 - 181 submissions streak"
+DADBadgeMap14:
+    badge_name: "DAD Streak Badge"
+    challenge_name: "Do Art Daily"
+    required_score: 209
+    prestige: 14
+    description: "Level 14 - 209 submissions streak"
+DADBadgeMap15:
+    badge_name: "DAD Streak Badge"
+    challenge_name: "Do Art Daily"
+    required_score: 239
+    prestige: 15
+    description: "Level 15 - 239 submissions streak"
 #Spring 2018 Badges
 Spring2018BadgeMap1:
     badge_name: "Spring 2018 Participation Badge"
@@ -119,5 +149,36 @@ Summer2018BadgeMap5:
     badge_name: "Summer 2018 Participation Badge"
     challenge_name: "Summer Challenge 2018"
     required_score: 93
+    prestige: 5
+    description: "FLAWLESS - This artist submitted daily this season!"
+#Autumn 2018 Badges
+Autumn2018BadgeMap1:
+    badge_name: "Autumn 2018 Participation Badge"
+    challenge_name: "Autumn Challenge 2018"
+    required_score: 12
+    prestige: 1
+    description: "WEEKLY - This artist submitted at least once a week this season."
+Autumn2018BadgeMap2:
+    badge_name: "Autumn 2018 Participation Badge"
+    challenge_name: "Autumn Challenge 2018"
+    required_score: 38
+    prestige: 2
+    description: "HOBBYIST - This artist submitted at least once a day on the weekends."
+Autumn2018BadgeMap3:
+    badge_name: "Autumn 2018 Participation Badge"
+    challenge_name: "Autumn Challenge 2018"
+    required_score: 64
+    prestige: 3
+    description: "BUSINESS - This artist submitted at least once a business day."
+Autumn2018BadgeMap4:
+    badge_name: "Autumn 2018 Participation Badge"
+    challenge_name: "Autumn Challenge 2018"
+    required_score: 77
+    prestige: 4
+    description: "ELITE - This artist submitted almost daily this season!"
+Autumn2018BadgeMap5:
+    badge_name: "Autumn 2018 Participation Badge"
+    challenge_name: "Autumn Challenge 2018"
+    required_score: 90
     prestige: 5
     description: "FLAWLESS - This artist submitted daily this season!"

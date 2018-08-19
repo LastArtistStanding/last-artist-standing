@@ -6,7 +6,8 @@ class PagesController < ApplicationController
         currentSeasonalChallenge = Challenge.where(":todays_date >= start_date AND :todays_date < end_date AND seasonal = true", {todays_date: Date.current}).first.id
         
         # All lists to be displayed in home
-        @latestAwards = Award.where("date_received = ?", Date.today).order("prestige DESC, badge_id DESC")
+        @latestAwards = Award.where("date_received = ? AND badge_id <> 1", Date.today).order("prestige DESC, badge_id DESC")
+        @levelUps = Award.where("date_received = ? AND badge_id = 1", Date.today).order("prestige DESC")
         @latestEliminations = Participation.where("challenge_id = 1 AND eliminated AND end_date = ?", (Date.current - 1.day)).order("score DESC")
         @startingChallenges = @activeChallenges.where('start_date = ?', Date.current)
         @endingChallenges = Challenge.where('end_date = ?', Date.current)

@@ -11,7 +11,7 @@ class ChallengesController < ApplicationController
   
   # GET
   def entries
-    @challengeEntries = ChallengeEntry.where(:challenge_id => @challenge.id)
+    @challengeEntries = ChallengeEntry.where(:challenge_id => @challenge.id).order("created_at DESC").paginate(:page => params[:page], :per_page => 50)
   end
 
   # GET /challenge/1
@@ -89,6 +89,7 @@ class ChallengesController < ApplicationController
         possibleScore = ((@challenge.end_date - @challenge.start_date) / @challenge.postfrequency).to_i
         if @badge_map.required_score > possibleScore
           @badge_map.errors.add(:required_score, " is impossible to achieve within the dates and post frequency specified (only #{possibleScore} submissions possible).")
+          failure = true;
         end
       end
       
@@ -111,9 +112,31 @@ class ChallengesController < ApplicationController
   end
 
   def update
+    failure = false
+    
     respond_to do |format|
-      if @challenge.update(allowed_challenge_params) && @badge.update(allowed_badge_params) && @badge_map.update(allowed_badge_map_params)
-        format.html { redirect_to root_path }
+      newChallenge = Challenge.new(allowed_challenge_params)
+      newBadgeMap = BadgeMap.new(allowed_badge_map_params)
+      
+      #specialized checks
+      if Date.current < @challenge.start_date && newChallenge.start_date - Date.today < 7
+        @challenge.errors.add(:start_date, " should be at least a week out from today. Allow people to have sufficient advance notice to join!")
+        failure = true;
+      end
+      if newChallenge.streak_based && newChallenge.postfrequency == 0
+        @challenge.errors.add(:streak_based, " challenges cannot have a post frequency of 'None'.")
+        failure = true;
+      end
+      if newChallenge.postfrequency != 0 && !newBadgeMap.required_score.blank? 
+        possibleScore = ((newChallenge.end_date - newChallenge.start_date) / newChallenge.postfrequency).to_i
+        if newBadgeMap.required_score > possibleScore
+          @badge_map.errors.add(:required_score, " is impossible to achieve within the dates and post frequency specified (only #{possibleScore} submissions possible).")
+          failure = true;
+        end
+      end
+      
+      if !failure && @challenge.update(allowed_challenge_params) && @badge.update(allowed_badge_params) && @badge_map.update(allowed_badge_map_params)
+        format.html { redirect_to @challenge }
       else
         format.html { render :edit }
       end

@@ -22,43 +22,10 @@ html {
   position: relative;
   min-height: 100%;
 }
+
 body {
   margin: 0;
-  margin-bottom: 30px; /* Margin bottom by footer height */
-}
-
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 30px; /* Set the fixed height of the footer here */
-  line-height: 30px;
-  background-color: SkyBlue;
-  padding-left: 5px;
-  padding-right: 5px;
-}
-
-footer a {
-  color: #448;
-}
-
-footer a:hover {
-  color: #113;
-}
-
-footer small {
-  float: left;
-}
-
-footer ul {
-  float: right;
-  list-style: none;
-  margin-bottom: 0;
-}
-
-footer ul li {
-  float: left;
-  margin-left: 15px;
+  margin-bottom: 85px;
 }
 
 .card {
@@ -116,3 +83,450 @@ footer ul li {
 p {
   margin-bottom: 0;
 }
+
+.card.homeCardStyle {
+  color: white;
+  &.transparentCard {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  &.redCard {
+    background-color: rgba(95, 31, 31, 0.8);
+  }
+  &.orangeCard {
+    background-color: rgba(95, 63, 0, 0.8);
+  }
+  &.yellowCard {
+    background-color: rgba(77, 77, 0, 0.8);
+  }
+  &.greenCard {
+    background-color: rgba(31, 95, 31, 0.8);
+  }
+  &.blueCard {
+    background-color: rgba(31, 31, 95, 0.8);
+  }
+  &.purpleCard {
+    background-color: rgba(77, 0, 77, 0.8);
+  }
+  .card-body.table-responsive {
+    font-size: 0.8em;
+  }
+  #StreakStatus {
+    font-weight: 600;
+    &.streakSafe {
+      color: #AAFFAA;
+    }
+    &.streakDanger {
+      color: #FF5A5A;
+    }
+    &.streakNeutral {
+      color: #DFDF5A;
+    }
+  }
+}
+
+.card {
+  #StreakStatus {
+    font-weight: 600;
+    &.streakSafe {
+      color: #1A7F1A;
+    }
+    &.streakDanger {
+      color: #7F0A0A;
+    }
+    &.streakNeutral {
+      color: #6F6F0A;
+    }
+  }
+}
+
+.smallPopoverText > p {
+  font-size: 0.9em;
+  text-align: left;
+}
+
+.container-fluid.mainPageSplash {
+  min-height: 100vh;
+  padding-top: 115px;
+  padding-bottom: 95px;
+  margin-top: -95px;
+  margin-bottom: -85px;
+}
+
+.unselectable {
+  -webkit-user-select: none; /* Safari */        
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+}
+
+.smallList {
+  font-size: 0.8rem;
+}
+
+.leftAlign {
+  text-align: left !important;
+}
+
+.avatarWithName {
+  display: inline-block;
+  position: relative;
+  width: 130px;
+  height: 170px;
+  text-align: center;
+  margin: 8px;
+  border-radius: 10px;
+  background: #A0C0E0;
+  z-index: 1;
+}
+
+.avatarUserName {
+  margin-top: 5px; 
+  text-align: center; 
+  font-weight: 600;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.75rem;
+}
+
+.fullSizeAvatar {
+  display: inline-block;
+  position: relative;
+  width: 120px;
+  height: 150px;
+  text-align: center;
+  z-index: 3;
+}
+
+.fullSizeAvatar > img {
+  padding: 10px;
+}
+
+.winter1, .winter2, .winter3, .winter4, .winter5, .spring1, .spring2, .spring3, .spring4, .spring5, .summer1, .summer2, .summer3, .summer4, .summer5, .autumn1, .autumn2, .autumn3, .autumn4, .autumn5 {
+  position: absolute; 
+  content: '';
+  z-index: -1;
+}
+.winter1, .spring1, .summer1, .autumn1 {
+  width: 20px;
+  height: 20px;
+}
+.winter2, .spring2, .summer2, .autumn2 {
+  width: 30px;
+  height: 30px;
+}
+.winter3, .spring3, .summer3, .autumn3 {
+  width: 40px;
+  height: 40px;
+}
+.winter4, .spring4, .summer4, .autumn4 {
+  width: 50px;
+  height: 50px;
+}
+.winter5, .spring5, .summer5, .autumn5 {
+  width: 60px;
+  height: 60px;
+}
+.winter1, .winter2, .winter3, .winter4 { background: #252B5F; }
+.spring1, .spring2, .spring3, .spring4 { background: #489B41; }
+.summer1, .summer2, .summer3, .summer4 { background: #FF8C00; }
+.autumn1, .autumn2, .autumn3, .autumn4 { background: #844222; }
+
+.winter1, .winter2, .winter3, .winter4, .winter5, .spring1, .spring2, .spring3, .spring4, .spring5 { left: 0px; }
+.spring1, .spring2, .spring3, .spring4, .spring5, .summer1, .summer2, .summer3, .summer4, .summer5 { top: 0px; }
+.winter1, .autumn1 { top: 100px; }
+.winter2, .autumn2 { top: 90px; }
+.winter3, .autumn3 { top: 80px; }
+.winter4, .autumn4 { top: 70px; }
+.winter5, .autumn5 { top: 60px; }
+.summer1, .autumn1 { left: 100px; }
+.summer2, .autumn2 { left: 90px; }
+.summer3, .autumn3 { left: 80px; }
+.summer4, .autumn4 { left: 70px; }
+.summer5, .autumn5 { left: 60px; }
+
+.winter5 { 
+  -webkit-animation: winterglow 2s infinite;
+  -moz-animation:    winterglow 2s infinite;
+  -o-animation:      winterglow 2s infinite;
+  animation:         winterglow 2s infinite; 
+  animation-timing-function: ease;
+}
+@-webkit-keyframes winterglow {
+  0% { background: #252B5F; }
+  50% { background: #C1E5FE; }
+  100% { background: #252B5F; }
+}
+@-moz-keyframes winterglow {
+  0% { background: #252B5F; }
+  50% { background: #C1E5FE; }
+  100% { background: #252B5F; }
+}
+@-o-keyframes winterglow {
+  0% { background: #252B5F; }
+  50% { background: #C1E5FE; }
+  100% { background: #252B5F; }
+}
+@keyframes winterglow {
+  0% { background: #252B5F; }
+  50% { background: #C1E5FE; }
+  100% { background: #252B5F; }
+}
+
+.spring5 { 
+  -webkit-animation: springglow 2s infinite;
+  -moz-animation:    springglow 2s infinite;
+  -o-animation:      springglow 2s infinite;
+  animation:         springglow 2s infinite; 
+  animation-timing-function: ease;
+}
+@-webkit-keyframes springglow {
+  0% { background: #489B41; }
+  50% { background: #70FF63; }
+  100% { background: #489B41; }
+}
+@-moz-keyframes springglow {
+  0% { background: #489B41; }
+  50% { background: #70FF63; }
+  100% { background: #489B41; }
+}
+@-o-keyframes springglow {
+  0% { background: #489B41; }
+  50% { background: #70FF63; }
+  100% { background: #489B41; }
+}
+@keyframes springglow {
+  0% { background: #489B41; }
+  50% { background: #70FF63; }
+  100% { background: #489B41; }
+}
+
+.summer5 { 
+  -webkit-animation: summerglow 2s infinite;
+  -moz-animation:    summerglow 2s infinite;
+  -o-animation:      summerglow 2s infinite;
+  animation:         summerglow 2s infinite;
+  animation-timing-function: ease;
+}
+@-webkit-keyframes summerglow {
+  0% { background: #FF8C00; }
+  50% { background: #FFDF82; }
+  100% { background: #FF8C00; }
+}
+@-moz-keyframes summerglow {
+  0% { background: #FF8C00; }
+  50% { background: #FFDF82; }
+  100% { background: #FF8C00; }
+}
+@-o-keyframes summerglow {
+  0% { background: #FF8C00; }
+  50% { background: #FFDF82; }
+  100% { background: #FF8C00; }
+}
+@keyframes summerglow {
+  0% { background: #FF8C00; }
+  50% { background: #FFDF82; }
+  100% { background: #FF8C00; }
+}
+
+.autumn5 { 
+  -webkit-animation: autumnglow 2s infinite;
+  -moz-animation:    autumnglow 2s infinite;
+  -o-animation:      autumnglow 2s infinite;
+  animation:         autumnglow 2s infinite; 
+  animation-timing-function: ease;
+}
+@-webkit-keyframes autumnglow {
+  0% { background: #844222; }
+  50% { background: #FF9648; }
+  100% { background: #844222; }
+}
+@-moz-keyframes autumnglow {
+  0% { background: #844222; }
+  50% { background: #FF9648; }
+  100% { background: #844222; }
+}
+@-o-keyframes autumnglow {
+  0% { background: #844222; }
+  50% { background: #FF9648; }
+  100% { background: #844222; }
+}
+@keyframes autumnglow {
+  0% { background: #844222; }
+  50% { background: #FF9648; }
+  100% { background: #844222; }
+}
+
+.levelOverlay {
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  position: absolute;
+  color: black;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.digg_pagination {
+  background: white;
+  font-family: "Montserrat", "Helvetica", Arial, sans-serif;
+  cursor: default;
+  width: 100%;
+  height: 90px;
+  a, span, em {
+    padding: 0.3em 0.5em;
+    display: block;
+    float: left;
+    margin-bottom: 0.5em;
+    margin-right: 0.25em;
+  }
+  .disabled {
+    border-radius: 20px;
+    color: #999999;
+    border: 2px solid #dddddd;
+    font-weight: 600;
+  }
+  .current {
+    text-align: center;
+    font-style: normal;
+    font-weight: bold;
+    background: #DF5F25;
+    border-radius: 20px;
+    height: 36px;
+    min-width: 36px;
+    color: white;
+    border: 2px solid #DF5F25;
+  }
+  a {
+    text-align: center;
+    border-radius: 20px;
+    text-decoration: none;
+    color: #DF5F25;
+    height: 36px;
+    border: 2px solid #DF5F25;
+    margin: 0;
+    min-width: 36px;
+    font-weight: 600;
+    margin-right: 0.25em;
+    &:hover, &:focus {
+      color: #000033;
+      border-color: #000033;
+    }
+  }
+  .page_info {
+    background: rgba(223, 223, 255, 0.9);
+    color: #222222;
+    border-radius: 20px;
+    padding: 0.4em 0.6em;
+    height: 36px;
+    width: 450px;
+    margin-bottom: 0.3em;
+    text-align: center;
+    b {
+      color: #000033;
+      background: rgba(190, 190, 245, 1);
+      padding: 0.1em 0.25em;
+    }
+  }
+}
+
+.submissionIcon {
+  display: inline-block;
+  position: relative;
+  width: 200px;
+  height: 200px;
+  text-align: center;
+  margin: 15px;
+  img {
+    width: 200px;
+    height: 200px;
+    border-radius: 10px;
+  }
+}
+
+.submissionAuthor {
+  text-align: left;
+  position: absolute;
+  background: rgba(255, 125, 47, 0.8);
+  color: black;
+  width: 100%;
+  border-radius: 10px 10px 0 0;
+  height: 30px;
+  padding: 2px;
+  padding-top: 4px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.submissionTime {
+  text-align: right;
+  position: absolute;
+  background: rgba(9, 87, 139, 0.8);
+  color: white;
+  width: 100%;
+  top: 170px;
+  height: 30px;
+  border-radius: 0 0 10px 10px;
+  padding: 2px;
+  padding-top: 4px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/*!
+
+ =========================================================
+ * Paper Kit 2 - v2.0.1
+ =========================================================
+
+ * Product Page: http://www.creative-tim.com/product/paper-kit-2
+ * Copyright 2017 Creative Tim (http://www.creative-tim.com)
+ * Licensed under MIT (https://github.com/timcreative/paper-kit/blob/master/LICENSE.md)
+
+ =========================================================
+
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ */
+
+@import "paper-kit/variables";
+@import "paper-kit/mixins";
+
+@import "paper-kit/typography";
+
+// Core CSS
+@import "paper-kit/misc";
+@import "paper-kit/buttons";
+@import "paper-kit/inputs";
+@import "paper-kit/progress-bars";
+@import "paper-kit/sliders";
+@import "paper-kit/alerts";
+@import "paper-kit/labels";
+//@import "paper-kit/tooltips-and-popovers";
+@import "paper-kit/sections";
+@import "paper-kit/checkbox-radio";
+@import "paper-kit/navbars";
+@import "paper-kit/images";
+@import "paper-kit/cards";
+@import "paper-kit/footers";
+
+
+// Bootstrap Switch
+@import "paper-kit/bootstrap-switch";
+
+// Fancy Stuff
+@import "paper-kit/dropdown";
+//
+// icons
+@import "paper-kit/icons";
+//
+@import "paper-kit/tabs-navs-pagination";
+@import "paper-kit/collapse";
+@import "paper-kit/carousel";
+@import "paper-kit/modal";
+//
+@import "paper-kit/responsive";
+@import "paper-kit/plugins/datetimepicker";
+@import "paper-kit/social-buttons";
+@import "paper-kit/examples";

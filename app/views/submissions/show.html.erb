@@ -3,29 +3,93 @@
     <b><p id="notice"><%=notice %></p></b>
     <div class="col-lg-2">
       <div class="card">
-	      <div class="card-header" style="text-align: center;"><b>Submission Info</b></div>
+	      <div class="card-header" style="text-align: center;">
+	        Submission Info
+	      </div>
         <div class="card-body" style="text-align: center;">
-          <%= image_tag getUserThumb(@submission.user) %><br><br>
-          Submitted by: <b><%= link_to @submission.user.name, @submission.user, :style => "color: black;" %></b><br>
-          Content Level: <b><%= getNsfwString(@submission.nsfw_level) %></b><br><br>
+          <div class="avatarWithName">
+        <div class="avatarUserName"><%= @submission.user.name %></div>
+        
+        <a href=<%="../users/#{@submission.user.id}"%>>
+        <span class="fullSizeAvatar">
+            <% seasonChallengeIds = getLatestSeasonalChallenges %>
+            <% userDADScore = getUserCurrentDADScore(@submission.user) %>
+            
+            <% if userDADScore != "None" %>
+              <% nextLvl = BadgeMap.where("required_score > :current_score AND challenge_id = :challengeId", {current_score: userDADScore, challengeId: 1}).order("required_score ASC").first %>
+              <% prevLvl = BadgeMap.where("required_score <= :current_score AND challenge_id = :challengeId", {current_score: userDADScore, challengeId: 1}).order("required_score DESC").first %>
+            <% else %>
+              <% toNextLvl = 0 %>
+              <% prevLvl = 0 %>
+            <% end %>
+            
+            <% winterAward = getAwardByUserAndChallenge(seasonChallengeIds[3], @submission.user) %>
+            <% springAward = getAwardByUserAndChallenge(seasonChallengeIds[0], @submission.user) %>
+            <% summerAward = getAwardByUserAndChallenge(seasonChallengeIds[1], @submission.user) %>
+            <% autumnAward = getAwardByUserAndChallenge(seasonChallengeIds[2], @submission.user) %>
+            
+            <%= image_tag getUserThumb(@submission.user), :title => "#{postfrequencyToString(getUserDADFrequency(@submission.user), true)}", :alt => "#{@submission.user.name}", :data => { :toggle => "tooltip", :placement => "top" } %>
+            <div class=<%= "winter#{winterAward.prestige unless winterAward.blank?}" %>></div>
+            <div class=<%= "spring#{springAward.prestige unless springAward.blank?}" %>></div>
+            <div class=<%= "summer#{summerAward.prestige unless summerAward.blank?}" %>></div>
+            <div class=<%= "autumn#{autumnAward.prestige unless autumnAward.blank?}" %>></div>
+            
+            <div style="margin-top: 5px;" data-toggle="tooltip" data-placement="top" title="Record Streak: <%= @submission.user.longest_streak %> (Level <%= getUserMaxLevel(@submission.user) %>)" >
+              <div class="levelOverlay unselectable">
+                <% if userDADScore != "None" %>
+                  <%= "#{userDADScore}/#{nextLvl.required_score} to lvl #{nextLvl.prestige}" %>
+                <% else %>
+                  No Active Streak
+                <% end %>
+              </div>
+              <div class="progress" >
+                <% barPercent = (userDADScore == "None") ? 0 : (100.0*(userDADScore - prevLvl.required_score).to_f)/(nextLvl.required_score - prevLvl.required_score).to_f %>
+                <div class="progress-bar progress-bar-experience" role="progressbar" style="width: <%= barPercent %>%" aria-valuenow="<%= barPercent %>" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+            
+          </span>
+          </a>
+          </div>
+          
+          <br>
+          <%= @submission.created_at.strftime("Submitted at %H:%M, %b %-d, %Y") %><br>
+          Time Spent: <%= getSubmissionTimeText(@submission) %><br>
+          Content Level: <%= getNsfwString(@submission.nsfw_level) %><br><br>
           <b>Submitted to Challenges:</b><br>
           <% @challenge_entries.each do |ce| %>
             <%= link_to ce.challenge.name, ce.challenge, :style => "color: black;" %><br>
           <% end %>
           <br>
+          
           <a class="btn btn-primary" href="/submissions">
             <span class="fa fa-undo"></span> Back
           </a>
+          
+          <% if logged_in? && (@submission.user_id == current_user.id) %>
+            <% if (@submission.created_at.to_date == Date.current) %>
+              <br><br>
+              <%= link_to '<span class="fa fa-edit"></span>'.html_safe, edit_submission_path(@submission), :class => "btn btn-primary" %>
+              <%= link_to '<span class="fa fa-trash"></span>'.html_safe, @submission, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-primary" %><br>
+            <% else %>
+              <br><br>
+              <%= link_to '<span class="fa fa-edit"></span>'.html_safe, edit_submission_path(@submission), :class => "btn btn-primary" %><br>
+            <% end %>
+          <% end %>
        </div>
 	   </div>
 	 </div>
 	 
 	 <div class="col-lg-10">
 	   <div class="card">
-	      <div class="card-header"><b>Submission</b></div>
+	      <div class="card-header" style="text-align: center; font-weight: 600;"><%= getSubmissionTitle(@submission) %></div>
         <div class="card-body" style="text-align: center;">
           <% submissionUrl = @submission.drawing.url unless @submission.drawing.blank? %>
-          <%= image_tag submissionUrl, :style => "max-width: 100%; max-height: 800px;" %>
+          <div style="width: 100%;">
+          <%= image_tag submissionUrl, :style => "max-width: 100%; max-height: 600px;" %>
+          </div>
+          <br>
+          <%= simple_format(getSubmissionDescription(@submission)) %>
         </div>
       </div>
     </div>

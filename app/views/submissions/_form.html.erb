@@ -1,9 +1,19 @@
 <script>
+  // Needed to activate tooltips.
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+  $(function () {
+    $('[data-toggle="popover"]').popover()
+  })
+
   function pad(n) {
     return (n < 10) ? ("0" + n) : n;
   }
   var interval;
   $(document).ready(function(){
+    var seconds, minutes, hours, days;
+    
     if (interval != null) {
       clearInterval(interval);
     }
@@ -16,52 +26,59 @@
     var rubyNextDate = new Date(Date.UTC(rubyDate.getUTCFullYear(), rubyDate.getUTCMonth(), rubyDate.getUTCDate() + 1, 0, 0, 0));
     var rubyNextSubmissionDate = new Date(Date.UTC(rubyDate.getUTCFullYear(), rubyDate.getUTCMonth(), rubyDate.getUTCDate() + $('.time_information').data('daysleft'), 0, 0, 0));
     var currentTime = new Date(offset + Date.now());
+    
     var timeToNextDay = rubyNextDate - currentTime;
     var timeToNextSubmissionDate = rubyNextSubmissionDate - currentTime;
     var submitted = $('.time_information').data('submitted')
     
     if (submitted == -2) {
       $('#TimeDisplay').html(currentTime.toUTCString());
-      $('#StreakStatus').css("display", "none")
+      $('#StreakStatus').html("Please log in to view your streak status.");
+      $('#StreakStatus').addClass("streakNeutral");
       $('#NextSubmissionDisplay').css("display", "none")
     } else if (submitted == -1) {
-      $('#TimeDisplay').html(currentTime.toUTCString() + "<br>");
+      $('#TimeDisplay').html(currentTime.toUTCString());
       $('#StreakStatus').html("You currently don't have an active streak.");
+      $('#StreakStatus').addClass("streakNeutral");
+      $('#NextSubmissionDisplay').css("display", "none")
     } else {
-      $('#TimeDisplay').html(currentTime.toUTCString() + "<br>");
+      $('#TimeDisplay').html(currentTime.toUTCString());
+      
+      seconds = Math.floor(timeToNextSubmissionDate / (1000)) % 60;
+      minutes = Math.floor(timeToNextSubmissionDate / (1000*60)) % 60;
+      hours = Math.floor(timeToNextSubmissionDate / (1000*60*60)) % 24;
+      days = Math.floor(timeToNextSubmissionDate / (1000*60*60*24));
       
       if (submitted == 0) {
-        $('#StreakStatus').html("Time left before your streak is reset: ");
-        $('#StreakStatus').css("color", "red")
+        $('#StreakStatus').html("You must submit soon to protect your streak.<br>");
+        $('#StreakStatus').addClass("streakDanger");
+        $('#NextSubmissionDisplay').html("Submission Deadline: "+(days ? days+" day(s) " : "")+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
       } else if (submitted == 1) {
-        $('#StreakStatus').html("You're good to go! Next submission period in: ");
-        $('#StreakStatus').css("color", "green")
+        $('#StreakStatus').html("Your streak is safe for now!<br>");
+        $('#StreakStatus').addClass("streakSafe");
+        $('#NextSubmissionDisplay').html("Next Submission Period: "+(days ? days+" day(s) " : "")+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
       }
       
-      var seconds = Math.floor(timeToNextSubmissionDate / (1000)) % 60;
-      var minutes = Math.floor(timeToNextSubmissionDate / (1000*60)) % 60;
-      var hours = Math.floor(timeToNextSubmissionDate / (1000*60*60)) % 24;
-      var days = Math.floor(timeToNextSubmissionDate / (1000*60*60*24));
-      
-      $('#NextSubmissionDisplay').html(days+" day(s) "+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
     }
     
     interval = setInterval(function() {
       currentTime = new Date(offset + Date.now());
       timeToNextDay = rubyNextDate - currentTime;
+      var pretext;
       
       if (submitted == -2) {
         $('#TimeDisplay').html(currentTime.toUTCString());
       } else if (submitted == -1) {
-        $('#TimeDisplay').html(currentTime.toUTCString() + "<br>");
-        $('#StreakStatus').html("You currently don't have an active streak.");
+        $('#TimeDisplay').html(currentTime.toUTCString());
       } else {
-        $('#TimeDisplay').html(currentTime.toUTCString() + "<br>");
+        $('#TimeDisplay').html(currentTime.toUTCString());
         
         if (submitted == 0) {
-          $('#StreakStatus').html("Time left before your streak is reset: ");
+          $('#StreakStatus').html("You must submit soon to protect your streak.<br>");
+          pretext = "Submission Deadline: ";
         } else if (submitted == 1) {
-          $('#StreakStatus').html("You're good to go! Next submission period in: ");
+          $('#StreakStatus').html("Your streak is safe for now!<br>");
+          pretext = "Next Submission Period: ";
         }
         
         timeToNextSubmissionDate = rubyNextSubmissionDate - currentTime;
@@ -72,9 +89,9 @@
           hours = Math.floor(timeToNextSubmissionDate / (1000*60*60)) % 24;
           days = Math.floor(timeToNextSubmissionDate / (1000*60*60*24));
       
-          $('#NextSubmissionDisplay').html(days+" day(s) "+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
+          $('#NextSubmissionDisplay').html(pretext+(days ? days+" day(s) " : "")+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
         } else {
-          $('#NextSubmissionDisplay').html("0 day(s) 00:00:00");
+          $('#NextSubmissionDisplay').html(pretext+"00:00:00");
         }
       }
       
@@ -85,37 +102,119 @@
 <%= form_for @submission, html: { multipart: true } do |f| %>
   <div class="row">
   <div class="col-lg-6">
-    <div class="card">
-      <% timeinfo = userSubmittedToDAD %>
-	    <%= content_tag :div, :class => "time_information", data: {time: Time.now.to_f * 1000, submitted: timeinfo[0], daysleft: timeinfo[1] } do %>
-	    <% end %>
-	    <div class="card-header"><b>Site Timers</b></b></div>
-	    <div class="card-body">
-	      <b>Current Site Time: </b><span id="TimeDisplay"></span>
-	      <b><span id="StreakStatus"></span></b><span id="NextSubmissionDisplay"></span>
-	    </div>
-	  </div>
+	  
+	  <div class="card">
+	    <div class="card-header"><b>New Submission (<span style="font-weight:600;">bolded</span> fields are required)</b></div>
+      <div class="card-body">
     
-    <div class="card">
-	    <div class="card-header"><b>Submission Rules</b></b></div>
-	    <div class="card-body">
-	      These are a set of guidelines to follow with regards to what you should submit here.
-	      <br><br>
-	      <span style="font-size: 0.8rem;"><b>Time Required</b> - All submissions are expected to represent at least 30 minutes of concentrated effort on the submission as a whole
-	      or as far as progress is made on the work.<br>
-	      <b>No Working Ahead</b> - Your submission, or the progress represented on said submission, must have been made within one day of your submission period.<br>
-	      <b>Ownership</b> - Any image you upload must represent your own work.<br>
-	      <b>WIPs Permitted</b> - It's ok to submit the same piece in succession over multiple days if each subsequent submission represents
-	      sufficient additional time being spent on the piece as it comes together.<br>
-	      <b>Challenges</b> - When attaching a submission to a challenge, double check to see if it meets the criteria for the challenge. For example, some challenges
-	      require you to submit completed pieces only, others permit sketches, WIPS and so on.<br>
-	      <b>Not A Gallery</b> - DAD is geared towards the documentation and formation of your drawing habits. This is not a place to display every art piece you've ever made, or
-	      commemorate another artist.</span>
-	    </div>
-	  </div>
+        <% if @submission.errors.any? %>
+          <div id="error_explanation">
+            <h3><%= pluralize(@submission.errors.count, "error") %> prohibited this submission from being posted:</h3>
+            <ul>
+              <% @submission.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+        
+        By submitting, you agree to the submission guidelines and content policy as specified <a href="../help">here</a>.
+        Also, be aware that after submitting, <span style="font-weight: 600;">your ability to edit your submission will be 
+        limited after rollover, and deletion will be impossible.</span><br><br>
+
+        <div class="form-group row">
+          <div class="col-3" style="font-weight:600;">
+            <%= f.label :drawing %><br>
+          </div>
+          <div class="col-9">
+            <%= f.file_field :drawing %>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <div class="col-3" style="font-weight:600;">
+            <%= f.label :nsfw_level %>
+          </div>
+          <div class="col-9">
+            <%= f.select :nsfw_level, options_for_select([['Safe', 1], ['Questionable', 2], ['Explicit', 3]], 1), {}, { :class => 'custom-select' } %>
+          </div>
+        </div>
+        
+        <div class="form-group row">
+          <div class="col-3">
+            <%= f.label :title %>
+          </div>
+          <div class="col-9">
+            <%= f.text_field :title %>
+          </div>
+        </div>
+        
+        <div class="form-group row">
+          <div class="col-3">
+            <%= f.label :description %>
+          </div>
+          <div class="col-9">
+            <%= f.text_area :description %>
+          </div>
+        </div>
+        
+        <div class="form-group row">
+          <div class="col-3">
+            <%= f.label :time, "Time Spent (in minutes)" %>
+          </div>
+          <div class="col-9">
+            <%= f.number_field :time, :max => 2880 %>
+          </div>
+        </div>
+
+        <% if @current_user.enabled_api %>
+          <div class="form-group row">
+            <div class="col-3">
+              <%= f.label :api_command, "API Command" %>
+            </div>
+            <div class="col-9">
+              <%= f.text_field :api_command, class: "form-control" %>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="form-group row">
+          <div class="offset-sm-6 col-sm-6">
+            <%= f.submit :class => 'btn btn-primary', :style => "margin-bottom: 0;" %>
+          </div>
+        </div>
+  
+      </div>
+    </div>
   </div>
   
+  
+  
   <div class="col-lg-6">
+    
+    <div class="card">
+      <div class="card-body">
+	      <% timeinfo = userSubmittedToDAD %>
+	      <%= content_tag :div, :class => "time_information", data: {time: Time.now.to_f * 1000, submitted: timeinfo[0], daysleft: timeinfo[1] } do %>
+	      <% end %>
+	      <span><i class="fa fa-clock-o"></i> <span id="TimeDisplay"></span></span><br>
+	      <% currentSeason = getCurrentSeasonalChallenge %>
+	      <span>
+	        <% if currentSeason.name.include? "Spring" %>
+	        <i class="fa fa-leaf"></i>
+	        <% elsif currentSeason.name.include? "Summer" %>
+	        <i class="fa fa-sun-o"></i>
+	        <% elsif currentSeason.name.include? "Autumn" %>
+	        <i class="fa fa-cloud"></i>
+	        <% elsif currentSeason.name.include? "Winter" %>
+	        <i class="fa fa-snowflake-o"></i>
+	        <% end %>
+	        <%= currentSeason.name %>: <%= pluralize((currentSeason.end_date - Date.current).to_i, "day") %> left.
+	      </span><br><br>
+	      <span id="StreakStatus"></span>
+	      <span id="NextSubmissionDisplay"></span>
+	    </div>
+	  </div>
     
     <div class="card">
       <div class="card-header"><b>Eligible Challenges</b></div>
@@ -162,58 +261,6 @@
       </div>
     </div>
     
-    <div class="card">
-	    <div class="card-header"><b>New Submission</b></div>
-      <div class="card-body">
-    
-        <% if @submission.errors.any? %>
-          <div id="error_explanation">
-            <h3><%= pluralize(@submission.errors.count, "error") %> prohibited this submission from being posted:</h3>
-            <ul>
-              <% @submission.errors.full_messages.each do |message| %>
-                <li><%= message %></li>
-              <% end %>
-            </ul>
-          </div>
-        <% end %>
-
-        <div class="form-group row">
-          <div class="col-3">
-            <%= f.label :drawing %><br>
-          </div>
-          <div class="col-9">
-            <%= f.file_field :drawing %>
-          </div>
-        </div>
-
-        <div class="form-group row">
-          <div class="col-3">
-            <%= f.label :nsfw_level %>
-          </div>
-          <div class="col-9">
-            <%= f.select :nsfw_level, options_for_select([['Safe', 1], ['Questionable', 2], ['Explicit', 3]], 1), {}, { :class => 'custom-select' } %>
-          </div>
-        </div>
-
-        <% if @current_user.enabled_api %>
-          <div class="form-group row">
-            <div class="col-3">
-              <%= f.label :api_command, "API Command" %>
-            </div>
-            <div class="col-9">
-              <%= f.text_field :api_command, class: "form-control" %>
-            </div>
-          </div>
-        <% end %>
-
-        <div class="form-group row">
-          <div class="offset-sm-6 col-sm-6">
-            <%= f.submit :class => 'btn btn-primary', :style => "margin-bottom: 0;" %>
-          </div>
-        </div>
-  
-      </div>
-    </div>
   </div>
   </div>
 <% end %>

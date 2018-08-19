@@ -2,6 +2,9 @@
 $(function () {
   $('[data-toggle="popover"]').popover()
 })
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
 </script>
 
 <% provide(:title, @curruser.name) %>
@@ -13,23 +16,62 @@ $(function () {
 	  <div class="col-lg-2">
       
       <div class="card">
-	      <div class="card-header" style="text-align: center;"><b><%= @curruser.name %></b></div>
         <div class="card-body table-responsive" style="text-align: center;">
-          <%= image_tag getUserThumb(@curruser) %><br><br>
-          Longest Streak: <%= @curruser.longest_streak %><br>
-	        DAD Frequency: <%= postfrequencyToString(getUserDADFrequency(@curruser)) %>
+        <div class="avatarWithName">
+        <div class="avatarUserName"><%= @curruser.name %></div>
+          <span class="fullSizeAvatar">
+            <% seasonChallengeIds = getLatestSeasonalChallenges %>
+            <% userDADScore = getUserCurrentDADScore(@curruser) %>
+            
+            <% if userDADScore != "None" %>
+              <% nextLvl = BadgeMap.where("required_score > :current_score AND challenge_id = :challengeId", {current_score: userDADScore, challengeId: 1}).order("required_score ASC").first %>
+              <% prevLvl = BadgeMap.where("required_score <= :current_score AND challenge_id = :challengeId", {current_score: userDADScore, challengeId: 1}).order("required_score DESC").first %>
+            <% else %>
+              <% toNextLvl = 0 %>
+              <% prevLvl = 0 %>
+            <% end %>
+            
+            <% winterAward = getAwardByUserAndChallenge(seasonChallengeIds[3], @curruser) %>
+            <% springAward = getAwardByUserAndChallenge(seasonChallengeIds[0], @curruser) %>
+            <% summerAward = getAwardByUserAndChallenge(seasonChallengeIds[1], @curruser) %>
+            <% autumnAward = getAwardByUserAndChallenge(seasonChallengeIds[2], @curruser) %>
+            
+            <%= image_tag getUserThumb(@curruser), :title => "#{postfrequencyToString(getUserDADFrequency(@curruser), true)}", :data => { :toggle => "tooltip", :placement => "top" } %>
+            <div class=<%= "winter#{winterAward.prestige unless winterAward.blank?}" %>></div>
+            <div class=<%= "spring#{springAward.prestige unless springAward.blank?}" %>></div>
+            <div class=<%= "summer#{summerAward.prestige unless summerAward.blank?}" %>></div>
+            <div class=<%= "autumn#{autumnAward.prestige unless autumnAward.blank?}" %>></div>
+            
+            <div style="margin-top: 5px;" data-toggle="tooltip" data-placement="top" title="Record Streak: <%= @curruser.longest_streak %> (Level <%= getUserMaxLevel(@curruser) %>)" >
+              <div class="levelOverlay unselectable">
+                <% if userDADScore != "None" %>
+                  <%= "#{userDADScore}/#{nextLvl.required_score} to lvl #{nextLvl.prestige}" %>
+                <% else %>
+                  No Active Streak
+                <% end %>
+              </div>
+              <div class="progress" >
+                <% barPercent = (userDADScore == "None") ? 0 : (100.0*(userDADScore - prevLvl.required_score).to_f)/(nextLvl.required_score - prevLvl.required_score).to_f %>
+                <div class="progress-bar progress-bar-experience" role="progressbar" style="width: <%= barPercent %>%" aria-valuenow="<%= barPercent %>" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+            
+          </span>
+          </div>
+          
           <% if logged_in? && current_user.id == @curruser.id %>
-            <br><br>
+            <br>
             <a class="btn btn-primary" href="<%= edit_user_path(@curruser) %>">
 	            <span class="fa fa-edit"></span> Edit Profile
 	          </a>
 	        <% end %>
+	        
         </div>
       </div>
       
     </div>
     
-    <div class="col-lg-4">
+    <div class="col-lg-8">
       
       <div class="card">
         <div class="card-header"><b>Badges Awarded</b></div>
@@ -37,19 +79,14 @@ $(function () {
           <p class="card-text">
             <% @awards.each do |award| %>
               <% badgeURL = getBadgeImage(award.badge) %>
-              <% prestigeCalc = award.prestige %>
-              <% if award.badge.id == 1 %>
-                <% prestigeCalc = (prestigeCalc + 1)/2 %>
-              <% end %>
-              <%= image_tag badgeURL, :title => "#{award.badge.name}", :class => "prestige#{prestigeCalc}", :data => { :content => "#{simple_format(BadgeMap.find_by({:badge_id => award.badge_id, :prestige => award.prestige}).description)} (Prestige Level: #{prestigeCalc})", :trigger => "hover", :toggle => "popover", :placement => "top", :html => "true"} %>
+              <%= image_tag badgeURL, :class => "prestige#{award.prestige}", :data => {:content => "<p style='font-weight: 600;'>#{award.badge.name}</p>#{simple_format(BadgeMap.find_by({:badge_id => award.badge.id, :prestige => award.prestige}).description)} (Prestige Level: #{award.prestige})", :trigger => "hover", :toggle => "popover", :placement => "top", :html => "true"} %> 
+            <% end %>
+            <% if @awards.blank? %>
+              No badges awarded yet!
             <% end %>
           </p>
         </div>
       </div>
-      
-    </div>
-    
-    <div class="col-lg-4">
       
       <div class="card">
         <div class="card-header"><b>Submissions</b></div>

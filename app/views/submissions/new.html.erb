@@ -4,17 +4,7 @@
     <div class="col-lg-1"></div>
     
     <div class="col-lg-10">
-      <% if Date.current < Date.new(2018,4,2) %>
-        <div class="card">
-	      <div class="card-header"><b>Locked</b></div>
-          <div class="card-body">
-	          <b>It's coming...</b><br>
-            <a class="btn btn-primary" style="float: right" href="/submissions">
-              <span class="fa fa-undo"></span> Back
-            </a>
-          </div>
-        </div>
-      <% elsif !logged_in? %>
+      <% if !logged_in? %>
         <div class="card">
 	      <div class="card-header"><b>Locked</b></div>
           <div class="card-body">

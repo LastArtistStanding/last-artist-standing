@@ -1,2 +1,27 @@
-<h1>Editing Submission</h1>
-Bear with me, you can't edit submissions right now, things are settling a bit.
+<div class="container-fluid" style="margin-top: 2rem;">
+  <div class="row">
+    <!-- Spacing Column -->
+    <div class="col-lg-1"></div>
+    
+    <div class="col-lg-10">
+      <% if !logged_in? %>
+        <div class="card">
+	      <div class="card-header"><b>Locked</b></div>
+          <div class="card-body">
+            You have to be logged in to submit.
+            <a class="btn btn-primary" style="float: right" href="/submissions">
+              <span class="fa fa-undo"></span> Back
+            </a>
+          </div>
+        </div>
+      <% elsif @submission.created_at.to_date <= Date.current %>
+        <%= render 'editform', submission: @submission %>
+      <% else %>
+        <%= render 'partialeditform', submission: @submission %>
+      <% end %>
+    </div>
+    
+    <!-- Spacing Column -->
+    <div class="col-lg-1"></div>
+  </div>
+</div>

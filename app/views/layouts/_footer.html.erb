@@ -1,17 +1,21 @@
-<footer class="footer">
-  <small>
-    Do Art Daily <%= link_to PatchNote.last.patch, "/news" %>
-    by <a href="https://github.com/the1banana">the1banana</a>,
-    <a href="https://github.com/shawsey">NicNac</a>
-    and <a href="https://github.com/fluffdotexe">fluff</a>
-  </small>
-  <nav>
-    <ul>
-      <small>
-        <li><%= link_to "About",   '#' %></li>
-        <li><%= mail_to "lastartiststanding3@gmail.com", "Contact" %></li>
-        <li><a href="https://github.com/LastArtistStanding/last-artist-standing/">Want to Help?</a></li>
-      </small>
-    </ul>
-  </nav>
+<footer class="footer" style="background-color: rgba(223, 223, 255, 0.9);">
+  <div class="container">
+    <div class="row">
+      <nav class="footer-nav">
+        <ul>
+          <li><%= link_to "About",   '#' %></li>
+          <li><%= mail_to "lastartiststanding3@gmail.com", "Contact" %></li>
+          <li><a href="https://github.com/LastArtistStanding/last-artist-standing/">Want to Help?</a></li>
+        </ul>
+      </nav>
+      <div class="credits ml-auto">
+        <span class="copyright">
+          Do Art Daily <%= link_to PatchNote.last.patch, "/news" %> © <script>
+              document.write(new Date().getFullYear()),
+            </script>
+           made by <a href="https://github.com/the1banana">the1banana</a> and <a href="https://github.com/shawsey">NicNac</a>, style adapted from Paper Kit 2
+        </span>
+      </div>
+    </div>
+  </div>
 </footer>
