@@ -219,3 +219,36 @@ textarea {
 #parallax3 .panel {
   opacity: 0.85;
 }
+
+
+
+/* Submission rows */
+
+
+.submissionrow {
+  list-style-type: none;
+  overflow:hidden;
+  padding:0;
+  margin:0;
+}
+    .submissionrow li {
+        float:left;
+    }
+    
+    
+/* Mobile Adjustments */
+
+
+@media only screen and (max-width:620px) {
+
+  .submissionrow {
+    width:100%;
+    margin:0;
+    list-style-type: none;
+    
+  }
+  
+  body {
+    width:100%;
+  }
+}
