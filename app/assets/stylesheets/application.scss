@@ -39,33 +39,44 @@ body {
 }
 
 .prestige1, .prestige2, .prestige3, .prestige4, .prestige5 {
- padding:3px; 
-  margin:auto;
-  width:50%;
-  
+  width: 70px;
+  height: 70px;
+  background: #eee;
+  border: 10px solid transparent;
 }
+
 .prestige1 {
-   background: url('g1.png') no-repeat center center;
+  -moz-border-image: -moz-linear-gradient(225deg, #E7703F, #C04A2C);
+  -webkit-border-image: -webkit-linear-gradient(225deg, #E7703F, #C04A2C);
+  border-image: linear-gradient(225deg, #E7703F, #C04A2C);
   border-image-slice: 1;
 }
 
 .prestige2 {
-    background: url('g2.png') no-repeat center center;
+  -moz-border-image: -moz-linear-gradient(225deg, #8C9EAD, #5675AD);
+  -webkit-border-image: -webkit-linear-gradient(225deg, #8C9EAD, #5675AD);
+  border-image: linear-gradient(225deg, #8C9EAD, #5675AD);
   border-image-slice: 1;
 }
 
 .prestige3 {
-    background: url('g3.png') no-repeat center center;
+  -moz-border-image: -moz-linear-gradient(225deg, #F6C562, #9F5E39);
+  -webkit-border-image: -webkit-linear-gradient(225deg, #F6C562, #9F5E39);
+  border-image: linear-gradient(225deg, #F6C562, #9F5E39);
   border-image-slice: 1;
 }
 
 .prestige4 {
-   background: url('g4.png') no-repeat center center;
+  -moz-border-image: -moz-linear-gradient(225deg, #D2E9E3, #707F7B);
+  -webkit-border-image: -webkit-linear-gradient(225deg, #D2E9E3, #707F7B);
+  border-image: linear-gradient(225deg, #D2E9E3, #707F7B);
   border-image-slice: 1;
 }
 
 .prestige5 {
-    background: url('g5.png') no-repeat center center;
+  -moz-border-image: -moz-linear-gradient(225deg, #CFECFB, #118FA6);
+  -webkit-border-image: -webkit-linear-gradient(225deg, #CFECFB, #118FA6);
+  border-image: linear-gradient(225deg, #CFECFB, #118FA6);
   border-image-slice: 1;
 }
 
