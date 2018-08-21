@@ -39,7 +39,9 @@
             <li>
               <div class="submissionIcon">
           <%= link_to "<i class='fa fa-user' aria-hidden='true'></i> #{submission.user.name}".html_safe, submission.user, :class => "submissionAuthor" %>
-          <%= link_to image_tag(getSubmissionThumb(submission)), submission %>
+
+          <%= link_to image_tag(getSubmissionThumb(submission), :alt => "#{getSubmissionTitle(submission)}"), submission %>
+
                 
                 </div>
               </li>
