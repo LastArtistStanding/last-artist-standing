@@ -32,6 +32,19 @@
         background-color: transparent;
     }
 }
+
+@media (max-width: 600px) {
+.btn-arrow {
+      width:30%;
+      position: block;
+     
+     }
+.btn-submit{
+      margin: auto;
+      width:100%;
+      position: inline-block;
+     }
+}  
 .btn-just-icon{
     border-radius: $border-radius-btn-large;
     height: 40px;
@@ -217,3 +230,5 @@
         }
     }
 }
+
+

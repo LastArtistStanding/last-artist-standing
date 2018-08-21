@@ -1,6 +1,12 @@
 // Place all the styles related to the Users controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.testprestige {
+    height:20px;
+    width:20px;
+  background: image-url("seasonal/g1.png") ;
+    background-repeat: no-repeat, repeat;
+}
 
 .inline-checkbox {
     width: auto;

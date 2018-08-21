@@ -39,44 +39,33 @@ body {
 }
 
 .prestige1, .prestige2, .prestige3, .prestige4, .prestige5 {
-  width: 70px;
-  height: 70px;
-  background: #eee;
-  border: 10px solid transparent;
+ padding:3px; 
+  margin:auto;
+  width:50%;
+  
 }
-
 .prestige1 {
-  -moz-border-image: -moz-linear-gradient(225deg, #E7703F, #C04A2C);
-  -webkit-border-image: -webkit-linear-gradient(225deg, #E7703F, #C04A2C);
-  border-image: linear-gradient(225deg, #E7703F, #C04A2C);
+   background: url('g1.png') no-repeat center center;
   border-image-slice: 1;
 }
 
 .prestige2 {
-  -moz-border-image: -moz-linear-gradient(225deg, #8C9EAD, #5675AD);
-  -webkit-border-image: -webkit-linear-gradient(225deg, #8C9EAD, #5675AD);
-  border-image: linear-gradient(225deg, #8C9EAD, #5675AD);
+    background: url('g2.png') no-repeat center center;
   border-image-slice: 1;
 }
 
 .prestige3 {
-  -moz-border-image: -moz-linear-gradient(225deg, #F6C562, #9F5E39);
-  -webkit-border-image: -webkit-linear-gradient(225deg, #F6C562, #9F5E39);
-  border-image: linear-gradient(225deg, #F6C562, #9F5E39);
+    background: url('g3.png') no-repeat center center;
   border-image-slice: 1;
 }
 
 .prestige4 {
-  -moz-border-image: -moz-linear-gradient(225deg, #D2E9E3, #707F7B);
-  -webkit-border-image: -webkit-linear-gradient(225deg, #D2E9E3, #707F7B);
-  border-image: linear-gradient(225deg, #D2E9E3, #707F7B);
+   background: url('g4.png') no-repeat center center;
   border-image-slice: 1;
 }
 
 .prestige5 {
-  -moz-border-image: -moz-linear-gradient(225deg, #CFECFB, #118FA6);
-  -webkit-border-image: -webkit-linear-gradient(225deg, #CFECFB, #118FA6);
-  border-image: linear-gradient(225deg, #CFECFB, #118FA6);
+    background: url('g5.png') no-repeat center center;
   border-image-slice: 1;
 }
 
@@ -152,6 +141,12 @@ p {
   margin-bottom: -85px;
 }
 
+@media only screen and (max-width:620px)  {
+  .container-fluid.mainPageSplash {
+    max-width:100%;
+  }
+}
+
 .unselectable {
   -webkit-user-select: none; /* Safari */        
   -moz-user-select: none; /* Firefox */
@@ -170,12 +165,12 @@ p {
 .avatarWithName {
   display: inline-block;
   position: relative;
-  width: 130px;
-  height: 170px;
+  width: 140px;
+  height: 190px;
   text-align: center;
   margin: 8px;
   border-radius: 10px;
-  background: #A0C0E0;
+  background: #515d68;
   z-index: 1;
 }
 
@@ -208,7 +203,7 @@ p {
   content: '';
   z-index: -1;
 }
-.winter1, .spring1, .summer1, .autumn1 {
+/* .winter1, .spring1, .summer1, .autumn1 {
   width: 20px;
   height: 20px;
 }
@@ -358,6 +353,8 @@ p {
   100% { background: #844222; }
 }
 
+*/
+
 .levelOverlay {
   font-family: Arial, Helvetica, sans-serif;
   text-align: center;
@@ -436,13 +433,13 @@ p {
 .submissionIcon {
   display: inline-block;
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: 134.9px;
+  height: 134.9px;
   text-align: center;
   margin: 15px;
   img {
-    width: 200px;
-    height: 200px;
+    width: 134.9px;
+    height: 134.9px;
     border-radius: 10px;
   }
 }
@@ -450,8 +447,8 @@ p {
 .submissionAuthor {
   text-align: left;
   position: absolute;
-  background: rgba(255, 125, 47, 0.8);
-  color: black;
+  background: rgba(51, 52, 50, 0.5);
+  color: white;
   width: 100%;
   border-radius: 10px 10px 0 0;
   height: 30px;
