@@ -154,8 +154,24 @@ p {
 
 @media only screen and (max-width:620px)  {
   .container-fluid.mainPageSplash {
+  max-width:100%;
+  }
+  
+  .page_info {
     max-width:100%;
   }
+  
+  .avatarWithName {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  
+  margin: 5px;
+  border-radius: 10px;
+  background: #515d68;
+  z-index: 1;
+  }
+  
 }
 
 .unselectable {
@@ -433,6 +449,7 @@ p {
     width: 450px;
     margin-bottom: 0.3em;
     text-align: center;
+    margin: 0 auto;
     b {
       color: #000033;
       background: rgba(190, 190, 245, 1);

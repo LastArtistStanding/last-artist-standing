@@ -45,6 +45,13 @@ class User < ActiveRecord::Base
   def password_reset_expired?
       reset_sent_at < 2.hours.ago
   end
+
+
+  def self.search(params)
+  users = all # for not existing params args
+  users = users.where("name like ?", "%#{params[:search]}%") if params[:search]
+  users
+  end
 end
 
 

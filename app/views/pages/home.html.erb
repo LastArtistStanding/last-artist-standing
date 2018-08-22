@@ -232,7 +232,7 @@
                 <% @activeChallenges.each do |challenge| %>
                 <tr style="cursor: pointer;" data-trigger="hover" data-toggle="popover" data-html="true" data-placement="left" data-content="<div class='smallPopoverText'><%= simple_format(challenge.description)%></div>">
                   <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "20px" %></td>
-                  <td><%= link_to challenge.name, challenge %></td>
+                  <td><%= challenge.name %></td>
                   <td><%= dateToShortString(challenge.start_date) %></td>
                   <td><%= dateToShortString(challenge.end_date) %></td>
                   <td><%= postfrequencyToString(challenge.postfrequency, false) %></td>
@@ -252,7 +252,7 @@
                 <% @upcomingChallenges.each do |challenge| %>
                   <tr style="cursor: pointer;" data-trigger="hover" data-toggle="popover" data-html="true" data-placement="left" data-content="<%= simple_format(challenge.description)%>">
                     <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "20px" %></td>
-                    <td><%= link_to challenge.name, challenge %></td>
+                    <td><%= challenge.name %></td>
                     <td><%= dateToShortString(challenge.start_date) %></td>
                     <td><%= dateToShortString(challenge.end_date) %></td>
                     <td><%= postfrequencyToString(challenge.postfrequency, false) %></td>

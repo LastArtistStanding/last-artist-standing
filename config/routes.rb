@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   
   root   'pages#home'
   get 'signup' => "users#new"
+  get "find" => "users#index"
   get 'about' => "pages#about"
   get 'help' => "pages#help"
   get "welcome" => "pages#home"

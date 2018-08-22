@@ -18,6 +18,34 @@ $(function () {
     </div>
   </div>
   
+  
+  
+  
+  <div class="row justify-content-center">
+                        <div class="col-12 col-md-10 col-lg-8">
+                            <form class="card card-sm">
+                                <div class="card-body row no-gutters align-items-center">
+                                    
+                                    <div class="col">
+                                      <%= form_tag users_path, method: :get do %>
+                                        <div class="form-control form-control-lg form-control-borderless">
+                                     
+                                       <%= text_field_tag :search, "" %>
+                                        </div>
+                                     <% end %>
+                                       
+                                    </div>
+                                   
+                                    <div class="col-auto">
+                                        <button class="btn btn-lg btn-success" type="submit">Search</button>
+                                    </div>
+                                  
+                                </div>
+                            </form>
+                        </div>
+                       
+                    </div>
+  
     
     <div class="card">
       <div class="card-body">
