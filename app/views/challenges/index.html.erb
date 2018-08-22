@@ -54,7 +54,7 @@
           <tr>
             <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "25px" %></td>
             <td><%= raw getParticipationIcon(getUserParticipationLevel(current_user, challenge, false)) %></td>
-            <td><%= link_to challenge.name, challenge %></td>
+            <td><%= challenge.name %></td>
             <td>Upcoming</td>
             <td><%= dateToShortString(challenge.start_date) %></td>
             <td><%= dateToShortString(challenge.end_date) %></td>
@@ -80,7 +80,7 @@
           <tr style="color: grey;">
             <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "25px" %></td>
             <td><%= raw getParticipationIcon(getUserParticipationLevel(current_user, challenge, false)) %></td>
-            <td><%= link_to challenge.name, challenge %></td>
+            <td><%= challenge.name %></td>
             <td>Completed</td>
             <td><%= dateToShortString(challenge.start_date) %></td>
             <td><%= dateToShortString(challenge.end_date) %></td>
