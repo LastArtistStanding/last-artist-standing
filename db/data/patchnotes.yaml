@@ -23,3 +23,8 @@ PatchNote5:
     before: "I peered beyond the horizon, beyond delays, and the delays of the delays, and caught glimpse of the faintest gasp of light in the darkness."
     after: "There's more to come. Stay tuned!"
     title: "Release Patch!"
+PatchNote6:
+    patch: "1.0.1"
+    before: "Some cleanup, fixes and small improvements on what NicNac had implemented. Diagnostic tools added."
+    after: "We'll open discussion on topic challenge soon."
+    title: "Minor Fixes"

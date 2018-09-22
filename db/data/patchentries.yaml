@@ -139,3 +139,19 @@ PatchEntry34:
     patchnote_id: 5
     body: "You can now EDIT and DELETE submissions! Bear in mind, after the day of submission, editing options will be severely limited, and deletion will be impossible."
     importance: 3
+PatchEntry35:
+    patchnote_id: 6
+    body: "Some bugs that should never manifest themselves right now have been fixed. Whee."
+    importance: 1
+PatchEntry34:
+    patchnote_id: 6
+    body: "Free text fields now have html characters escaped and formatted correctly."
+    importance: 2
+PatchEntry35:
+    patchnote_id: 6
+    body: "Fixed avatar sizing issues."
+    importance: 1
+PatchEntry36:
+    patchnote_id: 6
+    body: "Added the fan video made by a dedicated LAS/DAD fan to the Introduction page!"
+    importance: 1
