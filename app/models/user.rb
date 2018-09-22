@@ -48,9 +48,9 @@ class User < ActiveRecord::Base
 
 
   def self.search(params)
-  users = all # for not existing params args
-  users = users.where("name like ?", "%#{params[:search]}%") if params[:search]
-  users
+    users = all # for not existing params args
+    users = users.where("name like ?", "%#{params[:searchname]}%") if params[:searchname]
+    users
   end
 end
 

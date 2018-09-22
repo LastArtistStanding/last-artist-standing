@@ -14,7 +14,9 @@ module SubmissionsHelper
     end
     
     def getSubmissionThumb(submission)
-        if !logged_in? || current_user.nsfw_level.blank?
+        if submission.blank?
+            ""
+        elsif !logged_in? || current_user.nsfw_level.blank?
             if submission.nsfw_level > 1
                 "https://s3.us-east-2.amazonaws.com/do-art-daily-public/Content+Filter+Thumb.png"
             else

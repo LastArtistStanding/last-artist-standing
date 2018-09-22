@@ -140,7 +140,7 @@ module PagesHelper
     
     def getRandomSafeSubmission
         safeSubmission = Submission.where("nsfw_level = 1").sample
-        if safeSubmission.drawing.blank?
+        if safeSubmission.blank? || safeSubmission.drawing.blank?
             nil
         else
             safeSubmission
@@ -161,6 +161,16 @@ module PagesHelper
             end
         end
         cluster
+    end
+    
+    def html_escape(text)
+        text.gsub! '&','%amp;'
+        text.gsub! '<','&lt;'
+        text.gsub! '>','&gt;'
+        text.gsub! '\"','&quot;'
+        text.gsub! '\'','&#39;'
+        text.gsub! /\r\n/,'<br>'
+        text
     end
     
 end

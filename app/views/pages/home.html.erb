@@ -121,7 +121,9 @@
         </div>
         <div style="width: 100%; height: 2em; margin-top: 1em;">
           <div style="float: right; font-size: 0.75em;">
+            <% if !backgroundImage.blank? %>
             <i><%= link_to "image", backgroundImage, {:style => 'font-family: Fira Mono, monospace; color: white; font-weight: 300'} %> by <%= link_to backgroundImage.user.name, backgroundImage.user, {:style => 'font-family: Fira Mono, monospace; color: white; font-weight: 300'} %></i>
+            <% end %>
           </div>
         </div>
       </div>
@@ -149,18 +151,19 @@
 	         <span id="NextSubmissionDisplay"></span>
 	       </div>
 	     </div>
-	     
+	     <% latestSubmission = getLatestSubmission %>
+	     <% if !latestSubmission.blank? %>
 	     <div class="card homeCardStyle blueCard">
-        <div class="card-body" style="text-align: center;">
-          <div style="margin-bottom: 0.5em;"><h5>Latest Submission</h5></div>
-	         <% latestSubmission = getLatestSubmission %>
+         <div class="card-body" style="text-align: center;">
+           <div style="margin-bottom: 0.5em;"><h5>Latest Submission</h5></div>
 	         <%= link_to image_tag(getSubmissionThumb(latestSubmission), size: "150"), latestSubmission %>
-          <div style="margin-top: 0.5em;"><%= "Submitted by " + latestSubmission.user.name + " at " + latestSubmission.created_at.strftime("%T") %></div>
-          <% if latestSubmission.nsfw_level > 1 %>
-          <div><%= "Warning: submission contains "+getNsfwString(latestSubmission.nsfw_level).downcase+" content." %></div>
-          <% end %>
+             <div style="margin-top: 0.5em;"><%= "Submitted by " + latestSubmission.user.name + " at " + latestSubmission.created_at.strftime("%T") %></div>
+             <% if latestSubmission.nsfw_level > 1 %>
+             <div><%= "Warning: submission contains "+getNsfwString(latestSubmission.nsfw_level).downcase+" content." %></div>
+           <% end %>
 	       </div>
 	     </div>
+	     <% end %>
 	     
     </div>
   
@@ -230,7 +233,7 @@
               <tbody>
 
                 <% @activeChallenges.each do |challenge| %>
-                <tr style="cursor: pointer;" data-trigger="hover" data-toggle="popover" data-html="true" data-placement="left" data-content="<div class='smallPopoverText'><%= simple_format(challenge.description)%></div>">
+                <tr style="cursor: pointer;" data-trigger="hover" data-toggle="popover" data-html="true" data-placement="left" data-content="<div class='smallPopoverText'><%= html_escape(challenge.description)%></div>">
                   <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "20px" %></td>
                   <td><%= challenge.name %></td>
                   <td><%= dateToShortString(challenge.start_date) %></td>
@@ -250,7 +253,7 @@
               </thead>
               <tbody>
                 <% @upcomingChallenges.each do |challenge| %>
-                  <tr style="cursor: pointer;" data-trigger="hover" data-toggle="popover" data-html="true" data-placement="left" data-content="<%= simple_format(challenge.description)%>">
+                  <tr style="cursor: pointer;" data-trigger="hover" data-toggle="popover" data-html="true" data-placement="left" data-content="<%= html_escape(challenge.description) %>">
                     <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "20px" %></td>
                     <td><%= challenge.name %></td>
                     <td><%= dateToShortString(challenge.start_date) %></td>

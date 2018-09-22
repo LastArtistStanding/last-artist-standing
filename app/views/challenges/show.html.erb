@@ -33,7 +33,7 @@
             <%= label_tag :description %>
           </div>
           <div class="col-9">
-            <%= simple_format(@challenge.description) %>
+            <%= html_escape(@challenge.description).html_safe %>
           </div>
         </div>
         
@@ -116,7 +116,7 @@
                   <tr>
                     <td><%= badgemap.required_score %></td>
                     <td><%= badgemap.prestige %></td>
-                    <td><%= simple_format(badgemap.description) %></td>
+                    <td><%= html_escape(badgemap.description).html_safe %></td>
                   </tr>
                 <% end %>
               </tbody>
