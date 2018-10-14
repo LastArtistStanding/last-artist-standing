@@ -13,7 +13,7 @@ namespace :dad_tasks do
             isDAD = p.challenge.id == 1
             scoreChanged = false
         
-            challengeEntries = ChallengeEntry.where("challenge_id = :challengeId AND user_id = :userId AND created_at >= :last_date AND created_at < :next_date", {challengeId: challenge.id, userId: user.id, last_date: lastDate, next_date: nextDate})
+            challengeEntries = ChallengeEntry.where("challenge_id = :challengeId AND user_id = :userId AND created_at >= :last_date AND created_at < :next_date AND created_at < :current_date", {challengeId: challenge.id, userId: user.id, last_date: lastDate, next_date: nextDate, current_date: Date.today})
             
             # Eliminate anyone who failed to post in a streak_based challenge
             if Date.current == nextDate && challengeEntries.count == 0 && challenge.streak_based
