@@ -132,6 +132,42 @@ namespace :dad_tasks do
             s.save
             
         end
+        
+        starting_challenges = Challenge.where(start_date: Date.current)
+        
+        starting_challenges.each do |c|
+            challenge_name = c.name
+            challenge_id = c.id
+            
+            User.all.each do |u|
+                # If the user has submitted within the last two weeks, send a notification of a starting challenge.
+                next if Submission.find_by("created_at >= ? and user_id = ?", Date.today - 14.day, u.id).nil?
+                
+                Notification.create(body: "#{challenge_name} has started. If you are a participant, please remember to submit to the challenge.",
+                                    source_type: "Challenge",
+                                    source_id: challenge_id,
+                                    user_id: u.id,
+                                    url: "/challenges/#{challenge_id}")
+            end
+        end
+        
+        ending_challenges = Challenge.where(end_date: Date.current)
+        
+        ending_challenges.each do |c|
+            challenge_name = c.name
+            challenge_id = c.id
+            
+            User.all.each do |u|
+                # If the user has submitted within the last two weeks, send a notification of a starting challenge.
+                next if Submission.find_by("created_at >= ? and user_id = ?", Date.today - 14.day, u.id).nil?
+                
+                Notification.create(body: "#{challenge_name} has ended.",
+                                    source_type: "Challenge",
+                                    source_id: challenge_id,
+                                    user_id: u.id,
+                                    url: "/challenges/#{challenge_id}")
+            end
+        end
     end
     
     desc "Patch fix for orphaned participations."

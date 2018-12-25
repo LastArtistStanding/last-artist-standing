@@ -147,9 +147,9 @@ p {
 .container-fluid.mainPageSplash {
   min-height: 100vh;
   padding-top: 115px;
-  padding-bottom: 95px;
+  padding-bottom: 115px;
   margin-top: -95px;
-  margin-bottom: -85px;
+  margin-bottom: -110px;
 }
 
 @media only screen and (max-width:620px)  {
@@ -484,6 +484,7 @@ p {
   overflow: hidden;
   white-space: nowrap;
 }
+
 .submissionTime {
   text-align: right;
   position: absolute;
@@ -499,58 +500,80 @@ p {
   white-space: nowrap;
 }
 
-/*!
+footer {
+  position: absolute;
+  bottom: 0;
+  font-size: 0.7rem;
+  width: 100%;
+  height: 50px;
+  line-height: 25px;
+  background-color: #f5f5f5;
+}
 
- =========================================================
- * Paper Kit 2 - v2.0.1
- =========================================================
+ /* Dropdown Button */
+.drophover {
+    color: yellow;
+    cursor: pointer;
+}
 
- * Product Page: http://www.creative-tim.com/product/paper-kit-2
- * Copyright 2017 Creative Tim (http://www.creative-tim.com)
- * Licensed under MIT (https://github.com/timcreative/paper-kit/blob/master/LICENSE.md)
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
 
- =========================================================
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    width: 320px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    font-size: 0.8rem;
+    user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+}
 
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- */
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 0.25rem 0.5rem;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+}
 
-@import "paper-kit/variables";
-@import "paper-kit/mixins";
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd;}
 
-@import "paper-kit/typography";
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}
 
-// Core CSS
-@import "paper-kit/misc";
-@import "paper-kit/buttons";
-@import "paper-kit/inputs";
-@import "paper-kit/progress-bars";
-@import "paper-kit/sliders";
-@import "paper-kit/alerts";
-@import "paper-kit/labels";
-//@import "paper-kit/tooltips-and-popovers";
-@import "paper-kit/sections";
-@import "paper-kit/checkbox-radio";
-@import "paper-kit/navbars";
-@import "paper-kit/images";
-@import "paper-kit/cards";
-@import "paper-kit/footers";
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .drophover {background-color: #3e8e41;} 
 
+.alert-error {
+  background-color: #f2dede;
+  border-color: #ebcccc;
+  color: #a94442;
+}
+.alert-success {
+  background-color: #dff0d8;
+  border-color: #d0e9c6;
+  color: #3c763d;
+}
 
-// Bootstrap Switch
-@import "paper-kit/bootstrap-switch";
-
-// Fancy Stuff
-@import "paper-kit/dropdown";
-//
-// icons
-@import "paper-kit/icons";
-//
-@import "paper-kit/tabs-navs-pagination";
-@import "paper-kit/collapse";
-@import "paper-kit/carousel";
-@import "paper-kit/modal";
-//
-@import "paper-kit/responsive";
-@import "paper-kit/plugins/datetimepicker";
-@import "paper-kit/social-buttons";
-@import "paper-kit/examples";
+.comment-card {
+  .card-header {
+    padding: 0.5rem;
+  }
+  .card-body {
+    padding: 0.5rem;
+  }
+  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+}

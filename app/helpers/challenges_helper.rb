@@ -43,6 +43,8 @@ module ChallengesHelper
     end
     
     def getUserParticipationLevel(user, challenge, active)
+        return 0 if user.nil?
+        
         if active
             participation = Participation.find_by(:user_id => user.id, :challenge_id => challenge.id, :active => true)
         else

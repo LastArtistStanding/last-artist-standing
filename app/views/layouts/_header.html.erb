@@ -1,6 +1,6 @@
 <header>
   <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #2A3132;">
-    <div class="container">
+    <div class="container-fluid">
       <!-- Brand -->
       <div class="navbar-translate">
         <a class="navbar-brand" href="/" style="font-size: 30px; color: white;">
@@ -20,6 +20,15 @@
     <div class="collapse navbar-collapse" id="navbarToggler">
       <ul class="navbar-nav ml-auto">
         <% if logged_in? %>
+        <li class="nav-item dropdown" data-behavior="notifications">
+          <a class="nav-link drophover" data-behavior="notifications-link">
+            <i class="fa fa-bell"></i><span class="badge badge-info" data-behavior="unread-count"></span>
+          </a>
+          <div class="dropdown-content" data-behavior="notification-items">
+            <a>You're all caught up!</a>
+            <a href='/notifications'>View All Notifications</a>
+          </div>
+        </li>
         <li class="nav-item">
           <a class="nav-link" href=" <%= new_submission_path %> " title="Submit your art!" style="color: yellow;">
             <i class="fa fa-upload"></i>

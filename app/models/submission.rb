@@ -4,6 +4,7 @@ class Submission < ApplicationRecord
     belongs_to :user
     has_many :challenge_entries
     has_many :challenges, through: :challenge_entries
+    has_many :comments, as: :source
     
     validates :user_id, presence: true
     validates :drawing, presence: true

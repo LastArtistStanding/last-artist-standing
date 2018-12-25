@@ -1,0 +1,30 @@
+<div class="container-fluid mainPageSplash">
+  <div class="row">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-8">
+      <p class="h2">
+        Notifications
+      </p>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Message</th>
+            <th scope="col">Time Received</th>
+            <th scope="col">Read At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @notifications.each do |notification| %>
+          <tr>
+            <td><a <%= "href=#{notification.url}" if notification.url.present? %>><%= notification.body %></a></td>
+            <td><%= notification.created_at %></td>
+            <td><%= notification.read_at %></td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-lg-2"></div>
+  </div>
+</div>
+2
