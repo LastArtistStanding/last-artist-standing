@@ -79,7 +79,7 @@
             <%= f.label :commentable, "Allow Comments?" %>
           </div>
           <div class="col-6">
-            <%= f.check_box :commentable, :checked => "#{"checked" if @submission.commentable}" %>
+            <%= f.check_box :commentable, :checked => @submission.commentable %>
           </div>
         </div>
 
