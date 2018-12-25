@@ -28,3 +28,8 @@ PatchNote6:
     before: "Some cleanup, fixes and small improvements on what NicNac had implemented. Diagnostic tools added."
     after: "We'll open discussion on topic challenge soon."
     title: "Minor Fixes"
+PatchNote7:
+    patch: "1.1"
+    before: "Notifications and comments have arrived!"
+    after: "The pace of development will be speeding up. Stay tuned for more."
+    title: "Merry Christmas"

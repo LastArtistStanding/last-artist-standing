@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
     has_many :participations
     has_many :badges, through: :awards 
     has_many :challenges, through: :participations
+    has_many :comments
     
     before_save { self.email = email.downcase }
     
@@ -49,7 +50,7 @@ class User < ActiveRecord::Base
 
   def self.search(params)
     users = all # for not existing params args
-    users = users.where("name like ?", "%#{params[:searchname]}%") if params[:searchname]
+    users = users.where("lower(name) like lower(?)", "%#{params[:searchname]}%") if params[:searchname]
     users
   end
 end

@@ -1,3 +1,9 @@
+<script>
+  function charcountupdate(str) {
+	  var lng = str.length;
+	  document.getElementById("charcount").innerHTML = lng + '/2000';
+  }
+</script>
 <div class="container-fluid" style="margin-top: 2rem;">
   <div class="row">
     <b><p id="notice"><%=notice %></p></b>
@@ -92,6 +98,39 @@
           <%= simple_format(getSubmissionDescription(@submission)) %>
         </div>
       </div>
+      
+      <% has_permissions, error = can_comment_on_submission(@submission, current_user) %>
+     
+      <div class="card">
+        <% if has_permissions %>
+          <div class="card-header">Comment On Submission</div>
+          <div class="card-body">
+          <%= form_for [@submission, Comment.new] do |f| %>
+            <%= f.text_area :body, placeholder: "Add a comment. Be thoughtful, there is a 140 character minimum. This should be meaningful feedback, a step above surface-level critiques, shallow praise, or a token response to feedback.", onkeyup: "charcountupdate(this.value)" %>
+            <span id="charcount">0/2000</span>
+            <%= f.submit "Post Comment" %>
+          <% end %>
+          </div>
+        <% else %>
+          <div class="card-header">Comment On Submission</div>
+          <div class="card-body">
+            <%= error %>
+          </div>
+        <% end %>
+      </div>
+      
+      <% @submission.comments.each do |comment| %>
+        <div class="card comment-card">
+          <div class="card-header">
+            <b><%= User.find(comment.user_id).name %></b> <%= comment.created_at.strftime("%H:%M, %b %-d, %Y") %> No.<%= comment.id %>
+            <%= link_to '<span class="fa fa-trash"></span>'.html_safe, [@submission, comment], method: :delete, data: { confirm: 'Are you sure?' } if comment.user_id == current_user.id %>          
+          </div>
+          <div class="card-body">
+            <%= simple_format(comment.body) %>
+          </div>
+        </div>
+      <% end %>
     </div>
+    
   </div>
 </div>

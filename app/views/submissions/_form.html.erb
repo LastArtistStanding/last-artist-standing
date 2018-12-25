@@ -159,11 +159,20 @@
         </div>
         
         <div class="form-group row">
-          <div class="col-3">
+          <div class="col-6">
             <%= f.label :time, "Time Spent (in minutes)" %>
           </div>
-          <div class="col-9">
+          <div class="col-6">
             <%= f.number_field :time, :max => 2880 %>
+          </div>
+        </div>
+        
+        <div class="form-group row">
+          <div class="col-6">
+            <%= f.label :commentable, "Allow Comments?" %>
+          </div>
+          <div class="col-6">
+            <%= f.check_box :commentable, :checked => "checked" %>
           </div>
         </div>
 
@@ -224,19 +233,19 @@
           <br>
           <small style="color: grey;">(<b>You can increase your frequency, but lowering your post frequency will reset your streak!</b>)</small>
           <div class="form-group row" style="margin-bottom: 0;">
-            <div class="col-3">
+            <div class="col-5">
               <%= label_tag :postfrequency, "DAD Post Frequency" %>
             </div>
-            <div class="col-9">
+            <div class="col-7">
               <%= select_tag :postfrequency, options_for_select([['Daily', 1], ['Every Other Day', 2], ['Every 3 Days', 3], ['Every 4 Days', 4], ['Every 5 Days', 5], ['Every 6 Days', 6], ['Weekly', 7]], (getUserDADFrequency(current_user) == 0 ? 1 : getUserDADFrequency(current_user) )), { :class => 'custom-select' } %>
             </div>
           </div>
           
           <div class="form-group row">
-            <div class="col-3">
+            <div class="col-5">
               Seasonal Challenge:
             </div>
-            <div class="col-9">
+            <div class="col-7">
               <%= getCurrentSeasonalChallenge.name %>
             </div>
           </div>

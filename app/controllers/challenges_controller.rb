@@ -103,6 +103,17 @@ class ChallengesController < ApplicationController
         @badge_map.badge_id = @badge.id
         @badge_map.save
         
+        User.where.not(id: current_user.id).each do |u|
+          # If the user has submitted within the last two weeks, send a notification of a starting challenge.
+          next if Submission.find_by("created_at >= ? and user_id = ?", Date.today - 14.day, u.id).nil?
+                
+          Notification.create(body: "#{@challenge.name} has been created by #{current_user.name}. Check it out, and consider signing up!",
+                              source_type: "Challenge",
+                              source_id: @challenge.id,
+                              user_id: u.id,
+                              url: "/challenges/#{@challenge.id}")
+        end
+        
         format.html { redirect_to @challenge }
       end
     end

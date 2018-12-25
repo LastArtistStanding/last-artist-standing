@@ -2,20 +2,18 @@
   <div class="container">
     <div class="row">
       <nav class="footer-nav">
-        <ul>
-          <li><%= link_to "About",   '#' %></li>
-          <li><%= mail_to "lastartiststanding3@gmail.com", "Contact" %></li>
-          <li><a href="https://github.com/LastArtistStanding/last-artist-standing/">Want to Help?</a></li>
-        </ul>
+        <%= link_to "About",   '#' %>
+        <%= mail_to "lastartiststanding3@gmail.com", "Contact" %>
+        <a href="https://github.com/LastArtistStanding/last-artist-standing/">Want to Help?</a>
       </nav>
       <div class="credits ml-auto">
         <span class="copyright">
-          Do Art Daily <%= link_to PatchNote.last.patch, "/news" %> © <script>
-              document.write(new Date().getFullYear()),
-            </script>
-           made by <a href="https://github.com/the1banana">the1banana</a> and <a href="https://github.com/shawsey">NicNac</a>, style adapted from Paper Kit 2
+          Do Art Daily <%= link_to PatchNote.last.patch, "/news" %> ©<%= Date.today.year %>
+          made by <a href="https://github.com/the1banana">the1banana</a> and <a href="https://github.com/shawsey">NicNac</a>
         </span>
       </div>
+      <br>
+            <i>All trademarks and copyrights on this page are owned by their respective parties. Images uploaded are the responsibility of the Poster. Comments are owned by the Poster.</i>
     </div>
   </div>
 </footer>
