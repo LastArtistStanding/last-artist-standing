@@ -12,9 +12,11 @@ before_action :find_target
     @comment = @target.comments.new comment_params
     @comment.user_id = current_user.id
     @comment.body = @comment.body.gsub(/ +/, " ").strip
+   
+    can_comment, error = can_comment_on_submission(@target, current_user)
     
-    if can_comment_on_submission(@target, current_user)
-      flash[:error] = "You do not have permission to post comments here."
+    if !can_comment
+      flash[:error] = error
       redirect_to :back
     elsif @comment.save
       flash[:success] = "Comment posted successfully!"
