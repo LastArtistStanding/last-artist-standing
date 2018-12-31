@@ -1,0 +1,48 @@
+<div class="container-fluid" style="margin-top: 2rem;">
+ 
+   <div class="row">
+ 
+     <!-- Spacing Column -->
+     <div class="col-lg-1"></div>
+ 
+     <div class="col-lg-10">
+ 
+       <div class="digg_pagination">
+         <div class="page_info">
+           <%= page_entries_info @user_submissions %>
+         </div>
+         <%= will_paginate @user_submissions, :container => false %>
+       </div>
+ 
+       <div class="row">
+         <div class="col-lg-12">
+ 	        <div class="card">
+ 	          <div class="card-header"><b><%= @user.name %> - Submissions</b></div>
+             <div class="card-body">
+               <% if @user_submissions.count == 0 %>
+                 This user has no submissions!
+               <% else %>
+                 <% @user_submissions.each do |submission| %>
+                   <% submissionUrl = getSubmissionThumb(submission) %>
+                   <%= link_to image_tag(submissionUrl, :style => "margin: 0.125rem;"), url_for({:controller => 'submissions', :action => 'show', :id => submission.id}), :class => 'quick' %>
+                 <% end %>
+               <% end %>
+             </div>
+           </div>
+         </div>
+       </div>
+ 
+       <a class="btn btn-primary" href=<%="/users/#{@user.id}"%>>
+         <span class="fa fa-undo"></span> Back
+       </a>
+     </div>
+ 
+     <!-- Spacing Column -->
+     <div class="col-lg-1"></div>
+ 
+   </div>
+ 
+ </div>
+ 
+ 
+ 
