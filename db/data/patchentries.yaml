@@ -181,3 +181,19 @@ PatchEntry42:
     patchnote_id: 7
     body: "A minor disclaimer has been added for legal liability reasons. To ensure DAD's longevity, a Privacy Policy and Terms of Service will soon follow."
     importance: 1
+PatchEntry43:
+    patchnote_id: 8
+    body: "Some infrastructure changes made to alleviate loading times, such as lowering pagination limits to 25."
+    importance: 1
+PatchEntry44:
+    patchnote_id: 8
+    body: "You can no longer cheat the comment character requirement by spamming spaces. Please take a moment and be more thoughtful before commenting."
+    importance: 1
+PatchEntry45:
+    patchnote_id: 8
+    body: "Comments now link to the posting user."
+    importance: 1
+PatchEntry46:
+    patchnote_id: 8
+    body: "Fixed a bug where commenting on your own submission will lead to a notification sent to yourself."
+    importance: 1

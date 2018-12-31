@@ -2,13 +2,18 @@ class UsersController < ApplicationController
 
   def index
     #@users = User.order("id DESC").paginate(:page => params[:page], :per_page => 50)
-    @users = User.search(params).paginate(:page => params[:page], :per_page => 50 ).order("id DESC")
+    @users = User.search(params).paginate(:page => params[:page], :per_page => 25 ).order("id DESC")
+  end
+  
+  def submissions
+    @user = User.find(params[:id])
+    @user_submissions = Submission.where(:user_id => @user.id).order("created_at DESC").paginate(:page => params[:page], :per_page => 25)
   end
 
   def show
     @curruser = User.find(params[:id])
     @awards = Award.where("user_id = ? AND badge_id <> 1", @curruser.id).order("prestige DESC")
-    @submissions = Submission.where({user_id: @curruser.id}).order("created_at DESC")
+    @submissions = Submission.where({user_id: @curruser.id}).order("created_at DESC").limit(10)
   end
 
   def new
@@ -56,9 +61,6 @@ class UsersController < ApplicationController
       format.js
     end
   end
-  
-  
-
 
   private
     def user_params

@@ -139,7 +139,7 @@ module PagesHelper
     end
     
     def getRandomSafeSubmission
-        safeSubmission = Submission.where("nsfw_level = 1").sample
+        safeSubmission = Submission.where("nsfw_level = 1 and created_at >= ?", Time.now - 14.days).sample
         if safeSubmission.blank? || safeSubmission.drawing.blank?
             nil
         else

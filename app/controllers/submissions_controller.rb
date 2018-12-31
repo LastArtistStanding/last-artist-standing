@@ -23,7 +23,7 @@ class SubmissionsController < ApplicationController
           @date = Date.current
         end
       end
-      @submissions = Submission.where(created_at: @date.midnight..@date.end_of_day).order('created_at DESC')
+      @submissions = Submission.includes(:user).where(created_at: @date.midnight..@date.end_of_day).order('created_at DESC')
     end
   end
 
@@ -178,6 +178,7 @@ class SubmissionsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_submission
       @submission = Submission.find(params[:id])
+      @comments = Comment.where(source: @submission).includes(:user)
     end
     # Check in place to see if user is logged in. If not, redirect user to redirection page. Could also be swaped out with root_path
     def unauth

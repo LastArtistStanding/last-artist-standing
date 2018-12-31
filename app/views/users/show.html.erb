@@ -89,7 +89,12 @@ $(function () {
       </div>
       
       <div class="card">
-        <div class="card-header"><b>Submissions</b></div>
+        <div class="card-header">
+          <b>Latest Submissions</b>
+          <a class="btn btn-primary" style="float: right; margin-top: -0.25rem; margin-bottom: -0.5rem;" href="<%= @curruser.id %>/submissions">
+	          <i class="fa fa-picture-o" aria-hidden="true"></i> Show All Submissions
+	        </a>
+        </div>
         <div class="card-body">
           <p class="card-text">
             <% @submissions.each do |submission| %>

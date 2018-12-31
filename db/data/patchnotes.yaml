@@ -33,3 +33,8 @@ PatchNote7:
     before: "Notifications and comments have arrived!"
     after: "The pace of development will be speeding up. Stay tuned for more."
     title: "Merry Christmas"
+PatchNote8:
+    patch: "1.1.1"
+    before: "Minor infrastructure changes."
+    after: "This won't take care of all the performance problems, but may help just a little bit. I'll be making some modifications on the S3 side to make sure image loading isn't as arduous."
+    title: "Happy New Year"

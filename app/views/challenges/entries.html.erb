@@ -23,11 +23,7 @@
                 No entries made yet!
               <% else %>
                 <% @challengeEntries.each do |challengeEntry| %>
-                  <% if @challengeEntries.count > 140 %>
-                    <% submissionUrl = getSubmissionAvatar(Submission.find(challengeEntry.submission_id)) %>
-                  <% else %>
-                    <% submissionUrl = getSubmissionThumb(Submission.find(challengeEntry.submission_id)) %>
-                  <% end %>
+                  <% submissionUrl = getSubmissionThumb(challengeEntry.submission) %>
                   <%= link_to image_tag(submissionUrl, :style => "margin: 0.125rem;"), url_for({:controller => 'submissions', :action => 'show', :id => challengeEntry.submission_id}), :class => 'quick' %>
                 <% end %>
               <% end %>
