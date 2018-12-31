@@ -11,11 +11,10 @@ before_action :find_target
   def create
     @comment = @target.comments.new comment_params
     @comment.user_id = current_user.id
+    @comment.body = @comment.body.gsub(/ +/, " ").strip
     
-    can_comment, error = can_comment_on_submission(@target, current_user)
-    
-    if !can_comment
-      flash[:error] = error
+    if can_comment_on_submission(@target, current_user)
+      flash[:error] = "You do not have permission to post comments here."
       redirect_to :back
     elsif @comment.save
       flash[:success] = "Comment posted successfully!"
@@ -35,11 +34,12 @@ before_action :find_target
                               user_id: duid,
                               url: submission_path(@target.id))
         end
+        # Send a notification to the artist if it's not ourself.
         Notification.create(body: "#{poster_name} has commented on your submission #{getSubmissionTitle(@target)} (ID #{@target.id}).",
                             source_type: "Submission",
                             source_id: @target.id,
                             user_id: @target.user_id,
-                            url: submission_path(@target.id))
+                            url: submission_path(@target.id)) unless @target.user_id == current_user.id
       end
       redirect_to :back
     else

@@ -26,6 +26,7 @@ Rails.application.routes.draw do
   delete '/logout'   => "sessions#destroy"
   get "submissions" => "submissions#index"
   get 'challenges/:id/entries' => 'challenges#entries'
+  get 'users/:id/submissions' => 'users#submissions'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

@@ -119,10 +119,10 @@
         <% end %>
       </div>
       
-      <% @submission.comments.each do |comment| %>
+      <% @comments.each do |comment| %>
         <div class="card comment-card">
           <div class="card-header">
-            <b><%= User.find(comment.user_id).name %></b> <%= comment.created_at.strftime("%H:%M, %b %-d, %Y") %> No.<%= comment.id %>
+            <b><%= link_to comment.user.name, comment.user %></b> <%= comment.created_at.strftime("%H:%M, %b %-d, %Y") %> No.<%= comment.id %>
             <%= link_to '<span class="fa fa-trash"></span>'.html_safe, [@submission, comment], method: :delete, data: { confirm: 'Are you sure?' } if comment.user_id == current_user.id %>          
           </div>
           <div class="card-body">

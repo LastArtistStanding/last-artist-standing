@@ -121,8 +121,8 @@
         </div>
         <div style="width: 100%; height: 2em; margin-top: 1em;">
           <div style="float: right; font-size: 0.75em;">
-            <% if !backgroundImage.blank? %>
-            <i><%= link_to "image", backgroundImage, {:style => 'font-family: Fira Mono, monospace; color: white; font-weight: 300'} %> by <%= link_to backgroundImage.user.name, backgroundImage.user, {:style => 'font-family: Fira Mono, monospace; color: white; font-weight: 300'} %></i>
+            <% if backgroundImage.present? %>
+              <i><%= link_to "image", backgroundImage, {:style => 'font-family: Fira Mono, monospace; color: white; font-weight: 300'} %> by <%= link_to backgroundImage.user.name, backgroundImage.user, {:style => 'font-family: Fira Mono, monospace; color: white; font-weight: 300'} %></i>
             <% end %>
           </div>
         </div>
@@ -178,7 +178,7 @@
         <div class="card-header"><b>Today's Eliminations</b></div>
           <div class="card-body">
             <% @latestEliminations.each do |elim| %>
-            <% user = User.find(elim.user_id) %>
+            <% user = elim.user %>
             <% avatarURL = getUserThumb(user) %>
             <%= link_to image_tag(avatarURL, :title => "#{user.name} (Streak: #{elim.score})", :style => "width: 50px; margin: 0.25rem;", :data => { :toggle => "tooltip", :placement => "top" }), user %>
             <% end %>
@@ -191,7 +191,7 @@
         <div class="card-header"><b>Level Up - These users hit a new DAD milestone!</b></div>
           <div class="card-body">
             <% @levelUps.each do |award| %>
-              <% user = User.find(award.user_id) %>
+              <% user = award.user %>
               <% avatarURL = getUserThumb(user) %>
               <%= link_to image_tag(avatarURL, :title => "#{user.name} - Level #{award.prestige} (#{pluralize(BadgeMap.where(:prestige => award.prestige, :badge_id => 1).first.required_score, "submission")})", :style => "width: 50px; margin-right: 0.5rem; margin-bottom: 0.5rem;", :data => { :toggle => "tooltip", :placement => "top" }), user %>
             <% end %>
@@ -291,7 +291,7 @@
                 </div>
                 <div style="width: calc(100% - 90px); float: left;">
                   <% awards.each do |award| %>
-                    <% user = User.find(award.user_id) %>
+                    <% user = award.user %>
                     <% avatarURL = getUserThumb(user) %>
                     
                     <%= link_to image_tag(avatarURL, :title => "#{user.name}", :style => "width: 25px; margin-right: 0.25rem; margin-bottom: 0.25rem;", :data => { :toggle => "tooltip", :placement => "top" }), user %>
@@ -325,7 +325,7 @@
                 <% end %>
                 <tr><td>
                   <% seasonParts.each do |seasonPart| %>
-                    <% user = User.find(seasonPart.user_id) %>
+                    <% user = seasonPart.user %>
                     <% avatarURL = getUserThumb(user) %>
                     <%= link_to image_tag(avatarURL, :title => "#{user.name}", :style => "width: 20px; margin: 0.125rem;", :data => { :toggle => "tooltip", :placement => "top" }), user %>
                   <% end %>
