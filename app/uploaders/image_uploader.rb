@@ -14,8 +14,7 @@ class ImageUploader < CarrierWave::Uploader::Base
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
     if is_submission?("")
-      user = User.find(model.user_id)
-      "submissions/#{user.name}/#{mounted_as}/#{model.id}"
+      "submissions/#{model.user.name}/#{mounted_as}/#{model.id}"
     elsif is_badge?("")
       "badges/#{model.id}/#{mounted_as}"
     elsif is_user?("")
