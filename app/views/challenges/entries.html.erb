@@ -7,12 +7,14 @@
     
     <div class="col-lg-10">
       
+     <div class="row">
       <div class="digg_pagination">
         <div class="page_info">
           <%= page_entries_info @challengeEntries %>
         </div>
         <%= will_paginate @challengeEntries, :container => false %>
       </div>
+	    </div>
       
       <div class="row">
         <div class="col-lg-12">
