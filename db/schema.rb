@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181225191223) do
+ActiveRecord::Schema.define(version: 20190112175423) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -125,9 +125,8 @@ ActiveRecord::Schema.define(version: 20181225191223) do
     t.integer  "user_id"
     t.string   "drawing"
     t.integer  "nsfw_level"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.string   "api_command"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string   "title"
     t.string   "description"
     t.integer  "time"
@@ -148,7 +147,6 @@ ActiveRecord::Schema.define(version: 20181225191223) do
     t.boolean  "is_admin"
     t.integer  "dad_frequency"
     t.integer  "new_frequency"
-    t.boolean  "enabled_api"
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["name"], name: "index_users_on_name", unique: true, using: :btree
   end
