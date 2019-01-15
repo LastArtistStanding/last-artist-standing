@@ -38,3 +38,8 @@ PatchNote8:
     before: "Minor infrastructure changes."
     after: "This won't take care of all the performance problems, but may help just a little bit. I'll be making some modifications on the S3 side to make sure image loading isn't as arduous."
     title: "Happy New Year"
+PatchNote9:
+    patch: "1.1.1a"
+    before: "Some minor adjustments have been made to comments."
+    after: "More changes will be coming soon."
+    title: "Comment Adjustments"

@@ -105,8 +105,9 @@
         <% if has_permissions %>
           <div class="card-header">Comment On Submission</div>
           <div class="card-body">
+            By commenting, you agree to adhere to DAD's guidelines for comment ettiquite as defined <a href="/help">here</a>.<br><br>
           <%= form_for [@submission, Comment.new] do |f| %>
-            <%= f.text_area :body, placeholder: "Add a comment. Be thoughtful, there is a 140 character minimum. This should be meaningful feedback, a step above surface-level critiques, shallow praise, or a token response to feedback.", onkeyup: "charcountupdate(this.value)" %>
+            <%= f.text_area :body, placeholder: "Add a comment. Be thoughtful, there is a 100 character minimum. This should be meaningful feedback, a step above surface-level critiques, shallow praise, or a token response to feedback.", onkeyup: "charcountupdate(this.value)" %>
             <span id="charcount">0/2000</span>
             <%= f.submit "Post Comment" %>
           <% end %>
