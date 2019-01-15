@@ -197,3 +197,11 @@ PatchEntry46:
     patchnote_id: 8
     body: "Fixed a bug where commenting on your own submission will lead to a notification sent to yourself."
     importance: 1
+PatchEntry47:
+    patchnote_id: 9
+    body: "Comment character prerequisite lowered to 100 characters."
+    importance: 1
+PatchEntry48:
+    patchnote_id: 9
+    body: "Comment ettiquite / guidelines have been added."
+    importance: 1

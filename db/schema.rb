@@ -125,8 +125,8 @@ ActiveRecord::Schema.define(version: 20190112175423) do
     t.integer  "user_id"
     t.string   "drawing"
     t.integer  "nsfw_level"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
     t.string   "title"
     t.string   "description"
     t.integer  "time"
