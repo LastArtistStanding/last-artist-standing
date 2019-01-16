@@ -16,6 +16,6 @@ class Submission < ApplicationRecord
  
     private
       def image_size_validation
-        errors[:drawing] << "should be less than 2.5 MB" if drawing.size > 2.5 .megabytes
+        errors[:drawing] << "should be less than 10.0 MB" if drawing.size > 10.0 .megabytes
       end
 end
