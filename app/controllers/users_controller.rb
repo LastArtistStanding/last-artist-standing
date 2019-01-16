@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   
   def submissions
     @curruser = User.find(params[:id])
-    @user_submissions = Submission.where(:user_id => @user.id).order("created_at DESC").paginate(:page => params[:page], :per_page => 25)
+    @user_submissions = Submission.where(:user_id => @curruser.id).order("created_at DESC").paginate(:page => params[:page], :per_page => 25)
   end
 
   def show
