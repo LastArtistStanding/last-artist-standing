@@ -43,3 +43,8 @@ PatchNote9:
     before: "Some minor adjustments have been made to comments."
     after: "More changes will be coming soon."
     title: "Comment Adjustments"
+PatchNote10:
+    patch: "1.1.1b"
+    before: "Some bug fixes and adjustments."
+    after: "More changes to follow."
+    title: "Cleanup Patch"

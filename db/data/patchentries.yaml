@@ -205,3 +205,19 @@ PatchEntry48:
     patchnote_id: 9
     body: "Comment ettiquite / guidelines have been added."
     importance: 1
+PatchEntry49:
+    patchnote_id: 10
+    body: "A minor security bug has been fixed. (Thanks, Finlay!)"
+    importance: 2
+PatchEntry50:
+    patchnote_id: 10
+    body: "The submission edit page should no longer crash."
+    importance: 2
+PatchEntry51:
+    patchnote_id: 10
+    body: "Maximum submission size has been increased from 2.5 MB to 10.0 MB. Will monitor AWS S3 hosting costs and site performance after this change."
+    importance: 2
+PatchEntry52:
+    patchnote_id: 10
+    body: "Fixed some typos and added to the rules of the site."
+    importance: 1

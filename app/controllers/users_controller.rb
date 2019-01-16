@@ -6,7 +6,7 @@ class UsersController < ApplicationController
   end
   
   def submissions
-    @user = User.find(params[:id])
+    @curruser = User.find(params[:id])
     @user_submissions = Submission.where(:user_id => @user.id).order("created_at DESC").paginate(:page => params[:page], :per_page => 25)
   end
 
