@@ -2,10 +2,7 @@ module ChallengesHelper
     
     def getChallengeCreator(id)
         if id.present?
-            if id == -1
-                "Account Deleted"
-            else
-                link_to(User.find_by(id: id).name, User.find_by(id: id))
+            link_to(User.find_by(id: id).name, User.find_by(id: id))
         else
             "Site Challenge"
         end
