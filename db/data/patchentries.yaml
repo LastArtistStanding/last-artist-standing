@@ -221,3 +221,23 @@ PatchEntry52:
     patchnote_id: 10
     body: "Fixed some typos and added to the rules of the site."
     importance: 1
+PatchEntry53:
+    patchnote_id: 11
+    body: "A hard limit on submissions has been set, based on your max level. New users can only submit once a day; with level 4 users being able to make five submissions a day."
+    importance: 2
+PatchEntry54:
+    patchnote_id: 11
+    body: "Challenge creation is now locked unless you have reached at least level 4."
+    importance: 2
+PatchEntry55:
+    patchnote_id: 11
+    body: "You may create at most two challenges at a time (challenges that are closed won't count towards this total)."
+    importance: 2
+PatchEntry56:
+    patchnote_id: 11
+    body: "Level-based privileges are explicitly described on the DAD challenge page."
+    importance: 1
+PatchEntry57:
+    patchnote_id: 11
+    body: "A bug that caused logged-out users to be unable to view a submission with comments on it has now been fixed."
+    importance: 1

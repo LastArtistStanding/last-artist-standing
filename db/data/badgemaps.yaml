@@ -4,25 +4,25 @@ DADBadgeMap1:
     challenge_name: "Do Art Daily" 
     required_score: 1
     prestige: 1
-    description: "Level 1 - 1 submission submitted"
+    description: "Level 1 - 1 submission submitted.\r\nYou can make two submissions a day!\r\nYou can now participate in challenges!"
 DADBadgeMap2:
     badge_name: "DAD Streak Badge"
     challenge_name: "Do Art Daily" 
     required_score: 5
     prestige: 2
-    description: "Level 2 - 5 submissions streak"
+    description: "Level 2 - 5 submissions streak.\r\nYou can make three submissions a day!\r\nYou can now submit reports."
 DADBadgeMap3:
     badge_name: "DAD Streak Badge"
     challenge_name: "Do Art Daily" 
     required_score: 11
     prestige: 3
-    description: "Level 3 - 11 submissions streak"
+    description: "Level 3 - 11 submissions streak\r\nYou can make four submissions a day!\r\nYou may now comment on peoples' submissions!"
 DADBadgeMap4:
     badge_name: "DAD Streak Badge"
     challenge_name: "Do Art Daily" 
     required_score: 19
     prestige: 4
-    description: "Level 4 - 19 submissions streak"
+    description: "Level 4 - 19 submissions streak\r\nYou can make five submissions a day!\r\nYou can now create challenges."
 DADBadgeMap5:
     badge_name: "DAD Streak Badge"
     challenge_name: "Do Art Daily" 

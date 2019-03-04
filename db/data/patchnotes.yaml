@@ -48,3 +48,8 @@ PatchNote10:
     before: "Some bug fixes and adjustments."
     after: "More changes to follow."
     title: "Cleanup Patch"
+PatchNote11:
+    patch: "1.1.2"
+    before: "Some prepatory changes for the tribunal."
+    after: "To safeguard the site, prevent ease of spamming and improve efficacy of penalization, certain things are put into place right now. The tribunal will come in a few patches."
+    title: "Safeguard Patch"
