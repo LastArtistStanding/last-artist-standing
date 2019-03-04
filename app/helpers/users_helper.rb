@@ -1,64 +1,122 @@
 module UsersHelper
-    
-    def getUserThumb(user)
-        if !user.avatar.nil?
-            userThumb = user.avatar.thumb.url
-        end
-        if userThumb.blank?
-            userThumb = "https://s3.us-east-2.amazonaws.com/do-art-daily-public/Default+User+Thumb.png"
-        end
+  def getUserThumb(user)
+    if !user.avatar.nil?
+      userThumb = user.avatar.thumb.url
+    end
+  
+    if userThumb.blank?
+      userThumb = "https://s3.us-east-2.amazonaws.com/do-art-daily-public/Default+User+Thumb.png"
+    end
         
-        userThumb
+    userThumb
+  end
+    
+  def getUserNsfwLevel(user)
+    if user.nsfw_level.blank?
+      1
     end
     
-    def getUserNsfwLevel(user)
-        if user.nsfw_level.blank?
-            1
-        end
-        user.nsfw_level
+    user.nsfw_level
+  end
+    
+  def getUserDADFrequency(user)
+    if !user.new_frequency.blank?
+      postfrequency = user.new_frequency
+    elsif !user.dad_frequency.blank?
+      postfrequency = user.dad_frequency
+    else
+      postfrequency = 0
+    end
+  end
+    
+  def getUserCurrentDADScore(user)
+    participation = Participation.find_by({:user_id => user.id, :active => true, :challenge_id => 1})
+    
+    if participation.blank?
+      "None"
+    else
+      participation.score
+    end
+  end
+    
+  def getUserScoreByChallenge(user, challenge)
+    if user.blank? || challenge.blank?
+      return 0
     end
     
-    def getUserDADFrequency(user)
-        if !user.new_frequency.blank?
-            postfrequency = user.new_frequency
-        elsif !user.dad_frequency.blank?
-            postfrequency = user.dad_frequency
-        else
-            postfrequency = 0
-        end
+    participation = Participation.find_by({:user_id => user.id, :challenge_id => challenge.id})
+    
+    if participation.blank?
+      0
+    else
+      participation.score
+    end
+  end
+    
+  def getUserMaxLevel(user)
+    if user.blank?
+      return 0
     end
     
-    def getUserCurrentDADScore(user)
-        participation = Participation.find_by({:user_id => user.id, :active => true, :challenge_id => 1})
-        if participation.blank?
-            "None"
-        else
-            participation.score
-        end
-    end
+    award = Award.find_by({:user_id => user.id, :badge_id => 1})
     
-    def getUserScoreByChallenge(user, challenge)
-        if user.blank? || challenge.blank?
-            return 0
-        end
-        participation = Participation.find_by({:user_id => user.id, :challenge_id => challenge.id})
-        if participation.blank?
-            0
-        else
-            participation.score
-        end
+    if award.blank?
+      0
+    else
+      award.prestige
     end
+  end
     
-    def getUserMaxLevel(user)
-        if user.blank?
-            return 0
-        end
-        award = Award.find_by({:user_id => user.id, :badge_id => 1})
-        if award.blank?
-            0
-        else
-            award.prestige
-        end
+  def can_comment_on_submission(submission, user)
+    return [false, "The submitter has closed comments on this submission."] unless submission.commentable
+  
+    if !logged_in?
+      [false, "You must log in to post comments."]
+    elsif getUserMaxLevel(user) < 3
+      [false, "You need to have reached DAD level 3 (11 submission streak) to comment on submissions."]
+    else
+      [true, nil]
     end
+  end
+  
+  def can_make_submission(user)
+    return [false, "You must be logged in to post."] if user.blank?
     
+    max_submissions = submission_limit(user)
+    submissions_made_today = Submission.where("created_at >= ? AND created_at <= ? AND user_id = ?", Date.current.midnight, Date.current.end_of_day, user.id).count
+    
+    if submissions_made_today < max_submissions
+      [true, nil]
+    else
+      [false, "You have reached your daily submission limit (currently #{max_submissions})."]
+    end
+  end
+  
+  def submission_limit(user)
+    max_dad_level = getUserMaxLevel(user)
+    if max_dad_level == 0
+      1
+    elsif max_dad_level == 1
+      2
+    elsif max_dad_level == 2
+      3
+    elsif max_dad_level == 3
+      4    
+    else
+      5
+    end
+  end
+  
+  def can_make_challenge(user)
+    if getUserMaxLevel(user) >= 4
+      active_challenges_made = Challenge.where("end_date > ? AND creator_id = ?", Date.current, user.id).count
+      if active_challenges_made < 2
+        [true, nil]
+      else
+        [false, "You can make at most two active or upcoming challenges before you create another."]
+      end
+    else
+      [false, "You must have reached at least level 4 before you can make a challenge."]
+    end
+  end
 end

@@ -172,7 +172,7 @@ class ChallengesController < ApplicationController
     def set_challenge
       @challenge = Challenge.find(params[:id])
       @badge_map = BadgeMap.find_by(challenge_id: @challenge.id)
-      @badge_maps = BadgeMap.where(challenge_id: @challenge.id)
+      @badge_maps = BadgeMap.where(challenge_id: @challenge.id).order(:prestige)
       @badge = Badge.find(@badge_map.badge_id)
     end
   

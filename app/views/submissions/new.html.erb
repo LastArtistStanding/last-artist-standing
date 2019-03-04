@@ -15,7 +15,22 @@
           </div>
         </div>
       <% else %>
-        <%= render 'form', submission: @submission %>
+        <% can_submit, error_message = can_make_submission(current_user) %>
+        <% if can_submit %>
+          <%= render 'form', submission: @submission %>
+        <% else %>
+          <div class="card">
+	          <div class="card-header"><b>Max Daily Submissions Reached</b></div>
+            <div class="card-body">
+              <%= error_message %><br>
+              This is both a spam prevention and courtesy limit. This limit will increase up to 5, based on the highest DAD level you've reached. If you have reached your limit,
+              consider aggregating your work into a single submission.
+              <a class="btn btn-primary" style="float: right" href="/submissions">
+                <span class="fa fa-undo"></span> Back
+              </a>
+            </div>
+          </div>
+        <% end %>
       <% end %>
     </div>
     

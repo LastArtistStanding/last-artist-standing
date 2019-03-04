@@ -124,7 +124,7 @@
         <div class="card comment-card">
           <div class="card-header">
             <b><%= link_to comment.user.name, comment.user %></b> <%= comment.created_at.strftime("%H:%M, %b %-d, %Y") %> No.<%= comment.id %>
-            <%= link_to '<span class="fa fa-trash"></span>'.html_safe, [@submission, comment], method: :delete, data: { confirm: 'Are you sure?' } if comment.user_id == current_user.id %>          
+            <%= link_to '<span class="fa fa-trash"></span>'.html_safe, [@submission, comment], method: :delete, data: { confirm: 'Are you sure?' } if comment.user_id == current_user&.id %>          
           </div>
           <div class="card-body">
             <%= simple_format(comment.body) %>
