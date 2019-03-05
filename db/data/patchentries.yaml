@@ -241,3 +241,15 @@ PatchEntry57:
     patchnote_id: 11
     body: "A bug that caused logged-out users to be unable to view a submission with comments on it has now been fixed."
     importance: 1
+PatchEntry58:
+    patchnote_id: 12
+    body: "You can now navigate an artist's gallery and all submissions chronologically with the arrow keys. Submissions with a NSFW level higher than the threshold set will not be included. They should not trigger when you are actively typing a comment, but as with all things, please let me know if any bugs."
+    importance: 3
+PatchEntry59:
+    patchnote_id: 12
+    body: "Site privilege restrictions have been toned down a bit to be less confining."
+    importance: 2
+PatchEntry60:
+    patchnote_id: 12
+    body: "DAD prestiges have been updated with the new privilege adjustments."
+    importance: 1

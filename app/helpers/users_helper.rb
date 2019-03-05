@@ -12,9 +12,7 @@ module UsersHelper
   end
     
   def getUserNsfwLevel(user)
-    if user.nsfw_level.blank?
-      1
-    end
+    return 1 if user.blank? || user.nsfw_level.blank?
     
     user.nsfw_level
   end
@@ -85,7 +83,9 @@ module UsersHelper
     max_submissions = submission_limit(user)
     submissions_made_today = Submission.where("created_at >= ? AND created_at <= ? AND user_id = ?", Date.current.midnight, Date.current.end_of_day, user.id).count
     
-    if submissions_made_today < max_submissions
+    if max_submissions == -1
+      [true, nil]
+    elsif submissions_made_today < max_submissions
       [true, nil]
     else
       [false, "You have reached your daily submission limit (currently #{max_submissions})."]
@@ -94,16 +94,12 @@ module UsersHelper
   
   def submission_limit(user)
     max_dad_level = getUserMaxLevel(user)
-    if max_dad_level == 0
-      1
-    elsif max_dad_level == 1
+    if max_dad_level <= 2
       2
-    elsif max_dad_level == 2
-      3
-    elsif max_dad_level == 3
-      4    
+    elsif max_dad_level <= 4
+      4
     else
-      5
+      -1
     end
   end
   

@@ -1,8 +1,36 @@
+<% psub = prev_submission(@submission) %>
+<% apsub = prev_user_submission(@submission) %>
+<% ansub = next_user_submission(@submission) %>
+<% nsub = next_submission(@submission) %>
 <script>
   function charcountupdate(str) {
 	  var lng = str.length;
 	  document.getElementById("charcount").innerHTML = lng + '/2000';
   }
+  window.onkeyup = function(e) {
+    if (document.getElementById("comment_body") !== document.activeElement){
+      <% unless psub.blank? %>
+        if (e.keyCode == 37) {
+          window.open("<%= submission_path(psub.id) %>","_self");
+        }
+      <% end %>
+      <% unless apsub.blank? %>
+        if (e.keyCode == 40) {
+          window.open("<%= submission_path(apsub.id) %>","_self");
+        }
+      <% end %>
+      <% unless ansub.blank? %>
+        if (e.keyCode == 38) {
+          window.open("<%= submission_path(ansub.id) %>","_self");
+        }
+      <% end %>
+      <% unless nsub.blank? %>
+        if (e.keyCode == 39) {
+          window.open("<%= submission_path(nsub.id) %>","_self");
+        }
+      <% end %>
+    }
+  }  
 </script>
 <div class="container-fluid" style="margin-top: 2rem;">
   <div class="row">
@@ -86,8 +114,8 @@
 	   </div>
 	 </div>
 	 
-	 <div class="col-lg-10">
-	   <div class="card">
+	  <div class="col-lg-10">
+	    <div class="card">
 	      <div class="card-header" style="text-align: center; font-weight: 600;"><%= getSubmissionTitle(@submission) %></div>
         <div class="card-body" style="text-align: center;">
           <% submissionUrl = @submission.drawing.url unless @submission.drawing.blank? %>
@@ -96,6 +124,57 @@
           </div>
           <br>
           <%= simple_format(getSubmissionDescription(@submission)) %>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-3">
+          <div class="card">
+            <div class="card-body" style="text-align: center; padding: 5px;">
+              <% unless psub.blank? %>
+                Previous Submission by <%= psub.user.name %> (&larr;)<br>
+                <%= link_to image_tag(getSubmissionAvatar(psub), :alt => "#{getSubmissionAvatar(psub)}"), psub %>
+              <% else %>
+                First submission!
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card">
+            <div class="card-body" style="text-align: center; padding: 5px;">
+              <% unless apsub.blank? %>
+                <%= @submission.user.name %>'s Previous Submission (&darr;)<br>
+                <%= link_to image_tag(getSubmissionAvatar(apsub), :alt => "#{getSubmissionAvatar(apsub)}"), apsub %>
+              <% else %>
+                First submission!
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card">
+            <div class="card-body" style="text-align: center; padding: 5px;">
+              <% unless ansub.blank? %>
+                <%= @submission.user.name %>'s Next Submission (&uarr;)<br>
+                <%= link_to image_tag(getSubmissionAvatar(ansub), :alt => "#{getSubmissionAvatar(ansub)}"), ansub %>
+              <% else %>
+                Last submission!
+              <% end %>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card">
+            <div class="card-body" style="text-align: center; padding: 5px;">
+              <% unless nsub.blank? %>
+                Next Submission by <%= nsub.user.name %> (&rarr;) <br>
+                <%= link_to image_tag(getSubmissionAvatar(nsub), :alt => "#{getSubmissionAvatar(nsub)}"), nsub %>
+              <% else %>
+                Last submission!
+              <% end %>
+            </div>
+          </div>
         </div>
       </div>
       
