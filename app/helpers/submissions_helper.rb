@@ -81,4 +81,20 @@ module SubmissionsHelper
       submission.description
     end
   end
+  
+  def next_user_submission(submission)
+    submission.user.submissions.where("id > ? AND nsfw_level <= ?", submission.id, getUserNsfwLevel(current_user)).first
+  end
+
+  def prev_user_submission(submission)
+    submission.user.submissions.where("id < ? AND nsfw_level <= ?", submission.id, getUserNsfwLevel(current_user)).last
+  end
+    
+  def next_submission(submission)
+    Submission.where("id > ? AND nsfw_level <= ?", submission.id, getUserNsfwLevel(current_user)).first
+  end
+    
+  def prev_submission(submission)
+    Submission.where("id < ? AND nsfw_level <= ?", submission.id, getUserNsfwLevel(current_user)).last
+  end
 end
