@@ -15,12 +15,12 @@
         }
       <% end %>
       <% unless apsub.blank? %>
-        if (e.keyCode == 40) {
+        if (e.keyCode == 219) {
           window.open("<%= submission_path(apsub.id) %>","_self");
         }
       <% end %>
       <% unless ansub.blank? %>
-        if (e.keyCode == 38) {
+        if (e.keyCode == 221) {
           window.open("<%= submission_path(ansub.id) %>","_self");
         }
       <% end %>
@@ -144,7 +144,7 @@
           <div class="card">
             <div class="card-body" style="text-align: center; padding: 5px;">
               <% unless apsub.blank? %>
-                <%= @submission.user.name %>'s Previous Submission (&darr;)<br>
+                <%= @submission.user.name %>'s Previous Submission ([)<br>
                 <%= link_to image_tag(getSubmissionAvatar(apsub), :alt => "#{getSubmissionAvatar(apsub)}"), apsub %>
               <% else %>
                 First submission!
@@ -156,7 +156,7 @@
           <div class="card">
             <div class="card-body" style="text-align: center; padding: 5px;">
               <% unless ansub.blank? %>
-                <%= @submission.user.name %>'s Next Submission (&uarr;)<br>
+                <%= @submission.user.name %>'s Next Submission (])<br>
                 <%= link_to image_tag(getSubmissionAvatar(ansub), :alt => "#{getSubmissionAvatar(ansub)}"), ansub %>
               <% else %>
                 Last submission!
