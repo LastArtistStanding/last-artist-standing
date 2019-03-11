@@ -1,6 +1,6 @@
 Challenge1:
     name: "Do Art Daily"
-    description: "DAD's primary challenge. Select a frequency at which you are willing to draw, and build your streak which each submission!\r\n\r\nSome important caveats:\r\nYou can submit as many times as you'd like within your designated deadline, but only the first submission counts towards your streak.<br>You can change your streak frequency at any time.<br>There's no penalty for choosing to submit more often, but decreasing the amount you submit will reset your streak!"
+    description: "DAD's primary challenge. Select a frequency at which you are willing to draw, and build your streak which each submission!\r\n\r\nSome important caveats:\r\nYou can submit as many times as you'd like within your designated deadline, but only the first submission counts towards your streak.\r\nYou can change your streak frequency at any time.\r\nThere's no penalty for choosing to submit more often, but decreasing the amount you submit will reset your streak!"
     start_date: 2018-04-02
     end_date:
     streak_based: true
