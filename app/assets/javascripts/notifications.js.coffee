@@ -35,5 +35,5 @@ class Notifications
       $("[data-behavior='notifications-link']").on "click", @handleClick
 
 jQuery ->
-  $(document).on "turbolinks:load", -> 
+  $(window).load -> 
     new Notifications
