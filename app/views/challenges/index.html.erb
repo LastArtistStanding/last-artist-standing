@@ -1,4 +1,4 @@
-<div class="container-fluid mainPageSplash">
+<div class="container-fluid">
   <div class="row">
     <div class="col-lg-2"></div>
     <div class="col-lg-8">
@@ -27,7 +27,7 @@
         <tbody>
           <% @activeChallenges.each do |challenge| %>
           <tr>
-            <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "25px" %></td>
+            <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "25px", :alt => "bdg" %></td>
             <td><%= raw getParticipationIcon(getUserParticipationLevel(current_user, challenge, true)) %></td>
             <td><%= link_to challenge.name, challenge %></td>
             <td>Active</td>
@@ -52,7 +52,7 @@
           <% end %>
           <% @upcomingChallenges.each do |challenge| %>
           <tr>
-            <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "25px" %></td>
+            <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "25px", :alt => "bdg" %></td>
             <td><%= raw getParticipationIcon(getUserParticipationLevel(current_user, challenge, false)) %></td>
             <td><%= link_to challenge.name, challenge %></td>
             <td>Upcoming</td>
@@ -78,7 +78,7 @@
           <% end %>
           <% @completedChallenges.each do |challenge| %>
           <tr style="color: grey;">
-            <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "25px" %></td>
+            <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "25px", :alt => "bdg" %></td>
             <td><%= raw getParticipationIcon(getUserParticipationLevel(current_user, challenge, false)) %></td>
             <td><%= link_to challenge.name, challenge %></td>
             <td>Completed</td>

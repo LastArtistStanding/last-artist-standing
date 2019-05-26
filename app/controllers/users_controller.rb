@@ -38,7 +38,7 @@ class UsersController < ApplicationController
         params[:user][:password] = oldpassword
         params[:user][:password_confirmation] = oldpassword
       end
-      if @curruser.update_attributes(user_params)
+      if @curruser.update_attributes(user_edit_params)
         flash[:success] = "Profile updated."
         redirect_to @curruser
       else
@@ -65,5 +65,9 @@ class UsersController < ApplicationController
   private
     def user_params
       params.require(:user).permit(:name, :email, :password, :password_confirmation, :avatar, :nsfw_level)
+    end
+    
+    def user_edit_params
+      params.require(:user).permit(:name, :email, :password, :password_confirmation, :avatar, :nsfw_level, :display_name)
     end
 end

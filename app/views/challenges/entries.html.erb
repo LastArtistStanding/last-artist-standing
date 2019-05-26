@@ -21,13 +21,20 @@
 	        <div class="card">
 	          <div class="card-header"><b>Challenge Entries</b></div>
             <div class="card-body">
+              <ul class="submissionrow">
               <% if @challengeEntries.count == 0 %>
                 No entries made yet!
               <% else %>
                 <% @challengeEntries.each do |challengeEntry| %>
-                  <% submissionUrl = getSubmissionThumb(challengeEntry.submission) %>
-                  <%= link_to image_tag(submissionUrl, :style => "margin: 0.125rem;"), url_for({:controller => 'submissions', :action => 'show', :id => challengeEntry.submission_id}), :class => 'quick' %>
+                  <% submission = challengeEntry.submission %>
+                  <li>
+                    <div class="submissionIcon">
+                      <%= link_to "<i class='fa fa-user' aria-hidden='true'></i> #{submission.user.name}".html_safe, submission.user, :class => "submissionAuthor" %>
+                      <%= link_to image_tag(getSubmissionThumb(submission), :alt => "#{getSubmissionTitle(submission)}"), submission %>
+                    </div>
+                  </li>
                 <% end %>
+                </ul>
               <% end %>
             </div>
           </div>

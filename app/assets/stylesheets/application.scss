@@ -18,14 +18,38 @@
  @import 'sessions';
  @import 'users';
 
-html {
-  position: relative;
-  min-height: 100%;
+html, body {
+  height: 100%;
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+}
+
+.container-fluid {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+header > nav > .container-fluid {
   margin: 0;
-  margin-bottom: 85px;
+}
+
+#wrapper {
+  flex: 1 0 auto;
+}
+
+header {
+  height: 75px;
+}
+
+.footer {
+  font-size: 0.7rem;
+  width: 100%;
+  flex-shrink: 0;
+  line-height: 25px;
+  background-color: #f5f5f5;
 }
 
 .card {
@@ -86,6 +110,10 @@ p {
 
 .card.homeCardStyle {
   color: white;
+  td {
+    color: white;
+  }
+  
   &.transparentCard {
     background-color: rgba(0, 0, 0, 0);
   }
@@ -145,11 +173,7 @@ p {
 }
 
 .container-fluid.mainPageSplash {
-  min-height: 100vh;
-  padding-top: 115px;
-  padding-bottom: 115px;
-  margin-top: -95px;
-  margin-bottom: -110px;
+  min-height: 100vh;  
 }
 
 @media only screen and (max-width:620px)  {
@@ -227,162 +251,6 @@ p {
   width: 120px;
   height: 120px;
 }
-/*
-.winter1, .winter2, .winter3, .winter4, .winter5, .spring1, .spring2, .spring3, .spring4, .spring5, .summer1, .summer2, .summer3, .summer4, .summer5, .autumn1, .autumn2, .autumn3, .autumn4, .autumn5 {
-  position: absolute; 
-  content: '';
-  z-index: -1;
-}
- .winter1, .spring1, .summer1, .autumn1 {
-  width: 20px;
-  height: 20px;
-}
-.winter2, .spring2, .summer2, .autumn2 {
-  width: 30px;
-  height: 30px;
-}
-.winter3, .spring3, .summer3, .autumn3 {
-  width: 40px;
-  height: 40px;
-}
-.winter4, .spring4, .summer4, .autumn4 {
-  width: 50px;
-  height: 50px;
-}
-.winter5, .spring5, .summer5, .autumn5 {
-  width: 60px;
-  height: 60px;
-}
-.winter1, .winter2, .winter3, .winter4 { background: #252B5F; }
-.spring1, .spring2, .spring3, .spring4 { background: #489B41; }
-.summer1, .summer2, .summer3, .summer4 { background: #FF8C00; }
-.autumn1, .autumn2, .autumn3, .autumn4 { background: #844222; }
-
-.winter1, .winter2, .winter3, .winter4, .winter5, .spring1, .spring2, .spring3, .spring4, .spring5 { left: 0px; }
-.spring1, .spring2, .spring3, .spring4, .spring5, .summer1, .summer2, .summer3, .summer4, .summer5 { top: 0px; }
-.winter1, .autumn1 { top: 100px; }
-.winter2, .autumn2 { top: 90px; }
-.winter3, .autumn3 { top: 80px; }
-.winter4, .autumn4 { top: 70px; }
-.winter5, .autumn5 { top: 60px; }
-.summer1, .autumn1 { left: 100px; }
-.summer2, .autumn2 { left: 90px; }
-.summer3, .autumn3 { left: 80px; }
-.summer4, .autumn4 { left: 70px; }
-.summer5, .autumn5 { left: 60px; }
-
-.winter5 { 
-  -webkit-animation: winterglow 2s infinite;
-  -moz-animation:    winterglow 2s infinite;
-  -o-animation:      winterglow 2s infinite;
-  animation:         winterglow 2s infinite; 
-  animation-timing-function: ease;
-}
-@-webkit-keyframes winterglow {
-  0% { background: #252B5F; }
-  50% { background: #C1E5FE; }
-  100% { background: #252B5F; }
-}
-@-moz-keyframes winterglow {
-  0% { background: #252B5F; }
-  50% { background: #C1E5FE; }
-  100% { background: #252B5F; }
-}
-@-o-keyframes winterglow {
-  0% { background: #252B5F; }
-  50% { background: #C1E5FE; }
-  100% { background: #252B5F; }
-}
-@keyframes winterglow {
-  0% { background: #252B5F; }
-  50% { background: #C1E5FE; }
-  100% { background: #252B5F; }
-}
-
-.spring5 { 
-  -webkit-animation: springglow 2s infinite;
-  -moz-animation:    springglow 2s infinite;
-  -o-animation:      springglow 2s infinite;
-  animation:         springglow 2s infinite; 
-  animation-timing-function: ease;
-}
-@-webkit-keyframes springglow {
-  0% { background: #489B41; }
-  50% { background: #70FF63; }
-  100% { background: #489B41; }
-}
-@-moz-keyframes springglow {
-  0% { background: #489B41; }
-  50% { background: #70FF63; }
-  100% { background: #489B41; }
-}
-@-o-keyframes springglow {
-  0% { background: #489B41; }
-  50% { background: #70FF63; }
-  100% { background: #489B41; }
-}
-@keyframes springglow {
-  0% { background: #489B41; }
-  50% { background: #70FF63; }
-  100% { background: #489B41; }
-}
-
-.summer5 { 
-  -webkit-animation: summerglow 2s infinite;
-  -moz-animation:    summerglow 2s infinite;
-  -o-animation:      summerglow 2s infinite;
-  animation:         summerglow 2s infinite;
-  animation-timing-function: ease;
-}
-@-webkit-keyframes summerglow {
-  0% { background: #FF8C00; }
-  50% { background: #FFDF82; }
-  100% { background: #FF8C00; }
-}
-@-moz-keyframes summerglow {
-  0% { background: #FF8C00; }
-  50% { background: #FFDF82; }
-  100% { background: #FF8C00; }
-}
-@-o-keyframes summerglow {
-  0% { background: #FF8C00; }
-  50% { background: #FFDF82; }
-  100% { background: #FF8C00; }
-}
-@keyframes summerglow {
-  0% { background: #FF8C00; }
-  50% { background: #FFDF82; }
-  100% { background: #FF8C00; }
-}
-
-.autumn5 { 
-  -webkit-animation: autumnglow 2s infinite;
-  -moz-animation:    autumnglow 2s infinite;
-  -o-animation:      autumnglow 2s infinite;
-  animation:         autumnglow 2s infinite; 
-  animation-timing-function: ease;
-}
-@-webkit-keyframes autumnglow {
-  0% { background: #844222; }
-  50% { background: #FF9648; }
-  100% { background: #844222; }
-}
-@-moz-keyframes autumnglow {
-  0% { background: #844222; }
-  50% { background: #FF9648; }
-  100% { background: #844222; }
-}
-@-o-keyframes autumnglow {
-  0% { background: #844222; }
-  50% { background: #FF9648; }
-  100% { background: #844222; }
-}
-@keyframes autumnglow {
-  0% { background: #844222; }
-  50% { background: #FF9648; }
-  100% { background: #844222; }
-}
-*/
 
 .levelOverlay {
   font-family: Arial, Helvetica, sans-serif;
@@ -498,16 +366,6 @@ p {
   padding-top: 4px;
   overflow: hidden;
   white-space: nowrap;
-}
-
-footer {
-  position: absolute;
-  bottom: 0;
-  font-size: 0.7rem;
-  width: 100%;
-  height: 50px;
-  line-height: 25px;
-  background-color: #f5f5f5;
 }
 
  /* Dropdown Button */

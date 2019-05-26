@@ -11,9 +11,9 @@ gem 'rails-controller-testing'
 # Pulling directly from the author's github to solve a Windows issue
 gem 'bcrypt', git: 'https://github.com/codahale/bcrypt-ruby.git', :require => 'bcrypt'
 
-gem 'bootstrap', '>= 4'
+gem 'bootstrap', '>= 4.3.1'
 # For popovers
-gem 'popper_js', '~> 1.12.9'
+gem 'popper_js', '>= 1.12.9'
 gem 'rails-assets-tether', '>= 1.3.3', source: 'https://rails-assets.org'
 gem 'autoprefixer-rails'
 # Use SCSS for stylesheets
@@ -79,4 +79,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 ## Gemfile for Rails 3+, Sinatra, or Merb
 gem 'will_paginate', '~> 3.1.1'
 
-gem 'derailed_benchmarks', group: :development
+## Security updates
+gem "nokogiri", ">= 1.8.5"
+gem "rack", ">= 2.0.6"
+gem "loofah", ">= 2.2.3"

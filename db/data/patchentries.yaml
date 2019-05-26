@@ -253,3 +253,35 @@ PatchEntry60:
     patchnote_id: 12
     body: "DAD prestiges have been updated with the new privilege adjustments."
     importance: 1
+PatchEntry61:
+    patchnote_id: 13
+    body: "Fixed a Firefox-side auto-population bug on the edit password screen."
+    importance: 1
+PatchEntry62:
+    patchnote_id: 13
+    body: "Updated gems for security compliance."
+    importance: 2
+PatchEntry63:
+    patchnote_id: 13
+    body: "Nullified alt text on all images so that the ugly AWS code doesn't show up while pictures load."
+    importance: 2
+PatchEntry64:
+    patchnote_id: 13
+    body: "Formatted challenge entries like submissions (prettier, has username overlay)."
+    importance: 1
+PatchEntry65:
+    patchnote_id: 13
+    body: "Fixed the footer. I think."
+    importance: 1
+PatchEntry66:
+    patchnote_id: 13
+    body: "You can now edit your display name, which should affect your name as it is displayed everywhere on the site."
+    importance: 2
+PatchEntry67:
+    patchnote_id: 13
+    body: "Challenges now have NSFW levels. Their corresponding badges will be blocked if the challenge exceeds your content settings."
+    importance: 2
+PatchEntry68:
+    patchnote_id: 13
+    body: "Fixed an annoying behavior where certain select fields would reset to defaults when editing or refreshing after an error in submission. Now you won't have to double check fields after an error occurs. This applies to the NSFW fields on submissions and challenges, challenge post frequency and prestige."
+    importance: 2

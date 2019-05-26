@@ -3,7 +3,7 @@
      $('[data-toggle="tooltip"]').tooltip()
    })
 </script>
-<div class="container-fluid mainPageSplash">
+<div class="container-fluid">
    <div class="row">
       <div class="col-lg-1"></div>
       <div class="col-lg-10">
@@ -35,7 +35,7 @@
                      <div class="card-body">
                         <% @users.each do |user| %>
                         <div class="avatarWithName">
-                           <div class="avatarUserName"><%= user.name %></div>
+                           <div class="avatarUserName"><%= user.username %></div>
                            <a href=<%="users/#{user.id}"%>>
                               <span class="fullSizeAvatar">
                                  <% seasonChallengeIds = getLatestSeasonalChallenges %>
@@ -51,7 +51,7 @@
                                  <% springAward = getAwardByUserAndChallenge(seasonChallengeIds[0], user) %>
                                  <% summerAward = getAwardByUserAndChallenge(seasonChallengeIds[1], user) %>
                                  <% autumnAward = getAwardByUserAndChallenge(seasonChallengeIds[2], user) %>
-                                 <%= image_tag getUserThumb(user), :title => "#{postfrequencyToString(getUserDADFrequency(user), true)}", :alt => "#{user.name}", :data => { :toggle => "tooltip", :placement => "top" } %>
+                                 <%= image_tag getUserThumb(user), :title => "#{postfrequencyToString(getUserDADFrequency(user), true)}", :alt => "#{user.username}", :data => { :toggle => "tooltip", :placement => "top" } %>
                                  <div class=<%= "winter#{winterAward.prestige unless winterAward.blank?}" %>></div>
                                  <div class=<%= "spring#{springAward.prestige unless springAward.blank?}" %>></div>
                                  <div class=<%= "summer#{summerAward.prestige unless summerAward.blank?}" %>></div>

@@ -7,7 +7,7 @@ $(function () {
 })
 </script>
 
-<% provide(:title, @curruser.name) %>
+<% provide(:title, @curruser.username) %>
 <div class="container-fluid" style="margin-top: 2rem;">
   <div class="row">
     <!-- Spacing Column -->
@@ -18,7 +18,7 @@ $(function () {
       <div class="card">
         <div class="card-body table-responsive" style="text-align: center;">
         <div class="avatarWithName">
-        <div class="avatarUserName"><%= @curruser.name %></div>
+        <div class="avatarUserName"><%= @curruser.username %></div>
           <span class="fullSizeAvatar">
             <% seasonChallengeIds = getLatestSeasonalChallenges %>
             <% userDADScore = getUserCurrentDADScore(@curruser) %>
@@ -36,7 +36,7 @@ $(function () {
             <% summerAward = getAwardByUserAndChallenge(seasonChallengeIds[1], @curruser) %>
             <% autumnAward = getAwardByUserAndChallenge(seasonChallengeIds[2], @curruser) %>
             
-            <%= image_tag getUserThumb(@curruser), :title => "#{postfrequencyToString(getUserDADFrequency(@curruser), true)}", :data => { :toggle => "tooltip", :placement => "top" } %>
+            <%= image_tag getUserThumb(@curruser), :title => "#{postfrequencyToString(getUserDADFrequency(@curruser), true)}", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{@curruser.username}" %>
             <div class=<%= "winter#{winterAward.prestige unless winterAward.blank?}" %>></div>
             <div class=<%= "spring#{springAward.prestige unless springAward.blank?}" %>></div>
             <div class=<%= "summer#{summerAward.prestige unless summerAward.blank?}" %>></div>
@@ -79,7 +79,7 @@ $(function () {
           <p class="card-text">
             <% @awards.each do |award| %>
               <% badgeURL = getBadgeImage(award.badge) %>
-              <%= image_tag badgeURL, :class => "prestige#{award.prestige}", :data => {:content => "<p style='font-weight: 600;'>#{award.badge.name}</p>#{simple_format(BadgeMap.find_by({:badge_id => award.badge.id, :prestige => award.prestige}).description)} (Prestige Level: #{award.prestige})", :trigger => "hover", :toggle => "popover", :placement => "top", :html => "true"} %> 
+              <%= image_tag badgeURL, :class => "prestige#{award.prestige}", :data => {:content => "<p style='font-weight: 600;'>#{award.badge.name}</p>#{simple_format(BadgeMap.find_by({:badge_id => award.badge.id, :prestige => award.prestige}).description)} (Prestige Level: #{award.prestige})", :trigger => "hover", :toggle => "popover", :placement => "top", :html => "true", :alt => "#{award.badge.name}" } %> 
             <% end %>
             <% if @awards.blank? %>
               No badges awarded yet!
@@ -99,7 +99,7 @@ $(function () {
           <p class="card-text">
             <% @submissions.each do |submission| %>
               <% submissionUrl = getSubmissionAvatar(submission) %>
-              <%= link_to image_tag(submissionUrl), url_for({:controller => 'submissions', :action => 'show', :id => submission.id}), :class => 'quick' %>
+              <%= link_to image_tag(submissionUrl, alt: "#{getSubmissionTitle(submission)}"), url_for({:controller => 'submissions', :action => 'show', :id => submission.id}) %>
             <% end %>
           </p>
         </div>
