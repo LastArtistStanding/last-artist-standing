@@ -144,148 +144,152 @@ PatchEntry35:
     patchnote_id: 6
     body: "Some bugs that should never manifest themselves right now have been fixed. Whee."
     importance: 1
-PatchEntry34:
+PatchEntry36:
     patchnote_id: 6
     body: "Free text fields now have html characters escaped and formatted correctly."
     importance: 2
-PatchEntry35:
+PatchEntry37:
     patchnote_id: 6
     body: "Fixed avatar sizing issues."
     importance: 1
-PatchEntry36:
+PatchEntry38:
     patchnote_id: 6
     body: "Added the fan video made by a dedicated LAS/DAD fan to the Introduction page!"
     importance: 1
 #Patch 1.1
-PatchEntry37:
+PatchEntry39:
     patchnote_id: 7
     body: "You can now comment on things. Functionality is currently limited, but more features to enhance the experience and incentivize critique will be coming soon."
     importance: 3
-PatchEntry38:
+PatchEntry40:
     patchnote_id: 7
     body: "You can now receive notifications. You can click the bell or view all of them to dismiss them."
     importance: 3
-PatchEntry39:
+PatchEntry41:
     patchnote_id: 7
     body: "User search is no longer case sensitive."
     importance: 2
-PatchEntry40:
+PatchEntry42:
     patchnote_id: 7
     body: "Challenge pages no longer crash when viewed while logged out."
     importance: 1
-PatchEntry41:
+PatchEntry43:
     patchnote_id: 7
     body: "Notifications will be sent to active users (anyone who has submitted in the last two weeks) when a challenge is created, started or ended."
     importance: 1
-PatchEntry42:
+PatchEntry44:
     patchnote_id: 7
     body: "A minor disclaimer has been added for legal liability reasons. To ensure DAD's longevity, a Privacy Policy and Terms of Service will soon follow."
     importance: 1
-PatchEntry43:
+PatchEntry45:
     patchnote_id: 8
     body: "Some infrastructure changes made to alleviate loading times, such as lowering pagination limits to 25."
     importance: 1
-PatchEntry44:
+PatchEntry46:
     patchnote_id: 8
     body: "You can no longer cheat the comment character requirement by spamming spaces. Please take a moment and be more thoughtful before commenting."
     importance: 1
-PatchEntry45:
+PatchEntry47:
     patchnote_id: 8
     body: "Comments now link to the posting user."
     importance: 1
-PatchEntry46:
+PatchEntry48:
     patchnote_id: 8
     body: "Fixed a bug where commenting on your own submission will lead to a notification sent to yourself."
     importance: 1
-PatchEntry47:
+PatchEntry49:
     patchnote_id: 9
     body: "Comment character prerequisite lowered to 100 characters."
     importance: 1
-PatchEntry48:
+PatchEntry50:
     patchnote_id: 9
     body: "Comment ettiquite / guidelines have been added."
     importance: 1
-PatchEntry49:
+PatchEntry51:
     patchnote_id: 10
     body: "A minor security bug has been fixed. (Thanks, Finlay!)"
     importance: 2
-PatchEntry50:
+PatchEntry52:
     patchnote_id: 10
     body: "The submission edit page should no longer crash."
     importance: 2
-PatchEntry51:
+PatchEntry53:
     patchnote_id: 10
     body: "Maximum submission size has been increased from 2.5 MB to 10.0 MB. Will monitor AWS S3 hosting costs and site performance after this change."
     importance: 2
-PatchEntry52:
+PatchEntry54:
     patchnote_id: 10
     body: "Fixed some typos and added to the rules of the site."
     importance: 1
-PatchEntry53:
+PatchEntry55:
     patchnote_id: 11
     body: "A hard limit on submissions has been set, based on your max level. New users can only submit once a day; with level 4 users being able to make five submissions a day."
     importance: 2
-PatchEntry54:
+PatchEntry56:
     patchnote_id: 11
     body: "Challenge creation is now locked unless you have reached at least level 4."
     importance: 2
-PatchEntry55:
+PatchEntry57:
     patchnote_id: 11
     body: "You may create at most two challenges at a time (challenges that are closed won't count towards this total)."
     importance: 2
-PatchEntry56:
+PatchEntry58:
     patchnote_id: 11
     body: "Level-based privileges are explicitly described on the DAD challenge page."
     importance: 1
-PatchEntry57:
+PatchEntry59:
     patchnote_id: 11
     body: "A bug that caused logged-out users to be unable to view a submission with comments on it has now been fixed."
     importance: 1
-PatchEntry58:
+PatchEntry60:
     patchnote_id: 12
     body: "You can now navigate an artist's gallery and all submissions chronologically with the arrow keys. Submissions with a NSFW level higher than the threshold set will not be included. They should not trigger when you are actively typing a comment, but as with all things, please let me know if any bugs."
     importance: 3
-PatchEntry59:
+PatchEntry61:
     patchnote_id: 12
     body: "Site privilege restrictions have been toned down a bit to be less confining."
     importance: 2
-PatchEntry60:
+PatchEntry62:
     patchnote_id: 12
     body: "DAD prestiges have been updated with the new privilege adjustments."
     importance: 1
-PatchEntry61:
+PatchEntry63:
     patchnote_id: 13
     body: "Fixed a Firefox-side auto-population bug on the edit password screen."
     importance: 1
-PatchEntry62:
+PatchEntry64:
     patchnote_id: 13
     body: "Updated gems for security compliance."
     importance: 2
-PatchEntry63:
+PatchEntry65:
     patchnote_id: 13
     body: "Nullified alt text on all images so that the ugly AWS code doesn't show up while pictures load."
     importance: 2
-PatchEntry64:
+PatchEntry66:
     patchnote_id: 13
     body: "Formatted challenge entries like submissions (prettier, has username overlay)."
     importance: 1
-PatchEntry65:
+PatchEntry67:
     patchnote_id: 13
     body: "Fixed the footer. I think."
     importance: 1
-PatchEntry66:
+PatchEntry68:
     patchnote_id: 13
     body: "You can now edit your display name, which should affect your name as it is displayed everywhere on the site."
     importance: 2
-PatchEntry67:
+PatchEntry69:
     patchnote_id: 13
     body: "Challenges now have NSFW levels. Their corresponding badges will be blocked if the challenge exceeds your content settings."
     importance: 2
-PatchEntry68:
+PatchEntry70:
     patchnote_id: 13
     body: "Fixed an annoying behavior where certain select fields would reset to defaults when editing or refreshing after an error in submission. Now you won't have to double check fields after an error occurs. This applies to the NSFW fields on submissions and challenges, challenge post frequency and prestige."
     importance: 2
-PatchEntry69:
+PatchEntry71:
     patchnote_id: 13
     body: "Fixed the challenge view page from crashing when accessed when logged out."
+    importance: 1
+PatchEntry72:
+    patchnote_id: 13
+    body: "You can now toggle full view and standard view of large submissions by simply clicking it."
     importance: 1
