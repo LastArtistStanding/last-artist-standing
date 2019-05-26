@@ -58,3 +58,8 @@ PatchNote12:
     before: "Adjustments and quality of life improvements."
     after: "More small improvements to follow."
     title: "Submission Navigation"
+PatchNote13:
+    patch: "1.1.3"
+    before: "Several minor improvements. A serious overhaul is coming, too!"
+    after: "Continued improvements to the site."
+    title: "Birthday Patch!"

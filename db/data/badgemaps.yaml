@@ -119,6 +119,36 @@ DADBadgeMap20:
     required_score: 419
     prestige: 20
     description: "Level 20 - 419 submissions streak"
+DADBadgeMap21:
+    badge_name: "DAD Streak Badge"
+    challenge_name: "Do Art Daily"
+    required_score: 461
+    prestige: 21
+    description: "Level 21 - 461 submissions streak"
+DADBadgeMap22:
+    badge_name: "DAD Streak Badge"
+    challenge_name: "Do Art Daily"
+    required_score: 505
+    prestige: 22
+    description: "Level 22 - 505 submissions streak"
+DADBadgeMap23:
+    badge_name: "DAD Streak Badge"
+    challenge_name: "Do Art Daily"
+    required_score: 551
+    prestige: 23
+    description: "Level 23 - 551 submissions streak"
+DADBadgeMap24:
+    badge_name: "DAD Streak Badge"
+    challenge_name: "Do Art Daily"
+    required_score: 599
+    prestige: 24
+    description: "Level 24 - 599 submissions streak"
+DADBadgeMap25:
+    badge_name: "DAD Streak Badge"
+    challenge_name: "Do Art Daily"
+    required_score: 649
+    prestige: 25
+    description: "Level 25 - 649 submissions streak"
 #Spring 2018 Badges
 Spring2018BadgeMap1:
     badge_name: "Spring 2018 Participation Badge"

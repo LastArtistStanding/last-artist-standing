@@ -56,7 +56,10 @@ class ChallengesController < ApplicationController
   # POST /challenges.json
   def create
     @challenge = Challenge.new(allowed_challenge_params)
-    @badge = Badge.new(allowed_badge_params)
+    badge_params = allowed_badge_params
+    badge_params[:nsfw_level] = allowed_challenge_params[:nsfw_level]
+    @badge = Badge.new(badge_params)
+
     @badge_map = BadgeMap.new(allowed_badge_map_params)
     
     # Temporarily set this to analyze validation
@@ -107,7 +110,7 @@ class ChallengesController < ApplicationController
           # If the user has submitted within the last two weeks, send a notification of a starting challenge.
           next if Submission.find_by("created_at >= ? and user_id = ?", Date.today - 14.day, u.id).nil?
                 
-          Notification.create(body: "#{@challenge.name} has been created by #{current_user.name}. Check it out, and consider signing up!",
+          Notification.create(body: "#{@challenge.name} has been created by #{current_user.username}. Check it out, and consider signing up!",
                               source_type: "Challenge",
                               source_id: @challenge.id,
                               user_id: u.id,
@@ -146,7 +149,10 @@ class ChallengesController < ApplicationController
         end
       end
       
-      if !failure && @challenge.update(allowed_challenge_params) && @badge.update(allowed_badge_params) && @badge_map.update(allowed_badge_map_params)
+      badge_params = allowed_badge_params
+      badge_params[:nsfw_level] = allowed_challenge_params[:nsfw_level]
+
+      if !failure && @challenge.update(allowed_challenge_params) && @badge.update(badge_params) && @badge_map.update(allowed_badge_map_params)
         format.html { redirect_to @challenge }
       else
         format.html { render :edit }
@@ -181,7 +187,7 @@ class ChallengesController < ApplicationController
     end
   
     def allowed_challenge_params
-      params.require(:challenge).permit(:name, :description, :start_date, :end_date, :streak_based, :postfrequency)
+      params.require(:challenge).permit(:name, :description, :nsfw_level, :start_date, :end_date, :streak_based, :postfrequency)
     end
     
     def allowed_badge_params

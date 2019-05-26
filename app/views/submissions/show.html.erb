@@ -30,7 +30,19 @@
         }
       <% end %>
     }
-  }  
+  }
+  
+  var small = true;
+  window.onload = function(e){
+    document.getElementById("submissionImage").onclick = function(e) {
+      if (small) {
+        e.target.setAttribute("style", "cursor: zoom-out;")
+      } else {
+        e.target.setAttribute("style", "max-width: 100%; max-height: 600px; cursor: zoom-in;");
+      }
+      small = !small;
+    }
+  };
 </script>
 <div class="container-fluid" style="margin-top: 2rem;">
   <div class="row">
@@ -42,7 +54,7 @@
 	      </div>
         <div class="card-body" style="text-align: center;">
           <div class="avatarWithName">
-        <div class="avatarUserName"><%= @submission.user.name %></div>
+        <div class="avatarUserName"><%= @submission.user.username %></div>
         
         <a href=<%="../users/#{@submission.user.id}"%>>
         <span class="fullSizeAvatar">
@@ -62,7 +74,7 @@
             <% summerAward = getAwardByUserAndChallenge(seasonChallengeIds[1], @submission.user) %>
             <% autumnAward = getAwardByUserAndChallenge(seasonChallengeIds[2], @submission.user) %>
             
-            <%= image_tag getUserThumb(@submission.user), :title => "#{postfrequencyToString(getUserDADFrequency(@submission.user), true)}", :alt => "#{@submission.user.name}", :data => { :toggle => "tooltip", :placement => "top" } %>
+            <%= image_tag getUserThumb(@submission.user), :title => "#{postfrequencyToString(getUserDADFrequency(@submission.user), true)}", :alt => "#{@submission.user.username}", :data => { :toggle => "tooltip", :placement => "top" } %>
             <div class=<%= "winter#{winterAward.prestige unless winterAward.blank?}" %>></div>
             <div class=<%= "spring#{springAward.prestige unless springAward.blank?}" %>></div>
             <div class=<%= "summer#{summerAward.prestige unless summerAward.blank?}" %>></div>
@@ -120,7 +132,7 @@
         <div class="card-body" style="text-align: center;">
           <% submissionUrl = @submission.drawing.url unless @submission.drawing.blank? %>
           <div style="width: 100%;">
-          <%= image_tag submissionUrl, :style => "max-width: 100%; max-height: 600px;" %>
+          <%= image_tag submissionUrl, :style => "max-width: 100%; max-height: 600px; cursor: zoom-in;", :alt => "#{getSubmissionTitle(@submission)}", :id => "submissionImage" %>
           </div>
           <br>
           <%= simple_format(getSubmissionDescription(@submission)) %>
@@ -132,8 +144,8 @@
           <div class="card">
             <div class="card-body" style="text-align: center; padding: 5px;">
               <% unless psub.blank? %>
-                Previous Submission by <%= psub.user.name %> (&larr;)<br>
-                <%= link_to image_tag(getSubmissionAvatar(psub), :alt => "#{getSubmissionAvatar(psub)}"), psub %>
+                Previous Submission by <%= psub.user.username %> (&larr;)<br>
+                <%= link_to image_tag(getSubmissionAvatar(psub), :alt => "#{getSubmissionAvatar(psub)}", :alt => "prev"), psub %>
               <% else %>
                 First submission!
               <% end %>
@@ -144,8 +156,8 @@
           <div class="card">
             <div class="card-body" style="text-align: center; padding: 5px;">
               <% unless apsub.blank? %>
-                <%= @submission.user.name %>'s Previous Submission ([)<br>
-                <%= link_to image_tag(getSubmissionAvatar(apsub), :alt => "#{getSubmissionAvatar(apsub)}"), apsub %>
+                <%= @submission.user.username %>'s Previous Submission ([)<br>
+                <%= link_to image_tag(getSubmissionAvatar(apsub), :alt => "#{getSubmissionAvatar(apsub)}", :alt => "prev"), apsub %>
               <% else %>
                 First submission!
               <% end %>
@@ -156,8 +168,8 @@
           <div class="card">
             <div class="card-body" style="text-align: center; padding: 5px;">
               <% unless ansub.blank? %>
-                <%= @submission.user.name %>'s Next Submission (])<br>
-                <%= link_to image_tag(getSubmissionAvatar(ansub), :alt => "#{getSubmissionAvatar(ansub)}"), ansub %>
+                <%= @submission.user.username %>'s Next Submission (])<br>
+                <%= link_to image_tag(getSubmissionAvatar(ansub), :alt => "#{getSubmissionAvatar(ansub)}", :alt => "next"), ansub %>
               <% else %>
                 Last submission!
               <% end %>
@@ -168,8 +180,8 @@
           <div class="card">
             <div class="card-body" style="text-align: center; padding: 5px;">
               <% unless nsub.blank? %>
-                Next Submission by <%= nsub.user.name %> (&rarr;) <br>
-                <%= link_to image_tag(getSubmissionAvatar(nsub), :alt => "#{getSubmissionAvatar(nsub)}"), nsub %>
+                Next Submission by <%= nsub.user.username %> (&rarr;) <br>
+                <%= link_to image_tag(getSubmissionAvatar(nsub), :alt => "#{getSubmissionAvatar(nsub)}", :alt => "next"), nsub %>
               <% else %>
                 Last submission!
               <% end %>
@@ -202,7 +214,7 @@
       <% @comments.each do |comment| %>
         <div class="card comment-card">
           <div class="card-header">
-            <b><%= link_to comment.user.name, comment.user %></b> <%= comment.created_at.strftime("%H:%M, %b %-d, %Y") %> No.<%= comment.id %>
+            <b><%= link_to comment.user.username, comment.user %></b> <%= comment.created_at.strftime("%H:%M, %b %-d, %Y") %> No.<%= comment.id %>
             <%= link_to '<span class="fa fa-trash"></span>'.html_safe, [@submission, comment], method: :delete, data: { confirm: 'Are you sure?' } if comment.user_id == current_user&.id %>          
           </div>
           <div class="card-body">

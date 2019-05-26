@@ -21,7 +21,7 @@ before_action :find_target
     elsif @comment.save
       flash[:success] = "Comment posted successfully!"
       discussion_users = @target.comments.group(:user_id).pluck(:user_id)
-      poster_name = current_user.name
+      poster_name = current_user.username
       
       if @target.class.name == "Submission"
         discussion_users.each do |duid|

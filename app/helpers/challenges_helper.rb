@@ -4,7 +4,9 @@ module ChallengesHelper
       if id == -1
         "User Account Deleted"
       else
-        link_to(User.find_by(id: id).name, User.find_by(id: id))
+        user = User.find_by(id: id)
+        
+        link_to(user.username, user)
       end
     else
       "Site Challenge"

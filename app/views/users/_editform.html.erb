@@ -1,11 +1,11 @@
 <%= form_for(@curruser ||= User.new, html: { novalidate: true }) do |f| %>
-
+  <input type="text" style="display:none">
+  <input type="password" style="display:none">
   <div class="row">
     <div class="col-lg-6">
 	  <div class="card">
 	  <div class="card-header"><b>User Credentials</b></div>
         <div class="card-body">
-
           <%= f.label :email %>
           <%= f.email_field :email, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:email) ? 'is-invalid' : 'is-valid') : '' }" %>
           <% if @curruser.errors.key?(:email) %>
@@ -55,6 +55,13 @@
 	  <div class="card">
 	  <div class="card-header"><b>Site Settings</b></div>
         <div class="card-body">
+          <%= f.label :display_name %>
+          <%= f.text_field :display_name, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:display_name) ? 'is-invalid' : 'is-valid') : '' }" %>
+          <% if @curruser.errors.key?(:display_name) %>
+            <div class="invalid-feedback-rails" >
+              Display Name <%= @curruser.errors[:display_name][0] %>
+            </div>
+          <% end %>
             
           <%= f.label :avatar %>
           <%= f.file_field :avatar, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:avatar) ? 'is-invalid' : 'is-valid') : '' }"  %>

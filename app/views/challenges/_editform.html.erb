@@ -35,6 +35,15 @@
           </div>
         </div>
         
+        <div class="form-group row">
+          <div class="col-3">
+            <%= f.label :nsfw_level %>
+          </div>
+          <div class="col-9">
+            <%= f.select :nsfw_level, options_for_select([['Safe', 1], ['Questionable', 2], ['Explicit', 3]], @challenge.nsfw_level), {}, { :class => 'custom-select' } %>
+          </div>
+        </div>
+        
         <small style="color: grey;">When making an edit to a challenge, you must push the start date to a week from the edit, so that participants can react to the change.</small>
         <div class="form-group row">
           <div class="col-3">
@@ -145,7 +154,7 @@
               <%= u.label :prestige %>
             </div>
             <div class="col-9">
-              <%= u.select :prestige, options_for_select([['1 - Easiest', 1], ['2', 2], ['3', 3], ['4', 4], ['5 - Hardest', 5]], 1), {}, { :class => 'custom-select' } %>
+              <%= u.select :prestige, options_for_select([['1 - Easiest', 1], ['2', 2], ['3', 3], ['4', 4], ['5 - Hardest', 5]], @badge_map.prestige), {}, { :class => 'custom-select' } %>
             </div>
           </div>
           

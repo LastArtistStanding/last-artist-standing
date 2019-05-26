@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190112175423) do
+ActiveRecord::Schema.define(version: 20190526093726) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,8 +38,9 @@ ActiveRecord::Schema.define(version: 20190112175423) do
     t.string   "name"
     t.string   "avatar"
     t.string   "direct_image"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.integer  "nsfw_level",   default: 1
     t.index ["name"], name: "index_badges_on_name", unique: true, using: :btree
   end
 
@@ -63,6 +64,7 @@ ActiveRecord::Schema.define(version: 20190112175423) do
     t.datetime "updated_at",                    null: false
     t.boolean  "seasonal",      default: false
     t.integer  "creator_id"
+    t.integer  "nsfw_level",    default: 1
     t.index ["name"], name: "index_challenges_on_name", using: :btree
   end
 
@@ -147,6 +149,7 @@ ActiveRecord::Schema.define(version: 20190112175423) do
     t.boolean  "is_admin"
     t.integer  "dad_frequency"
     t.integer  "new_frequency"
+    t.string   "display_name"
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["name"], name: "index_users_on_name", unique: true, using: :btree
   end
