@@ -285,3 +285,7 @@ PatchEntry68:
     patchnote_id: 13
     body: "Fixed an annoying behavior where certain select fields would reset to defaults when editing or refreshing after an error in submission. Now you won't have to double check fields after an error occurs. This applies to the NSFW fields on submissions and challenges, challenge post frequency and prestige."
     importance: 2
+PatchEntry69:
+    patchnote_id: 13
+    body: "Fixed the challenge view page from crashing when accessed when logged out."
+    importance: 1
