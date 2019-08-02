@@ -150,7 +150,7 @@ class ChallengesController < ApplicationController
       end
       
       badge_params = allowed_badge_params
-      badge_params[:nsfw_level] = allowed_challenge_params[:nsfw_level]
+      badge_params[:nsfw_level] = allowed_challenge_params[:nsfw_level] || @challenge.nsfw_level
 
       if !failure && @challenge.update(allowed_challenge_params) && @badge.update(badge_params) && @badge_map.update(allowed_badge_map_params)
         format.html { redirect_to @challenge }
