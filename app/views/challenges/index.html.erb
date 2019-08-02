@@ -43,7 +43,7 @@
             </td>
             <td><%= getChallengeCreator(challenge.creator_id) %></td>
             <% if logged_in? && !challenge.creator_id.nil? && challenge.creator_id == current_user.id %>
-            <td><%= link_to '<i class="fa fa-pencil"></i>'.html_safe, edit_challenge_path(challenge) %></td>
+            <td><%= link_to 'Edit', edit_challenge_path(challenge) %></td>
             <% else %>
             <td></td>
             <% end %>
@@ -68,8 +68,8 @@
             </td>
             <td><%= getChallengeCreator(challenge.creator_id) %></td>
             <% if logged_in? && !challenge.creator_id.nil? && challenge.creator_id == current_user.id %>
-            <td><%= link_to '<i class="fa fa-pencil"></i>'.html_safe, edit_challenge_path(challenge) %></td>
-            <td><%= link_to '<i class="fa fa-trash"></i>'.html_safe, challenge, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+            <td><%= link_to 'Edit', edit_challenge_path(challenge) %></td>
+            <td><%= link_to 'Delete', challenge, method: :delete, data: { confirm: 'Are you sure?' } %></td>
             <% else %>
             <td></td>
             <td></td>
