@@ -59,6 +59,7 @@ class ChallengesController < ApplicationController
     badge_params = allowed_badge_params
     badge_params[:nsfw_level] = allowed_challenge_params[:nsfw_level]
     @badge = Badge.new(badge_params)
+    @badge.challenge_id = Challenge.maximum(:id).next
 
     @badge_map = BadgeMap.new(allowed_badge_map_params)
     

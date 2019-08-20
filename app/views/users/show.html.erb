@@ -31,16 +31,7 @@ $(function () {
               <% prevLvl = 0 %>
             <% end %>
             
-            <% winterAward = getAwardByUserAndChallenge(seasonChallengeIds[3], @curruser) %>
-            <% springAward = getAwardByUserAndChallenge(seasonChallengeIds[0], @curruser) %>
-            <% summerAward = getAwardByUserAndChallenge(seasonChallengeIds[1], @curruser) %>
-            <% autumnAward = getAwardByUserAndChallenge(seasonChallengeIds[2], @curruser) %>
-            
             <%= image_tag getUserThumb(@curruser), :title => "#{postfrequencyToString(getUserDADFrequency(@curruser), true)}", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{@curruser.username}" %>
-            <div class=<%= "winter#{winterAward.prestige unless winterAward.blank?}" %>></div>
-            <div class=<%= "spring#{springAward.prestige unless springAward.blank?}" %>></div>
-            <div class=<%= "summer#{summerAward.prestige unless summerAward.blank?}" %>></div>
-            <div class=<%= "autumn#{autumnAward.prestige unless autumnAward.blank?}" %>></div>
             
             <div style="margin-top: 5px;" data-toggle="tooltip" data-placement="top" title="Record Streak: <%= @curruser.longest_streak %> (Level <%= getUserMaxLevel(@curruser) %>)" >
               <div class="levelOverlay unselectable">
@@ -78,8 +69,9 @@ $(function () {
         <div class="card-body">
           <p class="card-text">
             <% @awards.each do |award| %>
-              <% badgeURL = getBadgeImage(award.badge) %>
-              <%= image_tag badgeURL, :class => "prestige#{award.prestige}", :data => {:content => "<p style='font-weight: 600;'>#{award.badge.name}</p>#{simple_format(BadgeMap.find_by({:badge_id => award.badge.id, :prestige => award.prestige}).description)} (Prestige Level: #{award.prestige})", :trigger => "hover", :toggle => "popover", :placement => "top", :html => "true", :alt => "#{award.badge.name}" } %> 
+              <% badge = award.badge %>
+              <% badgeURL = getBadgeImage(badge) %>
+              <%= link_to image_tag(badgeURL, :class => "prestige#{award.prestige}", :data => {:content => "<p style='font-weight: 600;'>#{award.badge.name}</p>#{simple_format(BadgeMap.find_by({:badge_id => award.badge.id, :prestige => award.prestige}).description)} (Prestige Level: #{award.prestige})", :trigger => "hover", :toggle => "popover", :placement => "top", :html => "true", :alt => "#{award.badge.name}" }), challenge_path(badge.challenge_id) %> 
             <% end %>
             <% if @awards.blank? %>
               No badges awarded yet!

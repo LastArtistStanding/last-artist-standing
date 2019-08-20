@@ -232,9 +232,9 @@
               <tbody>
 
                 <% @activeChallenges.each do |challenge| %>
-                <tr style="cursor: pointer;" data-trigger="hover" data-toggle="popover" data-html="true" data-placement="left" data-content="<div class='smallPopoverText'><%= html_escape(challenge.description)%></div>">
+                <tr>
                   <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
-                  <td><%= challenge.name %></td>
+                  <td><%= link_to challenge.name, challenge_path(challenge.id),  style: "color: white;" %></td>
                   <td><%= dateToShortString(challenge.start_date) %></td>
                   <td><%= dateToShortString(challenge.end_date) %></td>
                   <td><%= postfrequencyToString(challenge.postfrequency, false) %></td>
@@ -252,9 +252,9 @@
               </thead>
               <tbody>
                 <% @upcomingChallenges.each do |challenge| %>
-                  <tr style="cursor: pointer;" data-trigger="hover" data-toggle="popover" data-html="true" data-placement="left" data-content="<%= html_escape(challenge.description) %>">
+                  <tr>
                     <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
-                    <td><%= challenge.name %></td>
+                    <td><%= link_to challenge.name, challenge_path(challenge.id), style: "color: white;" %></td>
                     <td><%= dateToShortString(challenge.start_date) %></td>
                     <td><%= dateToShortString(challenge.end_date) %></td>
                     <td><%= postfrequencyToString(challenge.postfrequency, false) %></td>
@@ -286,7 +286,7 @@
               ">
                 <div style="width: 90px; float: left;">
                   <% badge = Badge.find(awardData[1]) %>
-                  <%= image_tag getBadgeImage(badge), :class => "prestige#{awardData[0]}", :data => {:content => "<p style='font-weight: 600;'>#{badge.name}</p>#{simple_format(BadgeMap.find_by({:badge_id => awardData[1], :prestige => awardData[0]}).description)} (Prestige Level: #{awardData[0]})", :trigger => "hover", :toggle => "popover", :placement => "top", :html => "true" }, :alt => "#{badge.name}" %>
+                  <%= link_to image_tag(getBadgeImage(badge), :class => "prestige#{awardData[0]}", :data => {:content => "<p style='font-weight: 600;'>#{badge.name}</p>#{simple_format(BadgeMap.find_by({:badge_id => awardData[1], :prestige => awardData[0]}).description)} (Prestige Level: #{awardData[0]})", :trigger => "hover", :toggle => "popover", :placement => "top", :html => "true" }, :alt => "#{badge.name}"), challenge_path(badge.challenge_id) %>
                 </div>
                 <div style="width: calc(100% - 90px); float: left;">
                   <% awards.each do |award| %>
@@ -307,7 +307,7 @@
       
         <% if !@seasonalLeaderboard.blank? %>
         <div class="card homeCardStyle blueCard">
-          <div class="card-header"><b><%= getCurrentSeasonalChallenge.name %> Leaderboard</b></div>
+          <div class="card-header"><b><%= link_to "#{@currentSeasonalChallenge.name} Leaderboard", challenge_path(@currentSeasonalChallenge.id), style: "color: white;" %></b></div>
           <div class="card-body table-responsive">
             <table class="table table-sm">
               <thead class="thead-dark">
