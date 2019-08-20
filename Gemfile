@@ -33,7 +33,7 @@ gem 'jquery-rails'
 gem 'jbuilder', '~> 2.0'
 # Gems for assisting with Image Upload on the site.
 gem 'carrierwave'
-gem 'mini_magick', '~> 4.8.0'
+gem 'mini_magick', '>= 4.9.4'
 #Formating timestamps for site 
 gem 'strftime', '~>1.0.0'
 # bundle exec rake doc:rails generates the API under doc/api.
