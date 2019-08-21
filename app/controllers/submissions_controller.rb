@@ -5,8 +5,6 @@ class SubmissionsController < ApplicationController
   # GET /submissions
   # GET /submissions.json
   def index
-    @date = Date.current
-
     if !params[:to].blank? || !params[:from].blank?
       if params[:to].blank?
         @submissions = Submission.where("id >= :from", {from: params[:from]}).order('id ASC')
@@ -19,9 +17,12 @@ class SubmissionsController < ApplicationController
       if !params[:date].blank?
         begin
           @date = Date.parse(params[:date])
+          @date = Date.today if @date > Date.today
         rescue ArgumentError
-          @date = Date.current
+          @date = Date.today
         end
+      else
+        @date = Date.today
       end
       @submissions = Submission.includes(:user).where(created_at: @date.midnight..@date.end_of_day).order('created_at DESC')
     end

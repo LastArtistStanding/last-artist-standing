@@ -347,10 +347,22 @@ p {
   width: 100%;
   border-radius: 10px 10px 0 0;
   height: 30px;
-  padding: 2px;
-  padding-top: 4px;
+  font-size: 10pt;
+  font-weight: 600;
   overflow: hidden;
   white-space: nowrap;
+  
+  > img {
+    height: 30px;
+    width: 30px;
+    border-radius: 0;
+    display: inline-block;
+  }
+  
+  &:hover {
+    color: #AAAAAA;
+    text-decoration: none;
+  }
 }
 
 .submissionTime {
