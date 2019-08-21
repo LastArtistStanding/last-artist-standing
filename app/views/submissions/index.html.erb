@@ -17,7 +17,7 @@
             <li>
               <div class="submissionIcon">
                 <% user = submission.user %>
-                <%= link_to "<img src=#{ getUserThumb(user) }> #{user.username}".html_safe, user, :class => "submissionAuthor" %>
+                <%= link_to "<img alt='' src=#{ getUserThumb(user) }> #{user.username}".html_safe, user, :class => "submissionAuthor" %>
                 <%= link_to image_tag(getSubmissionThumb(submission), :alt => "#{getSubmissionTitle(submission)}"), submission %>
               </div>
             </li>
