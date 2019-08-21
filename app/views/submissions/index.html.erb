@@ -2,52 +2,27 @@
   <div class="row">
     <div class="col-lg-2"></div>
     <div class="col-lg-8">
-      <div class="tim-title" style="margin-bottom: 1rem;">
-        <p class="h2">
-          <%= @date == Date.current ? "Today's" : @date.strftime("%B %e, %Y") %> Submissions
-          <a class="btn btn-primary btn-submit" style="margin-bottom: 0.5rem;" href="<%= new_submission_path %>">
-          <i class="fa fa-plus" aria-hidden="true"></i> Submit Your Art!
-          </a>
-          <a class="btn btn-primary btn-arrow" style="margin-bottom: 0.5rem;" href=" <%= submissions_path(:date => @date - 1.month) %> ">
-          <i class="fa fa-chevron-left" aria-hidden="true"></i>
-          <i class="fa fa-chevron-left" aria-hidden="true" style="margin-left: -0.5rem;"></i>
-          <i class="fa fa-chevron-left" aria-hidden="true" style="margin-left: -0.5rem;"></i>
-          </a>
-          <a class="btn btn-primary btn-arrow" style="margin-bottom: 0.5rem;" href=" <%= submissions_path(:date => @date - 7.day) %> ">
-          <i class="fa fa-chevron-left" aria-hidden="true"></i>
-          <i class="fa fa-chevron-left" aria-hidden="true" style="margin-left: -0.5rem;"></i>
-          </a>
-          <a class="btn btn-primary btn-arrow" style="margin-bottom: 0.5rem;" href=" <%= submissions_path(:date => @date - 1.day) %> ">
-          <i class="fa fa-chevron-left" aria-hidden="true"></i>
-          </a>
-          <a class="btn btn-primary btn-arrow" style="margin-bottom: 0.5rem;" href=" <%= submissions_path(:date => @date + 1.day) %> ">
-          <i class="fa fa-chevron-right" aria-hidden="true"></i>
-          </a>
-          <a class="btn btn-primary btn-arrow" style="margin-bottom: 0.5rem;" href=" <%= submissions_path(:date => @date + 7.day) %> ">
-          <i class="fa fa-chevron-right" aria-hidden="true"></i>
-          <i class="fa fa-chevron-right" aria-hidden="true" style="margin-left: -0.5rem;"></i>
-          </a>
-          <a class="btn btn-primary btn-arrow" style="margin-bottom: 0.5rem;" href=" <%= submissions_path(:date => @date + 1.month) %> ">
-          <i class="fa fa-chevron-right" aria-hidden="true"></i>
-          <i class="fa fa-chevron-right" aria-hidden="true" style="margin-left: -0.5rem;"></i>
-          <i class="fa fa-chevron-right" aria-hidden="true" style="margin-left: -0.5rem;"></i>
-          </a>
-        </p>
-      <ul class="submissionrow">
-    
-      <% @submissions.each do |submission| %>
+      <div style="margin-bottom: 1rem;">
+        <h2><%= @date == Date.current ? "Today's" : @date.strftime("%B %e, %Y") %> Submissions</h2>
+      </div>
+      <%= form_tag submissions_path, method: :get do %>
+        <%= date_field_tag :date, @date, class: "form-control", style: "width: 150px; display: inline-block; vertical-align: middle;" %>
+        <%= submit_tag 'Select', class: "btn btn-primary", style: "width: 100px;" %>
+        <input type="submit" value="Yesterday" class="btn btn-primary" style="width: 100px;" href=" <%= submissions_path(:date => @date - 1.day) %> ">
+        <input type="submit" value="Tomorrow" class="btn btn-primary" style="width: 100px;" href=" <%= submissions_path(:date => @date + 1.day) %> ">
+      <% end %>
+      <div class="row">
+        <ul class="submissionrow">
+          <% @submissions.each do |submission| %>
             <li>
               <div class="submissionIcon">
-          <%= link_to "<i class='fa fa-user' aria-hidden='true'></i> #{submission.user.username}".html_safe, submission.user, :class => "submissionAuthor" %>
-
-          <%= link_to image_tag(getSubmissionThumb(submission), :alt => "#{getSubmissionTitle(submission)}"), submission %>
-
-                
-                </div>
-              </li>
-            <% end %>
-          </ul>
-  
+                <% user = submission.user %>
+                <%= link_to "<img src=#{ getUserThumb(user) }> #{user.username}".html_safe, user, :class => "submissionAuthor" %>
+                <%= link_to image_tag(getSubmissionThumb(submission), :alt => "#{getSubmissionTitle(submission)}"), submission %>
+              </div>
+            </li>
+          <% end %>
+        </ul>
       </div>
     </div>
     <div class="col-lg-2"></div>
