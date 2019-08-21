@@ -8,8 +8,12 @@
       <%= form_tag submissions_path, method: :get do %>
         <%= date_field_tag :date, @date, class: "form-control", style: "width: 150px; display: inline-block; vertical-align: middle;" %>
         <%= submit_tag 'Select', class: "btn btn-primary", style: "width: 100px;" %>
-        <input type="submit" value="Yesterday" class="btn btn-primary" style="width: 100px;" href=" <%= submissions_path(:date => @date - 1.day) %> ">
-        <input type="submit" value="Tomorrow" class="btn btn-primary" style="width: 100px;" href=" <%= submissions_path(:date => @date + 1.day) %> ">
+        <a class="btn btn-primary" style="width: 100px; vertical-align: top;" href=" <%= submissions_path(:date => @date - 1.day) %> ">
+          Prev Day
+        </a>
+        <a class="btn btn-primary" style="width: 100px; vertical-align: top;" href=" <%= submissions_path(:date => @date + 1.day) %> ">
+          Next Day
+        </a>
       <% end %>
       <div class="row">
         <ul class="submissionrow">
