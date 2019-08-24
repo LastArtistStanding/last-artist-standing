@@ -124,6 +124,9 @@
           <br>
           <b>Custom Challenges:</b><br>
           <small><b>Remember to double check that you've submitted to all relevant challenges, and that your submission fulfills the conditions required for the challenge.</b></small>
+          <% if SiteStatus.first.current_rollover != Date.today %>
+            <br><b style="color: red;">WARNING! The rollover script has not completed yet. If a challenge you are participating in starts today, it may not currently be selectable.</b>
+          <% end %>
           <% @participations.each do |p| %>
             <% if p.challenge.id != 1 && !p.challenge.seasonal %>
               <div class="form-group row">
