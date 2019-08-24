@@ -204,7 +204,8 @@ namespace :dad_tasks do
         source_type: "Challenge",
         source_id: s.challenge_id,
         user_id: s.user_id,
-        url: "/challenges/#{s.challenge_id}"
+        url: "/challenges/#{s.challenge_id}",
+        processed: yesterday
       })
       
       s.save
