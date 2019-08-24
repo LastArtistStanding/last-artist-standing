@@ -31,40 +31,33 @@ class SubmissionsController < ApplicationController
   # GET /submissions/1
   # GET /submissions/1.json
   def show
-    @challenge_entries = ChallengeEntry.where(:submission_id => @submission.id)
+    @challenge_entries = ChallengeEntry.where(submission_id: @submission.id)
   end
 
   # GET /submissions/new
   def new
     @submission = Submission.new
-    @participations = Participation.where({:user_id => current_user.id, :active => true}).order("challenge_id ASC")
+    @participations = Participation.where("user_id = #{current_user.id}").joins(:challenge).where("challenges.start_date >= ? AND ? < challenges.end_date", Date.today, Date.today).order("challenge_id ASC")
   end
 
   # GET /submissions/1/edit
   def edit
-    @participations = Participation.where({:user_id => current_user.id, :active => true}).order("challenge_id ASC")
+    @participations = Participation.where("user_id = #{current_user.id}").joins(:challenge).where("challenges.start_date >= ? AND ? < challenges.end_date", Date.today, Date.today).order("challenge_id ASC")
   end
 
   # POST /submissions
   # POST /submissions.json
   def create
     initialDateTime = DateTime.current
-    tenMinuteGuard = ((initialDateTime - Date.current.to_datetime)*24*60).to_i
     failure = false
     @submission = Submission.new(submission_params)
-    @submission.user_id = current_user.id
-    @participations = Participation.where({:user_id => current_user.id, :active => true}).order("challenge_id ASC")
+    artist_id = current_user.id
+    @submission.user_id = artist_id
     
-    #Prevent submissions on the first 10 minutes
-    if tenMinuteGuard < 10
-      @submission.errors[:base] << " To prevent rollover problems, you cannot submit in the first ten minutes of the day. This is a temporary measure to prevent erroneous participation tracking, and will be replaced in the future iwth a more robust solution."
-      failure = true
-    else 
-      if !@submission.time.blank?
-        if !@submission.time.is_a? Integer
-          @submission.errors.add(:time, " specified has to be an integer.")
-          failure = true;
-        end
+    if !@submission.time.blank?
+      if !@submission.time.is_a? Integer
+        @submission.errors.add(:time, " specified has to be an integer.")
+        failure = true;
       end
     end
     
@@ -78,39 +71,20 @@ class SubmissionsController < ApplicationController
         @submission.created_at = initialDateTime
         @submission.save
         
-        submission_date = @submission.created_at.to_date
-        nextDay = submission_date + 1.day
         newFrequency = params[:postfrequency].to_i
         current_user.update_attribute(:new_frequency, newFrequency)
         
-        dadChallenge = Challenge.find(1)
-        seasonalChallenge = Challenge.where(":todays_date >= start_date AND :todays_date < end_date AND seasonal = true", {todays_date: Date.current}).first
-        
-        # Manage DAD/Seasonal Participation
-        dadPart = Participation.find_by(:user_id => current_user.id, :challenge_id => dadChallenge.id, :active => true)
-        if dadPart.blank?
-          dadPart = Participation.create({:user_id => current_user.id, :challenge_id => dadChallenge.id, :active => true, :eliminated => false, :score => 0, :start_date => submission_date, :last_submission_date => submission_date})
-        end
-        dadPart.next_submission_date = dadPart.last_submission_date + newFrequency.days
-        if dadPart.next_submission_date < nextDay
-          dadPart.next_submission_date = nextDay
-        end
-        dadPart.save
-        
-        seasonPart = Participation.find_by(:user_id => current_user.id, :challenge_id => seasonalChallenge.id, :active => true)
-        if seasonPart.blank?
-          seasonPart = Participation.create({:user_id => current_user.id, :challenge_id => seasonalChallenge.id, :active => true, :eliminated => false, :score => 0, :start_date => submission_date, :last_submission_date => submission_date, :next_submission_date => nextDay})
-        end
-        seasonPart.save
+        seasonalChallenge = Challenge.currentSeasonalChallenge
         
         # Add submission to DAD/Current Seasonal Challenge
-        ChallengeEntry.create({:challenge_id => dadChallenge.id, :submission_id => @submission.id, :user_id => current_user.id})
-        ChallengeEntry.create({:challenge_id => seasonalChallenge.id, :submission_id => @submission.id, :user_id => current_user.id})
+        ChallengeEntry.create({challenge_id: 1, submission_id: @submission.id, user_id: artist_id})
+        ChallengeEntry.create({challenge_id: seasonalChallenge.id, submission_id: @submission.id, user_id: artist_id})
         
         # Last, manage all custom challenge submissions selected (to do).
+        @participations = Participation.where({user_id: artist_id, active: true}).order("challenge_id ASC")
         @participations.each do |p|
           if !params[p.challenge_id.to_s].blank?
-            ChallengeEntry.create({:challenge_id => p.challenge.id, :submission_id => @submission.id, :user_id => current_user.id})
+            ChallengeEntry.create({challenge_id: p.challenge_id, submission_id: @submission.id, user_id: artist_id})
           end
         end
         
@@ -126,9 +100,10 @@ class SubmissionsController < ApplicationController
   # PATCH/PUT /submissions/1
   # PATCH/PUT /submissions/1.json
   def update
-    @participations = Participation.where({:user_id => current_user.id, :active => true}).order("challenge_id ASC")
+    @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
+    curr_user_id = current_user.id
     
-    if @submission.user_id == current_user.id
+    if @submission.user_id == curr_user_id
       if @submission.created_at.to_date == Date.current
         usedParams = submission_params
       else
@@ -139,11 +114,11 @@ class SubmissionsController < ApplicationController
           #This sort of information (challenge submissions) shouldn't ever change after the day it was submitted.
           if @submission.created_at.to_date == Date.current
             @participations.each do |p|
-              if p.challenge.id != 1 && !p.challenge.seasonal
-                entry = ChallengeEntry.find_by({:challenge_id => p.challenge.id, :submission_id => @submission.id, :user_id => current_user.id})
+              if p.challenge_id != 1 && !p.challenge.seasonal
+                entry = ChallengeEntry.find_by({challenge_id: p.challenge_id, submission_id: @submission.id, user_id: curr_user_id})
                 #If we selected the checkbox, check if an extry exists before creating it.
                 if !params[p.challenge_id.to_s].blank? && entry.blank?
-                  ChallengeEntry.create({:challenge_id => p.challenge.id, :submission_id => @submission.id, :user_id => current_user.id})
+                  ChallengeEntry.create({challenge_id: p.challenge_id, submission_id: @submission.id, user_id: curr_user_id})
                 #If we unchecked the box, check if an entry doesn't exist before deleting it.
                 elsif params[p.challenge_id.to_s].blank? && !entry.blank?
                   entry.destroy

@@ -1,0 +1,2 @@
+class SiteStatus < ApplicationRecord
+end

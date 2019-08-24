@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190820034051) do
+ActiveRecord::Schema.define(version: 20190824204733) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,6 +104,7 @@ ActiveRecord::Schema.define(version: 20190820034051) do
     t.date     "next_submission_date"
     t.date     "last_submission_date"
     t.boolean  "submitted"
+    t.date     "processed"
   end
 
   create_table "patch_entries", force: :cascade do |t|
@@ -122,6 +123,12 @@ ActiveRecord::Schema.define(version: 20190820034051) do
     t.datetime "updated_at", null: false
     t.string   "title"
     t.index ["patch"], name: "index_patch_notes_on_patch", unique: true, using: :btree
+  end
+
+  create_table "site_statuses", force: :cascade do |t|
+    t.date     "current_rollover"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
   end
 
   create_table "submissions", force: :cascade do |t|
@@ -151,6 +158,7 @@ ActiveRecord::Schema.define(version: 20190820034051) do
     t.integer  "dad_frequency"
     t.integer  "new_frequency"
     t.string   "display_name"
+    t.integer  "current_streak",  default: 0
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["name"], name: "index_users_on_name", unique: true, using: :btree
   end
