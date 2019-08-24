@@ -37,12 +37,12 @@ class SubmissionsController < ApplicationController
   # GET /submissions/new
   def new
     @submission = Submission.new
-    @participations = Participation.where("user_id = #{current_user.id}").joins(:challenge).where("challenges.start_date >= ? AND ? < challenges.end_date", Date.today, Date.today).order("challenge_id ASC")
+    @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
   end
 
   # GET /submissions/1/edit
   def edit
-    @participations = Participation.where("user_id = #{current_user.id}").joins(:challenge).where("challenges.start_date >= ? AND ? < challenges.end_date", Date.today, Date.today).order("challenge_id ASC")
+    @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
   end
 
   # POST /submissions
