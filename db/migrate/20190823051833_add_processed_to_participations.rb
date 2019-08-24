@@ -4,7 +4,7 @@ class AddProcessedToParticipations < ActiveRecord::Migration[5.0]
     
     all_active = Participation.where('active = true')
     all_active.each do |p|
-      p.processed = Date.today
+      p.processed = Date.today - 1.day
       p.save
     end
   end
