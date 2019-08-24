@@ -21,5 +21,9 @@ class Challenge < ApplicationRecord
     if end_date.present? && end_date <= start_date
       errors.add(:end_date, " cannot precede or equal start date.")
     end
-  end 
+  end
+  
+  def self.currentSeasonalChallenge
+    Challenge.where(":todays_date >= start_date AND :todays_date < end_date AND seasonal = true", {todays_date: Date.current}).first
+  end
 end

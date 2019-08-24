@@ -1,257 +1,320 @@
 namespace :dad_tasks do
-    desc "Updates participations and scores."
-    task :daily_challenge_check => :environment do
-        # Fish in all active participations
-        allParticipations = Participation.where(active: true)
-        
-        allParticipations.each do |p|
-            # Get challenge entries made to the challenge between the last_submission_date and next_submission_date
-            lastDate = p.last_submission_date
-            nextDate = p.next_submission_date
-            user = p.user
-            challenge = p.challenge
-            isDAD = p.challenge.id == 1
-            scoreChanged = false
-        
-            challengeEntries = ChallengeEntry.where("challenge_id = :challengeId AND user_id = :userId AND created_at >= :last_date AND created_at < :next_date AND created_at < :current_date", {challengeId: challenge.id, userId: user.id, last_date: lastDate, next_date: nextDate, current_date: Date.current})
-            
-            # Eliminate anyone who failed to post in a streak_based challenge
-            if Date.current == nextDate && challengeEntries.count == 0 && challenge.streak_based
-                p.active = false
-                p.eliminated = true
-                p.end_date = Date.current - 1.day
-                user.update_attribute(:dad_frequency, nil)
-                user.update_attribute(:new_frequency, nil)
-            else
-                # Increment score
-                if challengeEntries.count > 0
-                    if challenge.postfrequency == 0
-                        p.score = challengeEntries.count
-                        scoreChanged = true
-                    elsif !p.submitted
-                        p.score += 1
-                        p.submitted = true
-                        scoreChanged = true
-                    end
-                end 
-                
-                if scoreChanged
-                    # Check if the score has exceeded the user's previous record, replace it if so
-                    if isDAD && p.score > user.longest_streak
-                        user.update_attribute(:longest_streak, p.score)
-                    end
-                    
-                    # Award and/or update badges
-                    badgeToAward = BadgeMap.where("required_score <= :current_score AND challenge_id = :challengeId", {current_score: p.score, challengeId: challenge.id}).order("required_score DESC").first
-                    if !badgeToAward.blank?
-                        previousAward = Award.find_by(:user_id => user.id, :badge_id => badgeToAward.badge_id)
-                        if previousAward.blank?
-                            Award.create({:user_id => user.id, :badge_id => badgeToAward.badge_id, :date_received => Date.current, :prestige => badgeToAward.prestige})
-                        elsif previousAward.prestige < badgeToAward.prestige
-                            previousAward.prestige = badgeToAward.prestige
-                            previousAward.date_received = Date.current
-                            previousAward.save
-                        end
-                    end
-                end 
-                
-                # If we've reached the last date of the challenge, deactivate it.
-                if !challenge.end_date.blank? && Date.current >= challenge.end_date
-                    p.active = false
-                    p.end_date = Date.current
-                    p.eliminated = false
-                else
-                    # First (DAD-only) check if the postfrequency of the user has been changed to a lower one
-                    # Either way, update the new requested frequency
-                    if isDAD
-                        # If there wasn't a previous frequency, just populate it.
-                        if user.dad_frequency.blank?
-                            # Fixing a problem I made, haha.
-                            if user.new_frequency.blank?
-                                dateBasedFrequency = nextDate - lastDate
-                                user.update_attribute(:dad_frequency, dateBasedFrequency)
-                            else
-                                user.update_attribute(:dad_frequency, user.new_frequency)
-                            end
-                        else
-                            if !user.new_frequency.blank?
-                                # If the new frequency is easier, reset the streak
-                                if user.dad_frequency < user.new_frequency
-                                    # The only way a frequency can be changed is through a submission, so you start with a score of 1.
-                                    p.score = 1
-                                end
-                                user.update_attribute(:dad_frequency, user.new_frequency)
-                            end
-                        end
-                    end
-                    
-                    # Set the next_submission_date if today is that date, advance by the specified postfrequency
-                    if Date.current == nextDate
-                        p.last_submission_date = nextDate
-                        # Handle DAD's custom postfrequency
-                        if challenge.postfrequency == -1
-                            p.next_submission_date = p.last_submission_date + user.dad_frequency.days
-                        # Note that custom postfrequencies don't change submission date periods
-                        elsif challenge.postfrequency != 0
-                            p.next_submission_date = p.last_submission_date + challenge.postfrequency.days
-                        end
-                        p.submitted = false
-                    end
-                    
-                end
-                
-            end
-            
-            # Save changes to participation.
-            p.save
-            
-        end
-        
-        # Initialize any participations if the start_date has been reached
-        startingParticipations = Participation.where(active: nil, start_date: Date.current)
-        
-        startingParticipations.each do |s|
-            
-            challenge = s.challenge
-            
-            s.active = true
-            s.score = 0
-            s.eliminated = false
-            
-            # If the user can submit whenever, the submission period is the full duration of the challenge.
-            if challenge.postfrequency == 0
-                s.last_submission_date = challenge.start_date
-                s.next_submission_date = challenge.end_date
-            # Otherwise, the deadline is dictated by challenge postfrequency
-            else
-                s.last_submission_date = challenge.start_date
-                s.next_submission_date = challenge.start_date + challenge.postfrequency.days
-            end
-            
-            # Save changes to participation.
-            s.save
-            
-        end
-        
-        starting_challenges = Challenge.where(start_date: Date.current)
-        
-        starting_challenges.each do |c|
-            challenge_name = c.name
-            challenge_id = c.id
-            
-            User.all.each do |u|
-                # If the user has submitted within the last two weeks, send a notification of a starting challenge.
-                next if Submission.find_by("created_at >= ? and user_id = ?", Date.today - 14.day, u.id).nil?
-                
-                Notification.create(body: "#{challenge_name} has started. If you are a participant, please remember to submit to the challenge.",
-                                    source_type: "Challenge",
-                                    source_id: challenge_id,
-                                    user_id: u.id,
-                                    url: "/challenges/#{challenge_id}")
-            end
-        end
-        
-        ending_challenges = Challenge.where(end_date: Date.current)
-        
-        ending_challenges.each do |c|
-            challenge_name = c.name
-            challenge_id = c.id
-            
-            User.all.each do |u|
-                # If the user has submitted within the last two weeks, send a notification of a starting challenge.
-                next if Submission.find_by("created_at >= ? and user_id = ?", Date.today - 14.day, u.id).nil?
-                
-                Notification.create(body: "#{challenge_name} has ended.",
-                                    source_type: "Challenge",
-                                    source_id: challenge_id,
-                                    user_id: u.id,
-                                    url: "/challenges/#{challenge_id}")
-            end
-        end
+  task :rollover_script => :environment do
+    # The rollover script runs at 12:00 AM every night UTC.
+    # Yesterday represents all of the submissions made the day prior,
+    # giving context to what current_rollover refers to, if we're up to date.
+    # Today represents what is the current day, if we're up to date.
+    # Instead of using Date.today, we use these logged placeholders so that
+    # we can rerun a failed or missed rollover.
+    yesterday = SiteStatus.first.current_rollover
+    today = yesterday + 1.day
+
+    # Do not run the rollover script for a given day if it isn't over yet.
+    return if yesterday >= Date.today
+    
+    # STEP 1: Check the challenge entries, identify users that aren't participating in DAD/Seasonal Challenge, and create those participations.
+    # Get the users that have posted on the current rollover date
+    user_ids = ChallengeEntry.where('created_at >= ? AND created_at < ? AND challenge_id = 1', yesterday, today).pluck(:user_id).uniq
+
+    seasonal_challenge = Challenge.where(":yesterdays_date >= start_date AND :yesterdays_date < end_date AND seasonal = true", {yesterdays_date: yesterday}).first
+    
+    # For each user, check if they have an active DAD or seasonal participation. If not, create it.
+    user_ids.each do |uid|
+      dad_part = Participation.find_by(user_id: uid, challenge_id: 1, active: true)
+      Participation.create({
+        user_id: uid, 
+        challenge_id: 1,
+        active: true, 
+        eliminated: false, 
+        score: 0, 
+        start_date: yesterday,
+        last_submission_date: yesterday,
+        next_submission_date: today,
+        processed: yesterday - 1.day # so that this participation gets processed
+      }) if dad_part.blank?
+
+      season_part = Participation.find_by(user_id: uid, challenge_id: seasonal_challenge.id, active: true)
+      Participation.create({
+        user_id: uid,
+        challenge_id: seasonal_challenge.id,
+        active: true,
+        eliminated: false,
+        score: 0,
+        start_date: yesterday,
+        last_submission_date: yesterday,
+        next_submission_date: today,
+        processed: yesterday - 1.day
+      }) if season_part.blank?
     end
     
-    desc "Patch fix for orphaned participations."
-    task :fix_inactive_participations => :environment do
-        # Initialize any participations if the start_date has been reached
-        startingParticipations = Participation.where(active: nil, start_date: Date.current)
-        
-        startingParticipations.each do |s|
-            
-            challenge = s.challenge
-            
-            s.active = true
-            s.score = 0
-            s.eliminated = false
-            
-            # If the user can submit whenever, the submission period is the full duration of the challenge.
-            if challenge.postfrequency == 0
-                s.last_submission_date = challenge.start_date
-                s.next_submission_date = challenge.end_date
-            # Otherwise, the deadline is dictated by challenge postfrequency
-            else
-                s.last_submission_date = challenge.start_date
-                s.next_submission_date = challenge.start_date + challenge.postfrequency.days
+    
+    # STEP 2, process all DAD particicpations if they haven't been updated to this date yet (due to the script not running/crashing).
+    dad_participations = Participation.where("active = true AND challenge_id = 1 AND processed < ?", yesterday)
+    dad_participations.each do |p|
+      last_date = p.last_submission_date
+      next_date = p.next_submission_date
+      p_user = p.user
+
+      dad_entries = ChallengeEntry.where("challenge_id = 1 AND user_id = #{p.user_id} AND created_at >= ? AND created_at < ? AND created_at < ?", last_date, next_date, today)
+      
+      if today == next_date && dad_entries.count == 0
+        p.active = false
+        p.eliminated = true
+        p.end_date = yesterday
+      else
+        if dad_entries.count > 0 && !p.submitted
+          p.score += 1
+          p.submitted = true
+          p_user.update_attribute(:current_streak, p.score)
+          if p.score > p_user.longest_streak
+            p_user.update_attribute(:longest_streak, p.score)
+          end
+          
+          dad_badge_map = BadgeMap.where("required_score <= #{p.score} AND challenge_id = 1").order("required_score DESC").first
+          if !dad_badge_map.blank?
+            previous_award = Award.find_by(:user_id => p_user.id, :badge_id => dad_badge_map.badge_id)
+            if previous_award.blank?
+              Award.create({
+                user_id: p_user.id, 
+                badge_id: dad_badge_map.badge_id, 
+                date_received: today, 
+                prestige: dad_badge_map.prestige
+              })
+            elsif previous_award.prestige < dad_badge_map.prestige
+              previous_award.prestige = dad_badge_map.prestige
+              previous_award.date_received = today
+              previous_award.save
             end
-            
-            # Save changes to participation.
-            s.save
-            
+          end
         end
+        
+        if !p_user.new_frequency.blank?
+          # If the new frequency is easier, reset the streak
+          if !p_user.dad_frequency.blank? && p_user.dad_frequency < p_user.new_frequency
+            p.score = (p.score / 2.0).ceil
+          end
+          p_user.update_attribute(:dad_frequency, p_user.new_frequency)
+          p.next_submission_date = p.last_submission_date + p_user.dad_frequency
+          p.next_submission_date = today if p.next_submission_date < today
+          p_user.update_attribute(:new_frequency, nil)
+        end
+        
+        # Set the next_submission_date if yesterday is that date, advance by the specified postfrequency
+        if today == next_date
+          p.last_submission_date = next_date
+          # Handle DAD's custom postfrequency
+          p.next_submission_date = next_date + p_user.dad_frequency.days
+          p.submitted = false
+        end
+      end
+      
+      p.processed = yesterday
+      
+      p.save
     end
     
-    desc "Update patch notes."
-    task :update_patch_notes => :environment do
-        patchNoteData = YAML.load_file('db/data/patchnotes.yaml')
-        patchEntriesData = YAML.load_file('db/data/patchentries.yaml')
+    # STEP 3, process all other participations.
+    all_participations = Participation.where("active = true AND challenge_id != 1 AND processed < ?", yesterday)
+    
+    all_participations.each do |p|
+      last_date = p.last_submission_date
+      next_date = p.next_submission_date
+      p_user = p.user
+      challenge = p.challenge
+      score_changed = false
+      
+      entries = ChallengeEntry.where("challenge_id = #{challenge.id} AND user_id = #{p.user_id} AND created_at >= ? AND created_at < ? AND created_at < ?", last_date, next_date, today)
+      
+      if today == next_date && entries.count == 0 && challenge.streak_based
+        p.active = false
+        p.eliminated = true
+        p.end_date = yesterday
+      else
+        if entries.count > 0
+          if challenge.postfrequency == 0
+            score_changed = !(p.score == entries.count)
+            p.score = entries.count
+          elsif !p.submitted
+            p.score += 1
+            p.submitted = true
+            score_changed = true
+          end
+        end
         
-        patchNoteData.each do |currentPatchNote,noteDetails|
-            patchNote = PatchNote.find_by(patch: noteDetails["patch"])
-            if patchNote.blank?
-                patchNote = PatchNote.create({ :before => noteDetails["before"], :after => noteDetails["after"], :patch => noteDetails["patch"] })
-                if PatchNote.column_names.include?("title")
-                    patchNote.title = noteDetails["title"]
-                    patchNote.save
-                end
-                patchEntriesData.each do |currentPatchEntry,entryDetails|
-                    if patchNote.id == entryDetails["patchnote_id"]
-                        PatchEntry.create({ :patchnote_id => entryDetails["patchnote_id"], :body => entryDetails["body"], :importance => entryDetails["importance"] })
-                    end
-                end
+        if score_changed
+          badge_map = BadgeMap.where("required_score <= #{p.score} AND challenge_id = #{challenge.id}").order("required_score DESC").first
+          if !badge_map.blank?
+            previous_award = Award.find_by(user_id: p_user.id)
+            if previous_award.blank?
+              Award.create({
+                user_id: p_user.id, 
+                badge_id: badge_map.badge_id, 
+                date_received: today, 
+                prestige: badge_map.prestige
+              })
+            elsif previous_award.prestige < badge_map.prestige
+              previous_award.prestige = badge_map.prestige
+              previous_award.date_received = today
+              previous_award.save
             end
+          end
         end
-    end
-    
-    desc "Update site challenges and badges."
-    task :update_database => :environment do
-        challengeData = YAML.load_file('db/data/challenges.yaml')
-        challengeData.each do |currentChallenge,details|
-            newChallenge = Challenge.find_or_create_by(name: details["name"])
-            newChallenge.description = details["description"]
-            newChallenge.start_date = details["start_date"]
-            newChallenge.end_date = details["end_date"]
-            newChallenge.streak_based = details["streak_based"]
-            newChallenge.rejoinable = details["rejoinable"]
-            newChallenge.seasonal = details["seasonal"]
-            newChallenge.postfrequency = details["postfrequency"]
-            newChallenge.save
-        end
-    
-        badgeData = YAML.load_file('db/data/badges.yaml')
-        badgeData.each do |currentBadge,details|
-            newBadge = Badge.find_or_create_by(name: details["name"])
-            newBadge.direct_image = details["direct_image"]
-            newBadge.save
-        end
-    
-        badgeMapData = YAML.load_file('db/data/badgemaps.yaml')
         
-        badgeMapData.each do |currentBadgeMap,details|
-            challenge = Challenge.find_by(name: details["challenge_name"])
-            badge = Badge.find_by(name: details["badge_name"])
-            newBadgeMap = BadgeMap.find_or_create_by(badge_id: badge.id, prestige: details["prestige"], challenge_id: challenge.id)
-            newBadgeMap.description = details["description"]
-            newBadgeMap.required_score = details["required_score"]
-            newBadgeMap.save
+        # If today is the ending date, terminate the participation.
+        if today >= challenge.end_date
+          p.active = false
+          p.end_date = today
+          p.eliminated = false
+        elsif challenge.postfrequency != 0 && today == next_date
+          p.last_submission_date = next_date
+          p.next_submission_date = p.last_submission_date + challenge.postfrequency.days
+          p.submitted = false
         end
+      end
+      
+      p.processed = yesterday
+      
+      p.save
     end
+    
+    # STEP 4 Initialize participations.
+    starting_participations = Participation.where(active: nil, start_date: today)
+    
+    starting_participations.each do |s|
+      challenge = s.challenge
+
+      s.active = true
+      s.score = 0
+      s.eliminated = false
+      
+      if challenge.postfrequency = 0
+        s.last_submission_date = challenge.start_date
+        s.next_submission_date = challenge.end_date
+      else
+        s.last_submission_date = challenge.start_date
+        s.next_submission_date = challenge.start_date + challenge.postfrequency.days
+      end
+      
+      notification_text = "#{challenge.name} has started. It's time to start working on your submissions!"
+      notification_text = "#{challenge.name} has started. Beware, this is an elimination-based challenge! Don't forget to submit." if challenge.streak_based
+      
+      # Participants should be notified
+      Notification.create({
+        body: notification_text,
+        source_type: "Challenge",
+        source_id: s.challenge_id,
+        user_id: s.user_id,
+        url: "/challenges/#{s.challenge_id}"
+      })
+      
+      s.save
+    end
+    
+    # STEP 5: Notify active people that a challenge has ended!
+    ending_challenges = Challenge.where(end_date: today, seasonal: false)
+    
+    ending_challenges.each do |c|
+      challenge_name = c.name
+      challenge_id = c.id
+      
+      User.all.each do |u|
+        # If the user has submitted within the last two weeks, send a notification of a starting challenge.
+        next if Submission.find_by("created_at >= ? and user_id = ?", today - 14.day, u.id).nil?
+        
+        Notification.create({
+          body: "#{challenge_name} has ended. Why not check out some of the entries?",
+          source_type: "Challenge",
+          source_id: challenge_id,
+          user_id: u.id,
+          url: "/challenges/#{challenge_id}/entries"
+        })
+      end
+    end
+    
+    # STEP 6: Now that the daily job is complete, update.
+    SiteStatus.first.update_attribute(:current_rollover, today)
+  end
+  
+  desc "Patch fix for orphaned participations."
+  task :fix_inactive_participations => :environment do
+    # Initialize any participations if the start_date has been reached
+    startingParticipations = Participation.where(active: nil, start_date: Date.current)
+    
+    startingParticipations.each do |s|
+      challenge = s.challenge
+      
+      s.active = true
+      s.score = 0
+      s.eliminated = false
+      
+      # If the user can submit whenever, the submission period is the full duration of the challenge.
+      if challenge.postfrequency == 0
+        s.last_submission_date = challenge.start_date
+        s.next_submission_date = challenge.end_date
+      # Otherwise, the deadline is dictated by challenge postfrequency
+      else
+        s.last_submission_date = challenge.start_date
+        s.next_submission_date = challenge.start_date + challenge.postfrequency.days
+      end
+      
+      # Save changes to participation.
+      s.save
+    end
+  end
+  
+  desc "Update patch notes."
+  task :update_patch_notes => :environment do
+    patchNoteData = YAML.load_file('db/data/patchnotes.yaml')
+    patchEntriesData = YAML.load_file('db/data/patchentries.yaml')
+    
+    patchNoteData.each do |currentPatchNote,noteDetails|
+      patchNote = PatchNote.find_by(patch: noteDetails["patch"])
+      if patchNote.blank?
+        patchNote = PatchNote.create({ :before => noteDetails["before"], :after => noteDetails["after"], :patch => noteDetails["patch"] })
+        if PatchNote.column_names.include?("title")
+          patchNote.title = noteDetails["title"]
+          patchNote.save
+        end
+        patchEntriesData.each do |currentPatchEntry,entryDetails|
+          if patchNote.id == entryDetails["patchnote_id"]
+            PatchEntry.create({ :patchnote_id => entryDetails["patchnote_id"], :body => entryDetails["body"], :importance => entryDetails["importance"] })
+          end
+        end
+      end
+    end
+  end
+  
+  desc "Update site challenges and badges."
+  task :update_database => :environment do
+    challengeData = YAML.load_file('db/data/challenges.yaml')
+    challengeData.each do |currentChallenge,details|
+      newChallenge = Challenge.find_or_create_by(name: details["name"])
+      newChallenge.description = details["description"]
+      newChallenge.start_date = details["start_date"]
+      newChallenge.end_date = details["end_date"]
+      newChallenge.streak_based = details["streak_based"]
+      newChallenge.rejoinable = details["rejoinable"]
+      newChallenge.seasonal = details["seasonal"]
+      newChallenge.postfrequency = details["postfrequency"]
+      newChallenge.save
+    end
+
+    badgeData = YAML.load_file('db/data/badges.yaml')
+    badgeData.each do |currentBadge,details|
+      newBadge = Badge.find_or_create_by(name: details["name"])
+      newBadge.direct_image = details["direct_image"]
+      newBadge.save
+    end
+
+    badgeMapData = YAML.load_file('db/data/badgemaps.yaml')
+    
+    badgeMapData.each do |currentBadgeMap,details|
+      challenge = Challenge.find_by(name: details["challenge_name"])
+      badge = Badge.find_by(name: details["badge_name"])
+      newBadgeMap = BadgeMap.find_or_create_by(badge_id: badge.id, prestige: details["prestige"], challenge_id: challenge.id)
+      newBadgeMap.description = details["description"]
+      newBadgeMap.required_score = details["required_score"]
+      newBadgeMap.save
+    end
+  end
 end
