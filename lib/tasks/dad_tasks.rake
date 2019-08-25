@@ -72,7 +72,7 @@ namespace :dad_tasks do
           
           dad_badge_map = BadgeMap.where("required_score <= #{p.score} AND challenge_id = 1").order("required_score DESC").first
           if !dad_badge_map.blank?
-            previous_award = Award.find_by(:user_id => p_user.id, :badge_id => dad_badge_map.badge_id)
+            previous_award = Award.find_by({user_id: p_user.id, badge_id: dad_badge_map.badge_id})
             if previous_award.blank?
               Award.create({
                 user_id: p_user.id, 
@@ -144,7 +144,7 @@ namespace :dad_tasks do
         if score_changed
           badge_map = BadgeMap.where("required_score <= #{p.score} AND challenge_id = #{challenge.id}").order("required_score DESC").first
           if !badge_map.blank?
-            previous_award = Award.find_by(user_id: p_user.id)
+            previous_award = Award.find_by({user_id: p_user.id, badge_id: badge_map.badge_id})
             if previous_award.blank?
               Award.create({
                 user_id: p_user.id, 
@@ -236,30 +236,43 @@ namespace :dad_tasks do
     SiteStatus.first.update_attribute(:current_rollover, today)
   end
   
-  desc "Patch fix for orphaned participations."
-  task :fix_inactive_participations => :environment do
-    # Initialize any participations if the start_date has been reached
-    startingParticipations = Participation.where(active: nil, start_date: Date.current)
+  desc "Recalculate seasonal submissions."
+  task :fix_seasonal, [:user_id, :challenge_id] => [:environment] do |t, args|
+    user = User.find(args[:user_id])
+    next if user.blank?
+    challenge = Challenge.find(args[:challenge_id])
+    next if challenge.blank? || !challenge.seasonal
+    participation = Participation.find_by({user_id: user.id, challenge_id: challenge.id})
+    next if participation.blank?
     
-    startingParticipations.each do |s|
-      challenge = s.challenge
-      
-      s.active = true
-      s.score = 0
-      s.eliminated = false
-      
-      # If the user can submit whenever, the submission period is the full duration of the challenge.
-      if challenge.postfrequency == 0
-        s.last_submission_date = challenge.start_date
-        s.next_submission_date = challenge.end_date
-      # Otherwise, the deadline is dictated by challenge postfrequency
-      else
-        s.last_submission_date = challenge.start_date
-        s.next_submission_date = challenge.start_date + challenge.postfrequency.days
+    score = 0
+    
+    s = challenge.start_date
+    e = challenge.end_date
+    e = Date.today if e > Date.today
+    
+    while s < e do
+      entries = ChallengeEntry.where("challenge_id = #{challenge.id} AND user_id = #{user.id} AND created_at >= ? AND created_at < ?", s, s + 1.day)
+      score += 1 if entries.count > 0
+      s = s + 1.day
+    end
+    
+    participation.score = score
+    participation.save
+    
+    badge_map = BadgeMap.where("required_score <= #{participation.score} AND challenge_id = #{challenge.id}").order("required_score DESC").first
+    if !badge_map.blank?
+      previous_award = Award.find_by({user_id: user.id, badge_id: badge_map.badge_id})
+      if previous_award.blank?
+        Award.create({
+          user_id: user.id, 
+          badge_id: badge_map.badge_id, 
+          prestige: badge_map.prestige
+        })
+      elsif previous_award.prestige < badge_map.prestige
+        previous_award.prestige = badge_map.prestige
+        previous_award.save
       end
-      
-      # Save changes to participation.
-      s.save
     end
   end
   
