@@ -257,6 +257,8 @@ namespace :dad_tasks do
       s = s + 1.day
     end
     
+    puts "Old score: #{participation.score}. New score: #{score}"
+    
     participation.score = score
     participation.save
     
@@ -269,7 +271,9 @@ namespace :dad_tasks do
           badge_id: badge_map.badge_id, 
           prestige: badge_map.prestige
         })
-      elsif previous_award.prestige < badge_map.prestige
+        puts "Award not found. Creating one."
+      else
+        puts "Changing prestige from #{previous_award.prestige} to #{badge_map.prestige}."
         previous_award.prestige = badge_map.prestige
         previous_award.save
       end
