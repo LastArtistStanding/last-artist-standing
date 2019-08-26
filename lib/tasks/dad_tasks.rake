@@ -49,7 +49,7 @@ namespace :dad_tasks do
     
     
     # STEP 2, process all DAD particicpations if they haven't been updated to this date yet (due to the script not running/crashing).
-    dad_participations = Participation.where("active = true AND challenge_id = 1 AND processed < ?", yesterday)
+    dad_participations = Participation.where("active = true AND challenge_id = 1 AND processed = ?", yesterday - 1.day)
     dad_participations.each do |p|
       last_date = p.last_submission_date
       next_date = p.next_submission_date
@@ -114,7 +114,7 @@ namespace :dad_tasks do
     end
     
     # STEP 3, process all other participations.
-    all_participations = Participation.where("active = true AND challenge_id != 1 AND processed < ?", yesterday)
+    all_participations = Participation.where("active = true AND challenge_id != 1 AND processed = ?", yesterday - 1.day)
     
     all_participations.each do |p|
       last_date = p.last_submission_date
