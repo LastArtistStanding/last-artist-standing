@@ -2,7 +2,7 @@ class UsersController < ApplicationController
 
   def index
     #@users = User.order("id DESC").paginate(:page => params[:page], :per_page => 50)
-    @users = User.search(params).paginate(:page => params[:page], :per_page => 25 ).order("id DESC")
+    @users = User.search(params).paginate(:page => params[:page], :per_page => 25 ).order("current_streak DESC, id DESC")
   end
   
   def submissions

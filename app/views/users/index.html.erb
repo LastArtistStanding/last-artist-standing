@@ -4,81 +4,74 @@
    })
 </script>
 <div class="container-fluid">
-   <div class="row">
-      <div class="col-lg-1"></div>
-      <div class="col-lg-10">
-         <div class="tim-title" style="margin-bottom: 1rem;">
-            <p class="h2">User List</p>
-            <div class="row">
-               <div class="col-md-4">
-                  <div class="card">
-                     <div class="card-body">
-                        <%= form_tag users_path, method: :get do %>
-                        <%= text_field_tag :searchname, params[:searchname] %>
-                        <%= submit_tag 'Search', class: "btn btn-primary" %>
-                        <% end %>
-                     </div>
-                  </div>
-               </div>
-               <div class="col-md-8">
-                  <div class="card">
-                     <div class="card-body">
-                        <div class="digg_pagination" style="height: <%= @users.total_pages > 1 ? "80px" : "36px"  %>">
-                           <div class="page_info">
-                              <%= page_entries_info @users %>
-                           </div>
-                           <%= will_paginate @users, :container => false, :inner_window => 2, :outer_window => 1 %>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="card">
-                     <div class="card-body">
-                        <% @users.each do |user| %>
-                        <div class="avatarWithName">
-                           <div class="avatarUserName"><%= user.username %></div>
-                           <a href=<%="users/#{user.id}"%>>
-                              <span class="fullSizeAvatar">
-                                 <% seasonChallengeIds = getLatestSeasonalChallenges %>
-                                 <% userDADScore = getUserCurrentDADScore(user) %>
-                                 <% if userDADScore != "None" %>
-                                 <% nextLvl = BadgeMap.where("required_score > :current_score AND challenge_id = :challengeId", {current_score: userDADScore, challengeId: 1}).order("required_score ASC").first %>
-                                 <% prevLvl = BadgeMap.where("required_score <= :current_score AND challenge_id = :challengeId", {current_score: userDADScore, challengeId: 1}).order("required_score DESC").first %>
-                                 <% else %>
-                                 <% toNextLvl = 0 %>
-                                 <% prevLvl = 0 %>
-                                 <% end %>
-                                 <% winterAward = getAwardByUserAndChallenge(seasonChallengeIds[3], user) %>
-                                 <% springAward = getAwardByUserAndChallenge(seasonChallengeIds[0], user) %>
-                                 <% summerAward = getAwardByUserAndChallenge(seasonChallengeIds[1], user) %>
-                                 <% autumnAward = getAwardByUserAndChallenge(seasonChallengeIds[2], user) %>
-                                 <%= image_tag getUserThumb(user), :title => "#{postfrequencyToString(getUserDADFrequency(user), true)}", :alt => "#{user.username}", :data => { :toggle => "tooltip", :placement => "top" } %>
-                                 <div class=<%= "winter#{winterAward.prestige unless winterAward.blank?}" %>></div>
-                                 <div class=<%= "spring#{springAward.prestige unless springAward.blank?}" %>></div>
-                                 <div class=<%= "summer#{summerAward.prestige unless summerAward.blank?}" %>></div>
-                                 <div class=<%= "autumn#{autumnAward.prestige unless autumnAward.blank?}" %>></div>
-                                 <div style="margin-top: 5px;" data-toggle="tooltip" data-placement="top" title="Record Streak: <%= user.longest_streak %> (Level <%= getUserMaxLevel(user) %>)" >
-                                    <div class="levelOverlay unselectable">
-                                       <% if userDADScore != "None" %>
-                                       <%= "#{userDADScore}/#{nextLvl.required_score} to lvl #{nextLvl.prestige}" %>
-                                       <% else %>
-                                       No Active Streak
-                                       <% end %>
-                                    </div>
-                                    <div class="progress" >
-                                       <% barPercent = (userDADScore == "None") ? 0 : (100.0*(userDADScore - (prevLvl.blank? ? 0 : prevLvl.required_score)).to_f)/(nextLvl.required_score - (prevLvl.blank? ? 0 : prevLvl.required_score)).to_f %>
-                                       <div class="progress-bar progress-bar-experience" role="progressbar" style="width: <%= barPercent %>%" aria-valuenow="<%= barPercent %>" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                 </div>
-                              </span>
-                           </a>
-                        </div>
-                        <% end %>
-                     </div>
-                  </div>
-               </div>
+  <div class="row">
+    <div class="col-lg-1"></div>
+    <div class="col-lg-10">
+      <div class="tim-title" style="margin-bottom: 1rem;">
+        <p class="h2">User List</p>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card">
+              <div class="card-body">
+                <%= form_tag users_path, method: :get do %>
+                  <%= text_field_tag :searchname, params[:searchname] %>
+                  <%= submit_tag 'Search', class: "btn btn-primary" %>
+                <% end %>
+              </div>
             </div>
-         </div>
+          </div>
+          <div class="col-md-8">
+            <div class="card">
+              <div class="card-body">
+                <div class="digg_pagination" style="height: <%= @users.total_pages > 1 ? "80px" : "36px"  %>">
+                  <div class="page_info">
+                    <%= page_entries_info @users %>
+                  </div>
+                  <%= will_paginate @users, :container => false, :inner_window => 2, :outer_window => 1 %>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-body">
+                <% @users.each do |user| %>
+                  <div class="avatarWithName">
+                    <div class="avatarUserName"><%= user.username %></div>
+                    <a href=<%="users/#{user.id}"%>>
+                      <span class="fullSizeAvatar">
+                        <% seasonChallengeIds = getLatestSeasonalChallenges %>
+                        <% userDADScore = getUserCurrentDADScore(user) %>
+                        <% if userDADScore != "None" %>
+                          <% nextLvl = BadgeMap.where("required_score > :current_score AND challenge_id = :challengeId", {current_score: userDADScore, challengeId: 1}).order("required_score ASC").first %>
+                          <% prevLvl = BadgeMap.where("required_score <= :current_score AND challenge_id = :challengeId", {current_score: userDADScore, challengeId: 1}).order("required_score DESC").first %>
+                        <% else %>
+                          <% toNextLvl = 0 %>
+                          <% prevLvl = 0 %>
+                        <% end %>
+                        <%= image_tag getUserThumb(user), :title => "#{postfrequencyToString(getUserDADFrequency(user), true)}", :alt => "#{user.username}", :data => { :toggle => "tooltip", :placement => "top" } %>
+                        <div style="margin-top: 5px;" data-toggle="tooltip" data-placement="top" title="Record Streak: <%= user.longest_streak %> (Level <%= getUserMaxLevel(user) %>)" >
+                          <div class="levelOverlay unselectable">
+                            <% if userDADScore != "None" %>
+                              <%= "#{userDADScore}/#{nextLvl.required_score} to lvl #{nextLvl.prestige}" %>
+                            <% else %>
+                              No Active Streak
+                            <% end %>
+                          </div>
+                          <div class="progress" >
+                            <% barPercent = (userDADScore == "None") ? 0 : (100.0*(userDADScore - (prevLvl.blank? ? 0 : prevLvl.required_score)).to_f)/(nextLvl.required_score - (prevLvl.blank? ? 0 : prevLvl.required_score)).to_f %>
+                            <div class="progress-bar progress-bar-experience" role="progressbar" style="width: <%= barPercent %>%" aria-valuenow="<%= barPercent %>" aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                          </div>
+                        </div>
+                      </span>
+                    </a>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="col-lg-1"></div>
-   </div>
+    </div>
+    <div class="col-lg-1"></div>
+  </div>
 </div>
