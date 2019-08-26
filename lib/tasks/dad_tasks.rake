@@ -236,6 +236,11 @@ namespace :dad_tasks do
     SiteStatus.first.update_attribute(:current_rollover, today)
   end
   
+  desc "Initialize site status"
+  task :init_site_status => :environment do
+    SiteStatus.create(current_rollover: Date.today)
+  end
+  
   desc "Recalculate seasonal submissions."
   task :fix_seasonal, [:user_id, :challenge_id] => [:environment] do |t, args|
     user = User.find(args[:user_id])

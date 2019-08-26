@@ -53,6 +53,7 @@ class SubmissionsController < ApplicationController
     @submission = Submission.new(submission_params)
     artist_id = current_user.id
     @submission.user_id = artist_id
+    @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
     
     if !@submission.time.blank?
       if !@submission.time.is_a? Integer
