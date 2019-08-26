@@ -58,7 +58,7 @@ class User < ActiveRecord::Base
 
   def self.search(params)
     users = all # for not existing params args
-    users = users.where("lower(name) like lower(?)", "%#{params[:searchname]}%") if params[:searchname]
+    users = users.where("lower(name) like lower(?) OR lower(display_name) like lower(?)", "%#{params[:searchname]}%", "%#{params[:searchname]}%") if params[:searchname]
     users
   end
 end
