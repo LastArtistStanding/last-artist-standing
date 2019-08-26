@@ -186,6 +186,7 @@ namespace :dad_tasks do
       s.active = true
       s.score = 0
       s.eliminated = false
+      s.processed = yesterday
       
       if challenge.postfrequency = 0
         s.last_submission_date = challenge.start_date
@@ -204,8 +205,7 @@ namespace :dad_tasks do
         source_type: "Challenge",
         source_id: s.challenge_id,
         user_id: s.user_id,
-        url: "/challenges/#{s.challenge_id}",
-        processed: yesterday
+        url: "/challenges/#{s.challenge_id}"
       })
       
       s.save
