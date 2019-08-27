@@ -340,6 +340,9 @@ namespace :dad_tasks do
       newBadgeMap.description = details["description"]
       newBadgeMap.required_score = details["required_score"]
       newBadgeMap.save
+      
+      badge.challenge_id = challenge.id
+      badge.save
     end
   end
 end

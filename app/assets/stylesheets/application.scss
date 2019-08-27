@@ -440,10 +440,33 @@ p {
 .comment-card {
   .card-header {
     padding: 0.5rem;
+    &:target {
+      background-color: #bbdefb;
+    }
   }
   .card-body {
     padding: 0.5rem;
+    &:target {
+      background-color: #e3f2fd;
+    }
   }
   margin-bottom: 0.5rem;
   font-size: 0.8rem;
+}
+
+.comment-card:target {
+  border: 2px solid #0d47a1;
+  
+  .card-header {
+    background-color: #bbdefb;
+    border-bottom: 1px solid #1e88e5;
+  }
+  .card-body {
+    background-color: #e3f2fd;
+  }
+}
+
+.quote-id:hover {
+  cursor: pointer;
+  color: blue;
 }

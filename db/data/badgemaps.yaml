@@ -16,7 +16,7 @@ DADBadgeMap3:
     challenge_name: "Do Art Daily" 
     required_score: 11
     prestige: 3
-    description: "Level 3 - 11 submissions streak\r\nYou can now make four submissions a day!"
+    description: "Level 3 - 11 submissions streak\r\nYou can now make four submissions a day!\r\nYou can now write comments!"
 DADBadgeMap4:
     badge_name: "DAD Streak Badge"
     challenge_name: "Do Art Daily" 

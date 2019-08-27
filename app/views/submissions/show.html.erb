@@ -32,6 +32,12 @@
     }
   }
   
+  function quote(id) {
+    var quote_text = $('#comment-box').val() + ">>" + id.toString();
+    $("#comment-box").val(quote_text)
+    charcountupdate($("#comment-box").val());
+  }
+  
   var small = true;
   window.onload = function(e){
     document.getElementById("submissionImage").onclick = function(e) {
@@ -69,16 +75,7 @@
               <% prevLvl = 0 %>
             <% end %>
             
-            <% winterAward = getAwardByUserAndChallenge(seasonChallengeIds[3], @submission.user) %>
-            <% springAward = getAwardByUserAndChallenge(seasonChallengeIds[0], @submission.user) %>
-            <% summerAward = getAwardByUserAndChallenge(seasonChallengeIds[1], @submission.user) %>
-            <% autumnAward = getAwardByUserAndChallenge(seasonChallengeIds[2], @submission.user) %>
-            
             <%= image_tag getUserThumb(@submission.user), :title => "#{postfrequencyToString(getUserDADFrequency(@submission.user), true)}", :alt => "#{@submission.user.username}", :data => { :toggle => "tooltip", :placement => "top" } %>
-            <div class=<%= "winter#{winterAward.prestige unless winterAward.blank?}" %>></div>
-            <div class=<%= "spring#{springAward.prestige unless springAward.blank?}" %>></div>
-            <div class=<%= "summer#{summerAward.prestige unless summerAward.blank?}" %>></div>
-            <div class=<%= "autumn#{autumnAward.prestige unless autumnAward.blank?}" %>></div>
             
             <div style="margin-top: 5px;" data-toggle="tooltip" data-placement="top" title="Record Streak: <%= @submission.user.longest_streak %> (Level <%= getUserMaxLevel(@submission.user) %>)" >
               <div class="levelOverlay unselectable">
@@ -191,14 +188,14 @@
       </div>
       
       <% has_permissions, error = can_comment_on_submission(@submission, current_user) %>
-     
+      
       <div class="card">
         <% if has_permissions %>
           <div class="card-header">Comment On Submission</div>
           <div class="card-body">
             By commenting, you agree to adhere to DAD's guidelines for comment ettiquite as defined <a href="/help">here</a>.<br><br>
           <%= form_for [@submission, Comment.new] do |f| %>
-            <%= f.text_area :body, placeholder: "Write your comment. Do your best to provide meaningful feedback: a step above surface-level critique, simple praise, or a token acknowledgement of feedback.", onkeyup: "charcountupdate(this.value)" %>
+            <%= f.text_area :body, placeholder: "Write your comment. Do your best to provide meaningful feedback: a step above surface-level critique, simple praise, or a token acknowledgement of feedback.", onkeyup: "charcountupdate(this.value)", id: "comment-box" %>
             <span id="charcount">0/2000</span>
             <%= f.submit "Post Comment" %>
           <% end %>
@@ -212,13 +209,13 @@
       </div>
       
       <% @comments.each do |comment| %>
-        <div class="card comment-card">
+        <div class="card comment-card" id="<%= comment.id %>">
           <div class="card-header">
-            <b><%= link_to comment.user.username, comment.user %></b> <%= comment.created_at.strftime("%H:%M, %b %-d, %Y") %> No.<%= comment.id %>
+            <b><%= link_to comment.user.username, comment.user %></b> <%= comment.created_at.strftime("%H:%M, %b %-d, %Y") %> <span class="quote-id" <%= "onclick=quote(#{comment.id});" if has_permissions %>>No. <%= comment.id %></span></a>
             <%= link_to '<span class="fa fa-trash"></span>'.html_safe, [@submission, comment], method: :delete, data: { confirm: 'Are you sure?' } if comment.user_id == current_user&.id %>          
           </div>
           <div class="card-body">
-            <%= simple_format(comment.body) %>
+            <%= simple_format(comment.link_form) %>
           </div>
         </div>
       <% end %>
