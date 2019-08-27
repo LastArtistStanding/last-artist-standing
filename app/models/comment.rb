@@ -112,6 +112,10 @@ class Comment < ApplicationRecord
       current_index = e_indices[i] + 1
     end
     
+    if current_index != display_body.length
+      final_comment = final_comment + CGI::escapeHTML(display_body[current_index..(display_body.length - 1)])
+    end
+    
     final_comment
   end
 end
