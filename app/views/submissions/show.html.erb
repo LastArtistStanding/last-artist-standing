@@ -215,8 +215,7 @@
       </div>
       
       <% has_permissions, error = can_comment_on_submission(@submission, current_user) %>
-      <% has_permissions = true %>
-      
+
       <div class="card">
         <% if has_permissions %>
           <div class="card-header">Comment On Submission</div>
