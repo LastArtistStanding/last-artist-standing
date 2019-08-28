@@ -8,7 +8,7 @@
 	  document.getElementById("charcount").innerHTML = lng + '/2000';
   }
   window.onkeyup = function(e) {
-    if (document.getElementById("comment_body") !== document.activeElement){
+    if (document.getElementById("comment-box") !== document.activeElement){
       <% unless psub.blank? %>
         if (e.keyCode == 37) {
           window.open("<%= submission_path(psub.id) %>","_self");

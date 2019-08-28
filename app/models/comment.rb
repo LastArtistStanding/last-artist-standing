@@ -14,11 +14,13 @@ class Comment < ApplicationRecord
     
     first_gt = false
     second_gt = false
+    model = ""
     id_link = ""
     s_index = -1
     s_indices = []
     e_indices = []
     links = []
+    models = []
     
     def is_valid_id(string)
       string.scan(/\D/).empty? && string[0] != '0' && !string.blank?
@@ -36,23 +38,39 @@ class Comment < ApplicationRecord
       end
       if first_gt && second_gt
         if c == '>'
-          if is_valid_id(id_link)
-            links.push id_link.to_i
-            s_indices.push s_index
-            e_indices.push i-1
-            s_index = i
-            first_gt = true
-            second_gt = false
-            id_link = ""
-            next
-          elsif id_link == ""
+          if id_link.blank?
             s_index = i-1
             next
           else
+            links.push id_link.to_i
+            s_indices.push s_index
+            e_indices.push i-1
+            models.push model
             s_index = i
             first_gt = true
             second_gt = false
             id_link = ""
+            model = ""
+            next
+          end
+        elsif c == 'C' || c == 'S'
+          if model.blank?
+            model = c.to_sym
+            next
+          elsif id_link.blank?
+            first_gt = false
+            second_gt = false
+            model = ""
+            next
+          else
+            links.push id_link.to_i
+            s_indices.push s_index
+            e_indices.push i-1
+            models.push model
+            first_gt = true
+            second_gt = false
+            id_link = ""
+            model = ""
             next
           end
         elsif !!(c =~ /\d/)
@@ -61,21 +79,25 @@ class Comment < ApplicationRecord
             second_gt = false
             id_link = ""
             next
+          elsif model.blank?
+            model = :Z
           end
           id_link += c
         else
-          if is_valid_id(id_link)
+          if id_link.blank?
+            first_gt = false
+            second_gt = false
+            model = ""
+            next
+          else
             links.push id_link.to_i
             s_indices.push s_index
             e_indices.push i-1
+            models.push model
             first_gt = false
             second_gt = false
             id_link = ""
-            next
-          else
-            first_gt = false
-            second_gt = false
-            id_link = ""
+            model = ""
             next
           end
         end
@@ -83,6 +105,7 @@ class Comment < ApplicationRecord
         first_gt = false
         second_gt = false
         id_link = ""
+        model = ""
       end
     end
     
@@ -90,24 +113,37 @@ class Comment < ApplicationRecord
       links.push id_link.to_i
       s_indices.push s_index
       e_indices.push body.length - 1
+      models.push model
     end
     
     display_body = body
     final_comment = ""
     current_index = 0
     
+    model_hash = {Z: Comment, C: Challenge, S: Submission}
+
     links.each_with_index do |s, i|
       link_id = s.to_i
-      link_comment = Comment.find_by(id: s)
-      next if link_comment.blank?
+      model_type = models[i]
+      linked_content = model_hash[model_type].find_by(id: s)
+      next if linked_content.blank?
+      
       if current_index != s_indices[i]
         final_comment = final_comment + CGI::escapeHTML(display_body[current_index..(s_indices[i] - 1)])
       end
       
-      if source_type == link_comment.source_type && source_id == link_comment.source_id
-        final_comment = final_comment + "<a href=\"#{"#" + link_id.to_s}\">>>#{link_id}</a>".html_safe
+      if model_type == :Z
+        if source_type == linked_content.source_type && source_id == linked_content.source_id
+          final_comment = final_comment + "<a href=\"#{"#" + link_id.to_s}\">>>#{link_id}</a>".html_safe
+        else
+          final_comment = final_comment + link_to(">>#{link_id}", Rails.application.routes.url_helpers.submission_path(linked_content.source_id, anchor: "#{link_id}")).html_safe
+        end
+      elsif model_type == :C
+        final_comment = final_comment + link_to(">>C#{link_id}", Rails.application.routes.url_helpers.challenge_path(link_id)).html_safe
+      elsif model_type == :S
+        final_comment = final_comment + link_to(">>S#{link_id}", Rails.application.routes.url_helpers.submission_path(link_id)).html_safe
       else
-        final_comment = final_comment + link_to(">>#{link_id}", Rails.application.routes.url_helpers.submission_path(link_comment.source_id, anchor: "#{link_id}")).html_safe
+        next # what the fuck?????
       end
       current_index = e_indices[i] + 1
     end

@@ -14,7 +14,7 @@ before_action :find_target
     @comment.body = @comment.body.gsub(/ +/, " ").strip
    
     can_comment, error = can_comment_on_submission(@target, current_user)
-    
+
     if !can_comment
       flash[:error] = error
       redirect_to :back
