@@ -102,8 +102,8 @@ namespace :dad_tasks do
         end
         
         # Set the next_submission_date if yesterday is that date, advance by the specified postfrequency
-        if today == next_date
-          p.last_submission_date = next_date
+        if today == p.next_submission_date
+          p.last_submission_date = p.next_submission_date
           # Handle DAD's custom postfrequency
           p.next_submission_date = next_date + p_user.dad_frequency.days
           p.submitted = false
