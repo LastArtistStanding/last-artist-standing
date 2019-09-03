@@ -26,7 +26,7 @@
         </div>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href=" <%= new_submission_path %> " title="Submit your art!" style="color: yellow;">
+        <a class="nav-link nav-submit" href="<%= new_submission_path %> " title="Submit your art!">
           <i class="fa fa-upload"></i>
           Submit
         </a>
@@ -59,12 +59,6 @@
         <a class="nav-link" href="<%= user_path(current_user) %>" title="Preview and modify your profile.">
           <i class="fa fa-user"></i>
           Profile
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/help" title="New or lost? Get help here!">
-          <i class="fa fa-question-circle"></i>
-          Help
         </a>
       </li>
       <li class="nav-item">

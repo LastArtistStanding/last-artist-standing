@@ -50,7 +50,10 @@ header > nav > .container-fluid {
   .nav-link {
     height: 40px;
     &:hover {
-      background-color: #16162F;
+      background-color: #20203F;
+    }
+    &.nav-submit {
+      color: yellow;
     }
   }
   
@@ -150,7 +153,11 @@ header > nav > .container-fluid {
   width: 100%;
   flex-shrink: 0;
   line-height: 25px;
-  background-color: #f5f5f5;
+  background-color: #101016;
+  color: #E8D0A0;
+  a {
+    color: #FFF0E0;
+  }
 }
 
 .card {
