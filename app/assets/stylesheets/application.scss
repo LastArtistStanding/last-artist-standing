@@ -13,10 +13,11 @@
  *= require_self
  */
 
- @import 'bootstrap';
- @import 'pages';
- @import 'sessions';
- @import 'users';
+@import 'bootstrap';
+@import 'pages';
+@import 'home';
+@import "font-awesome-sprockets";
+@import "font-awesome";
 
 html, body {
   height: 100%;
@@ -25,6 +26,7 @@ html, body {
 body {
   display: flex;
   flex-direction: column;
+  background-color: #202028;
 }
 
 .container-fluid {
@@ -41,16 +43,15 @@ header > nav > .container-fluid {
 }
 
 .navbar {
-  
   padding: 0 0.5rem;
   font-size: 14px;
   font-weight: 600;
-  background-color: #101016;
+  background-color: #101018;
   
   .nav-link {
     height: 40px;
     &:hover {
-      background-color: #20203F;
+      background-color: #181824;
     }
     &.nav-submit {
       color: yellow;
@@ -77,6 +78,11 @@ header > nav > .container-fluid {
     .navbar-title {
       font-size: 1.2rem;
       vertical-align: top;
+      font-weight: 400;
+      
+      b {
+        color: #FF8000;
+      }
     }
     
     img {
@@ -153,15 +159,28 @@ header > nav > .container-fluid {
   width: 100%;
   flex-shrink: 0;
   line-height: 25px;
-  background-color: #101016;
+  background-color: #101018;
   color: #E8D0A0;
   a {
     color: #FFF0E0;
   }
 }
 
-.card {
-  margin-bottom: 1.5rem;
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.gilded-text {
+  color: #FFD700;
+}
+
+.failure-text {
+  color: #FF6F6F;
+}
+
+.success-text {
+  color: #5ADF82;
 }
 
 .field_with_errors {

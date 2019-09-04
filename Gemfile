@@ -12,6 +12,7 @@ gem 'rails-controller-testing'
 gem 'bcrypt', git: 'https://github.com/codahale/bcrypt-ruby.git', :require => 'bcrypt'
 
 gem 'bootstrap', '>= 4.3.1'
+gem 'font-awesome-sass', '~> 5.9.0'
 # For popovers
 gem 'popper_js', '>= 1.12.9'
 gem 'rails-assets-tether', '>= 1.3.3', source: 'https://rails-assets.org'

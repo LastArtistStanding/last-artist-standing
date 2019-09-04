@@ -101,245 +101,45 @@
   });
   <% backgroundImage = getRandomSafeSubmission %>
   window.onload = function(e) {
-    document.getElementById("wrapper").setAttribute("style", "background: linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ), url('<%= backgroundImage.drawing.url unless backgroundImage.blank? %>') no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;")
+    document.getElementById("home-dashboard").setAttribute("style", "background: linear-gradient(rgba(0, 0, 8, 0.8), rgba(0, 0, 8, 0.8)), url('<%= backgroundImage.drawing.url unless backgroundImage.blank? %>') no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;")
   }
 </script>
 <div class="container-fluid">
   <div class="row">
     <!-- Spacing Column -->
     <div class="col-lg-1"></div>
-  
-    <div class="col-lg-3" style="color: white;">
-      
-      <div style="font-family: Fira Mono, monospace;" class="unselectable" unselectable="on">
-        <div style="width: 100%; height: 2em;">Welcome to</div>
-        <div style="font-size: 6rem; line-height: 6rem; text-align: center; width: 100%;">
-          DoArt<br>Daily
-        </div>
-        <div style="width: 100%; height: 2em; margin-top: 1em;">
-          <div style="float: right; font-size: 0.75em;">
-            <% if backgroundImage.present? %>
-              <i><%= link_to "image", backgroundImage, {:style => 'font-family: Fira Mono, monospace; color: white; font-weight: 300'} %> by <%= link_to backgroundImage.user.username, backgroundImage.user, {:style => 'font-family: Fira Mono, monospace; color: white; font-weight: 300'} %></i>
-            <% end %>
-          </div>
-        </div>
-      </div>
-      
-      <div class="card homeCardStyle blueCard">
-        <div class="card-body">
-	         <% timeinfo = userSubmittedToDAD %>
-	         <%= content_tag :div, :class => "time_information", data: {time: Time.now.to_f * 1000, submitted: timeinfo[0], daysleft: timeinfo[1] } do %>
-	         <% end %>
-	         <span><i class="fa fa-clock-o"></i> <span id="TimeDisplay"></span></span><br>
-	         <% currentSeason = getCurrentSeasonalChallenge %>
-	         <span>
-	           <% if currentSeason.name.include? "Spring" %>
-	           <i class="fa fa-leaf"></i>
-	           <% elsif currentSeason.name.include? "Summer" %>
-	           <i class="fa fa-sun-o"></i>
-	           <% elsif currentSeason.name.include? "Autumn" %>
-	           <i class="fa fa-cloud"></i>
-	           <% elsif currentSeason.name.include? "Winter" %>
-	           <i class="fa fa-snowflake-o"></i>
-	           <% end %>
-	           <%= currentSeason.name %>: <%= pluralize((currentSeason.end_date - Date.current).to_i, "day") %> left.
-	         </span><br><br>
-	         <span id="StreakStatus"></span>
-	         <span id="NextSubmissionDisplay"></span>
-	       </div>
-	     </div>
-	     <% latestSubmission = getLatestSubmission %>
-	     <% if !latestSubmission.blank? %>
-	     <div class="card homeCardStyle blueCard">
-         <div class="card-body" style="text-align: center;">
-           <div style="margin-bottom: 0.5em;"><h5>Latest Submission</h5></div>
-             <div class="image-placeholder front-page">
-	             <%= link_to image_tag(getSubmissionThumb(latestSubmission), {size: "150", alt: "#{getSubmissionTitle(latestSubmission)}"}), latestSubmission %>
-	           </div>
-             <div style="margin-top: 0.5em;"><%= "Submitted by " + latestSubmission.user.username + " at " + latestSubmission.created_at.strftime("%T") %></div>
-            <% if latestSubmission.nsfw_level > 1 %>
-             <div><%= "Warning: submission contains "+getNsfwString(latestSubmission.nsfw_level).downcase+" content." %></div>
-           <% end %>
-	       </div>
-	     </div>
-	     <% end %>
-	     
-    </div>
-  
-    <div class="col-lg-7">
     
-    <div class="row">
-      
-      <div class="col-lg-6">
-        
-        <% if !@latestEliminations.blank? %>
-        <div class="card homeCardStyle redCard">
-        <div class="card-header"><b>Today's Eliminations</b></div>
-          <div class="card-body">
-            <% @latestEliminations.each do |elim| %>
-            <% user = elim.user %>
-            <% avatarURL = getUserThumb(user) %>
-            <%= link_to image_tag(avatarURL, :title => "#{user.username} (Streak: #{elim.score})", :style => "width: 50px; margin: 0.25rem;", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{user.username}"), user %>
-            <% end %>
-          </div>
-        </div>
-        <% end %>
-        
-        <% if !@levelUps.blank? %>
-        <div class="card homeCardStyle blueCard">
-        <div class="card-header"><b>Level Up - These users hit a new DAD milestone!</b></div>
-          <div class="card-body">
-            <% @levelUps.each do |award| %>
-              <% user = award.user %>
-              <% avatarURL = getUserThumb(user) %>
-              <%= link_to image_tag(avatarURL, :title => "#{user.username} - Level #{award.prestige} (#{pluralize(BadgeMap.where(:prestige => award.prestige, :badge_id => 1).first.required_score, "submission")})", :style => "width: 50px; margin-right: 0.5rem; margin-bottom: 0.5rem;", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{user.username}"), user %>
-            <% end %>
-          </div>
-        </div>
-        <% end %>
-        
-        <div class="card homeCardStyle blueCard">
-          <div class="card-body table-responsive">
-            <% if !@startingChallenges.blank? %>
-            <% @startingChallenges.each_with_index do |challenge, index| %>
-            <b><%= challenge.name %></b> has just begun.<br>
-            <% end %>
-            Don't forget to submit if you're participating in 
-            <% if @startingChallenges.size == 1 %>
-            this challenge!
-            <% else %>
-            these challenges!
-            <% end %>
-            </b>
-            <br><br>
-            <% end %>
-            <% if !@endingChallenges.blank? %>
-            <% @endingChallenges.each_with_index do |challenge, index| %>
-            <b><%= challenge.name %></b> has just ended.<br>
-            <% end %>
-            <br><br>
-            <% end %>
-            <table class="table table-sm">
-              <thead class="thead-dark">
-                <tr>
-                  <th scope="col">ICO</th>
-                  <th scope="col">Active Challenge</th>
-                  <th scope="col">Start</th>
-                  <th scope="col">End</th>
-                  <th scope="col">Frequency</th>
-                </tr>
-              </thead>
-              <tbody>
-
-                <% @activeChallenges.each do |challenge| %>
-                <tr>
-                  <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
-                  <td><%= link_to challenge.name, challenge_path(challenge.id),  style: "color: white;" %></td>
-                  <td><%= dateToShortString(challenge.start_date) %></td>
-                  <td><%= dateToShortString(challenge.end_date) %></td>
-                  <td><%= postfrequencyToString(challenge.postfrequency, false) %></td>
-                </tr>
-                <% end %>
-              </tbody>
-              <thead class="thead-dark">
-                <tr>
-                  <th scope="col">ICO</th>
-                  <th scope="col">Upcoming Challenge</th>
-                  <th scope="col">Start</th>
-                  <th scope="col">End</th>
-                  <th scope="col">Frequency</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% @upcomingChallenges.each do |challenge| %>
-                  <tr>
-                    <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
-                    <td><%= link_to challenge.name, challenge_path(challenge.id), style: "color: white;" %></td>
-                    <td><%= dateToShortString(challenge.start_date) %></td>
-                    <td><%= dateToShortString(challenge.end_date) %></td>
-                    <td><%= postfrequencyToString(challenge.postfrequency, false) %></td>
-                  </tr>
-                <% end %>
-              </tbody>
-            </table>
-          </div>
-        </div>
-          
-      </div>
-        
-      <div class="col-lg-6">
-      
-        <% numAwards = @latestAwards.count %>
-        <% if numAwards > 0 %>
-        <div class="card homeCardStyle blueCard">
-          <div class="card-header">
-            <b><%= pluralize(numAwards, "Badge") %> Awarded Today!</b>
-          </div>
-          <div class="card-body">
-            <% awardHash = @latestAwards.group_by{|a| [a.prestige, a.badge_id]} %>
-            <% awardHash.each_with_index do |(awardData, awards), index| %>
-              <% isNotLastHash = index != (awardHash.length-1) %>
-              <div class="row" style="padding-left: 1rem; padding-right: 0.75rem; padding-bottom: 1rem; 
-              <% if isNotLastHash %> 
-              <%= "border-bottom: 1px solid rgba(0, 0, 0, 0.125);" %>
-              <% end %>
-              ">
-                <div style="width: 90px; float: left;">
-                  <% badge = Badge.find(awardData[1]) %>
-                  <%= link_to image_tag(getBadgeImage(badge), :class => "prestige#{awardData[0]}", :data => {:content => "<p style='font-weight: 600;'>#{badge.name}</p>#{simple_format(BadgeMap.find_by({:badge_id => awardData[1], :prestige => awardData[0]}).description)} (Prestige Level: #{awardData[0]})", :trigger => "hover", :toggle => "popover", :placement => "top", :html => "true" }, :alt => "#{badge.name}"), challenge_path(badge.challenge_id) %>
-                </div>
-                <div style="width: calc(100% - 90px); float: left;">
-                  <% awards.each do |award| %>
-                    <% user = award.user %>
-                    <% avatarURL = getUserThumb(user) %>
-                    
-                    <%= link_to image_tag(avatarURL, :title => "#{user.username}", :style => "width: 25px; margin-right: 0.25rem; margin-bottom: 0.25rem;", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{user.username}"), user %>
-                  <% end %>
-                </div>
+    <div class="col-lg-10">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card" id="home-dashboard">
+            <div class="dad-title">Welcome to Do Art Daily!</div>
+            <div class="dad-subtitle">Today's Updates (<%= SiteStatus.first.current_rollover.strftime("%B %e, %Y") %>)</div>
+            <div class="row">
+              <div class="col-md-6 col-sm-6 col-xs-6">
+                <p class="failure-text section-title">
+                  <%= icon('fas', 'skull') %>
+                  Eliminations
+                </p>
+                <hr>
+                <p class="success-text section-title">
+                  <%= icon('fas', 'arrow-up') %>
+                  Level Ups
+                </p>
               </div>
-              <% if isNotLastHash %>
-              <br>
-              <% end %>
-            <% end %>
+              <div class="col-md-6 col-sm-6 col-xs-6">
+                <p class="gilded-text section-title">
+                  <%= icon('fas', 'award') %>
+                  Badges Awarded
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-        <% end %>
-      
-        <% if !@seasonalLeaderboard.blank? %>
-        <div class="card homeCardStyle blueCard">
-          <div class="card-header"><b><%= link_to "#{@currentSeasonalChallenge.name} Leaderboard", challenge_path(@currentSeasonalChallenge.id), style: "color: white;" %></b></div>
-          <div class="card-body table-responsive">
-            <table class="table table-sm">
-              <thead class="thead-dark">
-                <tr>
-                  <th scope="col">Users</th>
-                  <th scope="col">Score</th>
-                </tr>
-              </thead>
-              <% seasonHash = @seasonalLeaderboard.group_by{|a| [a.score]} %>
-              <% seasonHash.each_with_index do |(partData, seasonParts), index| %>
-                <% currScore = partData[0] %>
-                <% if index >= 10 %>
-                  <% break %>
-                <% end %>
-                <tr><td>
-                  <% seasonParts.each do |seasonPart| %>
-                    <% user = seasonPart.user %>
-                    <% avatarURL = getUserThumb(user) %>
-                    <%= link_to image_tag(avatarURL, :title => "#{user.username}", :style => "width: 20px; margin: 0.125rem;", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{user.username}"), user %>
-                  <% end %>
-                </td>
-                <td><%= currScore %></td></tr>
-              <% end %>
-            </table>
-          </div>
-        </div>
-        <% end %>
-        
       </div>
-      <!-- Spacing Column -->
+    </div>
+    
+    <!-- Spacing Column -->
     <div class="col-lg-1"></div>
   </div>
-</div>
-</div>
 </div>

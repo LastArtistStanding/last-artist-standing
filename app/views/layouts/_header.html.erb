@@ -4,7 +4,7 @@
     <a class="navbar-brand" href="/">
       <img src="https://s3.us-east-2.amazonaws.com/do-art-daily-public/DAD+Badge.png"></img>
       <span class="navbar-title">
-        DAD
+        <b>D</b>o<b>A</b>rt<b>D</b>aily
       </span>
     </a>
       
@@ -27,50 +27,50 @@
       </li>
       <li class="nav-item">
         <a class="nav-link nav-submit" href="<%= new_submission_path %> " title="Submit your art!">
-          <i class="fa fa-upload"></i>
+          <%= icon('fas', 'upload') %>
           Submit
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href=" <%= submissions_path %> " title="See today's submissions.">
-          <i class="fa fa-eye"></i>
+          <%= icon('fas', 'eye') %>
           Browse
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href=" <%= challenges_path %> " title="Join and create challenges.">
-          <i class="fa fa-bolt"></i>
+          <%= icon('fas', 'bolt') %>
           Challenges
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/news" rel="tooltip" title="Get info on the latest updates and development news.">
-          <i class="fa fa-newspaper-o"></i>
-          News
-        </a>
-      </li>
-      <li class="nav-item">
         <a class="nav-link" href=" <%= users_path %>" title="Peruse the user list and leaderboards.">
-          <i class="fa fa-users"></i>
+          <%= icon('fas', 'users') %>
           Users
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="<%= user_path(current_user) %>" title="Preview and modify your profile.">
-          <i class="fa fa-user"></i>
+          <%= icon('fas', 'user') %>
           Profile
         </a>
       </li>
       <li class="nav-item">
+        <a class="nav-link" href="/news" rel="tooltip" title="Get info on the latest updates and development news.">
+          <%= icon('fas', 'dragon') %>
+          Dev Center
+        </a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" href="<%= logout_path %>" data-method="delete" title="Log out of your account.">
-          <i class="fa fa-sign-out"></i>
+          <%= icon('fas', 'sign-out-alt') %>
           Log out
         </a>
       </li>
       <% else %>
       <li class="nav-item">
         <a class="nav-link" href="#login-modal" data-toggle="modal" title="Sign in, or create an account on DAD!">
-          <i class="fa fa-sign-in"></i>
+          <%= icon('fas', 'sign-in-alt') %>
           Login/Register
         </a>
       </li>

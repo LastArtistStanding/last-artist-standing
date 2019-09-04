@@ -1,0 +1,30 @@
+#home-dashboard {
+  box-shadow: 0 10px 20px 0 rgba(0,0,0,.75);
+  border-radius: 10px;
+  border: none;
+  padding: 40px 60px;
+  color: #CAC7C4;
+  
+  a {
+    color: #CAC7C4;
+  }
+  
+  .dad-subtitle {
+    text-align: center;
+    font-family: Verdana, Geneva, sans-serif;
+    padding-bottom: 20px;
+    font-size: 16px;
+  }
+  
+  .dad-title {
+    color: #CAC7C4;
+    font-size: 32px;
+    font-family: Verdana, Geneva, sans-serif;
+    text-align: center;
+    padding-bottom: 10px;
+  }
+  
+  hr {
+    border-top: 1px solid #606078;
+  }
+}
