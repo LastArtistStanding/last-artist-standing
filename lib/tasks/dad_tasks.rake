@@ -309,6 +309,64 @@ namespace :dad_tasks do
     end
   end
   
+  desc "Obliterates a user."
+  task :kill_user, [:user_id] => [:environment] do |t, args|
+    next if args[:user_id].nil?
+    user_id = args[:user_id].to_i
+    user = User.find_by(id: user_id)
+    if user.nil?
+      puts "User is missing or deleted."
+    else
+      puts "Crosshairs locked on User #{user_id} - #{user.name} (#{user.username if user.username != user.name})"
+    end
+    proceed = "?"
+    while !(proceed.downcase == "y\n" || proceed.downcase == "n\n")
+      puts "Proceed? (y/n)"
+      proceed = STDIN.gets
+    end
+    if proceed.downcase == "n\n"
+      puts "Exiting..."
+      next
+    end
+    
+    puts "Executing..."
+    awards = Award.where(user_id: user_id)
+    puts "Destroying #{awards.count} awards..."
+    awards.destroy_all
+    
+    challenge_entries = ChallengeEntry.where(user_id: user_id)
+    puts "Destroying #{challenge_entries.count} challenge entries..."
+    challenge_entries.destroy_all
+    
+    challenges = Challenge.where(creator_id: user_id)
+    puts "Updating #{challenges.count} challenges..."
+    challenges.each do |c|
+      c.creator_id = -1
+      c.save
+    end
+    
+    comments = Comment.where(user_id: user_id)
+    puts "Destroying #{comments.count} comments..."
+    comments.destroy_all
+    
+    notifications = Notification.where(user_id: user_id)
+    puts "Destroying #{notifications.count} notifications..."
+    notifications.destroy_all
+    
+    submissions = Submission.where(user_id: user_id)
+    puts "Destroying #{submissions.count} submissions..."
+    submissions.destroy_all
+
+    participations = Participation.where(user_id: user_id)
+    puts "Destroying #{participations.count} participations..."
+    participations.destroy_all
+    
+    if !user.nil?
+      puts "Executing #{user.username}."
+      user.destroy
+    end
+  end
+  
   desc "Update site challenges and badges."
   task :update_database => :environment do
     challengeData = YAML.load_file('db/data/challenges.yaml')
