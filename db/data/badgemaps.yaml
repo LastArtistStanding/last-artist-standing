@@ -335,3 +335,34 @@ Summer2019BadgeMap5:
     required_score: 94
     prestige: 5
     description: "FLAWLESS - This artist submitted daily this season!"
+#Autumn 2019 Badges
+Autumn2019BadgeMap1:
+    badge_name: "Autumn 2019 Participation Badge"
+    challenge_name: "Autumn Challenge 2019"
+    required_score: 12
+    prestige: 1
+    description: "WEEKLY - This artist submitted at least once a week this season."
+Autumn2019BadgeMap2:
+    badge_name: "Autumn 2019 Participation Badge"
+    challenge_name: "Autumn Challenge 2019"
+    required_score: 38
+    prestige: 2
+    description: "HOBBYIST - This artist submitted at least once a day on the weekends."
+Autumn2019BadgeMap3:
+    badge_name: "Autumn 2019 Participation Badge"
+    challenge_name: "Autumn Challenge 2019"
+    required_score: 63
+    prestige: 3
+    description: "BUSINESS - This artist submitted at least once a business day."
+Autumn2019BadgeMap4:
+    badge_name: "Autumn 2019 Participation Badge"
+    challenge_name: "Autumn Challenge 2019"
+    required_score: 76
+    prestige: 4
+    description: "ELITE - This artist submitted almost daily this season!"
+Autumn2019BadgeMap5:
+    badge_name: "Autumn 2019 Participation Badge"
+    challenge_name: "Autumn Challenge 2019"
+    required_score: 89
+    prestige: 5
+    description: "FLAWLESS - This artist submitted daily this season!"
