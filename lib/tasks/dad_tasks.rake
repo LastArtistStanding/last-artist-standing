@@ -126,7 +126,7 @@ namespace :dad_tasks do
       score_changed = false
       
       entries = ChallengeEntry.where("challenge_id = #{challenge.id} AND user_id = #{p.user_id} AND created_at >= ? AND created_at < ? AND created_at < ?", last_date, next_date, today)
-      
+
       if today == next_date && entries.count == 0 && challenge.streak_based
         p.active = false
         p.eliminated = true
@@ -190,7 +190,7 @@ namespace :dad_tasks do
       s.eliminated = false
       s.processed = yesterday
       
-      if challenge.postfrequency = 0
+      if challenge.postfrequency == 0
         s.last_submission_date = challenge.start_date
         s.next_submission_date = challenge.end_date
       else
