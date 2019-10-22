@@ -169,7 +169,7 @@
             <div class="card-body" style="text-align: center; padding: 5px;">
               <% unless psub.blank? %>
                 Previous Submission by <%= psub.user.username %> (&larr;)<br>
-                <%= link_to image_tag(getSubmissionAvatar(psub), :alt => "#{getSubmissionAvatar(psub)}", :alt => "prev"), psub %>
+                <%= link_to image_tag(getSubmissionAvatar(psub), alt: "prev", width: '60px', height: '60px'), psub %>
               <% else %>
                 First submission!
               <% end %>
@@ -181,7 +181,7 @@
             <div class="card-body" style="text-align: center; padding: 5px;">
               <% unless apsub.blank? %>
                 <%= @submission.user.username %>'s Previous Submission ([)<br>
-                <%= link_to image_tag(getSubmissionAvatar(apsub), :alt => "#{getSubmissionAvatar(apsub)}", :alt => "prev"), apsub %>
+                <%= link_to image_tag(getSubmissionAvatar(apsub), alt: "prev", width: '60px', height: '60px'), apsub %>
               <% else %>
                 First submission!
               <% end %>
@@ -193,7 +193,7 @@
             <div class="card-body" style="text-align: center; padding: 5px;">
               <% unless ansub.blank? %>
                 <%= @submission.user.username %>'s Next Submission (])<br>
-                <%= link_to image_tag(getSubmissionAvatar(ansub), :alt => "#{getSubmissionAvatar(ansub)}", :alt => "next"), ansub %>
+                <%= link_to image_tag(getSubmissionAvatar(ansub), alt: "next", width: '60px', height: '60px'), ansub %>
               <% else %>
                 Last submission!
               <% end %>
@@ -205,7 +205,7 @@
             <div class="card-body" style="text-align: center; padding: 5px;">
               <% unless nsub.blank? %>
                 Next Submission by <%= nsub.user.username %> (&rarr;) <br>
-                <%= link_to image_tag(getSubmissionAvatar(nsub), :alt => "#{getSubmissionAvatar(nsub)}", :alt => "next"), nsub %>
+                <%= link_to image_tag(getSubmissionAvatar(nsub), alt: "next", width: '60px', height: '60px'), nsub %>
               <% else %>
                 Last submission!
               <% end %>

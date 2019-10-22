@@ -24,7 +24,7 @@ class SubmissionsController < ApplicationController
       else
         @date = Date.today
       end
-      @submissions = Submission.includes(:user).where(created_at: @date.midnight..@date.end_of_day).order('created_at DESC')
+      @submissions = Submission.includes(:user).where(created_at: @date.midnight..@date.end_of_day).order('created_at DESC').includes(:comments)
     end
   end
 
