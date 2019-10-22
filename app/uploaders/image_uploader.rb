@@ -9,7 +9,6 @@ class ImageUploader < CarrierWave::Uploader::Base
   # Choose what kind of storage to use for this uploader:
   # storage :file
   storage :fog
-  process :strip
 
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
@@ -35,15 +34,11 @@ class ImageUploader < CarrierWave::Uploader::Base
 
   # Create different versions of your uploaded files:
   version :thumb do
-    process :strip
-    process :remove_animation
-    process :resize_to_fill => [400, 400]
+    process :resize_to_fill => [135, 135]
   end
   
-  version :avatar, from_version: :thumb do
-    process :strip
-    process :remove_animation
-    process :resize_to_fill => [100, 100]
+  version :avatar do
+    process :resize_to_fill => [50, 50]
   end
   
   protected
@@ -59,22 +54,6 @@ class ImageUploader < CarrierWave::Uploader::Base
   protected
   def is_user?(picture)
     model.class.to_s.underscore == "user"
-  end
-  
-  protected
-  def remove_animation
-    if content_type == 'image/gif'
-      manipulate! { |image| image.collapse! }
-    end
-  end
-  
-  protected
-  def strip
-    manipulate! do |img|
-      img.strip
-      img = yield(img) if block_given?
-      img
-    end
   end
 
   # Add a white list of extensions which are allowed to be uploaded.
