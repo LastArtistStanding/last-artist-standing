@@ -328,13 +328,13 @@ p {
 .submissionIcon {
   display: inline-block;
   position: relative;
-  width: 134.9px;
-  height: 134.9px;
+  width: 150px;
+  height: 150px;
   text-align: center;
   margin: 15px;
   img {
-    width: 134.9px;
-    height: 134.9px;
+    width: 150px;
+    height: 150px;
     border-radius: 10px;
   }
 }
@@ -363,6 +363,25 @@ p {
     color: #AAAAAA;
     text-decoration: none;
   }
+}
+
+.submissionNotes {
+  text-align: right;
+  position: absolute;
+  top: 120px;
+  background: rgba(51, 52, 50, 0.5);
+  color: white;
+  width: 100%;
+  border-radius: 0 0 10px 10px;
+  height: 30px;
+  font-size: 12pt;
+  font-weight: 600;
+  padding-top: 1px;
+  padding-right: 10px;
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+  user-select: none;          /* Likely future */      
 }
 
 .submissionTime {

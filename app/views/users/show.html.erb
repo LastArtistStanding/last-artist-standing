@@ -91,7 +91,7 @@ $(function () {
           <p class="card-text">
             <% @submissions.each do |submission| %>
               <% submissionUrl = getSubmissionAvatar(submission) %>
-              <%= link_to image_tag(submissionUrl, alt: "#{getSubmissionTitle(submission)}"), url_for({:controller => 'submissions', :action => 'show', :id => submission.id}) %>
+              <%= link_to image_tag(submissionUrl, alt: "#{getSubmissionTitle(submission)}", width: '60px', height: '60px'), url_for({:controller => 'submissions', :action => 'show', :id => submission.id}) %>
             <% end %>
           </p>
         </div>
