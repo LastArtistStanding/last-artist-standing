@@ -29,8 +29,17 @@
                   <% submission = challengeEntry.submission %>
                   <li>
                     <div class="submissionIcon">
-                      <%= link_to "<i class='fa fa-user' aria-hidden='true'></i> #{submission.user.username}".html_safe, submission.user, :class => "submissionAuthor" %>
+                      <% user = submission.user %>
+                      <%= link_to "<img alt='' src=#{ getUserThumb(user) }> #{user.username}".html_safe, user, :class => "submissionAuthor" %>
                       <%= link_to image_tag(getSubmissionThumb(submission), :alt => "#{getSubmissionTitle(submission)}"), submission %>
+                      <div class="submissionNotes">
+                        <% if submission.is_animated_gif %>
+                          <i class="fa fa-film"></i>
+                        <% end %>
+                        <% if submission.comments.count > 0 %>
+                          <i class="fa fa-comments-o"></i> <%= submission.comments.count %>
+                        <% end %>
+                      </div>
                     </div>
                   </li>
                 <% end %>

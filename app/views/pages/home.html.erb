@@ -149,7 +149,7 @@
 	       </div>
 	     </div>
 	     <% latestSubmission = getLatestSubmission %>
-	     <% if !latestSubmission.blank? %>
+	     <% if !latestSubmission.blank? && false %>
 	     <div class="card homeCardStyle blueCard">
          <div class="card-body" style="text-align: center;">
            <div style="margin-bottom: 0.5em;"><h5>Latest Submission</h5></div>
@@ -163,6 +163,23 @@
 	       </div>
 	     </div>
 	     <% end %>
+	     
+	     <div class="card homeCardStyle blueCard">
+         <div class="card-body" style="text-align: center;">
+           <table class="table table-sm">
+              <thead class="thead-dark">
+                <th>What's happening on DAD?</th>
+              </thead>
+              <tbody>
+                <% @activity.each do |activity| %>
+                <tr>
+                  <td><%= link_to activity[:message], activity[:link], style: "color: white;" %></td>
+                </tr>
+                <% end %>
+              </tbody>
+            </table>
+	       </div>
+	     </div>
 	     
     </div>
   
