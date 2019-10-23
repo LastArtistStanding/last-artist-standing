@@ -7,8 +7,8 @@ class Challenge < ApplicationRecord
   
   NO_EXCESS_WHITESPACE = /\A(\S\s?)*\S\z/
   
-  validates :name, presence: true, length: { maximum: 50 }, format: { with: NO_EXCESS_WHITESPACE }, uniqueness: {case_sensitive: false }
-  validates :description, presence: true, length: { maximum: 1000 }
+  validates :name, presence: true, length: { maximum: 100 }, format: { with: NO_EXCESS_WHITESPACE }, uniqueness: {case_sensitive: false }
+  validates :description, presence: true, length: { maximum: 2000 }
   validates :start_date, presence: true
   validates :nsfw_level, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 3 }
   #There is no required end date, indicating an indefinte challenge (should only apply to the primary DED challenge).
