@@ -24,11 +24,12 @@
                 <%= link_to "<img alt='' src=#{ getUserThumb(user) }> #{user.username}".html_safe, user, :class => "submissionAuthor" %>
                 <%= link_to image_tag(getSubmissionThumb(submission), :alt => "#{getSubmissionTitle(submission)}"), submission %>
                 <div class="submissionNotes">
+                  <%= submission.created_at.strftime("%H:%M:%S") %>&nbsp;
                   <% if submission.is_animated_gif %>
                     <i class="fa fa-film"></i>
                   <% end %>
-                  <% if submission.comments.count > 0 %>
-                    <i class="fa fa-comments-o"></i> <%= submission.comments.count %>
+                  <% if submission.num_comments > 0 %>
+                    <i class="fa fa-comments-o"></i> <%= submission.num_comments %>
                   <% end %>
                 </div>
               </div>
