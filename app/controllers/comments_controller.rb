@@ -24,6 +24,10 @@ before_action :find_target
       poster_name = current_user.username
       
       if @target.class.name == "Submission"
+        submission = Submission.find(@comment.source_id)
+        submission.num_comments += 1
+        submission.save
+        
         discussion_users.each do |duid|
           # Lets not send notifications to ourselves.
           next if duid == current_user.id 
@@ -53,7 +57,15 @@ before_action :find_target
   def destroy
     @comment = Comment.find(params[:id])
     if current_user.id == @comment.user_id
-      @comment.destroy
+      type = @comment.source_type
+      id = @comment.source_id
+      if @comment.destroy
+        if type == "Submission"
+          target = Submission.find(id)
+        end
+        target.num_comments -= 1
+        target.save
+      end
     else
       flash[:error] = "You can't delete other people's comments. Please cease these shenanigans."
     end
