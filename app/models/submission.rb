@@ -15,6 +15,7 @@ class Submission < ApplicationRecord
     validate :image_size_validation
  
     def is_animated_gif
+      return false
       image = MiniMagick::Image.open(self.drawing.url)
       return false if image.type.downcase != "gif"
       return image.layers.count > 1
