@@ -85,7 +85,6 @@ class ImageUploader < CarrierWave::Uploader::Base
     end
     if model.class.name == "Submission"
       model.is_animated_gif = animated
-      model.save
     end
     animated
   end
