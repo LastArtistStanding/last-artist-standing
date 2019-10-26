@@ -82,11 +82,11 @@ class ImageUploader < CarrierWave::Uploader::Base
   protected
   def check_is_animated_gif
     if model.class.name == "Submission" && content_type == 'image/gif'
-      manipulate! do |img, index|
-        if index != 0
+      if file
+        examining_image = ::MiniMagick::Image.open(file.file)
+        if examining_image.layers.count > 1
           model.is_animated_gif = true
           model.save
-          return
         end
       end
     end
