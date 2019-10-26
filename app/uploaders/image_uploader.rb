@@ -37,11 +37,13 @@ class ImageUploader < CarrierWave::Uploader::Base
 
   # Create different versions of your uploaded files:
   version :thumb do
+    puts "Processing thumbnail."
     process :remove_animation, if: :is_animated_gif?
     process :resize_to_fill => [400, 400]
   end
   
   version :avatar, from_version: :thumb do
+    puts "Processing avatar."
     process :resize_to_fill => [100, 100]
   end
   
@@ -91,8 +93,10 @@ class ImageUploader < CarrierWave::Uploader::Base
   
   protected
   def requires_resize?(file)
+    puts "Checking resize requirements."
     if file
       width, height = ::MiniMagick::Image.open(file.file)[:dimensions]
+      puts "Pixel count: #{width * height}"
       return width * height > 9000000
     end
     return false
