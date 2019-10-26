@@ -70,7 +70,7 @@ class ImageUploader < CarrierWave::Uploader::Base
   
   protected
   def strip_exif
-    if content_type='image/jpeg' || content_type == 'image/jpg'
+    if content_type == 'image/jpeg' || content_type == 'image/jpg'
       manipulate! do |img|
         img.strip
         img = yield(img) if block_given?
