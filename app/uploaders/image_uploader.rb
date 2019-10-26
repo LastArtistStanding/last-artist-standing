@@ -9,7 +9,10 @@ class ImageUploader < CarrierWave::Uploader::Base
   # Choose what kind of storage to use for this uploader:
   # storage :file
   storage :fog
-  process :strip
+  
+  process :resize_to_limit => [3000, 3000], if: :requires_resize?
+  process :strip_exif
+  process :check_is_animated_gif
 
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
@@ -35,14 +38,11 @@ class ImageUploader < CarrierWave::Uploader::Base
 
   # Create different versions of your uploaded files:
   version :thumb do
-    process :strip
     process :remove_animation
     process :resize_to_fill => [400, 400]
   end
   
   version :avatar, from_version: :thumb do
-    process :strip
-    process :remove_animation
     process :resize_to_fill => [100, 100]
   end
   
@@ -69,12 +69,36 @@ class ImageUploader < CarrierWave::Uploader::Base
   end
   
   protected
-  def strip
-    manipulate! do |img|
-      img.strip
-      img = yield(img) if block_given?
-      img
+  def strip_exif
+    if content_type='image/jpeg' && content_type == 'image/jpg'
+      manipulate! do |img|
+        img.strip
+        img = yield(img) if block_given?
+        img
+      end
     end
+  end
+  
+  protected
+  def check_is_animated_gif
+    if model.class.name == "Submission" && content_type == 'image/gif'
+      manipulate! do |img, index|
+        if index != 0
+          model.is_animated_gif = true
+          model.save
+          return
+        end
+      end
+    end
+  end
+  
+  protected
+  def requires_resize?(file)
+    if file
+      width, height = ::MiniMagick::Image.open(file.file)[:dimensions]
+      return width * height > 9000000
+    end
+    return false
   end
 
   # Add a white list of extensions which are allowed to be uploaded.
