@@ -62,7 +62,6 @@ class ImageUploader < CarrierWave::Uploader::Base
   
   protected
   def remove_animation
-    puts "Removing animation!"
     manipulate! { |image| image.collapse! }
   end
   
@@ -79,14 +78,11 @@ class ImageUploader < CarrierWave::Uploader::Base
   
   protected
   def is_animated_gif?(file)
-    puts "Try to check gif!"
     animated = false
     if content_type == 'image/gif' && file
-      puts "Whoa, it's a gif!"
       examining_image = ::MiniMagick::Image.open(file.file)
       animated = true if examining_image.layers.count > 1
     end
-    puts "And is it animated? #{animated}"
     if model.class.name == "Submission"
       model.is_animated_gif = animated
       model.save
