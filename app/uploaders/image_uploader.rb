@@ -10,7 +10,7 @@ class ImageUploader < CarrierWave::Uploader::Base
   # storage :file
   storage :fog
   
-  process :resize_to_limit => [3000, 3000], if: :requires_resize?
+  process :resize_to_limit => [3000, 3000]#, if: :requires_resize?
   process :strip_exif
 
   # Override the directory where uploaded files will be stored.
