@@ -9,7 +9,6 @@ class ImageUploader < CarrierWave::Uploader::Base
   # Choose what kind of storage to use for this uploader:
   # storage :file
   storage :fog
-  
   process :resize_to_limit => [3000, 3000], if: :requires_resize?
   process :strip_exif
 
@@ -37,13 +36,11 @@ class ImageUploader < CarrierWave::Uploader::Base
 
   # Create different versions of your uploaded files:
   version :thumb do
-    puts "Processing thumbnail."
     process :remove_animation, if: :is_animated_gif?
     process :resize_to_fill => [400, 400]
   end
   
   version :avatar, from_version: :thumb do
-    puts "Processing avatar."
     process :resize_to_fill => [100, 100]
   end
   
@@ -93,10 +90,9 @@ class ImageUploader < CarrierWave::Uploader::Base
   
   protected
   def requires_resize?(file)
-    puts "Checking resize requirements."
+    model.errors.add(:drawing, "penis")
     if file
       width, height = ::MiniMagick::Image.open(file.file)[:dimensions]
-      puts "Pixel count: #{width * height}"
       return width * height > 9000000
     end
     return false
@@ -108,6 +104,9 @@ class ImageUploader < CarrierWave::Uploader::Base
     %w(jpg jpeg gif png)
   end
 
+  def size_range
+    0..10.megabytes
+  end
   # Override the filename of the uploaded files:
   # Avoid using model.id or version_name here, see uploader/store.rb for details.
   # def filename
