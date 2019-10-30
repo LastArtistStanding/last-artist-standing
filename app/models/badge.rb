@@ -8,7 +8,7 @@ class Badge < ApplicationRecord
     
     NO_EXCESS_WHITESPACE = /\A(\S\s?)*\S\z/
     
-    validates :name, presence: true, length: { maximum: 50 }, format: { with: NO_EXCESS_WHITESPACE }, uniqueness: { case_sensitive: false }
+    validates :name, presence: true, length: { maximum: 100 }, format: { with: NO_EXCESS_WHITESPACE }, uniqueness: { case_sensitive: false }
     
     validate :badge_graphic_exists
     
