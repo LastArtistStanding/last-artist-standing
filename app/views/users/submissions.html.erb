@@ -24,8 +24,17 @@
                     <% @user_submissions.each do |submission| %>
                       <li>
                         <div class="submissionIcon">
-                          <% submissionUrl = getSubmissionThumb(submission) %>
-                          <%= link_to image_tag(submissionUrl, :style => "margin: 0.125rem;", :alt => "#{getSubmissionTitle(submission)}"), url_for({:controller => 'submissions', :action => 'show', :id => submission.id}) %>
+                          <div class="submissionTitle"><%= getSubmissionTitle(submission) %></div>
+                          <%= link_to image_tag(getSubmissionThumb(submission), :alt => "#{getSubmissionTitle(submission)}"), submission %>
+                          <div class="submissionNotes">
+                            <%= submission.created_at.strftime("%b %-d") %>&nbsp;
+                            <% if submission.is_animated_gif %>
+                              <i class="fa fa-film"></i>
+                            <% end %>
+                            <% if submission.num_comments > 0 %>
+                              <i class="fa fa-comments-o"></i> <%= submission.num_comments %>
+                            <% end %>
+                          </div>
                         </div>
                       </li>
                     <% end %>

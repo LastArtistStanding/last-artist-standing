@@ -339,6 +339,22 @@ p {
   }
 }
 
+.submissionTitle {
+  text-align: left;
+  position: absolute;
+  background: rgba(51, 52, 50, 0.5);
+  color: white;
+  width: 100%;
+  border-radius: 10px 10px 0 0;
+  height: 30px;
+  font-size: 10pt;
+  font-weight: 600;
+  overflow: hidden;
+  white-space: nowrap;
+  padding-top: 5px;
+  padding-left: 5px;
+}
+
 .submissionAuthor {
   text-align: left;
   position: absolute;

@@ -70,8 +70,10 @@ module UsersHelper
   
     if !logged_in?
       [false, "You must log in to post comments."]
+    elsif submission.user_id == user.id
+      [true, nil]
     elsif getUserMaxLevel(user) < 3
-      [false, "You need to have reached DAD level 3 (11 submission streak) to comment on submissions."]
+      [false, "You need to have reached DAD level 3 (11 submission streak) to comment on other users' submissions."]
     else
       [true, nil]
     end
