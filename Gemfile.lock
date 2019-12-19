@@ -266,7 +266,7 @@ GEM
     pg (0.21.0-x64-mingw32)
     popper_js (1.14.5)
     puma (3.12.1)
-    rack (2.0.6)
+    rack (2.0.8)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (5.0.7.2)
