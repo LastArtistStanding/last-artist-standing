@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/codahale/bcrypt-ruby.git
-  revision: 7644e3684d96fb49f5aa20cb5f547cb1b56b3f38
+  revision: 69f2941fa8a84c2d28a60e583fd683390620f916
   specs:
-    bcrypt (3.1.12)
+    bcrypt (3.1.13)
 
 GEM
   remote: https://rubygems.org/
@@ -46,21 +46,26 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+    addressable (2.7.0)
+      public_suffix (>= 2.0.2, < 5.0)
     arel (7.1.4)
-    autoprefixer-rails (9.5.0)
+    autoprefixer-rails (9.7.3)
       execjs
     binding_of_caller (0.8.0)
       debug_inspector (>= 0.0.1)
-    bootstrap (4.3.1)
+    bootstrap (4.4.1)
       autoprefixer-rails (>= 9.1.0)
       popper_js (>= 1.14.3, < 2)
       sassc-rails (>= 2.0.0)
-    builder (3.2.3)
+    builder (3.2.4)
     byebug (11.0.1)
-    carrierwave (1.3.1)
-      activemodel (>= 4.0.0)
-      activesupport (>= 4.0.0)
-      mime-types (>= 1.16)
+    carrierwave (2.0.2)
+      activemodel (>= 5.0.0)
+      activesupport (>= 5.0.0)
+      addressable (~> 2.6)
+      image_processing (~> 1.1)
+      mimemagic (>= 0.3.0)
+      mini_mime (>= 0.1.3)
     coffee-rails (4.1.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.1.x)
@@ -72,12 +77,11 @@ GEM
     crass (1.0.5)
     debug_inspector (0.0.3)
     diff-lcs (1.3)
-    dry-inflector (0.1.2)
+    dry-inflector (0.2.0)
     erubis (2.7.0)
     excon (0.71.1)
     execjs (2.7.0)
-    ffi (1.10.0)
-    ffi (1.10.0-x64-mingw32)
+    ffi (1.11.3)
     figaro (1.1.1)
       thor (~> 0.14)
     fission (0.5.0)
@@ -116,7 +120,7 @@ GEM
       fog-xml (~> 0.1.1)
       ipaddress (~> 0.5)
       json (>= 1.8, < 2.0)
-    fog-aliyun (0.3.3)
+    fog-aliyun (0.3.5)
       fog-core
       fog-json
       ipaddress (~> 0.8)
@@ -219,9 +223,9 @@ GEM
     fog-voxel (0.1.0)
       fog-core
       fog-xml
-    fog-vsphere (2.5.0)
+    fog-vsphere (3.2.1)
       fog-core
-      rbvmomi (~> 1.9)
+      rbvmomi (>= 1.9, < 3)
     fog-xenserver (1.0.0)
       fog-core
       fog-xml
@@ -232,13 +236,15 @@ GEM
     formatador (0.2.5)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
-    i18n (1.6.0)
+    i18n (1.7.0)
       concurrent-ruby (~> 1.0)
+    image_processing (1.10.0)
+      mini_magick (>= 4.9.5, < 5)
+      ruby-vips (>= 2.0.13, < 3)
     ipaddress (0.8.3)
-    jbuilder (2.8.0)
+    jbuilder (2.9.1)
       activesupport (>= 4.2.0)
-      multi_json (>= 1.2)
-    jquery-rails (4.3.3)
+    jquery-rails (4.3.5)
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
@@ -249,22 +255,22 @@ GEM
     mail (2.7.1)
       mini_mime (>= 0.1.1)
     method_source (0.9.2)
-    mime-types (3.2.2)
+    mime-types (3.3)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2018.0812)
+    mime-types-data (3.2019.1009)
+    mimemagic (0.3.3)
     mini_magick (4.9.5)
-    mini_mime (1.0.1)
+    mini_mime (1.0.2)
     mini_portile2 (2.4.0)
-    minitest (5.11.3)
-    multi_json (1.13.1)
-    nio4r (2.3.1)
+    minitest (5.13.0)
+    multi_json (1.14.1)
+    nio4r (2.5.2)
     nokogiri (1.10.7)
       mini_portile2 (~> 2.4.0)
-    nokogiri (1.10.7-x64-mingw32)
-      mini_portile2 (~> 2.4.0)
+    optimist (3.0.0)
     pg (0.21.0)
-    pg (0.21.0-x64-mingw32)
     popper_js (1.14.5)
+    public_suffix (4.0.1)
     puma (4.3.1)
       nio4r (~> 2.0)
     rack (2.0.8)
@@ -282,7 +288,7 @@ GEM
       bundler (>= 1.3.0)
       railties (= 5.0.7.2)
       sprockets-rails (>= 2.0.0)
-    rails-assets-tether (1.4.3)
+    rails-assets-tether (1.4.7)
     rails-controller-testing (1.0.4)
       actionpack (>= 5.0.1.x)
       actionview (>= 5.0.1.x)
@@ -290,8 +296,8 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.0.4)
-      loofah (~> 2.2, >= 2.2.2)
+    rails-html-sanitizer (1.3.0)
+      loofah (~> 2.3)
     rails_12factor (0.0.3)
       rails_serve_static_assets
       rails_stdout_logging
@@ -307,11 +313,11 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
-    rbvmomi (1.13.0)
+    rbvmomi (2.3.0)
       builder (~> 3.0)
       json (>= 1.8)
       nokogiri (~> 1.5)
-      trollop (~> 2.1)
+      optimist (~> 3.0)
     rdoc (4.3.0)
     rspec-core (2.13.1)
     rspec-expectations (2.13.0)
@@ -324,7 +330,9 @@ GEM
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
       rspec-mocks (~> 2.13.0)
-    sass (3.7.3)
+    ruby-vips (2.0.16)
+      ffi (~> 1.9)
+    sass (3.7.4)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
@@ -335,10 +343,9 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
-    sassc (2.0.1)
+    sassc (2.2.1)
       ffi (~> 1.9)
-      rake
-    sassc-rails (2.1.0)
+    sassc-rails (2.1.2)
       railties (>= 4.0.0)
       sassc (>= 2.0)
       sprockets (> 3.0)
@@ -347,8 +354,7 @@ GEM
     sdoc (0.4.2)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
-    spring (2.0.2)
-      activesupport (>= 4.2)
+    spring (2.1.0)
     sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
@@ -359,13 +365,10 @@ GEM
     strftime (1.0.0)
     thor (0.20.3)
     thread_safe (0.3.6)
-    tilt (2.0.9)
-    trollop (2.9.9)
+    tilt (2.0.10)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
-    tzinfo-data (1.2018.9)
-      tzinfo (>= 1.0.0)
-    uglifier (4.1.20)
+    uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
     web-console (2.3.0)
       activemodel (>= 4.0)
@@ -374,14 +377,13 @@ GEM
       sprockets-rails (>= 2.0, < 4.0)
     websocket-driver (0.6.5)
       websocket-extensions (>= 0.1.0)
-    websocket-extensions (0.1.3)
-    will_paginate (3.1.7)
+    websocket-extensions (0.1.4)
+    will_paginate (3.1.8)
     xml-simple (1.1.5)
     xmlrpc (0.3.0)
 
 PLATFORMS
   ruby
-  x64-mingw32
 
 DEPENDENCIES
   actionview
@@ -420,7 +422,7 @@ DEPENDENCIES
   will_paginate (~> 3.1.1)
 
 RUBY VERSION
-   ruby 2.4.4p296
+   ruby 2.6.5p114
 
 BUNDLED WITH
    1.17.3
