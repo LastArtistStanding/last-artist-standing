@@ -22,3 +22,6 @@ Badge7:
 Badge8:
     name: "Autumn 2019 Participation Badge"
     direct_image: "https://do-art-daily-public.s3.us-east-2.amazonaws.com/Autumn+Badge+2019.png"
+Badge9:
+    name: "Winter 2019 Participation Badge"
+    direct_image: "https://do-art-daily-public.s3.us-east-2.amazonaws.com/Winter+Badge+2019.png"

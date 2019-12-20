@@ -41,7 +41,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'rake', '< 11.0' 
 # Puma for the app server
-gem 'puma'
+gem 'puma', '>= 3.12.2'
 
 ###########################
   # 1/21/18 - - Use Postgres as the database for Active Record
@@ -81,5 +81,6 @@ gem 'will_paginate', '~> 3.1.1'
 
 ## Security updates
 gem "nokogiri", ">= 1.10.4"
-gem "rack", ">= 2.0.6"
-gem "loofah", ">= 2.2.3"
+gem "rack", ">= 2.0.8"
+gem "loofah", ">= 2.3.1"
+gem "excon", ">= 0.71.0"

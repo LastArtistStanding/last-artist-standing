@@ -70,3 +70,12 @@ Challenge8:
     rejoinable: true
     seasonal: true
     postfrequency: 1
+Challenge9:
+    name: "Winter Challenge 2019"
+    description: "Can you draw every day of the winter?\r\nUnlike the DAD challenge, these seasonal challenges are not streak based. Feel free to submit as much as you can this season, up to a maximum of once per day. You will receive a rotating season badge based on your peformance."
+    start_date: 2019-12-21
+    end_date: 2020-03-19
+    streak_based: false
+    rejoinable: true
+    seasonal: true
+    postfrequency: 1
