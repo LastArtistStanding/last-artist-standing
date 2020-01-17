@@ -1,4 +1,6 @@
 class NotificationsController < ApplicationController
+  skip_before_action :record_user_session
+  
   def index
     respond_to do |format|
       format.html do |variant|
