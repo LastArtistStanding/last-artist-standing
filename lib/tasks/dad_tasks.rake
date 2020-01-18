@@ -361,6 +361,13 @@ namespace :dad_tasks do
     puts "Destroying #{participations.count} participations..."
     participations.destroy_all
     
+    user_sessions = UserSession.where(user_id: user_id)
+    user_sessions.each do |us|
+      us.name = user.name
+      us.user_id = nil
+      us.save
+    end
+    
     if !user.nil?
       puts "Executing #{user.username}."
       user.destroy
