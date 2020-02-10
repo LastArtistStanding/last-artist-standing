@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
+  before_action :verify_domain, if: -> { Rails.env.production? && ENV['BLOCK_HEROKU'] == 'TRUE' }
   before_action :set_raven_context
   before_action :record_user_session
   
@@ -24,6 +25,14 @@ class ApplicationController < ActionController::Base
       else
         UserSession.create(user_id: active_user.id, ip_address: ip_address)
       end
+    end
+  end
+
+  def verify_domain
+    unless request.host == ENV['DAD_DOMAIN']
+      redirect_to "https://#{ENV['DAD_DOMAIN']}"\
+        "#{request.original_fullpath}",
+        status: :moved_permanently
     end
   end
   
