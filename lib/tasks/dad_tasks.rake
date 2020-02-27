@@ -10,7 +10,7 @@ namespace :dad_tasks do
     today = yesterday + 1.day
 
     # Do not run the rollover script for a given day if it isn't over yet.
-    return if yesterday >= Date.today
+    return if yesterday >= Time.now.utc.to_date
     
     # STEP 1: Check the challenge entries, identify users that aren't participating in DAD/Seasonal Challenge, and create those participations.
     # Get the users that have posted on the current rollover date
@@ -240,7 +240,7 @@ namespace :dad_tasks do
   
   desc "Initialize site status"
   task :init_site_status => :environment do
-    SiteStatus.create(current_rollover: Date.today)
+    SiteStatus.create(current_rollover: Time.now.utc.to_date)
   end
   
   desc "Recalculate seasonal submissions."
@@ -256,7 +256,7 @@ namespace :dad_tasks do
     
     s = challenge.start_date
     e = challenge.end_date
-    e = Date.today if e > Date.today
+    e = Time.now.utc.to_date if e > Time.now.utc.to_date
     
     while s < e do
       entries = ChallengeEntry.where("challenge_id = #{challenge.id} AND user_id = #{user.id} AND created_at >= ? AND created_at < ?", s, s + 1.day)
