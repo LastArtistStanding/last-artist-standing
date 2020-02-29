@@ -39,7 +39,7 @@ gem 'strftime', '~>1.0.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
-gem 'rake', '< 11.0' 
+gem 'rake', '< 13.0' 
 # Puma for the app server
 gem 'puma', '>= 3.12.2'
 
