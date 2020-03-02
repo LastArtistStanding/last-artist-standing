@@ -17,7 +17,7 @@ before_action :find_target
 
     if !can_comment
       flash[:error] = error
-      redirect_to :back
+      redirect_back(fallback_location: "/")
     elsif @comment.save
       flash[:success] = "Comment posted successfully!"
       discussion_users = @target.comments.group(:user_id).pluck(:user_id)
@@ -47,10 +47,10 @@ before_action :find_target
                             user_id: @target.user_id,
                             url: submission_path(@target.id)) unless @target.user_id == current_user.id
       end
-      redirect_to :back
+      redirect_back(fallback_location: "/")
     else
       flash[:error] = "Comment failed to post: " + @comment.errors.full_messages.join(", ")
-      redirect_to :back
+      redirect_back(fallback_location: "/")
     end
   end
   
@@ -69,7 +69,7 @@ before_action :find_target
     else
       flash[:error] = "You can't delete other people's comments. Please cease these shenanigans."
     end
-    redirect_to :back
+    redirect_back(fallback_location: "/")
   end
 
   private

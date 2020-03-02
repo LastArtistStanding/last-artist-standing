@@ -39,7 +39,7 @@ gem 'strftime', '~>1.0.0'
 
 gem 'rake', '>= 13.0.1', '< 13.1' 
 # Puma for the app server
-gem 'puma', '>= 3.12.2'
+gem 'puma', '>= 4.3.3', '< 4.4'
 
 ###########################
   # 1/21/18 - - Use Postgres as the database for Active Record
@@ -78,7 +78,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'will_paginate', '>= 3.3.0', '< 3.4'
 
 ## Security updates
-gem "nokogiri", ">= 1.10.8"
+gem "nokogiri", ">= 1.10.9", '< 2.0'
 gem "rack", ">= 2.0.8"
 gem "loofah", ">= 2.3.1"
 gem "excon", ">= 0.71.0"
