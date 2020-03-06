@@ -51,9 +51,7 @@ class UsersController < ApplicationController
   end
 
   def create
-    if ENV['DISABLE_REGISTRATION'] == 'TRUE'
-      flash[:error] = "Registration is temporarily disabled. Check back later."
-    else
+    if ENV['DISABLE_REGISTRATION'] != 'TRUE'
       @user = User.new(user_params)
       respond_to do |format|
         if @user.save
