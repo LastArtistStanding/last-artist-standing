@@ -51,15 +51,15 @@ class UsersController < ApplicationController
   end
 
   def create
-    #@user = User.new(user_params)
-    #respond_to do |format|
-    #  if @user.save
-    #    log_in @user
-    #    flash[:success] = "Welcome to Do Art Daily!"
-    #  end
-    #  # Send back create.js.erb
-    #  format.js
-    #end
+    @user = User.new(user_params)
+    respond_to do |format|
+      if @user.save
+        log_in @user
+        flash[:success] = "Welcome to Do Art Daily!"
+      end
+      # Send back create.js.erb
+      format.js
+    end
   end
 
   private
