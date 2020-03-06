@@ -1,8 +1,10 @@
-<% if @user.valid? %>
-<%# hide the modal and go to the new user's profile page %>
-  $('#login-modal').modal('hide');
-  window.location='<%= user_path(@user) %>'
-<% else %>
-<%# Render the form again with any errors from @user %>
-  $('#signup-form').html('<%=j render("layouts/signup_form") %>');
+<% if ENV['DISABLE_REGISTRATION'] == 'TRUE' %>
+   $('#login-modal').modal('hide');
+<% elsif @user.valid? %>
+  <%# hide the modal and go to the new user's profile page %>
+    $('#login-modal').modal('hide');
+    window.location='<%= user_path(@user) %>'
+  <% else %>
+  <%# Render the form again with any errors from @user %>
+    $('#signup-form').html('<%=j render("layouts/signup_form") %>');
 <% end %>
