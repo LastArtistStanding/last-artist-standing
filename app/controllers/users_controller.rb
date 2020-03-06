@@ -51,14 +51,18 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(user_params)
-    respond_to do |format|
-      if @user.save
-        log_in @user
-        flash[:success] = "Welcome to Do Art Daily!"
+    if ENV['DISABLE_REGISTRATION'] == 'TRUE'
+      flash[:error] = "Registration is temporarily disabled. Check back later."
+    else
+      @user = User.new(user_params)
+      respond_to do |format|
+        if @user.save
+          log_in @user
+          flash[:success] = "Welcome to Do Art Daily!"
+        end
+        # Send back create.js.erb
+        format.js
       end
-      # Send back create.js.erb
-      format.js
     end
   end
 
