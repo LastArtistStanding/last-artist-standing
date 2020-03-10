@@ -57,6 +57,7 @@ group :development, :test do
   gem 'byebug'
   gem 'rspec-rails', '>= 3.9.0', '< 4.0'
   gem 'dotenv-rails'
+  gem 'rubocop'
 end
 
 group :development do
@@ -83,3 +84,4 @@ gem "rack", ">= 2.0.8"
 gem "loofah", ">= 2.3.1"
 gem "excon", ">= 0.71.0"
 gem "sentry-raven"
+gem "slim-rails"

@@ -1,0 +1,9 @@
+Layout/LineLength:
+  Enabled: true
+  Max: 100
+Style/HashEachMethods:
+  Enabled: true
+Style/HashTransformKeys:
+  Enabled: true
+Style/HashTransformValues:
+  Enabled: true

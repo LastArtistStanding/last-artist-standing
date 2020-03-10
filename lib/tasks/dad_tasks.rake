@@ -81,10 +81,12 @@ namespace :dad_tasks do
                 date_received: today, 
                 prestige: dad_badge_map.prestige
               })
+              p_user.update_attribute(:highest_level, dad_badge_map.prestige)
             elsif previous_award.prestige < dad_badge_map.prestige
               previous_award.prestige = dad_badge_map.prestige
               previous_award.date_received = today
               previous_award.save
+              p_user.update_attribute(:highest_level, dad_badge_map.prestige)
             end
           end
         end
