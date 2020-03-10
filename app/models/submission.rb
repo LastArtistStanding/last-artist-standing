@@ -20,8 +20,6 @@ class Submission < ApplicationRecord
   }
 
   def can_be_commented_on_by(user)
-    commentable &&
-      (user_id == user.id ||
-       user.can_make_comments)
+    commentable && (user_id == user.id || user.can_make_comments)
   end
 end
