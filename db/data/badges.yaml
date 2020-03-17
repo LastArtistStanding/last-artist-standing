@@ -25,3 +25,15 @@ Badge8:
 Badge9:
     name: "Winter 2019 Participation Badge"
     direct_image: "https://do-art-daily-public.s3.us-east-2.amazonaws.com/Winter+Badge+2019.png"
+Badge10:
+    name: "Spring 2020 Participation Badge"
+    direct_image: "https://s3.us-east-2.amazonaws.com/do-art-daily-public/Spring+Badge+2020.png"
+Badge11:
+    name: "Summer 2020 Participation Badge"
+    direct_image: "https://s3.us-east-2.amazonaws.com/do-art-daily-public/Summer+Badge+2020.png"
+Badge12:
+    name: "Autumn 2020 Participation Badge"
+    direct_image: "https://do-art-daily-public.s3.us-east-2.amazonaws.com/Autumn+Badge+2020.png"
+Badge13:
+    name: "Winter 2020 Participation Badge"
+    direct_image: "https://do-art-daily-public.s3.us-east-2.amazonaws.com/Winter+Badge+2020.png"
