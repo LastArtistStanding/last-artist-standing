@@ -397,3 +397,127 @@ Winter2019BadgeMap5:
     required_score: 89
     prestige: 5
     description: "FLAWLESS - This artist submitted daily this season!"
+#Spring 2020 Badges
+Spring2020BadgeMap1:
+    badge_name: "Spring 2020 Participation Badge"
+    challenge_name: "Spring Challenge 2020"
+    required_score: 13
+    prestige: 1
+    description: "WEEKLY - This artist submitted at least once a week this season."
+Spring2020BadgeMap2:
+    badge_name: "Spring 2020 Participation Badge"
+    challenge_name: "Spring Challenge 2020"
+    required_score: 39
+    prestige: 2
+    description: "HOBBYIST - This artist submitted at least once a day on the weekends."
+Spring2020BadgeMap3:
+    badge_name: "Spring 2020 Participation Badge"
+    challenge_name: "Spring Challenge 2020"
+    required_score: 66
+    prestige: 3
+    description: "BUSINESS - This artist submitted at least once a business day."
+Spring2020BadgeMap4:
+    badge_name: "Spring 2020 Participation Badge"
+    challenge_name: "Spring Challenge 2020"
+    required_score: 79
+    prestige: 4
+    description: "ELITE - This artist submitted almost daily this season!"
+Spring2020BadgeMap5:
+    badge_name: "Spring 2020 Participation Badge"
+    challenge_name: "Spring Challenge 2020"
+    required_score: 93
+    prestige: 5
+    description: "FLAWLESS - This artist submitted daily this season!"
+#Summer 2020 Badges
+Summer2020BadgeMap1:
+    badge_name: "Summer 2020 Participation Badge"
+    challenge_name: "Summer Challenge 2020"
+    required_score: 13
+    prestige: 1
+    description: "WEEKLY - This artist submitted at least once a week this season."
+Summer2020BadgeMap2:
+    badge_name: "Summer 2020 Participation Badge"
+    challenge_name: "Summer Challenge 2020"
+    required_score: 40
+    prestige: 2
+    description: "HOBBYIST - This artist submitted at least once a day on the weekends."
+Summer2020BadgeMap3:
+    badge_name: "Summer 2020 Participation Badge"
+    challenge_name: "Summer Challenge 2020"
+    required_score: 67
+    prestige: 3
+    description: "BUSINESS - This artist submitted at least once a business day."
+Summer2020BadgeMap4:
+    badge_name: "Summer 2020 Participation Badge"
+    challenge_name: "Summer Challenge 2020"
+    required_score: 80
+    prestige: 4
+    description: "ELITE - This artist submitted almost daily this season!"
+Summer2020BadgeMap5:
+    badge_name: "Summer 2020 Participation Badge"
+    challenge_name: "Summer Challenge 2020"
+    required_score: 94
+    prestige: 5
+    description: "FLAWLESS - This artist submitted daily this season!"
+#Autumn 2020 Badges
+Autumn2020BadgeMap1:
+    badge_name: "Autumn 2020 Participation Badge"
+    challenge_name: "Autumn Challenge 2020"
+    required_score: 12
+    prestige: 1
+    description: "WEEKLY - This artist submitted at least once a week this season."
+Autumn2020BadgeMap2:
+    badge_name: "Autumn 2020 Participation Badge"
+    challenge_name: "Autumn Challenge 2020"
+    required_score: 38
+    prestige: 2
+    description: "HOBBYIST - This artist submitted at least once a day on the weekends."
+Autumn2020BadgeMap3:
+    badge_name: "Autumn 2020 Participation Badge"
+    challenge_name: "Autumn Challenge 2020"
+    required_score: 64
+    prestige: 3
+    description: "BUSINESS - This artist submitted at least once a business day."
+Autumn2020BadgeMap4:
+    badge_name: "Autumn 2020 Participation Badge"
+    challenge_name: "Autumn Challenge 2020"
+    required_score: 77
+    prestige: 4
+    description: "ELITE - This artist submitted almost daily this season!"
+Autumn2020BadgeMap5:
+    badge_name: "Autumn 2020 Participation Badge"
+    challenge_name: "Autumn Challenge 2020"
+    required_score: 90
+    prestige: 5
+    description: "FLAWLESS - This artist submitted daily this season!"
+#Winter 2020 Badges
+Winter2020BadgeMap1:
+    badge_name: "Winter 2020 Participation Badge"
+    challenge_name: "Winter Challenge 2020"
+    required_score: 12
+    prestige: 1
+    description: "WEEKLY - This artist submitted at least once a week this season."
+Winter2020BadgeMap2:
+    badge_name: "Winter 2020 Participation Badge"
+    challenge_name: "Winter Challenge 2020"
+    required_score: 38
+    prestige: 2
+    description: "HOBBYIST - This artist submitted at least once a day on the weekends."
+Winter2020BadgeMap3:
+    badge_name: "Winter 2020 Participation Badge"
+    challenge_name: "Winter Challenge 2020"
+    required_score: 63
+    prestige: 3
+    description: "BUSINESS - This artist submitted at least once a business day."
+Winter2020BadgeMap4:
+    badge_name: "Winter 2020 Participation Badge"
+    challenge_name: "Winter Challenge 2020"
+    required_score: 77
+    prestige: 4
+    description: "ELITE - This artist submitted almost daily this season!"
+Winter2020BadgeMap5:
+    badge_name: "Winter 2020 Participation Badge"
+    challenge_name: "Winter Challenge 2020"
+    required_score: 89
+    prestige: 5
+    description: "FLAWLESS - This artist submitted daily this season!"
