@@ -79,3 +79,39 @@ Challenge9:
     rejoinable: true
     seasonal: true
     postfrequency: 1
+Challenge10:
+    name: "Spring Challenge 2020"
+    description: "Can you draw every day of the spring?\r\nUnlike the DAD challenge, these seasonal challenges are not streak based. Feel free to submit as much as you can this season, up to a maximum of once per day. You will receive a rotating season badge based on your peformance."
+    start_date: 2020-03-19
+    end_date: 2020-06-20
+    streak_based: false
+    rejoinable: true
+    seasonal: true
+    postfrequency: 1
+Challenge11:
+    name: "Summer Challenge 2020"
+    description: "Can you draw every day of the summer?\r\nUnlike the DAD challenge, these seasonal challenges are not streak based. Feel free to submit as much as you can this season, up to a maximum of once per day. You will receive a rotating season badge based on your peformance."
+    start_date: 2020-06-20
+    end_date: 2020-09-22
+    streak_based: false
+    rejoinable: true
+    seasonal: true
+    postfrequency: 1
+Challenge12:
+    name: "Autumn Challenge 2020"
+    description: "Can you draw every day of the autumn?\r\nUnlike the DAD challenge, these seasonal challenges are not streak based. Feel free to submit as much as you can this season, up to a maximum of once per day. You will receive a rotating season badge based on your peformance."
+    start_date: 2020-09-22
+    end_date: 2020-12-21
+    streak_based: false
+    rejoinable: true
+    seasonal: true
+    postfrequency: 1
+Challenge13:
+    name: "Winter Challenge 2020"
+    description: "Can you draw every day of the winter?\r\nUnlike the DAD challenge, these seasonal challenges are not streak based. Feel free to submit as much as you can this season, up to a maximum of once per day. You will receive a rotating season badge based on your peformance."
+    start_date: 2020-12-21
+    end_date: 2021-03-20
+    streak_based: false
+    rejoinable: true
+    seasonal: true
+    postfrequency: 1
