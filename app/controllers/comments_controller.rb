@@ -13,10 +13,10 @@ before_action :find_target
     @comment.user_id = current_user.id
     @comment.body = @comment.body.gsub(/ +/, " ").strip
    
-    can_comment, error = can_comment_on_submission(@target, current_user)
+    can_comment = @target.can_be_commented_on_by(current_user)
 
     if !can_comment
-      flash[:error] = error
+      flash[:error] = "You do not have permission to comment on this submission."
       redirect_back(fallback_location: "/")
     elsif @comment.save
       flash[:success] = "Comment posted successfully!"
