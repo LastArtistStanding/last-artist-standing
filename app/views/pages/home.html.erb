@@ -195,7 +195,7 @@
           <div class="card-body">
             <% @latestEliminations.each do |elim| %>
             <% user = elim.user %>
-            <% avatarURL = getUserThumb(user) %>
+            <% avatarURL = user.profile_picture %>
             <%= link_to image_tag(avatarURL, :title => "#{user.username} (Streak: #{elim.score})", :style => "width: 50px; margin: 0.25rem;", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{user.username}"), user %>
             <% end %>
           </div>
@@ -208,7 +208,7 @@
           <div class="card-body">
             <% @levelUps.each do |award| %>
               <% user = award.user %>
-              <% avatarURL = getUserThumb(user) %>
+              <% avatarURL = user.profile_picture %>
               <%= link_to image_tag(avatarURL, :title => "#{user.username} - Level #{award.prestige} (#{pluralize(BadgeMap.where(:prestige => award.prestige, :badge_id => 1).first.required_score, "submission")})", :style => "width: 50px; margin-right: 0.5rem; margin-bottom: 0.5rem;", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{user.username}"), user %>
             <% end %>
           </div>
@@ -308,7 +308,7 @@
                 <div style="width: calc(100% - 90px); float: left;">
                   <% awards.each do |award| %>
                     <% user = award.user %>
-                    <% avatarURL = getUserThumb(user) %>
+                    <% avatarURL = user.profile_picture %>
                     
                     <%= link_to image_tag(avatarURL, :title => "#{user.username}", :style => "width: 25px; margin-right: 0.25rem; margin-bottom: 0.25rem;", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{user.username}"), user %>
                   <% end %>
@@ -342,7 +342,7 @@
                 <tr><td>
                   <% seasonParts.each do |seasonPart| %>
                     <% user = seasonPart.user %>
-                    <% avatarURL = getUserThumb(user) %>
+                    <% avatarURL = user.profile_picture %>
                     <%= link_to image_tag(avatarURL, :title => "#{user.username}", :style => "width: 20px; margin: 0.125rem;", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{user.username}"), user %>
                   <% end %>
                 </td>

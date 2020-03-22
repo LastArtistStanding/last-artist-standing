@@ -39,25 +39,20 @@
                     <a href=<%="users/#{user.id}"%>>
                       <span class="fullSizeAvatar">
                         <% seasonChallengeIds = getLatestSeasonalChallenges %>
-                        <% userDADScore = getUserCurrentDADScore(user) %>
-                        <% if userDADScore != "None" %>
-                          <% nextLvl = BadgeMap.where("required_score > :current_score AND challenge_id = :challengeId", {current_score: userDADScore, challengeId: 1}).order("required_score ASC").first %>
-                          <% prevLvl = BadgeMap.where("required_score <= :current_score AND challenge_id = :challengeId", {current_score: userDADScore, challengeId: 1}).order("required_score DESC").first %>
-                        <% else %>
-                          <% toNextLvl = 0 %>
-                          <% prevLvl = 0 %>
-                        <% end %>
-                        <%= image_tag getUserThumb(user), :title => "#{postfrequencyToString(getUserDADFrequency(user), true)}", :alt => "#{user.username}", :data => { :toggle => "tooltip", :placement => "top" } %>
-                        <div style="margin-top: 5px;" data-toggle="tooltip" data-placement="top" title="Record Streak: <%= user.longest_streak %> (Level <%= getUserMaxLevel(user) %>)" >
+                        <%= image_tag user.profile_picture, :title => "#{postfrequencyToString(user.current_dad_frequency, true)}", :alt => "#{user.username}", :data => { :toggle => "tooltip", :placement => "top" } %>
+                        <div style="margin-top: 5px;" data-toggle="tooltip" data-placement="top" title="Record Streak: <%= user.longest_streak %> (Level <%= user.highest_level %>)" >
+                          <% user_dad_score = user.current_streak %>
                           <div class="levelOverlay unselectable">
-                            <% if userDADScore != "None" %>
-                              <%= "#{userDADScore}/#{nextLvl.required_score} to lvl #{nextLvl.prestige}" %>
+                            <% if user_dad_score != 0 %>
+                              <% nextLvl = BadgeMap.where("required_score > :current_score AND challenge_id = :challengeId", {current_score: user_dad_score, challengeId: 1}).order("required_score ASC").first %>
+                              <% prevLvl = BadgeMap.where("required_score <= :current_score AND challenge_id = :challengeId", {current_score: user_dad_score, challengeId: 1}).order("required_score DESC").first %>
+                              <%= "#{user_dad_score}/#{nextLvl.required_score} to lvl #{nextLvl.prestige}" %>
                             <% else %>
                               No Active Streak
                             <% end %>
                           </div>
                           <div class="progress" >
-                            <% barPercent = (userDADScore == "None") ? 0 : (100.0*(userDADScore - (prevLvl.blank? ? 0 : prevLvl.required_score)).to_f)/(nextLvl.required_score - (prevLvl.blank? ? 0 : prevLvl.required_score)).to_f %>
+                            <% barPercent = (user_dad_score == 0) ? 0 : (100.0*(user_dad_score - (prevLvl.blank? ? 0 : prevLvl.required_score)).to_f)/(nextLvl.required_score - (prevLvl.blank? ? 0 : prevLvl.required_score)).to_f %>
                             <div class="progress-bar progress-bar-experience" role="progressbar" style="width: <%= barPercent %>%" aria-valuenow="<%= barPercent %>" aria-valuemin="0" aria-valuemax="100">
                             </div>
                           </div>

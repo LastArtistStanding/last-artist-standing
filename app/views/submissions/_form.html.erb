@@ -226,7 +226,9 @@
               <%= label_tag :postfrequency, "DAD Post Frequency" %>
             </div>
             <div class="col-7">
-              <%= select_tag :postfrequency, options_for_select([['Daily', 1], ['Every Other Day', 2], ['Every 3 Days', 3], ['Every 4 Days', 4], ['Every 5 Days', 5], ['Every 6 Days', 6], ['Weekly', 7]], (getUserDADFrequency(current_user) == 0 ? 1 : getUserDADFrequency(current_user) )), { :class => 'custom-select' } %>
+              <% frequency_default = current_user.current_dad_frequency %>
+              <% frequency_default = 1 if frequency_default == 0 %>
+              <%= select_tag :postfrequency, options_for_select([['Daily', 1], ['Every Other Day', 2], ['Every 3 Days', 3], ['Every 4 Days', 4], ['Every 5 Days', 5], ['Every 6 Days', 6], ['Weekly', 7]], frequency_default), { :class => 'custom-select' } %>
             </div>
           </div>
           

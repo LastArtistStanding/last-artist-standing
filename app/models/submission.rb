@@ -20,6 +20,12 @@ class Submission < ApplicationRecord
   }
 
   def can_be_commented_on_by(user)
-    commentable && (user_id == user.id || user.can_make_comments)
+    return [false, "You must be logged in to comment."] if user.blank?
+
+    return [false, "The artist had locked comments for this submission."] if !commentable
+
+    return [true, ""] if user_id == user.id
+    
+    user.can_make_comments
   end
 end

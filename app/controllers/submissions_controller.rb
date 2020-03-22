@@ -1,5 +1,5 @@
 class SubmissionsController < ApplicationController
-  before_action :unauth, only: [:new, :edit, :update, :destroy]
+  before_action :unauth, only: [:edit, :update, :destroy]
   before_action :set_submission, only: [:show, :edit, :update, :destroy]
 
   # GET /submissions
@@ -36,8 +36,10 @@ class SubmissionsController < ApplicationController
 
   # GET /submissions/new
   def new
-    @submission = Submission.new
-    @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
+    if logged_in?
+      @submission = Submission.new
+      @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
+    end
   end
 
   # GET /submissions/1/edit

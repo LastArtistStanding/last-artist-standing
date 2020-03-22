@@ -249,7 +249,7 @@
                   <td><%= dateToString(participation.end_date) %></td>
                 <% end %>
                 <% if @challenge.id == 1 %>
-                  <td><%= postfrequencyToString(getUserDADFrequency(participation.user), false) %></td>
+                  <td><%= postfrequencyToString(participation.user.current_dad_frequency, false) %></td>
                 <% end %>
                 <% if @challenge.streak_based && @challenge.id != 1 %>
                   <td></td>

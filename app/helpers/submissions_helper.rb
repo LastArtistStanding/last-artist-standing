@@ -83,18 +83,22 @@ module SubmissionsHelper
   end
   
   def next_user_submission(submission)
-    submission.user.submissions.where("id > ? AND nsfw_level <= ?", submission.id, getUserNsfwLevel(current_user)).first
+    nsfw_level = current_user ? current_user.nsfw_level : 1
+    submission.user.submissions.where("id > ? AND nsfw_level <= ?", submission.id, nsfw_level).first
   end
 
   def prev_user_submission(submission)
-    submission.user.submissions.where("id < ? AND nsfw_level <= ?", submission.id, getUserNsfwLevel(current_user)).last
+    nsfw_level = current_user ? current_user.nsfw_level : 1
+    submission.user.submissions.where("id < ? AND nsfw_level <= ?", submission.id, nsfw_level).last
   end
     
   def next_submission(submission)
-    Submission.where("id > ? AND nsfw_level <= ?", submission.id, getUserNsfwLevel(current_user)).first
+    nsfw_level = current_user ? current_user.nsfw_level : 1
+    Submission.where("id > ? AND nsfw_level <= ?", submission.id, nsfw_level).first
   end
     
   def prev_submission(submission)
-    Submission.where("id < ? AND nsfw_level <= ?", submission.id, getUserNsfwLevel(current_user)).last
+    nsfw_level = current_user ? current_user.nsfw_level : 1
+    Submission.where("id < ? AND nsfw_level <= ?", submission.id, nsfw_level).last
   end
 end

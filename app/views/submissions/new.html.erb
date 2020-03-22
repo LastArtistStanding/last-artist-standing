@@ -8,14 +8,14 @@
         <div class="card">
 	      <div class="card-header"><b>Locked</b></div>
           <div class="card-body">
-            You have to be logged in to submit.
+            You have to be logged in to make a submission.
             <a class="btn btn-primary" style="float: right" href="/submissions">
               <span class="fa fa-undo"></span> Back
             </a>
           </div>
         </div>
       <% else %>
-        <% can_submit, error_message = can_make_submission(current_user) %>
+        <% can_submit, error_message = current_user.can_make_submissions %>
         <% if can_submit %>
           <%= render 'form', submission: @submission %>
         <% else %>

@@ -4,7 +4,7 @@
     <div class="col-lg-1"></div>
     <div class="col-lg-10">
     <% if logged_in? %>
-      <% can_create_challenge, error_message = can_make_challenge(current_user) %>
+      <% can_create_challenge, error_message = current_user.can_make_challenges %>
       <% if can_create_challenge %>
         <%= render 'form', challenge: @challenge %>
       <% else %>
