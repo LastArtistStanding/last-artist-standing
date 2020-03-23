@@ -250,7 +250,7 @@
 
                 <% @activeChallenges.each do |challenge| %>
                 <tr>
-                  <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
+                  <td><%= image_tag safe_avatar(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
                   <td><%= link_to challenge.name, challenge_path(challenge.id),  style: "color: white;" %></td>
                   <td><%= dateToShortString(challenge.start_date) %></td>
                   <td><%= dateToShortString(challenge.end_date) %></td>
@@ -270,7 +270,7 @@
               <tbody>
                 <% @upcomingChallenges.each do |challenge| %>
                   <tr>
-                    <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
+                    <td><%= image_tag safe_avatar(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
                     <td><%= link_to challenge.name, challenge_path(challenge.id), style: "color: white;" %></td>
                     <td><%= dateToShortString(challenge.start_date) %></td>
                     <td><%= dateToShortString(challenge.end_date) %></td>
@@ -303,7 +303,7 @@
               ">
                 <div style="width: 90px; float: left;">
                   <% badge = Badge.find(awardData[1]) %>
-                  <%= link_to image_tag(getBadgeImage(badge), :class => "prestige#{awardData[0]}", :data => {:content => "<p style='font-weight: 600;'>#{badge.name}</p>#{simple_format(BadgeMap.find_by({:badge_id => awardData[1], :prestige => awardData[0]}).description)} (Prestige Level: #{awardData[0]})", :trigger => "hover", :toggle => "popover", :placement => "top", :html => "true" }, :alt => "#{badge.name}"), challenge_path(badge.challenge_id) %>
+                  <%= link_to image_tag(safe_avatar(badge), :class => "prestige#{awardData[0]}", :data => {:content => "<p style='font-weight: 600;'>#{badge.name}</p>#{simple_format(BadgeMap.find_by({:badge_id => awardData[1], :prestige => awardData[0]}).description)} (Prestige Level: #{awardData[0]})", :trigger => "hover", :toggle => "popover", :placement => "top", :html => "true" }, :alt => "#{badge.name}"), challenge_path(badge.challenge_id) %>
                 </div>
                 <div style="width: calc(100% - 90px); float: left;">
                   <% awards.each do |award| %>

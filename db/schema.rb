@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_10_034114) do
+ActiveRecord::Schema.define(version: 2020_03_22_233851) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(version: 2020_03_10_034114) do
     t.string "direct_image"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "nsfw_level", default: 1
+    t.integer "nsfw_level", default: 1, null: false
     t.integer "challenge_id"
     t.index ["name"], name: "index_badges_on_name", unique: true
   end
@@ -65,7 +65,7 @@ ActiveRecord::Schema.define(version: 2020_03_10_034114) do
     t.datetime "updated_at", null: false
     t.boolean "seasonal", default: false
     t.integer "creator_id"
-    t.integer "nsfw_level", default: 1
+    t.integer "nsfw_level", default: 1, null: false
     t.index ["name"], name: "index_challenges_on_name"
   end
 
@@ -134,7 +134,7 @@ ActiveRecord::Schema.define(version: 2020_03_10_034114) do
   create_table "submissions", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.string "drawing"
-    t.integer "nsfw_level"
+    t.integer "nsfw_level", default: 1, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "title"
@@ -164,7 +164,7 @@ ActiveRecord::Schema.define(version: 2020_03_10_034114) do
     t.integer "longest_streak", default: 0
     t.string "reset_digest"
     t.datetime "reset_sent_at"
-    t.integer "nsfw_level"
+    t.integer "nsfw_level", default: 1, null: false
     t.boolean "is_admin"
     t.integer "dad_frequency"
     t.integer "new_frequency"

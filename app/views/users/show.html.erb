@@ -64,7 +64,7 @@ $(function () {
           <p class="card-text">
             <% @awards.each do |award| %>
               <% badge = award.badge %>
-              <% badgeURL = getBadgeImage(badge) %>
+              <% badgeURL = safe_avatar(badge) %>
               <%= link_to image_tag(badgeURL, :class => "prestige#{award.prestige}", :data => {:content => "<p style='font-weight: 600;'>#{award.badge.name}</p>#{simple_format(BadgeMap.find_by({:badge_id => award.badge.id, :prestige => award.prestige}).description)} (Prestige Level: #{award.prestige})", :trigger => "hover", :toggle => "popover", :placement => "top", :html => "true", :alt => "#{award.badge.name}" }), challenge_path(badge.challenge_id) %> 
             <% end %>
             <% if @awards.blank? %>

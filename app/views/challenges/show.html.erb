@@ -107,7 +107,7 @@
               <%= label_tag "Badge Appearance" %>
             </div>
             <div class="col-9">
-              <%= image_tag getBadgeImage(@badge), :alt => "#{@badge.name}" %>
+              <%= image_tag safe_avatar(@badge), :alt => "#{@badge.name}" %>
             </div>
           </div>
           

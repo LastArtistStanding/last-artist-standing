@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Represents a user on the website.
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   NO_EXCESS_WHITESPACE = /\A(\S\s?)*\S\z/.freeze
   NULLABLE_NO_EXCESS_WHITESPACE = /\A(\S\s?)*\S\z|\A\z/.freeze
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.freeze
