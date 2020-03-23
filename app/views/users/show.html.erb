@@ -63,7 +63,7 @@ $(function () {
           <p class="card-text">
             <% @awards.each do |award| %>
               <% badge = award.badge %>
-              <% badgeURL = safe_avatar(badge) %>
+              <% badgeURL = safe_badge_avatar(badge) %>
               <%= link_to image_tag(badgeURL, :class => "prestige#{award.prestige}", :data => {:content => "<p style='font-weight: 600;'>#{award.badge.name}</p>#{simple_format(BadgeMap.find_by({:badge_id => award.badge.id, :prestige => award.prestige}).description)} (Prestige Level: #{award.prestige})", :trigger => "hover", :toggle => "popover", :placement => "top", :html => "true", :alt => "#{award.badge.name}" }), challenge_path(badge.challenge_id) %> 
             <% end %>
             <% if @awards.blank? %>
@@ -83,8 +83,8 @@ $(function () {
         <div class="card-body">
           <p class="card-text">
             <% @submissions.each do |submission| %>
-              <% submissionUrl = getSubmissionAvatar(submission) %>
-              <%= link_to image_tag(submissionUrl, alt: "#{getSubmissionTitle(submission)}", width: '60px', height: '60px'), url_for({:controller => 'submissions', :action => 'show', :id => submission.id}) %>
+              <% submissionUrl = safe_submission_avatar(submission) %>
+              <%= link_to image_tag(submissionUrl, alt: "#{submission.display_title}", width: '60px', height: '60px'), url_for({:controller => 'submissions', :action => 'show', :id => submission.id}) %>
             <% end %>
           </p>
         </div>

@@ -22,7 +22,7 @@
               <div class="submissionIcon">
                 <% user = submission.user %>
                 <%= link_to "<img alt='' src=#{ user.profile_picture }> #{user.username}".html_safe, user, :class => "submissionAuthor" %>
-                <%= link_to image_tag(getSubmissionThumb(submission), :alt => "#{getSubmissionTitle(submission)}"), submission %>
+                <%= link_to image_tag(safe_submission_thumb(submission), :alt => "#{submission.display_title}"), submission %>
                 <div class="submissionNotes">
                   <%= submission.created_at.strftime("%H:%M:%S") %>&nbsp;
                   <% if submission.is_animated_gif %>

@@ -148,21 +148,6 @@
 	         <span id="NextSubmissionDisplay"></span>
 	       </div>
 	     </div>
-	     <% latestSubmission = Submission.last %>
-	     <% if !latestSubmission.blank? && false %>
-	     <div class="card homeCardStyle blueCard">
-         <div class="card-body" style="text-align: center;">
-           <div style="margin-bottom: 0.5em;"><h5>Latest Submission</h5></div>
-             <div class="image-placeholder front-page">
-	             <%= link_to image_tag(getSubmissionThumb(latestSubmission), {size: "150", alt: "#{getSubmissionTitle(latestSubmission)}"}), latestSubmission %>
-	           </div>
-             <div style="margin-top: 0.5em;"><%= "Submitted by " + latestSubmission.user.username + " at " + latestSubmission.created_at.strftime("%T") %></div>
-            <% if latestSubmission.nsfw_level > 1 %>
-             <div><%= "Warning: submission contains "+getNsfwString(latestSubmission.nsfw_level).downcase+" content." %></div>
-           <% end %>
-	       </div>
-	     </div>
-	     <% end %>
 	     
 	     <div class="card homeCardStyle blueCard">
          <div class="card-body" style="text-align: center;">
@@ -250,7 +235,7 @@
 
                 <% @activeChallenges.each do |challenge| %>
                 <tr>
-                  <td><%= image_tag safe_avatar(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
+                  <td><%= image_tag safe_badge_avatar(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
                   <td><%= link_to challenge.name, challenge_path(challenge.id),  style: "color: white;" %></td>
                   <td><%= date_string_short(challenge.start_date) %></td>
                   <td><%= date_string_short(challenge.end_date) %></td>
@@ -270,7 +255,7 @@
               <tbody>
                 <% @upcomingChallenges.each do |challenge| %>
                   <tr>
-                    <td><%= image_tag safe_avatar(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
+                    <td><%= image_tag safe_badge_avatar(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
                     <td><%= link_to challenge.name, challenge_path(challenge.id), style: "color: white;" %></td>
                     <td><%= date_string_short(challenge.start_date) %></td>
                     <td><%= date_string_short(challenge.end_date) %></td>
@@ -303,7 +288,7 @@
               ">
                 <div style="width: 90px; float: left;">
                   <% badge = Badge.find(awardData[1]) %>
-                  <%= link_to image_tag(safe_avatar(badge), :class => "prestige#{awardData[0]}", :data => {:content => "<p style='font-weight: 600;'>#{badge.name}</p>#{simple_format(BadgeMap.find_by({:badge_id => awardData[1], :prestige => awardData[0]}).description)} (Prestige Level: #{awardData[0]})", :trigger => "hover", :toggle => "popover", :placement => "top", :html => "true" }, :alt => "#{badge.name}"), challenge_path(badge.challenge_id) %>
+                  <%= link_to image_tag(safe_badge_avatar(badge), :class => "prestige#{awardData[0]}", :data => {:content => "<p style='font-weight: 600;'>#{badge.name}</p>#{simple_format(BadgeMap.find_by({:badge_id => awardData[1], :prestige => awardData[0]}).description)} (Prestige Level: #{awardData[0]})", :trigger => "hover", :toggle => "popover", :placement => "top", :html => "true" }, :alt => "#{badge.name}"), challenge_path(badge.challenge_id) %>
                 </div>
                 <div style="width: calc(100% - 90px); float: left;">
                   <% awards.each do |award| %>

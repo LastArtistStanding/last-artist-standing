@@ -20,12 +20,30 @@ class Submission < ApplicationRecord
   }
 
   def can_be_commented_on_by(user)
-    return [false, "You must be logged in to comment."] if user.blank?
+    return [false, 'You must be logged in to comment.'] if user.blank?
 
-    return [false, "The artist has locked comments for this submission."] if !commentable
+    return [false, 'The artist has locked comments for this submission.'] unless commentable
 
-    return [true, ""] if user_id == user.id
-    
+    return [true, ''] if user_id == user.id
+
     user.can_make_comments
+  end
+
+  def time_text
+    return 'unspecified' if time.blank?
+
+    "#{time} minutes"
+  end
+
+  def display_title
+    return 'Untitled' if title.blank?
+
+    title
+  end
+
+  def display_description
+    return 'No description provided.' if description.blank?
+
+    description
   end
 end

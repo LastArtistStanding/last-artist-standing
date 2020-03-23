@@ -42,7 +42,7 @@
             <%= label_tag :nsfw_level %>
           </div>
           <div class="col-9">
-            <%= getNsfwString(@challenge.nsfw_level) %>
+            <%= nsfw_string(@challenge.nsfw_level) %>
           </div>
         </div>
         
@@ -107,7 +107,7 @@
               <%= label_tag "Badge Appearance" %>
             </div>
             <div class="col-9">
-              <%= image_tag safe_avatar(@badge), :alt => "#{@badge.name}" %>
+              <%= image_tag safe_badge_avatar(@badge), :alt => "#{@badge.name}" %>
             </div>
           </div>
           

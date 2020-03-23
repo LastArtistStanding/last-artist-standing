@@ -117,8 +117,8 @@
           
           <br>
           <%= @submission.created_at.strftime("Submitted at %H:%M, %b %-d, %Y") %><br>
-          Time Spent: <%= getSubmissionTimeText(@submission) %><br>
-          Content Level: <%= getNsfwString(@submission.nsfw_level) %><br><br>
+          Time Spent: <%= @submission.time_text %><br>
+          Content Level: <%= nsfw_string(@submission.nsfw_level) %><br><br>
           <b>Submitted to Challenges:</b><br>
           <% @challenge_entries.each do |ce| %>
             <%= link_to ce.challenge.name, ce.challenge, :style => "color: black;" %><br>
@@ -145,14 +145,14 @@
 	 
 	  <div class="col-lg-10">
 	    <div class="card">
-	      <div class="card-header" style="text-align: center; font-weight: 600;"><%= getSubmissionTitle(@submission) %></div>
+	      <div class="card-header" style="text-align: center; font-weight: 600;"><%= @submission.display_title %></div>
         <div class="card-body" style="text-align: center;">
           <% submissionUrl = @submission.drawing.url unless @submission.drawing.blank? %>
           <div style="width: 100%;">
-          <%= image_tag submissionUrl, :style => "max-width: 100%; max-height: 600px; cursor: zoom-in;", :alt => "#{getSubmissionTitle(@submission)}", :id => "submissionImage" %>
+          <%= image_tag submissionUrl, :style => "max-width: 100%; max-height: 600px; cursor: zoom-in;", :alt => "#{@submission.display_title}", :id => "submissionImage" %>
           </div>
           <br>
-          <%= simple_format(getSubmissionDescription(@submission)) %>
+          <%= simple_format(@submission.display_description) %>
         </div>
       </div>
       
@@ -162,7 +162,7 @@
             <div class="card-body" style="text-align: center; padding: 5px;">
               <% unless psub.blank? %>
                 Previous Submission by <%= psub.user.username %> (&larr;)<br>
-                <%= link_to image_tag(getSubmissionAvatar(psub), alt: "prev", width: '60px', height: '60px'), psub %>
+                <%= link_to image_tag(safe_submission_avatar(psub), alt: "prev", width: '60px', height: '60px'), psub %>
               <% else %>
                 First submission!
               <% end %>
@@ -174,7 +174,7 @@
             <div class="card-body" style="text-align: center; padding: 5px;">
               <% unless apsub.blank? %>
                 <%= @submission.user.username %>'s Previous Submission ([)<br>
-                <%= link_to image_tag(getSubmissionAvatar(apsub), alt: "prev", width: '60px', height: '60px'), apsub %>
+                <%= link_to image_tag(safe_submission_avatar(apsub), alt: "prev", width: '60px', height: '60px'), apsub %>
               <% else %>
                 First submission!
               <% end %>
@@ -186,7 +186,7 @@
             <div class="card-body" style="text-align: center; padding: 5px;">
               <% unless ansub.blank? %>
                 <%= @submission.user.username %>'s Next Submission (])<br>
-                <%= link_to image_tag(getSubmissionAvatar(ansub), alt: "next", width: '60px', height: '60px'), ansub %>
+                <%= link_to image_tag(safe_submission_avatar(ansub), alt: "next", width: '60px', height: '60px'), ansub %>
               <% else %>
                 Last submission!
               <% end %>
@@ -198,7 +198,7 @@
             <div class="card-body" style="text-align: center; padding: 5px;">
               <% unless nsub.blank? %>
                 Next Submission by <%= nsub.user.username %> (&rarr;) <br>
-                <%= link_to image_tag(getSubmissionAvatar(nsub), alt: "next", width: '60px', height: '60px'), nsub %>
+                <%= link_to image_tag(safe_submission_avatar(nsub), alt: "next", width: '60px', height: '60px'), nsub %>
               <% else %>
                 Last submission!
               <% end %>
