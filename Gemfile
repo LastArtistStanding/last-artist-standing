@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 ruby "2.6.5"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '>= 6.0.2', '< 6.1'
+gem 'rails', '>= 6.0.2.2', '< 6.1'
 #Use Rails controller testing for testing stability and error-proneness of site.
 gem 'rails-controller-testing'
 # Use bcrypt for Password hashing to protect against attackers
@@ -24,7 +24,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '>= 5.0.0', '< 5.1'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
-gem 'actionview', '>= 6.0.2', '< 6.1'
+gem 'actionview', '>= 6.0.2.2', '< 6.1'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
