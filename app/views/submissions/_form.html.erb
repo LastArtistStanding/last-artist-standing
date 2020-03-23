@@ -196,7 +196,7 @@
 	      <%= content_tag :div, :class => "time_information", data: {time: Time.now.to_f * 1000, submitted: timeinfo[0], daysleft: timeinfo[1] } do %>
 	      <% end %>
 	      <span><i class="fa fa-clock-o"></i> <span id="TimeDisplay"></span></span><br>
-	      <% currentSeason = getCurrentSeasonalChallenge %>
+	      <% currentSeason = Challenge.current_season %>
 	      <span>
 	        <% if currentSeason.name.include? "Spring" %>
 	        <i class="fa fa-leaf"></i>
@@ -237,7 +237,7 @@
               Seasonal Challenge:
             </div>
             <div class="col-7">
-              <%= getCurrentSeasonalChallenge.name %>
+              <%= Challenge.current_season.name %>
             </div>
           </div>
           <br>

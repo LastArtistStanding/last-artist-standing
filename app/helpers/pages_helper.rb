@@ -60,10 +60,6 @@ module PagesHelper
         end
     end
     
-    def getCurrentSeasonalChallenge
-        Challenge.where(":todays_date >= start_date AND :todays_date < end_date AND seasonal = true", {todays_date: Date.current}).first
-    end
-    
     def getLatestSeasonalChallenges
         seasonalChallenges = Challenge.where("seasonal = true AND :todays_date >= start_date", {todays_date: Date.current}).order("start_date ASC")
         seasonCount = seasonalChallenges.count

@@ -172,7 +172,7 @@
         <b>Current Participant List</b>
         <% if Date.current < @challenge.start_date %>
           <% if @challenge.id != 1 && !@challenge.seasonal && logged_in? %>
-            <% if userIsInChallenge(current_user, @challenge) %>
+            <% if user_is_participating(current_user, @challenge) %>
               <%= link_to "Leave Challenge", challenge_path(@challenge, :leave => true), :class => "btn btn-primary", :style => 'float: right; margin-top: -0.375rem; margin-bottom: -0.375rem;' %>
             <% else %>
               <%= link_to "Join Challenge", challenge_path(@challenge, :join => true), :class => "btn btn-primary", :style => 'float: right; margin-top: -0.375rem; margin-bottom: -0.375rem;' %>
@@ -183,7 +183,7 @@
       <div class="card-body table-responsive">
         <% if Date.current < @challenge.start_date %>
           <% userParticipation = getUserParticipationLevel(current_user, @challenge, false) %>
-          <%= raw getParticipationIcon(userParticipation) %> - 
+          <%= raw participation_icon(userParticipation) %> - 
           <% if userParticipation == 0 %>
             You have not signed up for this challenge.
           <% elsif userParticipation == 1 %>
@@ -194,7 +194,7 @@
           <br><br>
         <% elsif Date.current >= @challenge.start_date && (@challenge.end_date.blank? || Date.current < @challenge.end_date) %>
           <% userParticipation = getUserParticipationLevel(current_user, @challenge, true) %>
-          <%= raw getParticipationIcon(userParticipation) %> - 
+          <%= raw participation_icon(userParticipation) %> - 
           <% if userParticipation == 0 %>
             You are not participating in this challenge.
           <% elsif userParticipation == 1 %>
@@ -205,7 +205,7 @@
           <br><br>
         <% else %>
           <% userParticipation = getUserParticipationLevel(current_user, @challenge, false) %>
-          <%= raw getParticipationIcon(userParticipation) %> - 
+          <%= raw participation_icon(userParticipation) %> - 
           <% if userParticipation == 0 %>
             You did not participate in this challenge.
           <% elsif userParticipation == 1 %>

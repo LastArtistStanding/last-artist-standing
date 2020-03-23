@@ -23,7 +23,8 @@ class Challenge < ApplicationRecord
     end
   end
   
-  def self.currentSeasonalChallenge
-    Challenge.where(":todays_date >= start_date AND :todays_date < end_date AND seasonal = true", {todays_date: Date.current}).first
+  def self.current_season
+    Challenge.where(":todays_date >= start_date AND :todays_date < end_date AND seasonal = true", 
+                    {todays_date: Time.now.utc.to_date}).first
   end
 end

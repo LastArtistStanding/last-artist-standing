@@ -28,7 +28,7 @@
           <% @activeChallenges.each do |challenge| %>
           <tr>
             <td><%= image_tag safe_avatar(challenge.badges.first), :width => "25px", :alt => "bdg" %></td>
-            <td><%= raw getParticipationIcon(getUserParticipationLevel(current_user, challenge, true)) %></td>
+            <td><%= raw participation_icon(getUserParticipationLevel(current_user, challenge, true)) %></td>
             <td><%= link_to challenge.name, challenge %></td>
             <td>Active</td>
             <td><%= dateToShortString(challenge.start_date) %></td>
@@ -41,7 +41,7 @@
               No
               <% end %>
             </td>
-            <td><%= getChallengeCreator(challenge.creator_id) %></td>
+            <td><%= challenge_creator_link(challenge.creator_id) %></td>
             <% if logged_in? && !challenge.creator_id.nil? && challenge.creator_id == current_user.id %>
             <td><%= link_to '<span class="fa fa-pencil"></span>'.html_safe, edit_challenge_path(challenge), :class => "btn btn-primary" %></td>
             <% else %>
@@ -53,7 +53,7 @@
           <% @upcomingChallenges.each do |challenge| %>
           <tr>
             <td><%= image_tag safe_avatar(challenge.badges.first), :width => "25px", :alt => "bdg" %></td>
-            <td><%= raw getParticipationIcon(getUserParticipationLevel(current_user, challenge, false)) %></td>
+            <td><%= raw participation_icon(getUserParticipationLevel(current_user, challenge, false)) %></td>
             <td><%= link_to challenge.name, challenge %></td>
             <td>Upcoming</td>
             <td><%= dateToShortString(challenge.start_date) %></td>
@@ -66,7 +66,7 @@
               No
               <% end %>
             </td>
-            <td><%= getChallengeCreator(challenge.creator_id) %></td>
+            <td><%= challenge_creator_link(challenge.creator_id) %></td>
             <% if logged_in? && !challenge.creator_id.nil? && challenge.creator_id == current_user.id %>
             <td><%= link_to '<span class="fa fa-pencil"></span>'.html_safe, edit_challenge_path(challenge), :class => "btn btn-primary" %></td>
             <td><%= link_to '<i class="fa fa-trash"></i>'.html_safe, challenge, method: :delete, data: { confirm: 'Are you sure?' } %></td>
@@ -79,7 +79,7 @@
           <% @completedChallenges.each do |challenge| %>
           <tr style="color: grey;">
             <td><%= image_tag safe_avatar(challenge.badges.first), :width => "25px", :alt => "bdg" %></td>
-            <td><%= raw getParticipationIcon(getUserParticipationLevel(current_user, challenge, false)) %></td>
+            <td><%= raw participation_icon(getUserParticipationLevel(current_user, challenge, false)) %></td>
             <td><%= link_to challenge.name, challenge %></td>
             <td>Completed</td>
             <td><%= dateToShortString(challenge.start_date) %></td>
@@ -92,7 +92,7 @@
               No
               <% end %>
             </td>
-            <td><%= getChallengeCreator(challenge.creator_id) %></td>
+            <td><%= challenge_creator_link(challenge.creator_id) %></td>
             <td></td>
             <td></td>
           </tr>
