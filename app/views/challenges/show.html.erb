@@ -51,7 +51,7 @@
             <%= label_tag :start_date %>
           </div>
           <div class="col-9">
-            <%= dateToString(@challenge.start_date) %>
+            <%= date_string(@challenge.start_date) %>
           </div>
         </div>
         
@@ -60,7 +60,7 @@
             <%= label_tag :end_date %>
           </div>
           <div class="col-9">
-            <%= dateToString(@challenge.end_date) %>
+            <%= date_string(@challenge.end_date) %>
           </div>
         </div>
 
@@ -82,7 +82,7 @@
             <%= label_tag :postfrequency %>
           </div>
           <div class="col-9">
-            <%= postfrequencyToString(@challenge.postfrequency, false) %>
+            <%= frequency_string(@challenge.postfrequency, false) %>
           </div>
         </div>
   
@@ -157,8 +157,8 @@
               <tr>
                 <td><%= link_to participation.user.username, participation.user %></td>
                 <td><%= participation.score %></td>
-                <td><%= dateToString(participation.created_at.to_date) %></td>
-                <td><%= dateToString(participation.end_date) %></td>
+                <td><%= date_string(participation.created_at.to_date) %></td>
+                <td><%= date_string(participation.end_date) %></td>
               </tr>
             <% end %>
           </tbody>
@@ -244,12 +244,12 @@
                 </td>
                 <td><%= link_to participation.user.username, participation.user %></td>
                 <td><%= participation.score %></td>
-                <td><%= dateToString(participation.created_at.to_date) %></td>
+                <td><%= date_string(participation.created_at.to_date) %></td>
                 <% if @challenge.id != 1 %>
-                  <td><%= dateToString(participation.end_date) %></td>
+                  <td><%= date_string(participation.end_date) %></td>
                 <% end %>
                 <% if @challenge.id == 1 %>
-                  <td><%= postfrequencyToString(participation.user.current_dad_frequency, false) %></td>
+                  <td><%= frequency_string(participation.user.current_dad_frequency, false) %></td>
                 <% end %>
                 <% if @challenge.streak_based && @challenge.id != 1 %>
                   <td></td>
@@ -266,8 +266,8 @@
                 </td>
                 <td><%= link_to participation.user.username, participation.user %></td>
                 <td><%= participation.score %></td>
-                <td><%= dateToString(participation.created_at.to_date) %></td>
-                <td><%= dateToString(participation.end_date) %></td>
+                <td><%= date_string(participation.created_at.to_date) %></td>
+                <td><%= date_string(participation.end_date) %></td>
                 <td><%= "Eliminated" %></td>
               </tr>
             <% end %>

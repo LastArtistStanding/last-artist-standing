@@ -20,10 +20,9 @@ $(function () {
         <div class="avatarWithName">
         <div class="avatarUserName"><%= @curruser.username %></div>
           <span class="fullSizeAvatar">
-            <% seasonChallengeIds = getLatestSeasonalChallenges %>
             <% user_dad_score = @curruser.current_streak %>
             
-            <%= image_tag @curruser.profile_picture, :title => "#{postfrequencyToString(@curruser.current_dad_frequency, true)}", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{@curruser.username}" %>
+            <%= image_tag @curruser.profile_picture, :title => "#{frequency_string(@curruser.current_dad_frequency, true)}", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{@curruser.username}" %>
             
             <div style="margin-top: 5px;" data-toggle="tooltip" data-placement="top" title="Record Streak: <%= @curruser.longest_streak %> (Level <%= @curruser.highest_level %>)" >
               <div class="levelOverlay unselectable">

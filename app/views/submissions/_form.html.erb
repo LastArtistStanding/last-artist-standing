@@ -192,7 +192,7 @@
     
     <div class="card">
       <div class="card-body">
-	      <% timeinfo = userSubmittedToDAD %>
+	      <% timeinfo = dad_streak_status %>
 	      <%= content_tag :div, :class => "time_information", data: {time: Time.now.to_f * 1000, submitted: timeinfo[0], daysleft: timeinfo[1] } do %>
 	      <% end %>
 	      <span><i class="fa fa-clock-o"></i> <span id="TimeDisplay"></span></span><br>

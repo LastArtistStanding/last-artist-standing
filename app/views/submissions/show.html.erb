@@ -91,10 +91,9 @@
         
         <a href=<%="../users/#{@submission.user.id}"%> >
         <span class="fullSizeAvatar">
-            <% seasonChallengeIds = getLatestSeasonalChallenges %>
             <% user_dad_score = @submission.user.current_streak %>
             
-            <%= image_tag @submission.user.profile_picture, :title => "#{postfrequencyToString(@submission.user.current_dad_frequency, true)}", :alt => "#{@submission.user.username}", :data => { :toggle => "tooltip", :placement => "top" } %>
+            <%= image_tag @submission.user.profile_picture, :title => "#{frequency_string(@submission.user.current_dad_frequency, true)}", :alt => "#{@submission.user.username}", :data => { :toggle => "tooltip", :placement => "top" } %>
             
             <div style="margin-top: 5px;" data-toggle="tooltip" data-placement="top" title="Record Streak: <%= @submission.user.longest_streak %> (Level <%= @submission.user.highest_level %>)" >
               <div class="levelOverlay unselectable">

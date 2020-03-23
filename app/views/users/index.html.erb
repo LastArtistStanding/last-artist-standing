@@ -38,8 +38,7 @@
                     <div class="avatarUserName"><%= user.username %></div>
                     <a href=<%="users/#{user.id}"%>>
                       <span class="fullSizeAvatar">
-                        <% seasonChallengeIds = getLatestSeasonalChallenges %>
-                        <%= image_tag user.profile_picture, :title => "#{postfrequencyToString(user.current_dad_frequency, true)}", :alt => "#{user.username}", :data => { :toggle => "tooltip", :placement => "top" } %>
+                        <%= image_tag user.profile_picture, :title => "#{frequency_string(user.current_dad_frequency, true)}", :alt => "#{user.username}", :data => { :toggle => "tooltip", :placement => "top" } %>
                         <div style="margin-top: 5px;" data-toggle="tooltip" data-placement="top" title="Record Streak: <%= user.longest_streak %> (Level <%= user.highest_level %>)" >
                           <% user_dad_score = user.current_streak %>
                           <div class="levelOverlay unselectable">
