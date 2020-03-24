@@ -1,0 +1,25 @@
+<div class="avatarWithName">
+  <div class="avatarUserName"><%= user.username %></div>
+  <a href=<%="users/#{user.id}"%>>
+    <span class="fullSizeAvatar">
+      <%= image_tag user.profile_picture, title: "#{frequency_string(user.current_dad_frequency, true)}", alt: "#{user.username}", data: { toggle: "tooltip", placement: "top" } %>
+      <div style="margin-top: 5px;" data-toggle="tooltip" data-placement="top" title="Record Streak: <%= user.longest_streak %> (Level <%= user.highest_level %>)" >
+        <% user_dad_score = user.current_streak %>
+        <div class="levelOverlay unselectable">
+          <% if user_dad_score != 0 %>
+            <% next_level = BadgeMap.where("required_score > #{user_dad_score} AND challenge_id = 1").order("required_score ASC").first %>
+            <% prev_level = BadgeMap.where("required_score <= #{user_dad_score} AND challenge_id = 1").order("required_score DESC").first %>
+            <%= "#{user_dad_score}/#{next_level.required_score} to lvl #{next_level.prestige}" %>
+          <% else %>
+            No Active Streak
+          <% end %>
+        </div>
+        <div class="progress" >
+          <% bar_percent = (user_dad_score == 0) ? 0 : (100.0*(user_dad_score - (prev_level.blank? ? 0 : prev_level.required_score)).to_f)/(next_level.required_score - (prev_level.blank? ? 0 : prev_level.required_score)).to_f %>
+          <div class="progress-bar progress-bar-experience" role="progressbar" style="width: <%= bar_percent %>%" aria-valuenow="<%= bar_percent %>" aria-valuemin="0" aria-valuemax="100">
+          </div>
+        </div>
+      </div>
+    </span>
+  </a>
+</div>

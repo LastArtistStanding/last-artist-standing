@@ -17,31 +17,7 @@ $(function () {
       
       <div class="card">
         <div class="card-body table-responsive" style="text-align: center;">
-        <div class="avatarWithName">
-        <div class="avatarUserName"><%= @curruser.username %></div>
-          <span class="fullSizeAvatar">
-            <% user_dad_score = @curruser.current_streak %>
-            
-            <%= image_tag @curruser.profile_picture, :title => "#{frequency_string(@curruser.current_dad_frequency, true)}", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{@curruser.username}" %>
-            
-            <div style="margin-top: 5px;" data-toggle="tooltip" data-placement="top" title="Record Streak: <%= @curruser.longest_streak %> (Level <%= @curruser.highest_level %>)" >
-              <div class="levelOverlay unselectable">
-                <% if user_dad_score != 0 %>
-                  <% nextLvl = BadgeMap.where("required_score > :current_score AND challenge_id = :challengeId", {current_score: user_dad_score, challengeId: 1}).order("required_score ASC").first %>
-                  <% prevLvl = BadgeMap.where("required_score <= :current_score AND challenge_id = :challengeId", {current_score: user_dad_score, challengeId: 1}).order("required_score DESC").first %>
-                  <%= "#{user_dad_score}/#{nextLvl.required_score} to lvl #{nextLvl.prestige}" %>
-                <% else %>
-                  No Active Streak
-                <% end %>
-              </div>
-              <div class="progress" >
-                <% barPercent = (user_dad_score == 0) ? 0 : (100.0*(user_dad_score - (prevLvl.blank? ? 0 : prevLvl.required_score)).to_f)/(nextLvl.required_score - (prevLvl.blank? ? 0 : prevLvl.required_score)).to_f %>
-                <div class="progress-bar progress-bar-experience" role="progressbar" style="width: <%= barPercent %>%" aria-valuenow="<%= barPercent %>" aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-            </div>
-            
-          </span>
-          </div>
+          <%= render partial: "application/usercard", locals: { user: @curruser } %>
           
           <% if logged_in? && current_user.id == @curruser.id %>
             <br>
