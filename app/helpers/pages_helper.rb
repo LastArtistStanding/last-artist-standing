@@ -44,7 +44,7 @@ module PagesHelper
   end
 
   def dad_streak_status
-    [NOT_LOGGED_IN, 0] unless logged_in?
+    return [NOT_LOGGED_IN, 0] unless logged_in?
 
     user_id = current_user.id
     dad_participation = Participation.find_by(active: true, challenge_id: 1, user_id: user_id)
