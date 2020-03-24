@@ -1,6 +1,5 @@
 class CommentsController < ApplicationController
 include SubmissionsHelper
-include UsersHelper
   
 before_action :find_target
 
