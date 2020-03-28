@@ -1,0 +1,144 @@
+- psub = prev_submission(@submission)
+- apsub = prev_user_submission(@submission)
+- ansub = next_user_submission(@submission)
+- nsub = next_submission(@submission)
+- ppath = url_for(psub) unless psub.blank?
+- appath = url_for(apsub) unless apsub.blank?
+- anpath = url_for(ansub) unless ansub.blank?
+- npath = url_for(nsub) unless nsub.blank?
+javascript:
+  var ppath = "#{ppath}";
+  var appath = "#{appath}";
+  var anpath = "#{anpath}";
+  var npath = "#{npath}";
+= javascript_include_tag 'comments/writing_utils'
+= javascript_include_tag 'submissions/keyboard_navigation'
+= javascript_include_tag 'submissions/view_size_change'
+
+.container-fluid style="margin-top: 2rem;"
+  .row
+    b 
+      p#notice = notice 
+
+    .col-lg-2
+      .card
+        .card-header style="text-align: center;"
+          | Submission Info
+
+        .card-body style="text-align: center;"
+          = render partial: "application/usercard", locals: { user: @submission.user }
+          br
+          = @submission.created_at.strftime("Submitted at %H:%M, %b %-d, %Y") 
+          br
+          | Time Spent: #{@submission.time_text}
+          br
+          | Content Level: #{nsfw_string(@submission.nsfw_level)}
+          br
+          br
+          b Submitted to Challenges:
+          br
+          - @challenge_entries.each do |ce|
+            = link_to ce.challenge.name, ce.challenge, :style => "color: black;"
+            br
+          br
+          
+          a.btn.btn-primary href="/submissions"
+            span.fa.fa-undo 
+            | Back
+          
+          - if logged_in? && (@submission.user_id == current_user.id)
+            - if (@submission.created_at.to_date == Time.now.utc.to_date)
+              br
+              br
+              = link_to '<span class="fa fa-edit"></span>'.html_safe, edit_submission_path(@submission), class: "btn btn-primary"
+              = link_to '<span class="fa fa-trash"></span>'.html_safe, @submission, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-primary"
+              br
+            - else
+              br
+              br
+              = link_to '<span class="fa fa-edit"></span>'.html_safe, edit_submission_path(@submission), class: "btn btn-primary"
+              br
+   
+    .col-lg-10
+      .card
+        .card-header style="text-align: center; font-weight: 600;" = @submission.display_title
+
+        .card-body style="text-align: center;"
+          div style="width: 100%;"
+            = image_tag @submission.drawing.url, style: "max-width: 100%; max-height: 600px; cursor: zoom-in;", alt: "#{@submission.display_title}", id: "submissionImage"
+          br
+          = simple_format(@submission.display_description)
+      
+      .row
+        .col-md-3
+          .card
+            .card-body style="text-align: center; padding: 5px;"
+              - unless psub.blank?
+                | Previous Submission by #{psub.user.username} (&larr;)
+                br
+                = link_to image_tag(safe_submission_avatar(psub), alt: "prev", width: '60px', height: '60px'), psub
+              - else
+                | First submission!
+
+        .col-md-3
+          .card
+            .card-body style="text-align: center; padding: 5px;"
+              - unless apsub.blank?
+                | #{@submission.user.username}'s Previous Submission ([)
+                br
+                = link_to image_tag(safe_submission_avatar(apsub), alt: "prev", width: '60px', height: '60px'), apsub
+              - else
+                | First submission!
+
+        .col-md-3
+          .card
+            .card-body style="text-align: center; padding: 5px;"
+              - unless ansub.blank?
+                | #{@submission.user.username}'s Next Submission (])
+                br
+                = link_to image_tag(safe_submission_avatar(ansub), alt: "next", width: '60px', height: '60px'), ansub
+              - else
+                | Last submission!
+
+        .col-md-3
+          .card
+            .card-body style="text-align: center; padding: 5px;"
+              - unless nsub.blank?
+                | Next Submission by #{nsub.user.username} (&rarr;)
+                br
+                = link_to image_tag(safe_submission_avatar(nsub), alt: "next", width: '60px', height: '60px'), nsub
+              - else
+                | Last submission!
+      
+      - has_permissions, error = @submission.can_be_commented_on_by(current_user)
+
+      .card
+        - if has_permissions
+          .card-header Comment On Submission
+
+          .card-body
+            | By commenting, you agree to adhere to DAD's guidelines for comment ettiquite as defined 
+            a href="/help" here.
+            br
+            br
+            = form_for [@submission, Comment.new] do |f|
+              = f.text_area :body, placeholder: "Write your comment. Do your best to provide meaningful feedback: a step above surface-level critique, simple praise, or a token acknowledgement of feedback.", onkeyup: "charcountupdate(this.value)", id: "comment-box"
+              span#charcount 0/2000
+              = f.submit "Post Comment"
+        - else
+          .card-header Comment On Submission
+
+          .card-body
+            = error
+      
+      - @comments.each do |comment|
+        .card.comment-card id="#{comment.id}"
+          .card-header
+            b = link_to comment.user.username, comment.user
+            = comment.created_at.strftime("%H:%M, %b %-d, %Y") 
+            span.quote-id onclick=("quote(#{comment.id});" if has_permissions)
+              No. = comment.id
+            = link_to '<span class="fa fa-trash"></span>'.html_safe, [@submission, comment], method: :delete, data: { confirm: 'Are you sure?' } if comment.user_id == current_user&.id          
+
+          .card-body
+            = simple_format(comment.link_form)
