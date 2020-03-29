@@ -14,7 +14,7 @@
             </a>
           </div>
         </div>
-      <% if current_user.id != @submission.user_id %>
+      <% elsif current_user.id != @submission.user_id %>
         <div class="card">
 	  <div class="card-header"><b>Locked</b></div>
           <div class="card-body">
