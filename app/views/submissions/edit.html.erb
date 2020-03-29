@@ -6,9 +6,19 @@
     <div class="col-lg-10">
       <% if !logged_in? %>
         <div class="card">
-	      <div class="card-header"><b>Locked</b></div>
+	  <div class="card-header"><b>Locked</b></div>
           <div class="card-body">
             You have to be logged in to submit.
+            <a class="btn btn-primary" style="float: right" href="/submissions">
+              <span class="fa fa-undo"></span> Back
+            </a>
+          </div>
+        </div>
+      <% if current_user.id != @submission.user_id %>
+        <div class="card">
+	  <div class="card-header"><b>Locked</b></div>
+          <div class="card-body">
+            You cannot edit other peoples' submissions.
             <a class="btn btn-primary" style="float: right" href="/submissions">
               <span class="fa fa-undo"></span> Back
             </a>
