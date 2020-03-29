@@ -105,6 +105,8 @@ class User < ApplicationRecord
 
   def submission_limit
     max_dad_level = highest_level
+    return 1 if max_dad_level == 0
+
     return max_dad_level if max_dad_level < UNLIMITED_SUBMISSIONS_REQUIREMENT
 
     -1

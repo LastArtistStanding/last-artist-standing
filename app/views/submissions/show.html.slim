@@ -51,7 +51,7 @@ javascript:
               br
               br
               = link_to '<span class="fa fa-edit"></span>'.html_safe, edit_submission_path(@submission), class: "btn btn-primary"
-              = link_to '<span class="fa fa-trash"></span>'.html_safe, @submission, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-primary"
+              = link_to '<span class="fa fa-trash"></span>'.html_safe, @submission, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-primary", style: "margin-left: 5px;"
               br
             - else
               br

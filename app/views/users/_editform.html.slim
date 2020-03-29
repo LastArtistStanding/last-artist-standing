@@ -1,0 +1,65 @@
+= form_for(@curruser ||= User.new, html: { novalidate: true }) do |f|
+  input type="text" style="display:none"
+  input type="password" style="display:none"
+
+  .row
+    .col-lg-6
+      .card
+        .card-header
+          b User Credentials
+
+        .card-body
+          = f.label :email
+          = f.email_field :email, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:email) ? 'is-invalid' : 'is-valid') : '' }"
+          - if @curruser.errors.key?(:email)
+            .invalid-feedback-rails
+              | Email #{@curruser.errors[:email][0]}
+
+          = f.label :password, "New Password"
+          = f.password_field :password, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:password) ? 'is-invalid' : 'is-valid') : '' }"
+          - if @curruser.errors.key?(:password)
+            .invalid-feedback-rails
+              | Password #{@curruser.errors[:password][0]}
+
+          = f.label :password_confirmation, "New Password Confirmation"
+          = f.password_field :password_confirmation, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:password_confirmation) ? 'is-invalid' : 'is-valid') : '' }"
+          - if @curruser.errors.key?(:password_confirmation)
+            .invalid-feedback-rails
+              | Password confirmation #{@curruser.errors[:password_confirmation][0]}
+      
+      .card
+        .card-header
+          b Enter your old password to confirm changes.
+        
+        .card-body
+          = label_tag :oldpassword, "Old Password"
+          = password_field_tag :oldpassword, '', class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:oldpassword) ? 'is-invalid' : 'is-valid') : '' }"
+          - if @curruser.errors.key?(:oldpassword)
+            .invalid-feedback-rails
+              | #{@curruser.errors[:oldpassword][0]}
+        
+          = f.submit "Save Changes", class: "btn btn-primary"    
+    
+    .col-lg-6
+      .card
+        .card-header
+          b Site Settings
+        
+        .card-body
+          = f.label :display_name
+          = f.text_field :display_name, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:display_name) ? 'is-invalid' : 'is-valid') : '' }"
+          - if @curruser.errors.key?(:display_name)
+            .invalid-feedback-rails
+              | Display Name #{@curruser.errors[:display_name][0]}
+            
+          = f.label :avatar
+          = f.file_field :avatar, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:avatar) ? 'is-invalid' : 'is-valid') : '' }"
+          - if @curruser.errors.key?(:avatar)
+            .invalid-feedback-rails
+              | Avatar #{@curruser.errors[:avatar][0]}
+
+          = f.label :nsfw_level, "Content Filter Level"
+          = f.select :nsfw_level, options_for_select([['Safe', 1], ['Questionable', 2], ['Explicit', 3]], @curruser.nsfw_level), {}, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:nsfw_level) ? 'is-invalid' : 'is-valid') : '' }"
+          - if @curruser.errors.key?(:nsfw_level)
+            .invalid-feedback-rails
+              | NSFW Level #{@curruser.errors[:nsfw_level][0]}
