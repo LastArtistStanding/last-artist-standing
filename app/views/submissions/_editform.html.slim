@@ -1,0 +1,98 @@
+javascript:
+  // Needed to activate tooltips.
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+  $(function () {
+    $('[data-toggle="popover"]').popover()
+  })
+
+= form_for @submission, html: { multipart: true } do |f|
+  .row
+    .col-lg-6
+      .card
+        .card-header
+          b
+            | New Submission (
+            span style="font-weight:600;"  bolded
+            |  fields are required)
+        
+        .card-body
+          - if @submission.errors.any?
+            #error_explanation
+              h3 = "#{pluralize(@submission.errors.count, "error")} prohibited this submission from being posted:"
+              ul
+                - @submission.errors.full_messages.each do |message|
+                  li = message
+        
+          | By submitting, you agree to the submission guidelines and content policy as specified 
+          a href="../help" here.
+          br
+          br
+
+          .form-group.row
+            .col-3 style="font-weight:600;"
+              = f.label :drawing
+              br
+            .col-9 = f.file_field :drawing
+
+          .form-group.row
+            .col-3 style="font-weight:600;" = f.label :nsfw_level
+            .col-9 = f.select :nsfw_level, options_for_select([['Safe', 1], ['Questionable', 2], ['Explicit', 3]], @submission.nsfw_level), {}, { class: 'custom-select' }
+          
+          .form-group.row
+            .col-3 = f.label :title
+            .col-9 = f.text_field :title
+          
+          .form-group.row
+            .col-3 = f.label :description
+            .col-9 = f.text_area :description
+          
+          .form-group.row
+            .col-6 = f.label :time, "Time Spent (in minutes)"
+            .col-6 = f.number_field :time, max: 2880
+          
+          .form-group.row
+            .col-6 = f.label :commentable, "Allow Comments?"
+            .col-6 = f.check_box :commentable, checked: @submission.commentable
+
+          .form-group.row
+            .offset-sm-6.col-sm-6 = f.submit class: 'btn btn-primary', style: "margin-bottom: 0;"
+  
+    .col-lg-6
+      .card
+        .card-header
+          b Eligible Challenges
+
+        .card-body
+          p.card-text
+            | You can submit to the following challenges. All submissions are entered into the Do Art Daily and current seasonal challenge.
+            br
+            small style="color: grey;" 
+              b
+                | (You can increase your frequency, but lowering your post frequency will reset your streak!)
+            
+            - frequency_default = current_user.current_dad_frequency || 1
+            .form-group.row style="margin-bottom: 0;"
+              .col-3 = label_tag :postfrequency, "DAD Post Frequency"
+              .col-9 = select_tag :postfrequency, options_for_select([['Daily', 1], ['Every Other Day', 2], ['Every 3 Days', 3], ['Every 4 Days', 4], ['Every 5 Days', 5], ['Every 6 Days', 6], ['Weekly', 7]], frequency_default), { class: 'custom-select' }
+            
+            .form-group.row
+              .col-3 Seasonal Challenge:
+              .col-9 = Challenge.current_season.name
+
+            br
+            b Custom Challenges:
+            br
+            small
+              b Remember to double check that you've submitted to all relevant challenges, and that your submission fulfills the conditions required for the challenge.
+            - if SiteStatus.first.current_rollover != Time.now.utc.to_date
+              br
+              b style="color: red;" WARNING! The rollover script has not completed yet. If a challenge you are participating in starts today, it may not currently be selectable.
+
+            - @participations.each do |p|
+              - if p.challenge.id != 1 && !p.challenge.seasonal
+                .form-group.row
+                  .col-3 = label_tag p.challenge_id, "#{p.challenge.name}"
+                  .col-3 = check_box_tag p.challenge_id, 1, !ChallengeEntry.find_by({challenge_id: p.challenge_id, submission_id: @submission.id}).blank?
+                  .col-6

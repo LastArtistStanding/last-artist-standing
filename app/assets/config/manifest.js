@@ -11,3 +11,4 @@
 // about supported directives.
 //
 //= link application.js
+//= link lastan_1.png

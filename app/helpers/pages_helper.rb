@@ -9,7 +9,6 @@ module PagesHelper
 
   FREQUENCY_STRINGS_SHORT = {
     -1 => 'Custom',
-    0 => 'None',
     1 => 'Daily',
     2 => 'Every Other Day',
     7 => 'Weekly'
@@ -17,7 +16,6 @@ module PagesHelper
 
   FREQUENCY_STRINGS_LONG = {
     -1 => 'Custom Frequency',
-    0 => 'Inactive',
     1 => 'Posts Daily',
     2 => 'Posts Every Other Day',
     7 => 'Posts Weekly'
@@ -38,6 +36,8 @@ module PagesHelper
   end
 
   def frequency_string(frequency, long)
+    return long ? "Inactive" : "None" if frequency.nil?
+
     return FREQUENCY_STRINGS_LONG[frequency] || "Posts Every #{frequency} Days" if long
 
     FREQUENCY_STRINGS_SHORT[frequency] || "Every #{frequency} Days"
@@ -75,5 +75,17 @@ module PagesHelper
     text.gsub! '\'', '&#39;'
     text.gsub!(/\r\n/, '<br>')
     text
+  end
+
+  def season_to_icon_class(season_challenge_name)
+    return "fa fa-leaf" if season_challenge_name.include? "Spring"
+    
+    return "fa fa-sun-o" if season_challenge_name.include? "Summer"
+    
+    return "fa fa-cloud" if season_challenge_name.include? "Autumn"
+    
+    return "fa fa-snowflake-o" if season_challenge_name.include? "Winter"
+    
+    ""
   end
 end

@@ -1,5 +1,5 @@
 class SubmissionsController < ApplicationController
-  before_action :unauth, only: [:update, :destroy]
+  before_action :unauth, only: [:edit, :update, :destroy]
   before_action :set_submission, only: [:show, :edit, :update, :destroy]
 
   # GET /submissions
@@ -114,6 +114,9 @@ class SubmissionsController < ApplicationController
       end
       respond_to do |format|
         if @submission.update(submission_params)
+          newFrequency = params[:postfrequency].to_i
+          current_user.update_attribute(:new_frequency, newFrequency)
+
           #This sort of information (challenge submissions) shouldn't ever change after the day it was submitted.
           if @submission.created_at.to_date == Date.current
             @participations.each do |p|

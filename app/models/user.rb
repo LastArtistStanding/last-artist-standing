@@ -128,7 +128,7 @@ class User < ApplicationRecord
 
     return dad_frequency unless dad_frequency.blank?
 
-    0
+    nil
   end
 
   def self.search(params)
