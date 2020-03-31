@@ -1,0 +1,24 @@
+.container-fluid
+  .row
+    .col-lg-2
+
+    .col-lg-8
+      p.h2 Notifications
+
+      table.table.table-striped
+        thead
+          tr
+            th scope="col" Message
+            th scope="col" Time Received
+            th scope="col" Read At
+
+        tbody
+          - @notifications.each do |notification|
+            tr
+              td 
+                a href="#{notification.url if notification.url.present?}"
+                  = notification.body
+              td = notification.created_at
+              td = notification.read_at
+
+    .col-lg-2
