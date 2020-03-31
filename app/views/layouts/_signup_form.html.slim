@@ -1,0 +1,24 @@
+= form_for(@user ||= User.new, remote: true, html: { novalidate: true }) do |f|
+
+  .form-group
+    = f.label :name
+    = f.text_field :name, class: "form-control #{@user.errors.any? ? (@user.errors.key?(:name) ? 'is-invalid' : 'is-valid') : '' }"
+    - if @user.errors.key?(:name)
+      .invalid-feedback-rails = "Name #{@user.errors[:name][0]}"
+
+    = f.label :email
+    = f.email_field :email, class: "form-control #{@user.errors.any? ? (@user.errors.key?(:email) ? 'is-invalid' : 'is-valid') : '' }"
+    - if @user.errors.key?(:email)
+      .invalid-feedback-rails = "Email #{@user.errors[:email][0]}"
+
+    = f.label :password
+    = f.password_field :password, class: "form-control #{@user.errors.any? ? (@user.errors.key?(:password) ? 'is-invalid' : 'is-valid') : '' }"
+    - if @user.errors.key?(:password)
+      .invalid-feedback-rails = "Password #{@user.errors[:password][0]}"
+
+    = f.label :password_confirmation, "Confirmation"
+    = f.password_field :password_confirmation, class: "form-control #{@user.errors.any? ? (@user.errors.key?(:password_confirmation) ? 'is-invalid' : 'is-valid') : '' }"
+    - if @user.errors.key?(:password_confirmation)
+      .invalid-feedback-rails = "Password confirmation #{@user.errors[:password_confirmation][0]}"
+
+    = f.submit "Create my account", class: "btn btn-primary"
