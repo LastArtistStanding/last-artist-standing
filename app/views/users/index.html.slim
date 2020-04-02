@@ -1,0 +1,33 @@
+javascript:
+  $(function () { $('[data-toggle="tooltip"]').tooltip() });
+.container-fluid
+  .row
+    .col-lg-1
+
+    .col-lg-10
+      .tim-title style="margin-bottom: 1rem;"
+        p.h2 User List
+        
+        .row
+          .col-md-4
+            .card
+              .card-body
+                = form_tag users_path, method: :get do
+                  = text_field_tag :searchname, params[:searchname]
+                  = submit_tag 'Search', class: "btn btn-primary"
+
+          .col-md-8
+            .card
+              .card-body
+                .digg_pagination style="height: #{@users.total_pages > 1 ? "80px" : "36px"}"
+                  .page_info
+                    = page_entries_info @users
+                  
+                  = will_paginate @users, container: false, inner_window: 2, outer_window: 1
+
+            .card
+              .card-body
+                - @users.each do |user|
+                  = render partial: "application/usercard", locals: { user: user }
+
+    .col-lg-1

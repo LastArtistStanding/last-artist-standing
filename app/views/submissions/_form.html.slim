@@ -1,0 +1,207 @@
+javascript:
+  // Needed to activate tooltips.
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+  $(function () {
+    $('[data-toggle="popover"]').popover()
+  })
+
+  function pad(n) {
+    return (n < 10) ? ("0" + n) : n;
+  }
+  var interval;
+  $(document).ready(function(){
+    var seconds, minutes, hours, days;
+    
+    if (interval != null) {
+      clearInterval(interval);
+    }
+    var timeInfo = $('.time_information').data('time');
+   
+    var rubyDate = new Date(timeInfo);
+    var javascriptDate = Date.now();
+    var offset = rubyDate - javascriptDate;
+  
+    var rubyNextDate = new Date(Date.UTC(rubyDate.getUTCFullYear(), rubyDate.getUTCMonth(), rubyDate.getUTCDate() + 1, 0, 0, 0));
+    var rubyNextSubmissionDate = new Date(Date.UTC(rubyDate.getUTCFullYear(), rubyDate.getUTCMonth(), rubyDate.getUTCDate() + $('.time_information').data('daysleft'), 0, 0, 0));
+    var currentTime = new Date(offset + Date.now());
+    
+    var timeToNextDay = rubyNextDate - currentTime;
+    var timeToNextSubmissionDate = rubyNextSubmissionDate - currentTime;
+    var submitted = $('.time_information').data('submitted')
+    
+    if (submitted == -2) {
+      $('#TimeDisplay').html(currentTime.toUTCString());
+      $('#StreakStatus').html("Please log in to view your streak status.");
+      $('#StreakStatus').addClass("streakNeutral");
+      $('#NextSubmissionDisplay').css("display", "none")
+    } else if (submitted == -1) {
+      $('#TimeDisplay').html(currentTime.toUTCString());
+      $('#StreakStatus').html("You currently don't have an active streak.");
+      $('#StreakStatus').addClass("streakNeutral");
+      $('#NextSubmissionDisplay').css("display", "none")
+    } else {
+      $('#TimeDisplay').html(currentTime.toUTCString());
+      
+      seconds = Math.floor(timeToNextSubmissionDate / (1000)) % 60;
+      minutes = Math.floor(timeToNextSubmissionDate / (1000*60)) % 60;
+      hours = Math.floor(timeToNextSubmissionDate / (1000*60*60)) % 24;
+      days = Math.floor(timeToNextSubmissionDate / (1000*60*60*24));
+      
+      if (submitted == 0) {
+        $('#StreakStatus').html("You must submit soon to protect your streak.<br>");
+        $('#StreakStatus').addClass("streakDanger");
+        $('#NextSubmissionDisplay').html("Submission Deadline: "+(days ? days+" day(s) " : "")+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
+      } else if (submitted == 1) {
+        $('#StreakStatus').html("Your streak is safe for now!<br>");
+        $('#StreakStatus').addClass("streakSafe");
+        $('#NextSubmissionDisplay').html("Next Submission Period: "+(days ? days+" day(s) " : "")+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
+      }
+      
+    }
+    
+    interval = setInterval(function() {
+      currentTime = new Date(offset + Date.now());
+      timeToNextDay = rubyNextDate - currentTime;
+      var pretext;
+      
+      if (submitted == -2) {
+        $('#TimeDisplay').html(currentTime.toUTCString());
+      } else if (submitted == -1) {
+        $('#TimeDisplay').html(currentTime.toUTCString());
+      } else {
+        $('#TimeDisplay').html(currentTime.toUTCString());
+        
+        if (submitted == 0) {
+          $('#StreakStatus').html("You must submit soon to protect your streak.<br>");
+          pretext = "Submission Deadline: ";
+        } else if (submitted == 1) {
+          $('#StreakStatus').html("Your streak is safe for now!<br>");
+          pretext = "Next Submission Period: ";
+        }
+        
+        timeToNextSubmissionDate = rubyNextSubmissionDate - currentTime;
+        
+        if (timeToNextSubmissionDate >= 0) {
+          seconds = Math.floor(timeToNextSubmissionDate / (1000)) % 60;
+          minutes = Math.floor(timeToNextSubmissionDate / (1000*60)) % 60;
+          hours = Math.floor(timeToNextSubmissionDate / (1000*60*60)) % 24;
+          days = Math.floor(timeToNextSubmissionDate / (1000*60*60*24));
+      
+          $('#NextSubmissionDisplay').html(pretext+(days ? days+" day(s) " : "")+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
+        } else {
+          $('#NextSubmissionDisplay').html(pretext+"00:00:00");
+        }
+      }
+      
+    }, 1000);
+  });
+
+= form_for @submission, html: { multipart: true } do |f|
+  .row
+    .col-lg-6
+      .card
+        .card-header
+          b
+            | New Submission (
+            span style="font-weight:600;" bolded
+            |  fields are required)
+        
+        .card-body
+          - if @submission.errors.any?
+            #error_explanation
+              h3 = "#{pluralize(@submission.errors.count, "error")} prohibited this submission from being posted:"
+              ul
+                - @submission.errors.full_messages.each do |message|
+                  li = message
+          
+          | By submitting, you agree to the submission guidelines and content policy as specified
+          a href="../help"  here.
+          |  Also, be aware that after submitting, <span style="font-weight: 600;">your ability to edit your submission will be 
+          |  limited after rollover, and deletion will be impossible.</span><br><br>
+
+          .form-group.row
+            .col-3 style="font-weight: 600;" = f.label :drawing 
+            br
+            .col-9 = f.file_field :drawing
+
+          .form-group.row
+            .col-3 style="font-weight:600;" = f.label :nsfw_level
+            .col-9 = f.select :nsfw_level, options_for_select([['Safe', 1], ['Questionable', 2], ['Explicit', 3]], 1), {}, { class: 'custom-select' }
+          
+          .form-group.row
+            .col-3 = f.label :title 
+            .col-9 = f.text_field :title
+          
+          .form-group.row
+            .col-3 = f.label :description
+            .col-9 = f.text_area :description
+          
+          .form-group.row
+            .col-6 = f.label :time, "Time Spent (in minutes)"
+            .col-6 = f.number_field :time, max: 2880
+          
+          .form-group.row
+            .col-6 = f.label :commentable, "Allow Comments?"
+            .col-6 = f.check_box :commentable, checked: "checked"
+
+          .form-group.row
+            .offset-sm-6.col-sm-6 = f.submit class: 'btn btn-primary', style: "margin-bottom: 0;"
+    
+    .col-lg-6
+      .card
+        .card-body
+          - timeinfo = dad_streak_status
+          = content_tag :div, class: "time_information", data: {time: Time.now.to_f * 1000, submitted: timeinfo[0], daysleft: timeinfo[1] } do
+          span
+            i.fa.fa-clock-o
+            |  
+            span#TimeDisplay
+          br
+          - current_season = Challenge.current_season
+          span
+            i class="#{season_to_icon_class(current_season.name)}"
+            = " #{current_season.name}: #{pluralize((current_season.end_date - Date.current).to_i, "day")} left."
+          br
+          br
+          span#StreakStatus
+          span#NextSubmissionDisplay
+      
+      .card
+        .card-header
+          b Eligible Challenges
+
+        .card-body
+          p.card-text
+            | You can submit to the following challenges. All submissions are entered into the Do Art Daily and current seasonal challenge.
+            br
+            small style="color: grey;"
+              b
+                | (You can increase your frequency, but lowering your post frequency will reset your streak!)
+            
+            - frequency_default = current_user.current_dad_frequency || 1
+            .form-group.row style="margin-bottom: 0;"
+              .col-5 = label_tag :postfrequency, "DAD Post Frequency"
+              .col-7 = select_tag :postfrequency, options_for_select([['Daily', 1], ['Every Other Day', 2], ['Every 3 Days', 3], ['Every 4 Days', 4], ['Every 5 Days', 5], ['Every 6 Days', 6], ['Weekly', 7]], frequency_default), { class: 'custom-select' }
+            
+            .form-group.row
+              .col-5 Seasonal Challenge:
+              .col-7 = Challenge.current_season.name
+            br
+
+            b Custom Challenges:
+            br
+            small
+              b
+                | Remember to double check that you've submitted to all relevant challenges, and that your submission fulfills the conditions required for the challenge.
+            - if SiteStatus.first.current_rollover != Time.now.utc.to_date
+              br
+              b style="color: red;" WARNING! The rollover script has not completed yet. If a challenge you are participating in starts today, it may not currently be selectable.
+            
+            - @participations.each do |p|
+              - if p.challenge.id != 1 && !p.challenge.seasonal
+                .form-group.row
+                  .col-3 = label_tag p.challenge_id, "#{p.challenge.name}"
+                  .col-3 = check_box_tag p.challenge_id
+                  .col-6

@@ -1,0 +1,78 @@
+.container-fluid
+  .row
+    .col-lg-2
+
+    .col-lg-8
+      p.h2
+        | Challenge List 
+        a.btn.btn-primary style="margin-bottom: 0.5rem;" href="#{new_challenge_path}"
+          span.fa.fa-plus
+          |  Create Challenge
+
+      table.table
+        thead
+          tr
+            th scope="col" ICO
+            th scope="col" PAR
+            th scope="col" Name
+            th scope="col" Status
+            th scope="col" Start Date
+            th scope="col" End Date
+            th scope="col" Frequency
+            th scope="col" Eliminations?
+            th scope="col" Creator
+            th scope="col" 
+              i.fa.fa-pencil aria-hidden="true"
+            th scope="col"
+              i.fa.fa-trash aria-hidden="true"
+        tbody
+          - @activeChallenges.each do |challenge|
+            tr
+              td = image_tag safe_badge_avatar(challenge.badges.first), width: "25px", alt: "bdg"
+              td = raw participation_icon(getUserParticipationLevel(current_user, challenge, true))
+              td = link_to challenge.name, challenge
+              td Active
+              td = date_string_short(challenge.start_date)
+              td = date_string_short(challenge.end_date)
+              td = frequency_string(challenge.postfrequency, false)
+              td = challenge.streak_based ? "Yes" : "No"             
+              td = challenge_creator_link(challenge.creator_id)
+              - if logged_in? && !challenge.creator_id.nil? && challenge.creator_id == current_user.id
+                td = link_to '<span class="fa fa-pencil"></span>'.html_safe, edit_challenge_path(challenge), class: "btn btn-primary"
+              - else
+                td 
+              td 
+
+          - @upcomingChallenges.each do |challenge|
+            tr
+              td = image_tag safe_badge_avatar(challenge.badges.first), width: "25px", alt: "bdg"
+              td = raw participation_icon(getUserParticipationLevel(current_user, challenge, false))
+              td = link_to challenge.name, challenge
+              td Upcoming
+              td = date_string_short(challenge.start_date)
+              td = date_string_short(challenge.end_date)
+              td = frequency_string(challenge.postfrequency, false)
+              td = challenge.streak_based ? "Yes" : "No"
+              td = challenge_creator_link(challenge.creator_id)
+              - if logged_in? && !challenge.creator_id.nil? && challenge.creator_id == current_user.id
+                td = link_to '<span class="fa fa-pencil"></span>'.html_safe, edit_challenge_path(challenge), class: "btn btn-primary"
+                td = link_to '<i class="fa fa-trash"></i>'.html_safe, challenge, method: :delete, data: { confirm: 'Are you sure?' }
+              - else
+                td 
+                td 
+
+          - @completedChallenges.each do |challenge|
+            tr style="color: grey;"
+              td = image_tag safe_badge_avatar(challenge.badges.first), width: "25px", alt: "bdg"
+              td = raw participation_icon(getUserParticipationLevel(current_user, challenge, false))
+              td = link_to challenge.name, challenge
+              td Completed
+              td = date_string_short(challenge.start_date)
+              td = date_string_short(challenge.end_date)
+              td = frequency_string(challenge.postfrequency, false)
+              td = challenge.streak_based ? "Yes" : "No"
+              td = challenge_creator_link(challenge.creator_id)
+              td 
+              td 
+    
+    .col-lg-2

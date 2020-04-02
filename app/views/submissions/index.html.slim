@@ -1,0 +1,34 @@
+.container-fluid
+  .row
+    .col-lg-2
+
+    .col-lg-8
+      div style="margin-bottom: 1rem;"
+        h2 = "#{@date == Time.now.utc.to_date ? "Today's" : @date.strftime("%B %e, %Y")} Submissions"
+      
+      = form_tag submissions_path, method: :get do
+        = date_field_tag :date, @date, class: "form-control", style: "width: 150px; display: inline-block; vertical-align: middle;"
+        = submit_tag 'Select', class: "btn btn-primary", style: "width: 100px; margin-left: 5px;"
+        a.btn.btn-primary style="margin-left: 5px; width: 100px; vertical-align: top;" href="#{submissions_path(:date => @date - 1.day)}"
+          | Prev Day
+        a.btn.btn-primary style="margin-left: 5px; width: 100px; vertical-align: top;" href="#{submissions_path(:date => @date + 1.day)}"
+          | Next Day
+
+      .row
+        ul.submissionrow
+          - @submissions.each do |submission|
+            li
+              .submissionIcon
+                - user = submission.user
+                = link_to "<img alt='' src=#{ user.profile_picture }> #{user.username}".html_safe, user, class: "submissionAuthor"
+                = link_to image_tag(safe_submission_thumb(submission), alt: "#{submission.display_title}"), submission
+                div.submissionNotes
+                  = submission.created_at.strftime("%H:%M:%S")
+                  | &nbsp;
+                  - if submission.is_animated_gif
+                    i.fa.fa-film
+                  - if submission.num_comments > 0
+                    i.fa.fa-comments-o
+                    = submission.num_comments
+
+    .col-lg-2

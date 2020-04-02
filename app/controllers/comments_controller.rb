@@ -1,6 +1,5 @@
 class CommentsController < ApplicationController
 include SubmissionsHelper
-include UsersHelper
   
 before_action :find_target
 
@@ -13,10 +12,10 @@ before_action :find_target
     @comment.user_id = current_user.id
     @comment.body = @comment.body.gsub(/ +/, " ").strip
    
-    can_comment, error = can_comment_on_submission(@target, current_user)
+    can_comment = @target.can_be_commented_on_by(current_user)
 
     if !can_comment
-      flash[:error] = error
+      flash[:error] = "You do not have permission to comment on this submission."
       redirect_back(fallback_location: "/")
     elsif @comment.save
       flash[:success] = "Comment posted successfully!"
@@ -34,14 +33,14 @@ before_action :find_target
           # Lets not duplicate the message to the artist.
           next if @target.user_id == duid
           
-          Notification.create(body: "#{poster_name} has also commented on submission #{getSubmissionTitle(@target)} (ID #{@target.id}).",
+          Notification.create(body: "#{poster_name} has also commented on submission #{@target.display_title} (ID #{@target.id}).",
                               source_type: "Submission",
                               source_id: @target.id,
                               user_id: duid,
                               url: submission_path(@target.id))
         end
         # Send a notification to the artist if it's not ourself.
-        Notification.create(body: "#{poster_name} has commented on your submission #{getSubmissionTitle(@target)} (ID #{@target.id}).",
+        Notification.create(body: "#{poster_name} has commented on your submission #{@target.display_title} (ID #{@target.id}).",
                             source_type: "Submission",
                             source_id: @target.id,
                             user_id: @target.user_id,

@@ -99,7 +99,7 @@
       
     }, 1000);
   });
-  <% backgroundImage = getRandomSafeSubmission %>
+  <% backgroundImage = random_safe_submission %>
   window.onload = function(e) {
     document.getElementById("wrapper").setAttribute("style", "background: linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ), url('<%= backgroundImage.drawing.url unless backgroundImage.blank? %>') no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;")
   }
@@ -127,11 +127,11 @@
       
       <div class="card homeCardStyle blueCard">
         <div class="card-body">
-	         <% timeinfo = userSubmittedToDAD %>
+	         <% timeinfo = dad_streak_status %>
 	         <%= content_tag :div, :class => "time_information", data: {time: Time.now.to_f * 1000, submitted: timeinfo[0], daysleft: timeinfo[1] } do %>
 	         <% end %>
 	         <span><i class="fa fa-clock-o"></i> <span id="TimeDisplay"></span></span><br>
-	         <% currentSeason = getCurrentSeasonalChallenge %>
+	         <% currentSeason = Challenge.current_season %>
 	         <span>
 	           <% if currentSeason.name.include? "Spring" %>
 	           <i class="fa fa-leaf"></i>
@@ -148,21 +148,6 @@
 	         <span id="NextSubmissionDisplay"></span>
 	       </div>
 	     </div>
-	     <% latestSubmission = getLatestSubmission %>
-	     <% if !latestSubmission.blank? && false %>
-	     <div class="card homeCardStyle blueCard">
-         <div class="card-body" style="text-align: center;">
-           <div style="margin-bottom: 0.5em;"><h5>Latest Submission</h5></div>
-             <div class="image-placeholder front-page">
-	             <%= link_to image_tag(getSubmissionThumb(latestSubmission), {size: "150", alt: "#{getSubmissionTitle(latestSubmission)}"}), latestSubmission %>
-	           </div>
-             <div style="margin-top: 0.5em;"><%= "Submitted by " + latestSubmission.user.username + " at " + latestSubmission.created_at.strftime("%T") %></div>
-            <% if latestSubmission.nsfw_level > 1 %>
-             <div><%= "Warning: submission contains "+getNsfwString(latestSubmission.nsfw_level).downcase+" content." %></div>
-           <% end %>
-	       </div>
-	     </div>
-	     <% end %>
 	     
 	     <div class="card homeCardStyle blueCard">
          <div class="card-body" style="text-align: center;">
@@ -199,7 +184,7 @@
           <div class="card-body">
             <% @latestEliminations.each do |elim| %>
             <% user = elim.user %>
-            <% avatarURL = getUserThumb(user) %>
+            <% avatarURL = user.profile_picture %>
             <%= link_to image_tag(avatarURL, :title => "#{user.username} (Streak: #{elim.score})", :style => "width: 50px; margin: 0.25rem;", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{user.username}"), user %>
             <% end %>
           </div>
@@ -212,7 +197,7 @@
           <div class="card-body">
             <% @levelUps.each do |award| %>
               <% user = award.user %>
-              <% avatarURL = getUserThumb(user) %>
+              <% avatarURL = user.profile_picture %>
               <%= link_to image_tag(avatarURL, :title => "#{user.username} - Level #{award.prestige} (#{pluralize(BadgeMap.where(:prestige => award.prestige, :badge_id => 1).first.required_score, "submission")})", :style => "width: 50px; margin-right: 0.5rem; margin-bottom: 0.5rem;", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{user.username}"), user %>
             <% end %>
           </div>
@@ -254,11 +239,11 @@
 
                 <% @activeChallenges.each do |challenge| %>
                 <tr>
-                  <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
+                  <td><%= image_tag safe_badge_avatar(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
                   <td><%= link_to challenge.name, challenge_path(challenge.id),  style: "color: white;" %></td>
-                  <td><%= dateToShortString(challenge.start_date) %></td>
-                  <td><%= dateToShortString(challenge.end_date) %></td>
-                  <td><%= postfrequencyToString(challenge.postfrequency, false) %></td>
+                  <td><%= date_string_short(challenge.start_date) %></td>
+                  <td><%= date_string_short(challenge.end_date) %></td>
+                  <td><%= frequency_string(challenge.postfrequency, false) %></td>
                 </tr>
                 <% end %>
               </tbody>
@@ -274,11 +259,11 @@
               <tbody>
                 <% @upcomingChallenges.each do |challenge| %>
                   <tr>
-                    <td><%= image_tag getBadgeImage(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
+                    <td><%= image_tag safe_badge_avatar(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
                     <td><%= link_to challenge.name, challenge_path(challenge.id), style: "color: white;" %></td>
-                    <td><%= dateToShortString(challenge.start_date) %></td>
-                    <td><%= dateToShortString(challenge.end_date) %></td>
-                    <td><%= postfrequencyToString(challenge.postfrequency, false) %></td>
+                    <td><%= date_string_short(challenge.start_date) %></td>
+                    <td><%= date_string_short(challenge.end_date) %></td>
+                    <td><%= frequency_string(challenge.postfrequency, false) %></td>
                   </tr>
                 <% end %>
               </tbody>
@@ -307,12 +292,12 @@
               ">
                 <div style="width: 90px; float: left;">
                   <% badge = Badge.find(awardData[1]) %>
-                  <%= link_to image_tag(getBadgeImage(badge), :class => "prestige#{awardData[0]}", :data => {:content => "<p style='font-weight: 600;'>#{badge.name}</p>#{simple_format(BadgeMap.find_by({:badge_id => awardData[1], :prestige => awardData[0]}).description)} (Prestige Level: #{awardData[0]})", :trigger => "hover", :toggle => "popover", :placement => "top", :html => "true" }, :alt => "#{badge.name}"), challenge_path(badge.challenge_id) %>
+                  <%= link_to image_tag(safe_badge_avatar(badge), :class => "prestige#{awardData[0]}", :data => {:content => "<p style='font-weight: 600;'>#{badge.name}</p>#{simple_format(BadgeMap.find_by({:badge_id => awardData[1], :prestige => awardData[0]}).description)} (Prestige Level: #{awardData[0]})", :trigger => "hover", :toggle => "popover", :placement => "top", :html => "true" }, :alt => "#{badge.name}"), challenge_path(badge.challenge_id) %>
                 </div>
                 <div style="width: calc(100% - 90px); float: left;">
                   <% awards.each do |award| %>
                     <% user = award.user %>
-                    <% avatarURL = getUserThumb(user) %>
+                    <% avatarURL = user.profile_picture %>
                     
                     <%= link_to image_tag(avatarURL, :title => "#{user.username}", :style => "width: 25px; margin-right: 0.25rem; margin-bottom: 0.25rem;", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{user.username}"), user %>
                   <% end %>
@@ -346,7 +331,7 @@
                 <tr><td>
                   <% seasonParts.each do |seasonPart| %>
                     <% user = seasonPart.user %>
-                    <% avatarURL = getUserThumb(user) %>
+                    <% avatarURL = user.profile_picture %>
                     <%= link_to image_tag(avatarURL, :title => "#{user.username}", :style => "width: 20px; margin: 0.125rem;", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{user.username}"), user %>
                   <% end %>
                 </td>

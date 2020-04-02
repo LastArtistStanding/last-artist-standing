@@ -1,0 +1,183 @@
+.container-fluid style="margin-top: 2rem;"
+  .row
+    .col-lg-1
+    
+    .col-lg-10
+      .row
+        .col-lg-6
+          .card
+            .card-header
+              b Challenge Details
+              a.btn.btn-primary style="float: right; margin-left: 0.5rem; margin-top: -0.25rem; margin-bottom: -0.5rem;" href="/challenges"
+                i.fa.fa-undo
+                |  Back
+              
+              a.btn.btn-primary style="float: right; margin-top: -0.25rem; margin-bottom: -0.5rem;" href="#{@challenge.id}/entries"
+                i.fa.fa-picture-o aria-hidden="true"
+                |  Show Entries
+
+            .card-body
+              .form-group.row
+                .col-3 = label_tag :name
+                .col-9 = @challenge.name
+
+              .form-group.row
+                .col-3 = label_tag :description
+                .col-9 = html_escape(@challenge.description).html_safe
+        
+              .form-group.row
+                .col-3 = label_tag :nsfw_level
+                .col-9 = nsfw_string(@challenge.nsfw_level)
+              
+              .form-group.row
+                .col-3 = label_tag :start_date
+                .col-9 = date_string(@challenge.start_date)
+              
+              .form-group.row
+                .col-3 = label_tag :end_date
+                .col-9 = date_string(@challenge.end_date)
+
+              .form-group.row
+                .col-3 = label_tag :streak_based
+                .col-9 = @challenge.streak_based ? "Yes" : "No"
+              
+              .form-group.row
+                .col-3 = label_tag :postfrequency
+                .col-9 = frequency_string(@challenge.postfrequency, false)
+    
+          .card
+            .card-header
+              b Reward
+
+            .card-body
+              .form-group.row
+                .col-3 = label_tag "Badge Name"
+                .col-9 = @badge.name
+              
+              .form-group.row
+                .col-3 = label_tag "Badge Appearance"
+                .col-9 = image_tag safe_badge_avatar(@badge), alt: @badge.name
+          
+              .table-responsive
+                table.table.table-sm
+                  thead.thead-light
+                    tr
+                      th scope="col" Score
+                      th scope="col" Prestige
+                      th scope="col" Description
+                  tbody
+                    - @badge_maps.each do |badgemap|
+                      tr
+                        td = badgemap.required_score
+                        td = badgemap.prestige
+                        td = html_escape(badgemap.description).html_safe
+
+        .col-lg-6
+          - if @challenge.id == 1 && !@latestEliminations.blank?
+            .card
+              .card-header style="color: red;"
+                 b Last Week's Eliminations
+              
+              .card-body.table-responsive
+                table.table.table-sm
+                  thead.thead-light
+                    tr
+                      th scope="col" User
+                      th scope="col" Final Score
+                      th scope="col" Join Date
+                      th scope="col" End Date
+                  tbody
+                    - @latestEliminations.each do |participation|
+                      tr
+                        td = link_to participation.user.username, participation.user
+                        td = participation.score
+                        td = date_string(participation.created_at.to_date)
+                        td = date_string(participation.end_date)
+    
+          .card
+            .card-header
+              b Current Participant List
+              - if Time.now.utc.to_date < @challenge.start_date
+                - if @challenge.id != 1 && !@challenge.seasonal && logged_in?
+                  - if user_is_participating(current_user, @challenge)
+                    = link_to "Leave Challenge", challenge_path(@challenge, leave: true), class: "btn btn-primary", style: 'float: right; margin-top: -0.375rem; margin-bottom: -0.375rem;'
+                  - else
+                    = link_to "Join Challenge", challenge_path(@challenge, join: true), class: "btn btn-primary", style: 'float: right; margin-top: -0.375rem; margin-bottom: -0.375rem;'
+
+            .card-body.table-responsive
+              - if Time.now.utc.to_date < @challenge.start_date
+                - user_participation_level = getUserParticipationLevel(current_user, @challenge, false)
+                = "#{raw participation_icon(user_participation_level)} -".html_safe
+                - if user_participation_level == 0
+                  |  You have not signed up for this challenge.
+                - elsif user_participation_level == 1
+                  |  You have signed up for this challenge!
+                - else
+                  |  You definitely cheated, or something weird happened. Either way, report this to banana ASAP.
+                br
+                br
+              - elsif Time.now.utc.to_date >= @challenge.start_date && (@challenge.end_date.blank? || Time.now.utc.to_date < @challenge.end_date)
+                - user_participation_level = getUserParticipationLevel(current_user, @challenge, true)
+                = "#{raw participation_icon(user_participation_level)} -".html_safe
+                - if user_participation_level == 0
+                  |  You are not participating in this challenge.
+                - elsif user_participation_level == 1
+                  |  You are currently participating in this challenge!
+                - else
+                  |  You are participating in this challenge, and have earned a badge for your efforts!
+                br
+                br
+              - else
+                - user_participation_level = getUserParticipationLevel(current_user, @challenge, false)
+                = "#{raw participation_icon(user_participation_level)} -".html_safe
+                - if user_participation_level == 0
+                  |  You did not participate in this challenge.
+                - elsif user_participation_level == 1
+                  |  You participated in this challenge, but did not earn a badge.
+                - else
+                  |  You participated in this challenge, and earned a badge for your efforts!
+                br
+                br
+              
+              table.table.table-sm
+                thead.thead-light
+                  tr
+                    th scope="col"
+                    th scope="col" User
+                    th scope="col" Current Score
+                    th scope="col" Join Date
+                    - if @challenge.id != 1
+                      th scope="col" End Date
+                      - if @challenge.streak_based
+                        th scope="col" Eliminated?
+                    - if @challenge.id == 1
+                      th scope="col" Post Frequency
+                tbody
+                  - @currentParticipants.each do |participation|
+                    tr
+                      td
+                        - if getParticipationLevel(participation, @challenge) == 2
+                          i.fa.fa-trophy aria-hidden="true"
+                      td = link_to participation.user.username, participation.user
+                      td = participation.score
+                      td = date_string(participation.created_at.to_date)
+                      - if @challenge.id != 1
+                        td = date_string(participation.end_date)
+                        - if @challenge.streak_based
+                          td
+                      - if @challenge.id == 1
+                        td = frequency_string(participation.user.current_dad_frequency, false)
+                  
+                  - if !@allEliminations.blank?
+                    - @allEliminations.each do |participation|
+                    tr
+                      td
+                        - if getParticipationLevel(participation, @challenge) == 2
+                          i.fa.fa-trophy aria-hidden="true"
+                      td = link_to participation.user.username, participation.user 
+                      td = participation.score
+                      td = date_string(participation.created_at.to_date)
+                      td = date_string(participation.end_date)
+                      td = "Eliminated"
+
+    .col-lg-1

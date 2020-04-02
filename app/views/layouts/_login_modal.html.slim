@@ -1,0 +1,19 @@
+.modal-dialog.modal-lg role="document"
+  .modal-content
+    .modal-header
+      h4.modal-title Login/Register
+      button.close type="button" data-dismiss="modal"
+        span &times;
+    
+    .modal-body
+      .row
+        .col-lg-6
+          .card
+            .card-header Login
+            #login-form.card-body = render "layouts/login_form"
+
+        .col-lg-6
+          .card
+            .card-header Register
+            #signup-form.card-body
+              = render "layouts/signup_form"

@@ -1,5 +1,5 @@
 class SubmissionsController < ApplicationController
-  before_action :unauth, only: [:new, :edit, :update, :destroy]
+  before_action :unauth, only: [:edit, :update, :destroy]
   before_action :set_submission, only: [:show, :edit, :update, :destroy]
 
   # GET /submissions
@@ -17,12 +17,12 @@ class SubmissionsController < ApplicationController
       if !params[:date].blank?
         begin
           @date = Date.parse(params[:date])
-          @date = Date.today if @date > Date.today
+          @date = Time.now.utc.to_date if @date > Time.now.utc.to_date
         rescue ArgumentError
-          @date = Date.today
+          @date = Time.now.utc.to_date
         end
       else
-        @date = Date.today
+        @date = Time.now.utc.to_date
       end
       @submissions = Submission.includes(:user).where(created_at: @date.midnight..@date.end_of_day).order('created_at DESC')
     end
@@ -36,8 +36,10 @@ class SubmissionsController < ApplicationController
 
   # GET /submissions/new
   def new
-    @submission = Submission.new
-    @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
+    if logged_in?
+      @submission = Submission.new
+      @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
+    end
   end
 
   # GET /submissions/1/edit
@@ -75,7 +77,7 @@ class SubmissionsController < ApplicationController
         newFrequency = params[:postfrequency].to_i
         current_user.update_attribute(:new_frequency, newFrequency)
         
-        seasonalChallenge = Challenge.currentSeasonalChallenge
+        seasonalChallenge = Challenge.current_season
         
         # Add submission to DAD/Current Seasonal Challenge
         ChallengeEntry.create({challenge_id: 1, submission_id: @submission.id, user_id: artist_id})
@@ -112,6 +114,9 @@ class SubmissionsController < ApplicationController
       end
       respond_to do |format|
         if @submission.update(submission_params)
+          newFrequency = params[:postfrequency].to_i
+          current_user.update_attribute(:new_frequency, newFrequency)
+
           #This sort of information (challenge submissions) shouldn't ever change after the day it was submitted.
           if @submission.created_at.to_date == Date.current
             @participations.each do |p|

@@ -1,0 +1,41 @@
+.container-fluid style="margin-top: 2rem;"
+  .row
+    .col-lg-1
+
+    .col-lg-10
+      .row
+        .digg_pagination
+          .page_info
+            = page_entries_info @user_submissions
+          
+          = will_paginate @user_submissions, container: false
+ 
+      .row
+        .col-lg-12
+           .card
+              .card-header
+                b = "#{@curruser.username} - Submissions"
+            
+              .card-body
+                - if @user_submissions.count == 0
+                  | This user has no submissions!
+                - else
+                  ul.submissionrow
+                    - @user_submissions.each do |submission|
+                      li
+                        .submissionIcon
+                          .submissionTitle = submission.display_title
+                          = link_to image_tag(safe_submission_thumb(submission), alt: "#{submission.display_title}"), submission
+                          .submissionNotes
+                            = submission.created_at.strftime("%b %-d") 
+                            | &nbsp;
+                            - if submission.is_animated_gif
+                              i.fa.fa-film
+                            - if submission.num_comments > 0
+                              i.fa.fa-comments-o = submission.num_comments
+
+      a.btn.btn-primary href="/users/#{@curruser.id}"
+        span.fa.fa-undo
+        |  Back
+
+    .col-lg-1

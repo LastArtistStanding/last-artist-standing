@@ -1,38 +1,15 @@
 module ChallengesHelper
-  def getChallengeCreator(id)
-    if id.present?
-      if id == -1
-        "User Account Deleted"
-      else
-        user = User.find_by(id: id)
-        
-        link_to(user.username, user)
-      end
-    else
-      "Site Challenge"
-    end
-  end
+  def challenge_creator_link(id)
+    return "Site Challenge" unless id.present?
+
+    return "User Account Deleted" if id == -1
     
-  def userIsInChallenge(user, challenge)
-    !Participation.find_by(:user_id => user.id, :challenge_id => challenge.id).blank?
+    user = User.find(id)
+    link_to(user.username, user)
   end
-    
-  def getDADChallenge
-    Challenge.find(1)
-  end
-    
-  def getCurrentSeasonalChallenge
-    Challenge.where(":todays_date >= start_date AND :todays_date < end_date AND seasonal = true", {todays_date: Date.current}).first
-  end
-    
-  def getDaysInChallenge(challenge)
-    if challenge.blank?
-      0
-    else
-      (challenge.end_date - challenge.start_date).to_i
-    end
-  end
-    
+  
+  # TODO: This suite of methods is absolutely fucking awful.
+  # Will be removed once the challenge page is refactored.
   def getBadgeThreshold(challenge)
     BadgeMap.where(:challenge_id => challenge.id).order("required_score ASC").first.required_score
   end
@@ -58,26 +35,5 @@ module ChallengesHelper
     
     getParticipationLevel(participation, challenge)
   end
-    
-  def getParticipationIcon(value)
-    case value
-    when 0
-      "<i class='fa fa-times-circle' aria-hidden='true'></i>"
-    when 1
-      "<i class='fa fa-check' aria-hidden='true'></i>"
-    when 2
-      "<i class='fa fa-trophy' aria-hidden='true'></i>"
-    end
-  end
-    
-  def getAwardByUserAndChallenge(challenge, user)
-    if challenge.blank?
-      nil
-    elsif user.blank?
-      nil
-    else
-      badge_map = BadgeMap.find_by(challenge_id: challenge.id)
-      Award.find_by(:user_id => user.id, :badge_id => badge_map.badge_id)
-    end
-  end
+  # End absolute fucking garbage.
 end
