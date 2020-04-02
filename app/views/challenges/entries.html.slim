@@ -1,0 +1,40 @@
+.container-fluid style="margin-top: 2rem;"
+  .row
+    .col-lg-1
+    
+    .col-lg-10
+      .row
+        .digg_pagination
+          .page_info = page_entries_info @challengeEntries
+          = will_paginate @challengeEntries, container: false
+      
+      .row
+        .col-lg-12
+          .card
+            .card-header
+              b Challenge Entries
+            
+            .card-body
+              ul.submissionrow
+                - if @challengeEntries.count == 0
+                  | No entries made yet!
+                - else
+                  - @challengeEntries.each do |challengeEntry|
+                    - submission = challengeEntry.submission
+                    li
+                      .submissionIcon
+                        - user = submission.user
+                        = link_to "<img alt='' src=#{ user.profile_picture }> #{user.username}".html_safe, user, class: "submissionAuthor"
+                        = link_to image_tag(safe_submission_thumb(submission), alt: "#{submission.display_title}"), submission
+                        .submissionNotes
+                          - if submission.is_animated_gif
+                            i.fa.fa-film
+                          - if submission.comments.count > 0
+                            i.fa.fa-comments-o
+                            = submission.comments.count
+      
+      a.btn.btn-primary href="/challenges/#{@challenge.id}"
+        span.fa.fa-undo
+        |  Back
+    
+    .col-lg-1
