@@ -36,7 +36,7 @@ module PagesHelper
   end
 
   def frequency_string(frequency, long)
-    return long ? "Inactive" : "None" if frequency.nil?
+    return long ? "Inactive" : "None" if frequency.nil? || frequency.zero?
 
     return FREQUENCY_STRINGS_LONG[frequency] || "Posts Every #{frequency} Days" if long
 
