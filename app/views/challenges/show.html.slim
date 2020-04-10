@@ -170,14 +170,14 @@
                   
                   - if !@allEliminations.blank?
                     - @allEliminations.each do |participation|
-                    tr
-                      td
-                        - if getParticipationLevel(participation, @challenge) == 2
-                          i.fa.fa-trophy aria-hidden="true"
-                      td = link_to participation.user.username, participation.user 
-                      td = participation.score
-                      td = date_string(participation.created_at.to_date)
-                      td = date_string(participation.end_date)
-                      td = "Eliminated"
+                      tr
+                        td
+                          - if getParticipationLevel(participation, @challenge) == 2
+                            i.fa.fa-trophy aria-hidden="true"
+                        td = link_to participation.user.username, participation.user 
+                        td = participation.score
+                        td = date_string(participation.created_at.to_date)
+                        td = date_string(participation.end_date)
+                        td = "Eliminated"
 
     .col-lg-1
