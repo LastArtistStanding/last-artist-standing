@@ -1,6 +1,6 @@
 .avatarWithName
   .avatarUserName = user.username
-  a href="users/#{user.id}"
+  a href="#{root_url}users/#{user.id}"
     span.fullSizeAvatar
       = image_tag user.profile_picture, title: "#{frequency_string(user.current_dad_frequency, true)}", alt: "#{user.username}", data: { toggle: "tooltip", placement: "top" }
       div style="margin-top: 5px;" data-toggle="tooltip" data-placement="top" title="Record Streak: #{user.longest_streak} (Level #{user.highest_level})"
