@@ -31,8 +31,11 @@
                             | &nbsp;
                             - if submission.is_animated_gif
                               i.fa.fa-film
+                              | &nbsp;
                             - if submission.num_comments > 0
-                              i.fa.fa-comments-o = submission.num_comments
+                              i.fa.fa-comments-o
+                              | &nbsp;
+                              = submission.num_comments
 
       a.btn.btn-primary href="/users/#{@curruser.id}"
         span.fa.fa-undo

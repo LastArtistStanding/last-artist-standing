@@ -27,8 +27,10 @@
                   | &nbsp;
                   - if submission.is_animated_gif
                     i.fa.fa-film
+                    | &nbsp;
                   - if submission.num_comments > 0
                     i.fa.fa-comments-o
+                    | &nbsp;
                     = submission.num_comments
 
     .col-lg-2
