@@ -50,7 +50,7 @@ class SubmissionsController < ApplicationController
   # POST /submissions
   # POST /submissions.json
   def create
-    initialDateTime = DateTime.current
+    initial_date_time = Time.now.utc
     failure = false
     @submission = Submission.new(submission_params)
     artist_id = current_user.id
@@ -58,8 +58,8 @@ class SubmissionsController < ApplicationController
     @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
     
     if !@submission.time.blank?
-      if !@submission.time.is_a? Integer
-        @submission.errors.add(:time, " specified has to be an integer.")
+      if !@submission.time.is_a? Integer || !@submission.time.positive?
+        @submission.errors.add(:time, " specified has to be a positive integer.")
         failure = true;
       end
     end
@@ -69,9 +69,8 @@ class SubmissionsController < ApplicationController
         format.html { render :new }
         format.json { render json: @submission.errors, status: :unprocessable_entity }
       elsif @submission.save
-      
         #lock in time to account for lag time
-        @submission.created_at = initialDateTime
+        @submission.created_at = initial_date_time
         @submission.save
         
         newFrequency = params[:postfrequency].to_i
@@ -80,14 +79,20 @@ class SubmissionsController < ApplicationController
         seasonalChallenge = Challenge.current_season
         
         # Add submission to DAD/Current Seasonal Challenge
-        ChallengeEntry.create({challenge_id: 1, submission_id: @submission.id, user_id: artist_id})
-        ChallengeEntry.create({challenge_id: seasonalChallenge.id, submission_id: @submission.id, user_id: artist_id})
+        dad_ce = ChallengeEntry.create({challenge_id: 1, submission_id: @submission.id, user_id: artist_id})
+        dad_ce.created_at = initial_date_time
+        dad_ce.save
+        season_ce = ChallengeEntry.create({challenge_id: seasonalChallenge.id, submission_id: @submission.id, user_id: artist_id})
+        season_ce.created_at = initial_date_time
+        season_ce.save
         
         # Last, manage all custom challenge submissions selected (to do).
         @participations = Participation.where({user_id: artist_id, active: true}).order("challenge_id ASC")
         @participations.each do |p|
           if !params[p.challenge_id.to_s].blank?
-            ChallengeEntry.create({challenge_id: p.challenge_id, submission_id: @submission.id, user_id: artist_id})
+            ce = ChallengeEntry.create({challenge_id: p.challenge_id, submission_id: @submission.id, user_id: artist_id})
+            ce.created_at = initial_date_time
+            ce.save
           end
         end
         
@@ -107,18 +112,21 @@ class SubmissionsController < ApplicationController
     curr_user_id = current_user.id
     
     if @submission.user_id == curr_user_id
-      if @submission.created_at.to_date == Date.current
+      if @submission.created_at.to_date == Time.now.utc.to_date
         usedParams = submission_params
       else
         usedParams = limited_params
       end
       respond_to do |format|
-        if @submission.update(submission_params)
-          newFrequency = params[:postfrequency].to_i
-          current_user.update_attribute(:new_frequency, newFrequency)
+        if @submission.update(usedParams)
+
+          if !params[:postfrequency].nil?
+            newFrequency = params[:postfrequency].to_i
+            current_user.update_attribute(:new_frequency, newFrequency)
+          end
 
           #This sort of information (challenge submissions) shouldn't ever change after the day it was submitted.
-          if @submission.created_at.to_date == Date.current
+          if @submission.created_at.to_date == Time.now.utc.to_date
             @participations.each do |p|
               if p.challenge_id != 1 && !p.challenge.seasonal
                 entry = ChallengeEntry.find_by({challenge_id: p.challenge_id, submission_id: @submission.id, user_id: curr_user_id})
@@ -132,6 +140,7 @@ class SubmissionsController < ApplicationController
               end
             end
           end
+          
           format.html { redirect_to @submission }
           format.json { render :show, status: :ok, location: @submission }
         else

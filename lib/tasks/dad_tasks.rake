@@ -61,6 +61,7 @@ namespace :dad_tasks do
         p.active = false
         p.eliminated = true
         p.end_date = yesterday
+        p_user.update_attribute(:new_frequency, nil)
         p_user.update_attribute(:current_streak, 0)
       else
         if dad_entries.count > 0 && !p.submitted
@@ -93,7 +94,7 @@ namespace :dad_tasks do
         
         if !p_user.new_frequency.blank?
           # If the new frequency is easier, reset the streak
-          if !p_user.dad_frequency.blank? && p_user.dad_frequency < p_user.new_frequency
+          if !p_user.dad_frequency.blank? && (p_user.dad_frequency < p_user.new_frequency)
             p.score = (p.score / 2.0).ceil
             p_user.update_attribute(:current_streak, p.score)
           end
@@ -107,7 +108,7 @@ namespace :dad_tasks do
         if today == p.next_submission_date
           p.last_submission_date = p.next_submission_date
           # Handle DAD's custom postfrequency
-          p.next_submission_date = next_date + p_user.dad_frequency.days
+          p.next_submission_date = p.next_submission_date + p_user.dad_frequency.days
           p.submitted = false
         end
       end
