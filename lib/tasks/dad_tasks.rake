@@ -99,7 +99,7 @@ namespace :dad_tasks do
             p_user.update_attribute(:current_streak, p.score)
           end
           p_user.update_attribute(:dad_frequency, p_user.new_frequency)
-          p.next_submission_date = p.last_submission_date + p_user.dad_frequency
+          p.next_submission_date = p.last_submission_date + p_user.dad_frequency.days
           p.next_submission_date = today if p.next_submission_date < today
           p_user.update_attribute(:new_frequency, nil)
         end
@@ -108,7 +108,7 @@ namespace :dad_tasks do
         if today == p.next_submission_date
           p.last_submission_date = p.next_submission_date
           # Handle DAD's custom postfrequency
-          p.next_submission_date = p.next_submission_date + p_user.dad_frequency.days
+          p.next_submission_date = p.last_submission_date + p_user.dad_frequency.days
           p.submitted = false
         end
       end

@@ -57,13 +57,6 @@ class SubmissionsController < ApplicationController
     @submission.user_id = artist_id
     @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
     
-    if !@submission.time.blank?
-      if !@submission.time.is_a? Integer || !@submission.time.positive?
-        @submission.errors.add(:time, " specified has to be a positive integer.")
-        failure = true;
-      end
-    end
-    
     respond_to do |format|
       if failure
         format.html { render :new }
