@@ -1,5 +1,5 @@
 <% provide(:title, "Do Art Daily") %>
-
+<%= javascript_include_tag "polyfills/css.escape" %>
 <script>
   // Needed to activate tooltips.
   $(function () {
@@ -100,9 +100,13 @@
     }, 1000);
   });
   <% backgroundImage = random_safe_submission %>
+  <%# We must escape the URL as JavaScript because we're in a script tag, but *not* as HTML because this is a CDATA section. %>
+  <%# Afterwards, we must escape the URL as CSS because the style attribute is CSS. %>
+  <%# There is no built-in Rails function to escape CSS directly, so we must use the browser built-in. %>
+  const backgroundImageUrl = CSS.escape("<%= escape_javascript(backgroundImage.drawing.url).html_safe unless backgroundImage.blank? %>");
   window.onload = function(e) {
-    document.getElementById("wrapper").setAttribute("style", "background: linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ), url('<%= backgroundImage.drawing.url unless backgroundImage.blank? %>') no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;")
-  }
+    document.getElementById("wrapper").setAttribute("style", "background: linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ), url('" + backgroundImageUrl + "') no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;")
+  };
 </script>
 <div class="container-fluid">
   <div class="row">

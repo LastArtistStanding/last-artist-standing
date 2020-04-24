@@ -12,3 +12,4 @@
 //
 //= link application.js
 //= link lastan_1.png
+//= link polyfills/css.escape.js
