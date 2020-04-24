@@ -47,12 +47,13 @@ $ rake dad_tasks:update_database
 $ rake dad_tasks:init_site_status
 ```
 
-Now, you'll need to create an Amazon AWS account. Don't worry; the free-tier services are sufficient to run this website. Then, [create an access key for your user account](https://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html) and create an S3 bucket for your local copy of DAD to use. The bucket region is not currently configurable, so you *must* make your bucket in the `us-east-2` region.
+Now, you'll need to create an Amazon AWS account. Don't worry; the free-tier services are sufficient to run this website. Then, [create an access key for your user account](https://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html) and create an S3 bucket for your local copy of DAD to use.
 Put your access key and S3 bucket ID in a `.env` file in the root of the repository (the `.gitignore` file will prevent you from accidentally uploading your access keys):
 ```
 AWS_ACCESS_KEY=<your access key>
 AWS_SECRET_ACCESS_KEY=<your secret access key>
 AWS_S3_BUCKET=<your bucket id>
+AWS_REGION=<the region your bucket is in, or us-east-2 if unspecified>
 ```
 
 You will need to add this permission policy to your bucket:
