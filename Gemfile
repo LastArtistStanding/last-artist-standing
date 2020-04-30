@@ -8,8 +8,7 @@ gem 'rails', '>= 6.0.2.2', '< 6.1'
 #Use Rails controller testing for testing stability and error-proneness of site.
 gem 'rails-controller-testing'
 # Use bcrypt for Password hashing to protect against attackers
-# Pulling directly from the author's github to solve a Windows issue
-gem 'bcrypt', git: 'https://github.com/codahale/bcrypt-ruby.git', :require => 'bcrypt'
+gem 'bcrypt', '~> 3.1'
 
 gem 'bootstrap', '>= 4.3.1'
 # For popovers
