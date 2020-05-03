@@ -149,8 +149,9 @@ class SubmissionsController < ApplicationController
     # You can only delete a submission on the day you submitted it.
     return if @submission.created_at.to_date != Time.now.utc.to_date
 
-    ChallengeEntry.where(submission_id: @submission.id).destroy_all
     @submission.destroy
+    @submission.comments.each { |comment| comment.notifications.destroy_all }
+
     respond_to do |format|
       format.html { redirect_to submissions_url }
       format.json { head :no_content }

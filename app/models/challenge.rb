@@ -2,11 +2,12 @@
 
 # Represents a challenge on the website.
 class Challenge < ApplicationRecord
-  has_many :badge_maps
-  has_many :participations
+  has_many :badge_maps, dependent: :destroy
+  has_many :participations, dependent: :destroy
+  has_many :notifications, as: :source, dependent: :destroy
   has_many :challenge_entries
   has_many :users, through: :participations
-  has_many :badges, through: :badge_maps
+  has_many :badges, through: :badge_maps, dependent: :destroy
 
   NO_EXCESS_WHITESPACE = /\A(\S\s?)*\S\z/.freeze
 

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class CommentsController < ApplicationController
+  include CommentsHelper
   include SubmissionsHelper
 
   before_action :set_target, only: %i[new create]
@@ -37,7 +38,7 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    target = Submission.find_by(id: @comment.source_id) if @comment.source_type == 'Submission'
+    target = @comment.source
     @comment.destroy!
     unless target.nil?
       target.num_comments -= 1
@@ -76,10 +77,10 @@ class CommentsController < ApplicationController
     Notification.create(
       body: format(message, poster: current_user.username,
                             target: "#{@target.display_title} (ID: #{@target.id})"),
-      source_type: 'Submission',
-      source_id: @target.id,
+      source_type: 'Comment',
+      source_id: @comment.id,
       user_id: user_id,
-      url: submission_path(@target)
+      url: comment_html_path(@comment)
     )
   end
 

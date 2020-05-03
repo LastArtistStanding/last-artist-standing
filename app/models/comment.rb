@@ -5,10 +5,16 @@ class Comment < ApplicationRecord
 
   belongs_to :source, polymorphic: true
   belongs_to :user
+  has_many :notifications, as: :source, dependent: :destroy
 
   validates :user_id, presence: true
   validates :body, length: { maximum: 2000 }, presence: true
 
+  # HACK: What a mess!!
+  #   I *think* this parses comment bodies, finds `>>`-syntax replies,
+  #   and replaces them with links to the comment or submission being replied to.
+  #   I'd be willing to clean this up, but until I know for sure what it does,
+  #   I don't want to mess with it.
   def link_form
     return body if body.index('>>').nil?
 
