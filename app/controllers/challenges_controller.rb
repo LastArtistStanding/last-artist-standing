@@ -169,6 +169,7 @@ class ChallengesController < ApplicationController
     return unless challenge.can_delete?
 
     Participation.where(challenge_id: @challenge.id).destroy_all
+    Notification.where(source_type: 'Challenge', source_id: @challenge.id).destroy_all
     @badge_map.destroy
     @badge.destroy
     @challenge.destroy
