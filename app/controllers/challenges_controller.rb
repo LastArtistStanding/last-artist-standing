@@ -47,6 +47,11 @@ class ChallengesController < ApplicationController
   
   # GET /challenge/new
   def new
+    if !logged_in?
+      render "/pages/redirect", status: 403
+      return
+    end
+
     @challenge = Challenge.new
     @badge_map = BadgeMap.new
     @badge = Badge.new
@@ -124,6 +129,10 @@ class ChallengesController < ApplicationController
   end
 
   def edit
+    if !logged_in? || @challenge.creator_id.nil? || challenge.creator_id != current_user.id
+      render "/pages/redirect", status: 403
+      return
+    end
   end
 
   def update

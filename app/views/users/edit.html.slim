@@ -3,17 +3,6 @@
     .col-lg-1
     
     .col-lg-10
-      - if logged_in? && @curruser.id == current_user.id
-        = render 'editform', challenge: @curruser
-      - else
-        .card
-          .card-header
-            b Locked
-
-          .card-body
-            | You can't edit someone else's user page.
-            a.btn.btn-primary style="float: right" href="/users"
-              span.fa.fa-undo
-              |  Back
+      = render 'editform', challenge: @curruser
 
     .col-lg-1

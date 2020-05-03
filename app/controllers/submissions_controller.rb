@@ -36,14 +36,22 @@ class SubmissionsController < ApplicationController
 
   # GET /submissions/new
   def new
-    if logged_in?
-      @submission = Submission.new
-      @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
+    if !logged_in?
+      render "/pages/redirect", status: 403
+      return
     end
+
+    @submission = Submission.new
+    @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
   end
 
   # GET /submissions/1/edit
   def edit
+    if !logged_in? || @submission.user_id != current_user.id
+      render "/pages/redirect", status: 403
+      return
+    end
+
     @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
   end
 
@@ -166,7 +174,7 @@ class SubmissionsController < ApplicationController
     end
     # Check in place to see if user is logged in. If not, redirect user to redirection page. Could also be swaped out with root_path
     def unauth
-      redirect_to redirection_path unless logged_in?
+      render "/pages/redirect", status: 403 unless logged_in?
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

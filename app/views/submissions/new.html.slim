@@ -3,33 +3,21 @@
     .col-lg-1
     
     .col-lg-10
-      - if !logged_in?
+      - can_submit, error_message = current_user.can_make_submissions
+      - if can_submit
+        = render 'form', submission: @submission
+      - else
         .card
           .card-header
-            b Locked
+            b Max Daily Submissions Reached
 
           .card-body
-            | You have to be logged in to make a submission.
+            = error_message
+            br
+            | This is a simple spam prevention measure for new accounts. This limit
+            |  will increase based on the highest DAD level you've reached. If you have
+            |  reached your limit, consider aggregating your work into a single submission.
             a.btn.btn-primary style="float: right" href="/submissions"
-              span.fa.fa-undo
-              |  Back
-
-      - else
-        - can_submit, error_message = current_user.can_make_submissions
-        - if can_submit
-          = render 'form', submission: @submission
-        - else 
-          .card
-            .card-header
-              b Max Daily Submissions Reached
-            
-            .card-body
-              = error_message
-              br
-              | This is a simple spam prevention measure for new accounts. This limit
-              |  will increase based on the highest DAD level you've reached. If you have 
-              |  reached your limit, consider aggregating your work into a single submission.
-              a.btn.btn-primary style="float: right" href="/submissions"
-                span.fa.fa-undo>
+              span.fa.fa-undo>
     
     .col-lg-1
