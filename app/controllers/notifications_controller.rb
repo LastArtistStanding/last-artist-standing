@@ -2,6 +2,11 @@ class NotificationsController < ApplicationController
   skip_before_action :record_user_session
   
   def index
+    if !logged_in?
+      render "/pages/redirect", status: 403
+      return
+    end
+
     respond_to do |format|
       format.html do |variant|
         @unread_notifications = Notification.where(user: current_user).unread

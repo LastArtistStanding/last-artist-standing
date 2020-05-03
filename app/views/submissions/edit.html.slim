@@ -3,27 +3,7 @@
     .col-lg-1
     
     .col-lg-10
-      - if !logged_in?
-        .card
-          .card-header
-            b Locked
-
-          .card-body
-            | You have to be logged in to edit submissions.
-            a.btn.btn-primary style="float: right" href="/submissions"
-              span.fa.fa-undo
-              |  Back
-      - elsif current_user.id != @submission.user_id
-        .card
-          .card-header
-            b Locked
-
-          .card-body
-            | You cannot edit other peoples' submissions.
-            a.btn.btn-primary style="float: right" href="/submissions"
-              span.fa.fa-undo
-              |  Back
-      - elsif @submission.created_at.to_date >= Time.now.utc.to_date
+      - if @submission.created_at.to_date >= Time.now.utc.to_date
         = render 'editform', submission: @submission
       - else
         = render 'partialeditform', submission: @submission

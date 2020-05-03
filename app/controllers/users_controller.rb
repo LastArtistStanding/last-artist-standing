@@ -28,6 +28,11 @@ class UsersController < ApplicationController
   
   def edit
     @curruser = User.find(params[:id])
+
+    if !logged_in? || @curruser.id != current_user.id
+      render "/pages/redirect", status: 403
+      return
+    end
   end
   
   def update

@@ -3,29 +3,17 @@
     .col-lg-1
 
     .col-lg-10
-      - if logged_in?
-        - can_create_challenge, error_message = current_user.can_make_challenges
-        - if can_create_challenge
-          = render 'form', challenge: @challenge
-        - else
-          .card
-            .card-header
-              b Can't Create Challenge
-            
-            .card-body
-              = error_message
-              a.btn.btn-primary style="float: right" href="/challenges"
-                span.fa.fa-undo
-                |  Back
+      - can_create_challenge, error_message = current_user.can_make_challenges
+      - if can_create_challenge
+        = render 'form', challenge: @challenge
       - else
         .card
           .card-header
-            b Locked
+            b Can't Create Challenge
 
           .card-body
-            | You must be logged in to make a challenge.
+            = error_message
             a.btn.btn-primary style="float: right" href="/challenges"
               span.fa.fa-undo
               |  Back
-
     .col-lg-1
