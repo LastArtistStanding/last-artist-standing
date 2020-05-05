@@ -129,7 +129,7 @@ class ChallengesController < ApplicationController
   end
 
   def edit
-    if !logged_in? || @challenge.creator_id.nil? || challenge.creator_id != current_user.id
+    if !logged_in? || @challenge.creator_id != current_user.id
       render "/pages/redirect", status: 403
       return
     end
