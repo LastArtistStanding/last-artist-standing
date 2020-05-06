@@ -25,7 +25,9 @@ class Notifications
   handleSuccess: (data) =>
     console.log(data)
     items = $.map data, (notification) ->
-      "<a href='#{notification.url}'>#{notification.body}</a>"
+      $(document.createElement("a"))
+        .attr("href", notification.url)
+        .text(notification.body)
     
     items.push "<a href='/notifications'>View All Notifications</a>"
     
