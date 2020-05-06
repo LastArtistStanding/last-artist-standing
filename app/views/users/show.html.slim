@@ -10,23 +10,23 @@ javascript:
 .container-fluid style="margin-top: 2rem;"
   .row
     .col-lg-1
-    
+
     .col-lg-2
       .card
         .card-body.table-responsive style="text-align: center;"
           = render partial: "application/usercard", locals: { user: @curruser }
-          
+
           - if logged_in? && current_user.id == @curruser.id
             br
             a.btn.btn-primary href="#{edit_user_path(@curruser)}"
-              span.fa.fa-edit 
+              span.fa.fa-edit
               |  Edit Profile
-    
+
     .col-lg-8
       .card
         .card-header
           b Badges Awarded
-        
+
         .card-body
           p.card-text
             - @awards.each do |award|
@@ -35,7 +35,7 @@ javascript:
               = link_to image_tag(badgeURL, class: "prestige#{award.prestige}", data: {content: "<p style='font-weight: 600;'>#{award.badge.name}</p>#{simple_format(BadgeMap.find_by({badge_id: award.badge.id, prestige: award.prestige}).description)} (Prestige Level: #{award.prestige})", trigger: "hover", toggle: "popover", placement: "top", html: "true", alt: "#{award.badge.name}" }), challenge_path(badge.challenge_id) 
             - if @awards.blank?
               | No badges awarded yet!
-      
+
       .card
         .card-header
           b Latest Submissions
@@ -48,5 +48,5 @@ javascript:
             - @submissions.each do |submission|
               - submissionUrl = safe_submission_avatar(submission)
               = link_to image_tag(submissionUrl, alt: "#{submission.display_title}", width: '60px', height: '60px'), url_for({controller: 'submissions', action: 'show', id: submission.id})
-    
+
     .col-lg-1

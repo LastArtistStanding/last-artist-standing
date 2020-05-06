@@ -79,13 +79,13 @@ module PagesHelper
 
   def season_to_icon_class(season_challenge_name)
     return "fa fa-leaf" if season_challenge_name.include? "Spring"
-    
+
     return "fa fa-sun-o" if season_challenge_name.include? "Summer"
-    
+
     return "fa fa-cloud" if season_challenge_name.include? "Autumn"
-    
+
     return "fa fa-snowflake-o" if season_challenge_name.include? "Winter"
-    
+
     ""
   end
 end

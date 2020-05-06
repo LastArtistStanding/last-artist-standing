@@ -13,10 +13,10 @@
  *= require_self
  */
 
- @import 'bootstrap';
- @import 'pages';
- @import 'sessions';
- @import 'users';
+@import 'bootstrap';
+@import 'pages';
+@import 'sessions';
+@import 'users';
 
 html, body {
   height: 100%;
@@ -113,7 +113,7 @@ p {
   td {
     color: white;
   }
-  
+
   &.transparentCard {
     background-color: rgba(0, 0, 0, 0);
   }
@@ -173,33 +173,33 @@ p {
 }
 
 .container-fluid.mainPageSplash {
-  min-height: 100vh;  
+  min-height: 100vh;
 }
 
 @media only screen and (max-width:620px)  {
   .container-fluid.mainPageSplash {
   max-width:100%;
   }
-  
+
   .page_info {
     max-width:100%;
   }
-  
+
   .avatarWithName {
   display: inline-block;
   position: relative;
   width: 100%;
-  
+
   margin: 5px;
   border-radius: 10px;
   background: #515d68;
   z-index: 1;
   }
-  
+
 }
 
 .unselectable {
-  -webkit-user-select: none; /* Safari */        
+  -webkit-user-select: none; /* Safari */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+/Edge */
   user-select: none; /* Standard */
@@ -226,8 +226,8 @@ p {
 }
 
 .avatarUserName {
-  margin-top: 5px; 
-  text-align: center; 
+  margin-top: 5px;
+  text-align: center;
   font-weight: 600;
   width: 100%;
   color:#ffffff;
@@ -368,14 +368,14 @@ p {
   font-weight: 600;
   overflow: hidden;
   white-space: nowrap;
-  
+
   > img {
     height: 30px;
     width: 30px;
     border-radius: 0;
     display: inline-block;
   }
-  
+
   &:hover {
     color: #AAAAAA;
     text-decoration: none;
@@ -398,7 +398,7 @@ p {
   -webkit-user-select: none;  /* Chrome all / Safari all */
   -moz-user-select: none;     /* Firefox all */
   -ms-user-select: none;      /* IE 10+ */
-  user-select: none;          /* Likely future */      
+  user-select: none;          /* Likely future */
 }
 
 .submissionTime {
@@ -416,7 +416,7 @@ p {
   white-space: nowrap;
 }
 
- /* Dropdown Button */
+/* Dropdown Button */
 .drophover {
     color: yellow;
     cursor: pointer;
@@ -460,7 +460,7 @@ p {
 .dropdown:hover .dropdown-content {display: block;}
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .drophover {background-color: #3e8e41;} 
+.dropdown:hover .drophover {background-color: #3e8e41;}
 
 .alert-error {
   background-color: #f2dede;
@@ -492,7 +492,7 @@ p {
 
 .comment-card:target {
   border: 2px solid #0d47a1;
-  
+
   .card-header {
     background-color: #bbdefb;
     border-bottom: 1px solid #1e88e5;

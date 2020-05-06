@@ -39,31 +39,31 @@ class ImageUploader < CarrierWave::Uploader::Base
     process :remove_animation, if: :is_animated_gif?
     process :resize_to_fill => [400, 400]
   end
-  
+
   version :avatar, from_version: :thumb do
     process :resize_to_fill => [100, 100]
   end
-  
+
   protected
   def is_submission?(picture)
     model.class.to_s.underscore == "submission"
   end
-    
+
   protected
   def is_badge?(picture)
     model.class.to_s.underscore == "badge"
   end
-  
+
   protected
   def is_user?(picture)
     model.class.to_s.underscore == "user"
   end
-  
+
   protected
   def remove_animation
     manipulate! { |image| image.collapse! }
   end
-  
+
   protected
   def strip_exif
     if content_type == 'image/jpeg' || content_type == 'image/jpg'
@@ -74,7 +74,7 @@ class ImageUploader < CarrierWave::Uploader::Base
       end
     end
   end
-  
+
   protected
   def is_animated_gif?(file)
     animated = false
@@ -87,7 +87,7 @@ class ImageUploader < CarrierWave::Uploader::Base
     end
     animated
   end
-  
+
   protected
   def requires_resize?(file)
     model.errors.add(:drawing, "penis")

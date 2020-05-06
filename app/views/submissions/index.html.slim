@@ -5,7 +5,7 @@
     .col-lg-8
       div style="margin-bottom: 1rem;"
         h2 = "#{@date == Time.now.utc.to_date ? "Today's" : @date.strftime("%B %e, %Y")} Submissions"
-      
+
       = form_tag submissions_path, method: :get do
         = date_field_tag :date, @date, class: "form-control", style: "width: 150px; display: inline-block; vertical-align: middle;"
         = submit_tag 'Select', class: "btn btn-primary", style: "width: 100px; margin-left: 5px;"

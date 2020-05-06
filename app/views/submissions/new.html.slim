@@ -1,7 +1,7 @@
 .container-fluid style="margin-top: 2rem;"
   .row
     .col-lg-1
-    
+
     .col-lg-10
       - if !logged_in?
         .card
@@ -18,18 +18,18 @@
         - can_submit, error_message = current_user.can_make_submissions
         - if can_submit
           = render 'form', submission: @submission
-        - else 
+        - else
           .card
             .card-header
               b Max Daily Submissions Reached
-            
+
             .card-body
               = error_message
               br
               | This is a simple spam prevention measure for new accounts. This limit
-              |  will increase based on the highest DAD level you've reached. If you have 
+              |  will increase based on the highest DAD level you've reached. If you have
               |  reached your limit, consider aggregating your work into a single submission.
               a.btn.btn-primary style="float: right" href="/submissions"
                 span.fa.fa-undo>
-    
+
     .col-lg-1

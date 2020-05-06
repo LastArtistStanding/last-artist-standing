@@ -1,17 +1,17 @@
 class Comment < ApplicationRecord
   include ActionView::Helpers::UrlHelper
-  
+
   belongs_to :source, polymorphic: true
   belongs_to :user
-  
+
   validates :user_id, presence: true
   validates :body, length: { maximum: 2000 }, presence: true
-  
+
   def link_form
     return body if body.index('>>') == nil
-    
+
     split_body = body.split('')
-    
+
     first_gt = false
     second_gt = false
     model = ""
@@ -21,11 +21,11 @@ class Comment < ApplicationRecord
     e_indices = []
     links = []
     models = []
-    
+
     def is_valid_id(string)
       string.scan(/\D/).empty? && string[0] != '0' && !string.blank?
     end
-    
+
     split_body.each_with_index do |c, i|
       if !first_gt && c == '>'
         first_gt = true
@@ -108,18 +108,18 @@ class Comment < ApplicationRecord
         model = ""
       end
     end
-    
+
     if is_valid_id(id_link)
       links.push id_link.to_i
       s_indices.push s_index
       e_indices.push body.length - 1
       models.push model
     end
-    
+
     display_body = body
     final_comment = ""
     current_index = 0
-    
+
     model_hash = {Z: Comment, C: Challenge, S: Submission}
 
     links.each_with_index do |s, i|
@@ -127,11 +127,11 @@ class Comment < ApplicationRecord
       model_type = models[i]
       linked_content = model_hash[model_type].find_by(id: s)
       next if linked_content.blank?
-      
+
       if current_index != s_indices[i]
         final_comment = final_comment + CGI::escapeHTML(display_body[current_index..(s_indices[i] - 1)])
       end
-      
+
       if model_type == :Z
         if source_type == linked_content.source_type && source_id == linked_content.source_id
           final_comment = final_comment + "<a href=\"#{"#" + link_id.to_s}\">>>#{link_id}</a>".html_safe
@@ -147,11 +147,11 @@ class Comment < ApplicationRecord
       end
       current_index = e_indices[i] + 1
     end
-    
+
     if current_index != display_body.length
       final_comment = final_comment + CGI::escapeHTML(display_body[current_index..(display_body.length - 1)])
     end
-    
+
     final_comment
   end
 end

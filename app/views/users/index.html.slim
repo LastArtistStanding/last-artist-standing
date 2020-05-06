@@ -7,7 +7,7 @@ javascript:
     .col-lg-10
       .tim-title style="margin-bottom: 1rem;"
         p.h2 User List
-        
+
         .row
           .col-md-4
             .card
@@ -22,7 +22,7 @@ javascript:
                 .digg_pagination style="height: #{@users.total_pages > 1 ? "80px" : "36px"}"
                   .page_info
                     = page_entries_info @users
-                  
+
                   = will_paginate @users, container: false, inner_window: 2, outer_window: 1
 
             .card

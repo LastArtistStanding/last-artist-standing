@@ -1,17 +1,17 @@
 class CommentsController < ApplicationController
 include SubmissionsHelper
-  
+
 before_action :find_target
 
   def new
     @comment = Comment.new
   end
-  
+
   def create
     @comment = @target.comments.new comment_params
     @comment.user_id = current_user.id
     @comment.body = @comment.body.gsub(/ +/, " ").strip
-   
+
     can_comment = @target.can_be_commented_on_by(current_user)
 
     if !can_comment
@@ -21,18 +21,18 @@ before_action :find_target
       flash[:success] = "Comment posted successfully!"
       discussion_users = @target.comments.group(:user_id).pluck(:user_id)
       poster_name = current_user.username
-      
+
       if @target.class.name == "Submission"
         submission = Submission.find(@comment.source_id)
         submission.num_comments += 1
         submission.save
-        
+
         discussion_users.each do |duid|
           # Lets not send notifications to ourselves.
-          next if duid == current_user.id 
+          next if duid == current_user.id
           # Lets not duplicate the message to the artist.
           next if @target.user_id == duid
-          
+
           Notification.create(body: "#{poster_name} has also commented on submission #{@target.display_title} (ID #{@target.id}).",
                               source_type: "Submission",
                               source_id: @target.id,
@@ -52,7 +52,7 @@ before_action :find_target
       redirect_back(fallback_location: "/")
     end
   end
-  
+
   def destroy
     @comment = Comment.find(params[:id])
     if current_user.id == @comment.user_id
@@ -72,11 +72,11 @@ before_action :find_target
   end
 
   private
-  
+
   def comment_params
     params.require(:comment).permit(:body, :user_id)
   end
-  
+
   def find_target
     @target = Submission.find_by_id(params[:submission_id]) if params[:submission_id]
   end

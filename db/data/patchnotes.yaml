@@ -12,11 +12,11 @@ PatchNote3:
     patch: "0.9.1a"
     before: "Small improvement."
     after: "Patch 1.0 is coming soon! Get excited!"
-    title: 
+    title:
 PatchNote4:
     patch: "0.9.9"
     before: "..."
-    after: 
+    after:
     title: "Meaningless Timer?"
 PatchNote5:
     patch: "1.0"

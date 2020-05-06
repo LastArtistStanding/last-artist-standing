@@ -20,19 +20,19 @@
           .form-group.row
             .col-3 = f.label :description
             .col-9 = f.text_area :description
-          
+
           .form-group.row
             .col-3 = f.label :nsfw_level
             .col-9 = nsfw_string(@challenge.nsfw_level)
-          
+
           .form-group.row
             .col-3 = f.label :start_date
             .col-9 = @challenge.start_date.strftime("%B %e, %Y")
-          
+
           .form-group.row
             .col-3 = f.label :end_date
             .col-9 = @challenge.end_date.strftime("%B %e, %Y")
-          
+
           .form-group.row
             .col-3 = f.label :streak_based
             .col-9 = @challenge.streak_based ? "Yes" : "No"
@@ -40,10 +40,10 @@
           .form-group.row
             .col-3 = f.label :postfrequency, "Submission Frequency"
             .col-9 = frequency_string(@challenge.postfrequency, false)
-          
+
           .form-group.row
             .offset-sm-6.col-sm-6 = f.submit class: 'btn btn-primary', style: "margin-bottom: 0;"
-  
+
     .col-lg-6
       .card
         .card-header
@@ -58,11 +58,11 @@
                   li = message
                 - @badge_map.errors.full_messages.each do |message|
                   li = message
-            
+
           | Design the badge earned for participating in your challenge!
           br
           br
-          
+
           = fields_for @badge do |v|
             .form-group.row
               .col-3 = v.label :name
@@ -71,16 +71,16 @@
             .form-group.row
               .col-3 = v.label :avatar
               .col-9 = v.file_field :avatar
-          
+
           = fields_for @badge_map do |u|
             .form-group.row
               .col-3 = u.label :required_score, "Submissions Required"
               .col-9 = @badge_map.required_score
-          
+
             .form-group.row
               .col-3 = u.label :prestige
               .col-9 = @badge_map.prestige
-            
+
             .form-group.row
               .col-3 = u.label :description
               .col-9 = u.text_area :description

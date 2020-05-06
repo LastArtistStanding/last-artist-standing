@@ -1,14 +1,14 @@
 #Custom Methods to be used in migrations
 
 module MigrationHelper
-    
+
     #Updates the database, making sure not to duplicate existing records.
     def updateDatabase
         updateChallenges
         updateBadges
         updateBadgeMaps
     end
-    
+
     def updateChallenges
         challengeData = YAML.load_file('db/data/challenges.yaml')
         challengeData.each do |currentChallenge,details|
@@ -23,7 +23,7 @@ module MigrationHelper
             newChallenge.save
         end
     end
-    
+
     def updateBadges
         badgeData = YAML.load_file('db/data/badges.yaml')
         badgeData.each do |currentBadge,details|
@@ -32,10 +32,10 @@ module MigrationHelper
             newBadge.save
         end
     end
-    
+
     def updateBadgeMaps
         badgeMapData = YAML.load_file('db/data/badgemaps.yaml')
-        
+
         badgeMapData.each do |currentBadgeMap,details|
             challenge = Challenge.find_by(name: details["challenge_name"])
             badge = Badge.find_by(name: details["badge_name"])
@@ -45,11 +45,11 @@ module MigrationHelper
             newBadgeMap.save
         end
     end
-    
+
     def updatePatchInfo
         patchNoteData = YAML.load_file('db/data/patchnotes.yaml')
         patchEntriesData = YAML.load_file('db/data/patchentries.yaml')
-        
+
         patchNoteData.each do |currentPatchNote,noteDetails|
             patchNote = PatchNote.find_by(patch: noteDetails["patch"])
             if patchNote.blank?
@@ -66,5 +66,5 @@ module MigrationHelper
             end
         end
     end
-    
+
 end

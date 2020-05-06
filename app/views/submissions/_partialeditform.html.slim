@@ -3,11 +3,11 @@
     .col-lg-6
       .card
         .card-header
-          b 
+          b
             | New Submission (
             span style="font-weight:600;" bolded 
             | fields are required)
-        
+
         .card-body
           - if @submission.errors.any?
             #error_explanation
@@ -15,24 +15,24 @@
               ul
                 - @submission.errors.full_messages.each do |message|
                   li = message
-          
+
           | Because it is currently after the day of submission, your options for editing the submission are limited. 
-          | If you need something changed that isn't available here, please contact an administrator.
+          |  If you need something changed that isn't available here, please contact an administrator.
           br
           br
 
           .form-group.row
             .col-3 style="font-weight:600;" = f.label :nsfw_level
             .col-9 = f.select :nsfw_level, options_for_select([['Safe', 1], ['Questionable', 2], ['Explicit', 3]], 1), {}, { class: 'custom-select' }
-          
+
           .form-group.row
             .col-3 = f.label :title
             .col-9 = f.text_field :title
-          
+
           .form-group.row
             .col-3 = f.label :description
             .col-9 = f.text_area :description
-          
+
           .form-group.row
             .col-6 = f.label :commentable, "Allow Comments?"
             .col-6 = f.check_box :commentable, checked: @submission.commentable

@@ -5,14 +5,14 @@ class ApplicationController < ActionController::Base
   before_action :verify_domain, if: -> { Rails.env.production? && ENV['BLOCK_HEROKU'] == 'TRUE' }
   before_action :set_raven_context
   before_action :record_user_session
-  
+
   private
-  
+
   def set_raven_context
     Raven.user_context(id: session[:current_user_id]) # or anything else in session
     Raven.extra_context(params: params.to_unsafe_h, url: request.url)
   end
-  
+
   def record_user_session
     active_user = current_user
     ip_address = request.remote_ip
@@ -35,6 +35,6 @@ class ApplicationController < ActionController::Base
         status: :moved_permanently
     end
   end
-  
+
   include SessionsHelper
 end

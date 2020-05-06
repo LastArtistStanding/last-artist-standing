@@ -1,7 +1,7 @@
 .container-fluid style="margin-top: 2rem;"
   .row
     .col-lg-1
-    
+
     .col-lg-10
       - if logged_in? && !@challenge.creator_id.nil? && @challenge.creator_id == current_user.id
         - if Time.now.utc.to_date >= @challenge.end_date
@@ -22,11 +22,11 @@
         .card
           .card-header
             b Locked
-          
+
           .card-body
             | You are not the creator of this challenge; you may not edit it.
             a.btn.btn-primary style="float: right" href="/challenges"
               span.fa.fa-undo
               |  Back
-    
+
     .col-lg-1

@@ -33,19 +33,19 @@ gem 'jbuilder', '~> 2.0'
 # Gems for assisting with Image Upload on the site.
 gem 'carrierwave'
 gem 'mini_magick', '>= 4.9.4'
-#Formating timestamps for site 
+#Formating timestamps for site
 gem 'strftime', '~>1.0.0'
 
-gem 'rake', '>= 13.0.1', '< 13.1' 
+gem 'rake', '>= 13.0.1', '< 13.1'
 # Puma for the app server
 gem 'puma', '>= 4.3.3', '< 4.4'
 
 ###########################
   # 1/21/18 - - Use Postgres as the database for Active Record
-  # Fix found based off of: 
+  # Fix found based off of:
   #https://stackoverflow.com/questions/39261996/heroku-and-rails-gem-load-error-with-postgres-however-it-is-specified-in-gemfi
   #https://stackoverflow.com/questions/24755673/gemloaderror-specified-postgresql-for-database-adapter-but-the-gem-is-not/24755814
-  
+
 ###########################
 gem 'pg', '>= 1.2.2', '< 1.3'
 gem 'figaro'

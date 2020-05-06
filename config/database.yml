@@ -9,7 +9,7 @@ default: &default
   pool: 5
   timeout: 5000
   template: template0
-  
+
 ###########
 # 1/21/18 - - Postgresql fix with template: template0 to run rails db:create:migrate
 # Solution based on following stackoverflow:

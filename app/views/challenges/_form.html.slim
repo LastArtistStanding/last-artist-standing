@@ -12,7 +12,7 @@
               ul
                 - @challenge.errors.full_messages.each do |message|
                   li = message
-          
+
           | Unsure about how to make a challenge? Try giving 
           a href="../help" this
           | a read!
@@ -26,15 +26,15 @@
           .form-group.row
             .col-3 = f.label :description
             .col-9 = f.text_area :description
-      
+
           .form-group.row
             .col-3 = f.label :nsfw_level
             .col-9 = f.select :nsfw_level, options_for_select([['Safe', 1], ['Questionable', 2], ['Explicit', 3]], @challenge.nsfw_level), {}, { class: 'custom-select' }
-          
+
           .form-group.row
             .col-3 = f.label :start_date
             .col-9 = f.date_select :start_date, {order: [:month, :day, :year], start_year: Time.now.utc.to_date.year}, { class: "col-3" }
-          
+
           small style="color: grey;"
             | End dates are 
             b exclusive;
@@ -42,21 +42,21 @@
           .form-group.row
             .col-3 = f.label :end_date
             .col-9 = f.date_select :end_date, {order: [:month, :day, :year], start_year: Time.now.utc.to_date.year}, {class: 'col-3'}
-          
+
           small style="color: grey;" If enabled, participants can be eliminated from the challenge.
           .form-group.row
             .col-3 = f.label :streak_based
             .col-9 = f.check_box :streak_based
 
           small style="color: grey;"
-            | Submission frequency indicates how often participants can make submissions. 
+            | Submission frequency indicates how often participants can make submissions.
             |  For example, a submission frequency of "weekly" means that one submission per week
-            |  can be made. More submissions can be made in the same period fort the challenge, 
+            |  can be made. More submissions can be made in the same period fort the challenge,
             |  but will not count towards their required submissions for badge progress. To permit
-            |  users to submit as many submissions at whatever point they would like during the 
-            |  challenge, use the frequency "None". 
-            b 
-              | It is very important to clarify what users are expected to submit to the challenge 
+            |  users to submit as many submissions at whatever point they would like during the
+            |  challenge, use the frequency "None".
+            b
+              | It is very important to clarify what users are expected to submit to the challenge
               | (final products, WIPs, etc) in your challenge description.
           .form-group.row
             .col-3 = f.label :postfrequency, "Submission Frequency"
@@ -64,7 +64,7 @@
 
           .form-group.row
             .offset-sm-6.col-sm-6 = f.submit class: 'btn btn-primary', style: "margin-bottom: 0;"
-  
+
     .col-lg-6
       .card
         .card-header
@@ -79,11 +79,11 @@
                   li = message
                 - @badge_map.errors.full_messages.each do |message|
                   li = message
-            
+
           | Design the badge earned for participating in your challenge!
           br
           br
-            
+
           = fields_for @badge do |v|
             .form-group.row
               .col-3 = v.label :name
@@ -92,14 +92,14 @@
             .form-group.row
               .col-3 = v.label :avatar
               .col-9 = v.file_field :avatar
-            
+
           = fields_for @badge_map do |u|
             .form-group.row
               .col-3 = u.label :required_score, "Submissions Required"
               .col-9 = u.number_field :required_score, max: 2000
-            
+
             small style="color: grey;"
-              | Prestige indicates the level of achievement for a badge, 
+              | Prestige indicates the level of achievement for a badge,
               | 1 being the lowest and 5 being the highest.
             br
             small style="color: red;"

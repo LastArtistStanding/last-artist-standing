@@ -26,32 +26,32 @@
           - if @curruser.errors.key?(:password_confirmation)
             .invalid-feedback-rails
               | Password confirmation #{@curruser.errors[:password_confirmation][0]}
-      
+
       .card
         .card-header
           b Enter your old password to confirm changes.
-        
+
         .card-body
           = label_tag :oldpassword, "Old Password"
           = password_field_tag :oldpassword, '', class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:oldpassword) ? 'is-invalid' : 'is-valid') : '' }"
           - if @curruser.errors.key?(:oldpassword)
             .invalid-feedback-rails
               | #{@curruser.errors[:oldpassword][0]}
-        
-          = f.submit "Save Changes", class: "btn btn-primary"    
-    
+
+          = f.submit "Save Changes", class: "btn btn-primary"
+
     .col-lg-6
       .card
         .card-header
           b Site Settings
-        
+
         .card-body
           = f.label :display_name
           = f.text_field :display_name, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:display_name) ? 'is-invalid' : 'is-valid') : '' }"
           - if @curruser.errors.key?(:display_name)
             .invalid-feedback-rails
               | Display Name #{@curruser.errors[:display_name][0]}
-            
+
           = f.label :avatar
           = f.file_field :avatar, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:avatar) ? 'is-invalid' : 'is-valid') : '' }"
           - if @curruser.errors.key?(:avatar)

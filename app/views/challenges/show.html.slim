@@ -1,7 +1,7 @@
 .container-fluid style="margin-top: 2rem;"
   .row
     .col-lg-1
-    
+
     .col-lg-10
       .row
         .col-lg-6
@@ -11,7 +11,7 @@
               a.btn.btn-primary style="float: right; margin-left: 0.5rem; margin-top: -0.25rem; margin-bottom: -0.5rem;" href="/challenges"
                 i.fa.fa-undo
                 |  Back
-              
+
               a.btn.btn-primary style="float: right; margin-top: -0.25rem; margin-bottom: -0.5rem;" href="#{@challenge.id}/entries"
                 i.fa.fa-picture-o aria-hidden="true"
                 |  Show Entries
@@ -24,15 +24,15 @@
               .form-group.row
                 .col-3 = label_tag :description
                 .col-9 = html_escape(@challenge.description).html_safe
-        
+
               .form-group.row
                 .col-3 = label_tag :nsfw_level
                 .col-9 = nsfw_string(@challenge.nsfw_level)
-              
+
               .form-group.row
                 .col-3 = label_tag :start_date
                 .col-9 = date_string(@challenge.start_date)
-              
+
               .form-group.row
                 .col-3 = label_tag :end_date
                 .col-9 = date_string(@challenge.end_date)
@@ -40,11 +40,11 @@
               .form-group.row
                 .col-3 = label_tag :streak_based
                 .col-9 = @challenge.streak_based ? "Yes" : "No"
-              
+
               .form-group.row
                 .col-3 = label_tag :postfrequency
                 .col-9 = frequency_string(@challenge.postfrequency, false)
-    
+
           .card
             .card-header
               b Reward
@@ -53,11 +53,11 @@
               .form-group.row
                 .col-3 = label_tag "Badge Name"
                 .col-9 = @badge.name
-              
+
               .form-group.row
                 .col-3 = label_tag "Badge Appearance"
                 .col-9 = image_tag safe_badge_avatar(@badge), alt: @badge.name
-          
+
               .table-responsive
                 table.table.table-sm
                   thead.thead-light
@@ -76,8 +76,8 @@
           - if @challenge.id == 1 && !@latestEliminations.blank?
             .card
               .card-header style="color: red;"
-                 b Last Week's Eliminations
-              
+                b Last Week's Eliminations
+
               .card-body.table-responsive
                 table.table.table-sm
                   thead.thead-light
@@ -93,7 +93,7 @@
                         td = participation.score
                         td = date_string(participation.created_at.to_date)
                         td = date_string(participation.end_date)
-    
+
           .card
             .card-header
               b Current Participant List
@@ -138,7 +138,7 @@
                   |  You participated in this challenge, and earned a badge for your efforts!
                 br
                 br
-              
+
               table.table.table-sm
                 thead.thead-light
                   tr
@@ -167,14 +167,14 @@
                           td
                       - if @challenge.id == 1
                         td = frequency_string(participation.user.current_dad_frequency, false)
-                  
+
                   - if !@allEliminations.blank?
                     - @allEliminations.each do |participation|
                       tr
                         td
                           - if getParticipationLevel(participation, @challenge) == 2
                             i.fa.fa-trophy aria-hidden="true"
-                        td = link_to participation.user.username, participation.user 
+                        td = link_to participation.user.username, participation.user
                         td = participation.score
                         td = date_string(participation.created_at.to_date)
                         td = date_string(participation.end_date)

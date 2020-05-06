@@ -18,8 +18,8 @@ javascript:
 
 .container-fluid style="margin-top: 2rem;"
   .row
-    b 
-      p#notice = notice 
+    b
+      p#notice = notice
 
     .col-lg-2
       .card
@@ -29,7 +29,7 @@ javascript:
         .card-body style="text-align: center;"
           = render partial: "application/usercard", locals: { user: @submission.user }
           br
-          = @submission.created_at.strftime("Submitted at %H:%M, %b %-d, %Y") 
+          = @submission.created_at.strftime("Submitted at %H:%M, %b %-d, %Y")
           br
           | Time Spent: #{@submission.time_text}
           br
@@ -42,11 +42,11 @@ javascript:
             = link_to ce.challenge.name, ce.challenge, :style => "color: black;"
             br
           br
-          
+
           a.btn.btn-primary href="/submissions"
-            span.fa.fa-undo 
+            span.fa.fa-undo
             | Back
-          
+
           - if logged_in? && (@submission.user_id == current_user.id)
             - if (@submission.created_at.to_date == Time.now.utc.to_date)
               br
@@ -59,7 +59,7 @@ javascript:
               br
               = link_to '<span class="fa fa-edit"></span>'.html_safe, edit_submission_path(@submission), class: "btn btn-primary"
               br
-   
+
     .col-lg-10
       .card
         .card-header style="text-align: center; font-weight: 600;" = @submission.display_title
@@ -69,7 +69,7 @@ javascript:
             = image_tag @submission.drawing.url, style: "max-width: 100%; max-height: 600px; cursor: zoom-in;", alt: "#{@submission.display_title}", id: "submissionImage"
           br
           = simple_format(@submission.display_description)
-      
+
       .row
         .col-md-3
           .card
@@ -110,7 +110,7 @@ javascript:
                 = link_to image_tag(safe_submission_avatar(nsub), alt: "next", width: '60px', height: '60px'), nsub
               - else
                 | Last submission!
-      
+
       - has_permissions, error = @submission.can_be_commented_on_by(current_user)
 
       .card
@@ -131,7 +131,7 @@ javascript:
 
           .card-body
             = error
-      
+
       - @comments.each do |comment|
         .card.comment-card id="#{comment.id}"
           .card-header
@@ -139,7 +139,7 @@ javascript:
             = comment.created_at.strftime(" %H:%M, %b %-d, %Y") 
             span.quote-id onclick=("quote(#{comment.id});" if has_permissions)
               = " No. #{comment.id}"
-            = link_to ' <span class="fa fa-trash"></span>'.html_safe, [@submission, comment], method: :delete, data: { confirm: 'Are you sure?' } if comment.user_id == current_user&.id          
+            = link_to ' <span class="fa fa-trash"></span>'.html_safe, [@submission, comment], method: :delete, data: { confirm: 'Are you sure?' } if comment.user_id == current_user&.id
 
           .card-body
             = simple_format(comment.link_form)

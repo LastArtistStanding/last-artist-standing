@@ -1,7 +1,7 @@
 .container-fluid style="margin-top: 2rem;"
   .row
     .col-lg-1
-    
+
     .col-lg-10
       - if !logged_in?
         .card
@@ -27,5 +27,5 @@
         = render 'editform', submission: @submission
       - else
         = render 'partialeditform', submission: @submission
-    
+
     .col-lg-1

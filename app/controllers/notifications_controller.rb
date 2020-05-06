@@ -1,6 +1,6 @@
 class NotificationsController < ApplicationController
   skip_before_action :record_user_session
-  
+
   def index
     respond_to do |format|
       format.html do |variant|
@@ -12,9 +12,9 @@ class NotificationsController < ApplicationController
         @notifications = Notification.where(user: current_user).unread
       end
     end
-    
+
   end
-  
+
   def mark_as_read
     @notifications = Notification.where(user: current_user).unread
     @notifications.update_all(read_at: Time.now.utc)

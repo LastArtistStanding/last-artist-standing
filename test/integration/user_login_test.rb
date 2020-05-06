@@ -6,16 +6,16 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
   def setup
     @user = users(:michael)
   end
-  
-  
-  
+
+
+
   test "login with invalid information" do
         get login_path
-        assert_redirected_to "/" 
+        assert_redirected_to "/"
         post login_path, xhr: true, params: { session: {email: "", password: ""} }
         assert_template "layouts/_login_form"
   end
-    
+
   test "login with valid information followed by logout" do
     get login_path
     post login_path, xhr: true, params: { session: { email:    @user.email,

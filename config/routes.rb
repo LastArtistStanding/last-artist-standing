@@ -6,13 +6,13 @@ Rails.application.routes.draw do
   resources :users
   resources :challenges
   resources :password_resets,     only: [:new, :create, :edit, :update]
-  
+
   resources :notifications, only: [:index] do
     collection do
       post :mark_as_read
     end
   end
-  
+
   root   'pages#home'
   get 'signup' => "users#new"
   get "find" => "users#index"

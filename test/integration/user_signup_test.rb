@@ -17,7 +17,7 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
     assert_template 'layouts/_signup_form'
     assert_template 'users/create'
   end
-  
+
   test "valid signup information" do
     get signup_path
     assert_difference 'User.count', 1 do
@@ -28,7 +28,7 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
     assert_template 'users/create'
     assert is_logged_in?
   end
-  
+
   test "requires unique name and email fields" do
     get signup_path
     assert_difference 'User.count', 1 do
@@ -41,6 +41,6 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
     end
     assert_template 'users/new'
   end
-  
-  
+
+
 end

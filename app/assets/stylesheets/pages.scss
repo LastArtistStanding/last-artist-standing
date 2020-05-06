@@ -87,14 +87,14 @@ input {
 /*
 .field_with_errors {
   @extend .has-error;
-  
+
   .form-control {
     color: $state-danger-text;
   }
-  
+
 }*/
 
-/* Universal rules */ 
+/* Universal rules */
 
 section {
   overflow: auto;
@@ -223,8 +223,8 @@ textarea {
     .submissionrow li {
         float:left;
     }
-    
-    
+
+
 /* Mobile Adjustments */
 
 
@@ -234,9 +234,9 @@ textarea {
     width:100%;
     margin:0;
     list-style-type: none;
-    
+
   }
-  
+
   body {
     width:100%;
   }

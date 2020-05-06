@@ -15,7 +15,7 @@
         tbody
           - @notifications.each do |notification|
             tr
-              td 
+              td
                 a href="#{notification.url if notification.url.present?}"
                   = notification.body
               td = notification.created_at

@@ -1,7 +1,7 @@
 .container-fluid style="margin-top: 2rem;"
   .row
     .col-lg-1
-    
+
     .col-lg-10
       - if logged_in? && @curruser.id == current_user.id
         = render 'editform', challenge: @curruser

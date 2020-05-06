@@ -56,7 +56,7 @@ class SubmissionsController < ApplicationController
     artist_id = current_user.id
     @submission.user_id = artist_id
     @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
-    
+
     respond_to do |format|
       if failure
         format.html { render :new }
@@ -65,12 +65,12 @@ class SubmissionsController < ApplicationController
         #lock in time to account for lag time
         @submission.created_at = initial_date_time
         @submission.save
-        
+
         newFrequency = params[:postfrequency].to_i
         current_user.update_attribute(:new_frequency, newFrequency)
-        
+
         seasonalChallenge = Challenge.current_season
-        
+
         # Add submission to DAD/Current Seasonal Challenge
         dad_ce = ChallengeEntry.create({challenge_id: 1, submission_id: @submission.id, user_id: artist_id})
         dad_ce.created_at = initial_date_time
@@ -78,7 +78,7 @@ class SubmissionsController < ApplicationController
         season_ce = ChallengeEntry.create({challenge_id: seasonalChallenge.id, submission_id: @submission.id, user_id: artist_id})
         season_ce.created_at = initial_date_time
         season_ce.save
-        
+
         # Last, manage all custom challenge submissions selected (to do).
         @participations = Participation.where({user_id: artist_id, active: true}).order("challenge_id ASC")
         @participations.each do |p|
@@ -88,7 +88,7 @@ class SubmissionsController < ApplicationController
             ce.save
           end
         end
-        
+
         format.html { redirect_to @submission }
         format.json { render :show, status: :created, location: @submission }
       else
@@ -103,7 +103,7 @@ class SubmissionsController < ApplicationController
   def update
     @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
     curr_user_id = current_user.id
-    
+
     if @submission.user_id == curr_user_id
       if @submission.created_at.to_date == Time.now.utc.to_date
         usedParams = submission_params
@@ -133,7 +133,7 @@ class SubmissionsController < ApplicationController
               end
             end
           end
-          
+
           format.html { redirect_to @submission }
           format.json { render :show, status: :ok, location: @submission }
         else
@@ -173,7 +173,7 @@ class SubmissionsController < ApplicationController
     def submission_params
       params.require(:submission).permit(:drawing, :user_id, :nsfw_level, :title, :description, :time, :commentable)
     end
-  
+
     def limited_params
       params.require(:submission).permit(:nsfw_level, :title, :description)
     end

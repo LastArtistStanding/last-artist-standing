@@ -4,7 +4,7 @@ class UsersController < ApplicationController
     #@users = User.order("id DESC").paginate(:page => params[:page], :per_page => 50)
     @users = User.search(params).paginate(:page => params[:page], :per_page => 25 ).order("current_streak DESC, id DESC")
   end
-  
+
   def submissions
     @curruser = User.find(params[:id])
     @user_submissions = Submission.where(:user_id => @curruser.id).order("created_at DESC").paginate(:page => params[:page], :per_page => 25)
@@ -25,11 +25,11 @@ class UsersController < ApplicationController
       format.js
     end
   end
-  
+
   def edit
     @curruser = User.find(params[:id])
   end
-  
+
   def update
     @curruser = User.find(params[:id])
     oldpassword = params[:oldpassword]
@@ -68,7 +68,7 @@ class UsersController < ApplicationController
     def user_params
       params.require(:user).permit(:name, :email, :password, :password_confirmation, :avatar, :nsfw_level)
     end
-    
+
     def user_edit_params
       params.require(:user).permit(:name, :email, :password, :password_confirmation, :avatar, :nsfw_level, :display_name)
     end
