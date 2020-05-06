@@ -1,0 +1,25 @@
+root = true
+
+[*]
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+indent_style = space
+indent_size = 2
+
+# Trailing whitespace is significant in these files,
+# though it should still be avoided when not necessary.
+[*.{erb,slim}]
+trim_trailing_whitespace = false
+
+# These files are deliberately left empty.
+[.keep]
+insert_final_newline = false
+
+# This is code not written by the project,
+# and should not be subject to its style guidelines.
+[/vendor/**]
+insert_final_newline = unset
+trim_trailing_whitespace = unset
+indent_style = unset
+indent_size = unset
