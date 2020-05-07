@@ -3,7 +3,7 @@ require 'test_helper'
 class BadgeMapTest < ActiveSupport::TestCase
     
     def setup 
-        @badge_map = BadgeMap.new(badge_id: 1, challenge_id: 1, required_score: 1, prestige: 1, description: "This is a level 1 badge.")
+        @badge_map = BadgeMap.new(badge_id: 100, challenge_id: 100, required_score: 1, prestige: 1, description: "This is a level 1 badge.")
     end
     
     #VALID CASE

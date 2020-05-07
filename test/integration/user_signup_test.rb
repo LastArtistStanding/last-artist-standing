@@ -8,10 +8,10 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
     get signup_path
     assert_no_difference 'User.count' do
 
-      post users_path, params: { user: { name: "", email: "g@g.com", password: "password", password_confirmation: "password" } }
-      post users_path, params: { user: { name: "name", email: "", password: "password", password_confirmation: "password" } }
-      post users_path, params: { user: { name: "name", email: "g@g.com", password: "", password_confirmation: "password" } }
-      post users_path, params: { user: { name: "name", email: "g@g.com", password: "password", password_confirmation: "" } }
+      post users_path, xhr: true, params: { user: { name: "", email: "g@g.com", password: "password", password_confirmation: "password" } }
+      post users_path, xhr: true, params: { user: { name: "name", email: "", password: "password", password_confirmation: "password" } }
+      post users_path, xhr: true, params: { user: { name: "name", email: "g@g.com", password: "", password_confirmation: "password" } }
+      post users_path, xhr: true, params: { user: { name: "name", email: "g@g.com", password: "password", password_confirmation: "" } }
 
     end
     assert_template 'layouts/_signup_form'
@@ -22,7 +22,7 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
     get signup_path
     assert_difference 'User.count', 1 do
 
-      post users_path, params: { user: { name: "name", email: "g@g.com", password: "password", password_confirmation: "password" } }
+      post users_path, xhr: true, params: { user: { name: "name", email: "g@g.com", password: "password", password_confirmation: "password" } }
 
     end
     assert_template 'users/create'
@@ -32,14 +32,13 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
   test "requires unique name and email fields" do
     get signup_path
     assert_difference 'User.count', 1 do
-      post users_path, params: { user: { name: "name", email: "g@g.com", password: "password", password_confirmation: "password" } }
-      follow_redirect!
-      assert_template 'users/show'
+      post users_path, xhr: true, params: { user: { name: "name", email: "g@g.com", password: "password", password_confirmation: "password" } }
+      assert_template 'users/create'
       get signup_path
-      post users_path, params: { user: { name: "name", email: "gg@g.com", password: "password", password_confirmation: "password" } }
-      post users_path, params: { user: { name: "name1", email: "g@g.com", password: "password", password_confirmation: "password" } }
+      post users_path, xhr: true, params: { user: { name: "name", email: "gg@g.com", password: "password", password_confirmation: "password" } }
+      post users_path, xhr: true, params: { user: { name: "name1", email: "g@g.com", password: "password", password_confirmation: "password" } }
     end
-    assert_template 'users/new'
+    assert_template 'layouts/_signup_form'
   end
   
   

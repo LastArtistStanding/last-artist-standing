@@ -27,7 +27,7 @@ class ChallengeTest < ActiveSupport::TestCase
     end
   
     test "name should not be too long" do
-        @challenge.name = "a" * 51
+        @challenge.name = "a" * 101
         assert_not @challenge.valid?
     end
   
