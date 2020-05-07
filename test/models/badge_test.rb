@@ -21,7 +21,7 @@ class BadgeTest < ActiveSupport::TestCase
     end
   
     test "name should not be too long" do
-        @badge.name = "a" * 51
+        @badge.name = "a" * 101
         assert_not @badge.valid?
     end
   
