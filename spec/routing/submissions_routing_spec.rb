@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe SubmissionsController do
   describe "routing" do
 

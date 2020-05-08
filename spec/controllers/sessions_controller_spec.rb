@@ -1,11 +1,9 @@
-require 'spec_helper'
-
 describe SessionsController do
 
   describe "GET 'new'" do
-    it "returns http success" do
+    it "redirects HTML requests" do
       get 'new'
-      response.should be_success
+      response.should redirect_to "/"
     end
   end
 
