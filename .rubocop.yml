@@ -1,3 +1,7 @@
+require:
+  - rubocop-rails
+  - rubocop-rspec
+
 Layout/LineLength:
   Enabled: true
   Max: 100

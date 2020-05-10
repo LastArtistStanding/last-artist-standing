@@ -33,19 +33,20 @@ jobs:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432
         run: |
           gem install bundler
-          bundle install --jobs 4 --retry 3
+          bin/bundle install --jobs 4 --retry 3
           bin/rake db:setup RAILS_ENV=test
 
       - name: Run Tests
         env:
           RAILS_ENV: test
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432
-        run: |
-          bin/rails test
+        run: bin/rake test
 
       - name: Run Spec Tests
         env:
           RAILS_ENV: test
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432
-        run: |
-          bin/bundle exec rspec spec/
+        run: bin/rspec spec/
+
+      - name: Run Rubocop
+        run: bin/rubocop --fail-level E

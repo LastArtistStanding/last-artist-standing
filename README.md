@@ -33,13 +33,13 @@ psql=# ALTER USER $USER CREATEDB ;
 Next, go ahead and clone and then `cd` into the app repository. You will then need to install its dependencies:
 
 ```console
-$ bundle install
+$ bin/bundle install
 ```
 
 Next, use `rake` to set up the database:
 
 ```console
-$ rake db:setup dad_tasks:update_database dad_tasks:init_site_status dad_tasks:update_patch_notes
+$ bin/rake db:setup dad_tasks:update_database dad_tasks:init_site_status dad_tasks:update_patch_notes
 ```
 
 Now, you'll need to create an Amazon AWS account. Don't worry; the free-tier services are sufficient to run this website. Then, [create an access key for your user account](https://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html) and create an S3 bucket for your local copy of DAD to use.
@@ -88,8 +88,8 @@ If you make a change to the site, you should make sure that all of the tests sti
 Here's how you run the tests:
 
 ```console
-$ rake test
-$ bundle exec rspec spec/
+$ bin/rake test
+$ bin/rspec spec/
 ```
 
 It does *not* test your S3 configuration; you can verify that S3 works by manually uploading a submission.
@@ -97,10 +97,10 @@ It does *not* test your S3 configuration; you can verify that S3 works by manual
 Now, you'll be ready to run the app in a local server:
 
 ```console
-$ rails server
+$ bin/rails server
 ```
 
-To cause the site to process user streaks, eliminations, and challenges, you will need to run `rake dad_tasks:rollover_script`.
+To cause the site to process user streaks, eliminations, and challenges, you will need to run `bin/rake dad_tasks:rollover_script`.
 On the production website, that task runs at 12:00 AM UTC every night.
 
 For more information, see the

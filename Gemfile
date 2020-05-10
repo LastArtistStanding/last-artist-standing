@@ -55,7 +55,9 @@ group :development, :test do
   gem 'byebug'
   gem 'dotenv-rails'
   gem 'rspec-rails', '~> 4.0'
-  gem 'rubocop'
+  gem 'rubocop', '~> 0.84.0', require: false
+  gem 'rubocop-rails', '~> 2.5.2', require: false
+  gem 'rubocop-rspec', '~> 1.39.0', require: false
 end
 
 group :test do
