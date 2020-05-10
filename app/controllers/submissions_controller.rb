@@ -1,7 +1,7 @@
 class SubmissionsController < ApplicationController
   before_action :set_submission, only: %i[show edit update destroy]
-  before_action :unauthenticated, only: %i[new create edit update destroy]
-  before_action -> { unauthorized @submission.user_id }, only: %i[edit update destroy]
+  before_action :ensure_authenticated, only: %i[new create edit update destroy]
+  before_action -> { ensure_authorized @submission.user_id }, only: %i[edit update destroy]
 
   # GET /submissions
   # GET /submissions.json
@@ -145,7 +145,7 @@ class SubmissionsController < ApplicationController
   # DELETE /submissions/1.json
   def destroy
     # You can only delete a submission on the day you submitted it.
-    return if @submission.created_at.to_date != Date.current
+    return if @submission.created_at.to_date != Time.now.utc.to_date
 
     ChallengeEntry.where(submission_id: @submission.id).destroy_all
     @submission.destroy

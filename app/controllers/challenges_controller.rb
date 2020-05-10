@@ -1,7 +1,7 @@
 class ChallengesController < ApplicationController
   before_action :set_challenge, only: %i[show edit update destroy join entries]
-  before_action :unauthenticated, only: %i[new create edit update destroy]
-  before_action -> { unauthorized @challenge.creator_id }, only: %i[edit update destroy]
+  before_action :ensure_authenticated, only: %i[new create edit update destroy]
+  before_action -> { ensure_authorized @challenge.creator_id }, only: %i[edit update destroy]
 
   # GET /challenges
   # GET /challenges.json
@@ -166,7 +166,7 @@ class ChallengesController < ApplicationController
   end
 
   def destroy
-    return if Time.now.utc.to_date >= @challenge.start_date
+    return unless challenge.can_delete?
 
     Participation.where(challenge_id: @challenge.id).destroy_all
     @badge_map.destroy
