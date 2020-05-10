@@ -1,6 +1,8 @@
-describe "Submissions" do
-  describe "GET /submissions" do
-    it "works! (now write some real specs)" do
+# frozen_string_literal: true
+
+describe 'Submissions' do
+  describe 'GET /submissions' do
+    it 'works! (now write some real specs)' do
       # Run the generator again with the --webrat flag if you want to use webrat methods/matchers
       get submissions_path
       response.status.should be(200)

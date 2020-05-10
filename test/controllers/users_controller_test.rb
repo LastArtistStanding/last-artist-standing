@@ -1,9 +1,10 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class UsersControllerTest < ActionController::TestCase
-  test "should get new" do
+  test 'should get new' do
     get :new
     assert_response :found
   end
-
 end
