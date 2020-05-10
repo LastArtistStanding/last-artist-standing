@@ -54,7 +54,7 @@ gem 'fog-aws', '>= 3.5.2', '< 3.6'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
-  gem 'rspec-rails', '>= 3.9.0', '< 4.0'
+  gem 'rspec-rails', '~> 4.0'
   gem 'dotenv-rails'
   gem 'rubocop'
 end

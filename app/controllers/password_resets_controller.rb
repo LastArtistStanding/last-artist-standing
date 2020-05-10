@@ -1,5 +1,7 @@
 class PasswordResetsController < ApplicationController
   before_action :get_user,   only: [:edit, :update]
+  before_action :check_user, only: [:edit, :update]
+  before_action :check_reset_token, only: [:edit, :update]
   before_action :check_expiration, only: [:edit, :update]
 
   def new
@@ -45,10 +47,22 @@ class PasswordResetsController < ApplicationController
       @user = User.find_by(email: params[:email])
     end
 
+    def check_user
+      if @user.nil?
+        redirect_to root_url
+      end
+    end
+
     def check_expiration
       if @user.password_reset_expired?
         flash[:danger] = "Password reset has expired."
         redirect_to new_password_reset_url
+      end
+    end
+
+    def check_reset_token
+      if @user.reset_digest.nil? || BCrypt::Password.new(@user.reset_digest) != params[:id]
+        redirect_to root_url
       end
     end
 
