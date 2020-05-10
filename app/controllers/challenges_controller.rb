@@ -166,6 +166,8 @@ class ChallengesController < ApplicationController
   end
 
   def destroy
+    return if Time.now.utc.to_date >= @challenge.start_date
+
     Participation.where(challenge_id: @challenge.id).destroy_all
     @badge_map.destroy
     @badge.destroy
