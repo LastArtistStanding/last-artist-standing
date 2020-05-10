@@ -48,7 +48,7 @@ class PasswordResetsController < ApplicationController
     end
     
     def check_user
-      if !@user
+      if @user.nil?
         redirect_to root_url
       end
     end
@@ -61,7 +61,7 @@ class PasswordResetsController < ApplicationController
     end
 
     def check_reset_token
-      if !@user.reset_digest || BCrypt::Password.new(@user.reset_digest) != params[:id]
+      if @user.reset_digest.nil? || BCrypt::Password.new(@user.reset_digest) != params[:id]
         redirect_to root_url
       end
     end
