@@ -1,6 +1,7 @@
 class SubmissionsController < ApplicationController
-  before_action :unauth, only: [:edit, :update, :destroy]
-  before_action :set_submission, only: [:show, :edit, :update, :destroy]
+  before_action :set_submission, only: %i[show edit update destroy]
+  before_action :unauthenticated, only: %i[new create edit update destroy]
+  before_action -> { unauthorized @submission.user_id }, only: %i[edit update destroy]
 
   # GET /submissions
   # GET /submissions.json
@@ -36,22 +37,12 @@ class SubmissionsController < ApplicationController
 
   # GET /submissions/new
   def new
-    if !logged_in?
-      render "/pages/redirect", status: 403
-      return
-    end
-
     @submission = Submission.new
     @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
   end
 
   # GET /submissions/1/edit
   def edit
-    if !logged_in? || @submission.user_id != current_user.id
-      render "/pages/redirect", status: 403
-      return
-    end
-
     @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
   end
 
@@ -112,42 +103,40 @@ class SubmissionsController < ApplicationController
     @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
     curr_user_id = current_user.id
     
-    if @submission.user_id == curr_user_id
-      if @submission.created_at.to_date == Time.now.utc.to_date
-        usedParams = submission_params
-      else
-        usedParams = limited_params
-      end
-      respond_to do |format|
-        if @submission.update(usedParams)
+    if @submission.created_at.to_date == Time.now.utc.to_date
+      usedParams = submission_params
+    else
+      usedParams = limited_params
+    end
+    respond_to do |format|
+      if @submission.update(usedParams)
 
-          if !params[:postfrequency].nil?
-            newFrequency = params[:postfrequency].to_i
-            current_user.update_attribute(:new_frequency, newFrequency)
-          end
+        if !params[:postfrequency].nil?
+          newFrequency = params[:postfrequency].to_i
+          current_user.update_attribute(:new_frequency, newFrequency)
+        end
 
-          #This sort of information (challenge submissions) shouldn't ever change after the day it was submitted.
-          if @submission.created_at.to_date == Time.now.utc.to_date
-            @participations.each do |p|
-              if p.challenge_id != 1 && !p.challenge.seasonal
-                entry = ChallengeEntry.find_by({challenge_id: p.challenge_id, submission_id: @submission.id, user_id: curr_user_id})
-                #If we selected the checkbox, check if an extry exists before creating it.
-                if !params[p.challenge_id.to_s].blank? && entry.blank?
-                  ChallengeEntry.create({challenge_id: p.challenge_id, submission_id: @submission.id, user_id: curr_user_id})
-                #If we unchecked the box, check if an entry doesn't exist before deleting it.
-                elsif params[p.challenge_id.to_s].blank? && !entry.blank?
-                  entry.destroy
-                end
+        # This sort of information (challenge submissions) shouldn't ever change after the day it was submitted.
+        if @submission.created_at.to_date == Time.now.utc.to_date
+          @participations.each do |p|
+            if p.challenge_id != 1 && !p.challenge.seasonal
+              entry = ChallengeEntry.find_by({challenge_id: p.challenge_id, submission_id: @submission.id, user_id: curr_user_id})
+              # If we selected the checkbox, check if an extry exists before creating it.
+              if !params[p.challenge_id.to_s].blank? && entry.blank?
+                ChallengeEntry.create({challenge_id: p.challenge_id, submission_id: @submission.id, user_id: curr_user_id})
+              # If we unchecked the box, check if an entry doesn't exist before deleting it.
+              elsif params[p.challenge_id.to_s].blank? && !entry.blank?
+                entry.destroy
               end
             end
           end
-          
-          format.html { redirect_to @submission }
-          format.json { render :show, status: :ok, location: @submission }
-        else
-          format.html { render :edit }
-          format.json { render json: @submission.errors, status: :unprocessable_entity }
         end
+
+        format.html { redirect_to @submission }
+        format.json { render :show, status: :ok, location: @submission }
+      else
+        format.html { render :edit }
+        format.json { render json: @submission.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -155,26 +144,23 @@ class SubmissionsController < ApplicationController
   # DELETE /submissions/1
   # DELETE /submissions/1.json
   def destroy
-    #Only the creator can delete a submission, and only on the day he submitted it.
-    if @submission.user_id == current_user.id && (@submission.created_at.to_date == Date.current)
-      ChallengeEntry.where(submission_id: @submission.id).destroy_all
-      @submission.destroy
-      respond_to do |format|
-        format.html { redirect_to submissions_url }
-        format.json { head :no_content }
-      end
+    # You can only delete a submission on the day you submitted it.
+    return if @submission.created_at.to_date != Date.current
+
+    ChallengeEntry.where(submission_id: @submission.id).destroy_all
+    @submission.destroy
+    respond_to do |format|
+      format.html { redirect_to submissions_url }
+      format.json { head :no_content }
     end
   end
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_submission
       @submission = Submission.find(params[:id])
       @comments = Comment.where(source: @submission).includes(:user)
-    end
-    # Check in place to see if user is logged in. If not, redirect user to redirection page. Could also be swaped out with root_path
-    def unauth
-      render "/pages/redirect", status: 403 unless logged_in?
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

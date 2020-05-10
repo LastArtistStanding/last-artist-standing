@@ -1,6 +1,8 @@
 class ChallengesController < ApplicationController
-  before_action :set_challenge, only: [:show, :edit, :update, :destroy, :join, :entries]
-  
+  before_action :set_challenge, only: %i[show edit update destroy join entries]
+  before_action :unauthenticated, only: %i[new create edit update destroy]
+  before_action -> { unauthorized @challenge.creator_id }, only: %i[edit update destroy]
+
   # GET /challenges
   # GET /challenges.json
   def index
@@ -47,11 +49,6 @@ class ChallengesController < ApplicationController
   
   # GET /challenge/new
   def new
-    if !logged_in?
-      render "/pages/redirect", status: 403
-      return
-    end
-
     @challenge = Challenge.new
     @badge_map = BadgeMap.new
     @badge = Badge.new
@@ -60,6 +57,8 @@ class ChallengesController < ApplicationController
   # POST /challenges
   # POST /challenges.json
   def create
+    return unless current_user.can_make_challenges
+
     @challenge = Challenge.new(allowed_challenge_params)
     badge_params = allowed_badge_params
     badge_params[:nsfw_level] = allowed_challenge_params[:nsfw_level]
@@ -129,10 +128,6 @@ class ChallengesController < ApplicationController
   end
 
   def edit
-    if !logged_in? || @challenge.creator_id != current_user.id
-      render "/pages/redirect", status: 403
-      return
-    end
   end
 
   def update
@@ -171,15 +166,13 @@ class ChallengesController < ApplicationController
   end
 
   def destroy
-    if @challenge.creator_id == current_user.id
-      Participation.where(challenge_id: @challenge.id).destroy_all
-      @badge_map.destroy
-      @badge.destroy
-      @challenge.destroy
-      respond_to do |format|
-        format.html { redirect_to challenges_url }
-        format.json { head :no_content }
-      end
+    Participation.where(challenge_id: @challenge.id).destroy_all
+    @badge_map.destroy
+    @badge.destroy
+    @challenge.destroy
+    respond_to do |format|
+      format.html { redirect_to challenges_url }
+      format.json { head :no_content }
     end
   end
   
