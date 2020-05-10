@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :set_curruser, only: %i[submissions show edit update]
-  before_action :unauthenticated, only: %i[edit update]
-  before_action -> { unauthorized @curruser.id }, only: %i[edit update]
+  before_action :ensure_authenticated, only: %i[edit update]
+  before_action -> { ensure_authorized @curruser.id }, only: %i[edit update]
 
   def index
     #@users = User.order("id DESC").paginate(:page => params[:page], :per_page => 50)

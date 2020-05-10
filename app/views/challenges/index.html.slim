@@ -54,9 +54,10 @@
               td = frequency_string(challenge.postfrequency, false)
               td = challenge.streak_based ? "Yes" : "No"
               td = challenge_creator_link(challenge.creator_id)
-              - if logged_in? && !challenge.creator_id.nil? && challenge.creator_id == current_user.id
+              - if logged_in? && challenge.creator_id == current_user.id
                 td = link_to '<span class="fa fa-pencil"></span>'.html_safe, edit_challenge_path(challenge), class: "btn btn-primary"
-                td = link_to '<i class="fa fa-trash"></i>'.html_safe, challenge, method: :delete, data: { confirm: 'Are you sure?' }
+                - if challenge.can_delete?
+                  td = link_to '<i class="fa fa-trash"></i>'.html_safe, challenge, method: :delete, data: { confirm: 'Are you sure?' }
               - else
                 td 
                 td 

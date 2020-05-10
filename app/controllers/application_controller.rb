@@ -7,14 +7,14 @@ class ApplicationController < ActionController::Base
   before_action :record_user_session
 
   # Check that if a user is logged in.
-  def unauthenticated
+  def ensure_authenticated
     # Technically, the HTTP response code intended for unauthenticated requests is `401`.
     # However, to use it, you must support HTTP's authentication mechanism, which we don't.
     render '/pages/unauthenticated', status: 403 unless logged_in?
   end
 
   # Check that the logged-in user is authorized to modify this submission.
-  def unauthorized(creator_id)
+  def ensure_authorized(creator_id)
     render '/pages/unauthorized', status: 403 unless creator_id == current_user.id
   end
 
