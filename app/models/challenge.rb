@@ -26,6 +26,10 @@ class Challenge < ApplicationRecord
 
   validate :end_date_cannot_precede_start_date
 
+  def can_delete?
+    Time.now.utc.to_date < start_date
+  end
+
   def end_date_cannot_precede_start_date
     return unless end_date.present? && end_date <= start_date
 

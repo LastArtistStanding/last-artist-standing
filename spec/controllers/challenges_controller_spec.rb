@@ -1,24 +1,24 @@
 # frozen_string_literal: true
 
 describe ChallengesController do
-  describe "GET 'new'" do
+  describe 'GET :new' do
     it 'requires login' do
       get :new
-      response.should render_template(:new)
+      expect_requires_login
     end
   end
 
-  describe "GET 'edit'" do
+  describe 'GET :edit' do
     it 'requires login' do
       get :edit, params: { id: 1 }
-      response.should render_template(:edit)
+      expect_requires_login
     end
   end
 
-  describe "GET 'destroy'" do
+  describe 'DELETE :destroy' do
     it 'requires login' do
       delete :destroy, params: { id: 1 }
-      response.should be_unauthorized
+      expect_requires_login
     end
   end
 end

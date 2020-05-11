@@ -1,5 +1,6 @@
 class NotificationsController < ApplicationController
   skip_before_action :record_user_session
+  before_action :ensure_authenticated, only: %i[index mark_as_read]
 
   def index
     respond_to do |format|
