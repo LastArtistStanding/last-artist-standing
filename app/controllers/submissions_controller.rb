@@ -149,6 +149,14 @@ class SubmissionsController < ApplicationController
 
     ChallengeEntry.where(submission_id: @submission.id).destroy_all
     @submission.destroy
+
+    Comment.where(source: @submission).each do |comment|
+      # FIXME: Abstract this particular bit of code out into the model.
+      #   It should be `comment.notifications.destroy_all` or something like that.
+      #   Same for elsewhere this comes up: the challenge controller, @submission.comments, etc.
+      Notification.where(source_type: 'Comment', source_id: comment.id).destroy_all
+    end
+
     respond_to do |format|
       format.html { redirect_to submissions_url }
       format.json { head :no_content }

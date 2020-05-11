@@ -34,17 +34,22 @@ before_action :find_target
           next if @target.user_id == duid
 
           Notification.create(body: "#{poster_name} has also commented on submission #{@target.display_title} (ID #{@target.id}).",
-                              source_type: "Submission",
-                              source_id: @target.id,
+                              source_type: 'Comment',
+                              source_id: @comment.id,
                               user_id: duid,
                               url: submission_path(@target.id))
         end
         # Send a notification to the artist if it's not ourself.
-        Notification.create(body: "#{poster_name} has commented on your submission #{@target.display_title} (ID #{@target.id}).",
-                            source_type: "Submission",
-                            source_id: @target.id,
-                            user_id: @target.user_id,
-                            url: submission_path(@target.id)) unless @target.user_id == current_user.id
+        unless @target.user_id == current_user.id
+          Notification.create(
+            body: "#{poster_name} has commented on your submission #{@target.display_title} (ID #{@target.id}).",
+            source_type: 'Comment',
+            source_id: @comment.id,
+            user_id: @target.user_id,
+            # FIXME: The comment URL generation logic should be its own method.
+            url: submission_path(@target.id) + "\##{@comment.id}"
+          )
+        end
       end
       redirect_back(fallback_location: "/")
     else
@@ -64,6 +69,8 @@ before_action :find_target
         end
         target.num_comments -= 1
         target.save
+
+        Notification.where(source_type: 'Comment', source_id: id).destroy_all
       end
     else
       flash[:error] = "You can't delete other people's comments. Please cease these shenanigans."
