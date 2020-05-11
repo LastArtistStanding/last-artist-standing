@@ -42,4 +42,10 @@ jobs:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432
         run: |
           bin/rails test
-        # TODO: Add rspec tests once they're fixed.
+
+      - name: Run Spec Tests
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432
+        run: |
+          bin/bundle exec rspec spec/
