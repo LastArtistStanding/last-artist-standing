@@ -147,15 +147,8 @@ class SubmissionsController < ApplicationController
     # You can only delete a submission on the day you submitted it.
     return if @submission.created_at.to_date != Time.now.utc.to_date
 
-    ChallengeEntry.where(submission_id: @submission.id).destroy_all
     @submission.destroy
-
-    Comment.where(source: @submission).each do |comment|
-      # FIXME: Abstract this particular bit of code out into the model.
-      #   It should be `comment.notifications.destroy_all` or something like that.
-      #   Same for elsewhere this comes up: the challenge controller, @submission.comments, etc.
-      Notification.where(source_type: 'Comment', source_id: comment.id).destroy_all
-    end
+    @submission.comments.each { |comment| comment.notifications.destroy_all }
 
     respond_to do |format|
       format.html { redirect_to submissions_url }

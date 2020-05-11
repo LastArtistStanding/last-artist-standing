@@ -3,6 +3,7 @@ class Comment < ApplicationRecord
 
   belongs_to :source, polymorphic: true
   belongs_to :user
+  has_many :notifications, as: :source, dependent: :destroy
 
   validates :user_id, presence: true
   validates :body, length: { maximum: 2000 }, presence: true

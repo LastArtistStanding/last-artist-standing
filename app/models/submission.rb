@@ -5,9 +5,14 @@ class Submission < ApplicationRecord
   mount_uploader :drawing, ImageUploader
 
   belongs_to :user
-  has_many :challenge_entries
+  has_many :challenge_entries, dependent: :destroy
   has_many :challenges, through: :challenge_entries
   has_many :comments, as: :source
+  # This *would* include a `dependent: :destroy` clause as well, but that causes an error:
+  #   Cannot modify association 'Submission#notifications'
+  #   because the source reflection class 'Notification' is associated to 'Comment' via :has_many.
+  # If there is any way to solve this, feel free to do so.
+  has_many :notifications, through: :comments
 
   validates :user_id, presence: true
   validates :drawing, presence: true

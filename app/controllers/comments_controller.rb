@@ -69,8 +69,6 @@ before_action :find_target
         end
         target.num_comments -= 1
         target.save
-
-        Notification.where(source_type: 'Comment', source_id: id).destroy_all
       end
     else
       flash[:error] = "You can't delete other people's comments. Please cease these shenanigans."
