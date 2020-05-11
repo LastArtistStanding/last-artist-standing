@@ -26,7 +26,7 @@ class PagesController < ApplicationController
       comment_activity = Comment.order("created_at DESC").limit(10).includes(:user)
       comment_activity.each do |c|
         if c.source_type == "Submission"
-          activity_hash = { message: "#{c.user.username} posted a comment on submission #{c.source_id}.", datetime: c.created_at, link: submission_path(c.source_id) + "\##{c.id}" }
+          activity_hash = { message: "#{c.user.username} posted a comment on submission #{c.source_id}.", datetime: c.created_at, link: c.url }
           @activity.push(activity_hash)
         end
       end

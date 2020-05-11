@@ -8,6 +8,21 @@ class Comment < ApplicationRecord
   validates :user_id, presence: true
   validates :body, length: { maximum: 2000 }, presence: true
 
+  # FIXME: This code assumes that submissions are the only possible thing to comment on,
+  #   and although as far as I know that is *currently* true, the source is polymorphic,
+  #   so this should be rewritten to act on *any* source_type.
+  #   I don't know how to do it personally, but I assume there are two possibilities:
+  #     1. link_form does it somehow, and that code should be abstracted out to this method
+  #     2. link_form doesn't handle it, in which case it's probably safe to ignore for now
+  def url
+    "/submissions/#{source_id}\##{id}"
+  end
+
+  # HACK: What a mess!!
+  #   I *think* this parses comment bodies, finds `>>`-syntax replies,
+  #   and replaces them with links to the comment or submission being replied to.
+  #   I'd be willing to clean this up, but until I know for sure what it does,
+  #   I don't want to mess with it.
   def link_form
     return body if body.index('>>') == nil
 

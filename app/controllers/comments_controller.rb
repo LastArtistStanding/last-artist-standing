@@ -46,8 +46,7 @@ before_action :find_target
             source_type: 'Comment',
             source_id: @comment.id,
             user_id: @target.user_id,
-            # FIXME: The comment URL generation logic should be its own method.
-            url: submission_path(@target.id) + "\##{@comment.id}"
+            url: @comment.url
           )
         end
       end
