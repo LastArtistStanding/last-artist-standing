@@ -5,7 +5,8 @@ Rails.application.routes.draw do
   end
   resources :users
   resources :challenges
-  resources :password_resets,     only: [:new, :create, :edit, :update]
+  resources :password_resets, only: [:new, :create, :edit, :update]
+  resources :moderator_applications
 
   resources :notifications, only: [:index] do
     collection do

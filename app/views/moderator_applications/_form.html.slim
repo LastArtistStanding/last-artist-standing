@@ -1,0 +1,53 @@
+section.card
+  header.card-header
+    strong Moderator Application Form
+
+  .card-body
+    - if application.errors.any?
+      #error_explanation
+        h3 = "#{pluralize(application.errors.count, "error")} prohibited this application from being submitted:"
+        ul
+          - application.errors.messages.each do |message|
+            li = message[1][0]
+
+    p
+      | You will be able to edit your application after you submit it.
+      |  You may receive your response through the email address associated through your account.
+    br
+
+    = form_for application do |form|
+      .form-group.row
+        .col-3 = form.label(:at_least_18_years_old, 'Are you at least 18 years of age?')
+        .col-9 = form.check_box(:at_least_18_years_old, { checked: over_18, style: 'width: auto' })
+
+      .form-group.row
+        .col-3 = form.label(:time_zone, 'What time zone are you in?')
+        .col-9 = form.time_zone_select(:time_zone)
+
+      small style="color: grey;"
+        | Please state your answers in Central Standard Time.
+      .form-group.row
+        .col-3 = form.label(:active_hours, 'What periods of time can you be actively moderating the site?')
+        .col-9 = form.text_area(:active_hours)
+
+      .form-group.row
+        .col-3 = form.label(:why_mod, 'Why do you think you should become a mod?')
+        .col-9 = form.text_area(:why_mod)
+
+      .form-group.row
+        .col-3 = form.label(:past_experience, 'Do you have any past experience as a moderator?')
+        .col-9 = form.text_area(:past_experience)
+
+      .form-group.row
+        .col-3 = form.label(:how_long, 'How long have you been a member of LAS/DED/DAD?')
+        .col-9 = form.text_area(:how_long)
+
+      .form-group.row
+        .col-3 = form.label(:why_dad, 'What does DAD mean to you?')
+        .col-9 = form.text_area(:why_dad)
+
+      .form-group.row
+        .col-3 = form.label(:anything_else, 'Is there anything else you wish to include in your application? (Optional)')
+        .col-9 = form.text_area(:anything_else)
+
+      = form.submit 'Save Changes', class: 'btn btn-primary'

@@ -1,0 +1,38 @@
+.container-fluid
+  .row
+    .col-lg-2
+
+    main.restore-defaults.col-lg-8
+      h1
+        = link_to(@application.user.username, user_path(@application.user))
+        | 's Moderator Application
+
+      - if current_user.is_admin?
+        a.btn.btn-primary href=moderator_applications_path style='margin-right: 5px;'
+          span.fa.fa-undo Back
+      = link_to '<span class="fa fa-edit"></span>'.html_safe, edit_moderator_application_path(@application), class: 'btn btn-primary', style: 'margin-right: 5px;'
+      = link_to '<span class="fa fa-trash"></span>'.html_safe, @application, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-primary'
+
+      h2.test What time zone are you in?
+      p = simple_format @application.time_zone
+
+      h2 What periods of time can you be actively moderating the site?
+      p = simple_format @application.active_hours
+
+      h2 Why do you think you should become a mod?
+      p = simple_format @application.why_mod
+
+      h2 Do you have any past experience as a moderator?
+      p = simple_format @application.past_experience
+
+      h2 How long have you been a member of LAS/DED/DAD?
+      p = simple_format @application.how_long
+
+      h2 What does DAD mean to you?
+      p = simple_format @application.why_dad
+
+      - unless @application.anything_else.nil? || @application.anything_else.empty?
+        h2 Is there anything else you wish to include in your application?
+        p = simple_format @application.anything_else
+
+    .col-lg-2

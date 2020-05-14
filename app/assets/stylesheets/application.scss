@@ -44,6 +44,10 @@ header {
   height: 75px;
 }
 
+header.card-header {
+  height: auto;
+}
+
 .footer {
   font-size: 0.7rem;
   width: 100%;
@@ -505,4 +509,29 @@ p {
 .quote-id:hover {
   cursor: pointer;
   color: blue;
+}
+
+/*
+ * This application's CSS overwrites many default styles for some reason.
+ * This section will restore them back to their usual values within a section.
+ */
+
+.restore-defaults {
+  h1 {
+    font-size: 2em;
+    margin-top: 0.67em;
+    margin-bottom: 0.67em;
+    font-weight: bold;
+  }
+
+  h2 {
+    font-size: 1.5em;
+    margin-top: 0.83em;
+    margin-bottom: 0.83em;
+    font-weight: bold;
+  }
+
+  p {
+    margin: 1em 0px;
+  }
 }

@@ -20,6 +20,7 @@ class User < ApplicationRecord
   has_many :badges, through: :awards
   has_many :challenges, through: :participations
   has_many :comments
+  has_one :moderator_application
 
   before_save { self.email = email.downcase }
 

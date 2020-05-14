@@ -166,7 +166,7 @@ class ChallengesController < ApplicationController
   end
 
   def destroy
-    return unless challenge.can_delete?
+    return unless @challenge.can_delete?
 
     Participation.where(challenge_id: @challenge.id).destroy_all
     @badge_map.destroy
