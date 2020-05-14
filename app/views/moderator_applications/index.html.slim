@@ -1,0 +1,14 @@
+.container-fluid
+  .row
+    .col-lg-2
+
+    main.col-lg-8
+      h1 Moderator Applications
+      ul
+        - @applications.each do |application|
+          li
+            = link_to(application.user.username, moderator_application_path(application.id))
+            - if application.updated_at != application.created_at
+              = ", last updated #{application.updated_at.strftime("%b %-d, %Y at %H:%M")}"
+
+    .col-lg-2

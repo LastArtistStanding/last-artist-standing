@@ -1,0 +1,10 @@
+.container-fluid
+  .row
+    .col-lg-2
+
+    main.col-lg-8
+      h1 Edit Moderator Application
+      = render 'responsibilities'
+      = render 'form', application: @application, over_18: true
+
+    .col-lg-2

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_22_233851) do
+ActiveRecord::Schema.define(version: 2020_05_13_203600) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,6 +77,20 @@ ActiveRecord::Schema.define(version: 2020_03_22_233851) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["source_type", "source_id"], name: "index_comments_on_source_type_and_source_id"
+  end
+
+  create_table "moderator_applications", force: :cascade do |t|
+    t.bigint "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "time_zone"
+    t.text "active_hours"
+    t.text "why_mod"
+    t.text "past_experience"
+    t.text "how_long"
+    t.text "why_dad"
+    t.text "anything_else"
+    t.index ["user_id"], name: "index_moderator_applications_on_user_id"
   end
 
   create_table "notifications", id: :serial, force: :cascade do |t|
@@ -175,5 +189,6 @@ ActiveRecord::Schema.define(version: 2020_03_22_233851) do
     t.index ["name"], name: "index_users_on_name", unique: true
   end
 
+  add_foreign_key "moderator_applications", "users"
   add_foreign_key "user_sessions", "users"
 end
