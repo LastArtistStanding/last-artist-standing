@@ -68,6 +68,8 @@ group :development do
 end
 
 group :production do
+  # "[...] configures Rails for CloudFlare so that request.remote_ip [... works] correctly."
+  gem 'cloudflare-rails', '~> 0.6.0'
   gem 'rails_12factor'
 end
 
