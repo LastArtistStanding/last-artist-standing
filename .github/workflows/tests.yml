@@ -34,7 +34,7 @@ jobs:
         run: |
           gem install bundler
           bundle install --jobs 4 --retry 3
-          bin/rake db:setup dad_tasks:update_database dad_tasks:init_site_status dad_tasks:update_patch_notes RAILS_ENV=test
+          bin/rake db:setup RAILS_ENV=test
 
       - name: Run Tests
         env:

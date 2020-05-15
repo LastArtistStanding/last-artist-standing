@@ -64,7 +64,7 @@ class ModeratorApplicationsController < ApplicationController
 
   def ensure_authorized_or_admin
     # The administrator can view and edit *every* moderator application.
-    ensure_authorized @application.user_id if current_user.nil? || !current_user.is_admin
+    ensure_authorized @application.user_id unless current_user.is_admin
   end
 
   def ensure_applications_open

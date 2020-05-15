@@ -9,7 +9,8 @@ footer.footer style="background-color: rgba(223, 223, 255, 0.9);"
       .credits.ml-auto
         span.copyright
           | Do Art Daily 
-          = link_to PatchNote.last.patch, "/news"
+          - unless PatchNote.last.nil?
+            = link_to PatchNote.last.patch, "/news"
           = " ©#{Time.now.utc.year}"
           |  made by 
           a href="https://github.com/the1banana" the1banana
