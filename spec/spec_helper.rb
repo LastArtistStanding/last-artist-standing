@@ -5,6 +5,29 @@ require File.expand_path('../config/environment', __dir__)
 require 'database_cleaner/active_record'
 require 'rspec/rails'
 
+# Sets the logged-in user based on the individual example's configuration.
+# This is primarily intended to be used to write controller authorization tests:
+#   * with no example settings, the logged-in user will be the user provided,
+#     which presumably is the creator of whatever thing is hypothetically being edited
+#   * with :incorrect_login set, the logged-in user will be an entirely new user,
+#     which could not have any relationship to the thing being edited
+#   * with :admin_login set, the logged-in user will be an entirely new user,
+#     but it will be an admin
+#   * with :no_login, no user will be logged in at all
+def setup_session(example, user)
+  if example.metadata[:incorrect_login] || example.metadata[:admin_login]
+    unrelated_user = create(:user, name: 'user2', email: 'user2@example.com',
+                                   is_admin: example.metadata[:admin_login])
+    request.session = { user_id: unrelated_user.id }
+  elsif !example.metadata[:no_login]
+    request.session = { user_id: user.id }
+  end
+end
+
+def expect_successful_template(template)
+  expect(response).to have_http_status(:successful).and render_template(template)
+end
+
 def expect_not_found
   expect(response).to have_http_status(:not_found)
 end

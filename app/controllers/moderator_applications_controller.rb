@@ -25,14 +25,14 @@ class ModeratorApplicationsController < ApplicationController
     @application = ModeratorApplication.new
   end
 
-  def edit; end
-
   def create
     @application = ModeratorApplication.new(application_params)
     @application.user_id = current_user.id
 
     view_result @application.save
   end
+
+  def edit; end
 
   def update
     view_result @application.update(application_params)
