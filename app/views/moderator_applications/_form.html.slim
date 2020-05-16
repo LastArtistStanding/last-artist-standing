@@ -46,8 +46,10 @@ section.card
         .col-3 = form.label(:why_dad, 'What does DAD mean to you?')
         .col-9 = form.text_area(:why_dad)
 
+      small style="color: grey;"
+        | This field is optional.
       .form-group.row
-        .col-3 = form.label(:anything_else, 'Is there anything else you wish to include in your application? (Optional)')
+        .col-3 = form.label(:anything_else, 'Is there anything else you wish to include in your application?')
         .col-9 = form.text_area(:anything_else)
 
       = form.submit 'Save Changes', class: 'btn btn-primary'

@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :application, class: ModeratorApplication do
     user
-    time_zone { 'America/Los_Angeles' }
+    time_zone { 'Pacific Time (US & Canada)' }
     active_hours { 'Placeholder' }
     why_mod { 'Placeholder' }
     past_experience { 'Placeholder' }

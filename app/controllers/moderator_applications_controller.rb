@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ModeratorApplicationsController < ApplicationController
   before_action :set_application, only: %i[show edit update destroy]
   before_action :ensure_authenticated, only: %i[index show new create edit update destroy]

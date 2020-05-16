@@ -80,15 +80,15 @@ ActiveRecord::Schema.define(version: 2020_05_13_203600) do
   end
 
   create_table "moderator_applications", force: :cascade do |t|
-    t.bigint "user_id"
+    t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "time_zone"
-    t.text "active_hours"
-    t.text "why_mod"
-    t.text "past_experience"
-    t.text "how_long"
-    t.text "why_dad"
+    t.string "time_zone", null: false
+    t.text "active_hours", null: false
+    t.text "why_mod", null: false
+    t.text "past_experience", null: false
+    t.text "how_long", null: false
+    t.text "why_dad", null: false
     t.text "anything_else"
     t.index ["user_id"], name: "index_moderator_applications_on_user_id"
   end

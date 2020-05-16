@@ -103,13 +103,17 @@ describe ModeratorApplicationsController do
   end
 
   describe 'POST :create' do
-    before(:each) { post :create }
+    before(:each) { post :create, params: { moderator_application: @application.attributes } }
 
     it_requires_login
     it_requires_that_applications_are_open
 
     it 'redirects if the user already applied' do
       expect(response).to redirect_to(edit_moderator_application_path(@application))
+    end
+
+    it 'works', :does_not_exist do
+      expect(response).to have_http_status(:see_other)
     end
   end
 
@@ -122,11 +126,19 @@ describe ModeratorApplicationsController do
   end
 
   describe 'PUT :update' do
-    before(:each) { put :update, params: { id: application_id } }
+    before(:each) do
+      put :update, params: { id: application_id, moderator_application: @application.attributes }
+    end
 
     it_handles_nonexistent_application
     it_requires_correct_login
     it_requires_that_applications_are_open
+
+    it 'works' do
+      expect(response)
+        .to redirect_to(moderator_application_path(@application))
+        .and have_http_status(:see_other)
+    end
   end
 
   describe 'DELETE :destroy' do

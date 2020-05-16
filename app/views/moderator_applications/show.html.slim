@@ -13,8 +13,8 @@
       = link_to '<span class="fa fa-edit"></span>'.html_safe, edit_moderator_application_path(@application), class: 'btn btn-primary', style: 'margin-right: 5px;'
       = link_to '<span class="fa fa-trash"></span>'.html_safe, @application, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-primary'
 
-      h2.test What time zone are you in?
-      p = simple_format @application.time_zone
+      h2 What time zone are you in?
+      p = "(GMT#{@application.time_zone_offset}) #{@application.time_zone}"
 
       h2 What periods of time can you be actively moderating the site?
       p = simple_format @application.active_hours
