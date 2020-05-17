@@ -9,6 +9,8 @@ footer.footer style="background-color: rgba(223, 223, 255, 0.9);"
       .credits.ml-auto
         span.copyright
           | Do Art Daily 
+          / The patch note is null unless `dad_tasks:update_patch_notes` has been run,
+          / which is the case in the test environment.
           - unless PatchNote.last.nil?
             = link_to PatchNote.last.patch, "/news"
           = " ©#{Time.now.utc.year}"

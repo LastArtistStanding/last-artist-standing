@@ -4,6 +4,7 @@
 def application_id
   # @application.id will always be set unless :does_not_exist is set for the example,
   # in which case we specifically want to use an id that does not exist.
+  # The number 192_139 has no special significance.
   @application.id || 192_139
 end
 
@@ -148,8 +149,9 @@ describe ModeratorApplicationsController do
     it_requires_correct_login
     it_requires_that_applications_are_open
 
-    expect_record_missing =
-      -> { expect(ModeratorApplication.find_by(id: @application.id)).to be_nil }
+    expect_record_missing = lambda do
+      expect(ModeratorApplication.find_by(id: @application.id)).to be_nil
+    end
 
     expect_admin_access_behavior = lambda do
       expect(response).to redirect_to(moderator_applications_path)

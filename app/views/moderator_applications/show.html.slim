@@ -31,7 +31,7 @@
       h2 What does DAD mean to you?
       p = simple_format @application.why_dad
 
-      - unless @application.anything_else.nil? || @application.anything_else.empty?
+      - unless @application.anything_else.blank?
         h2 Is there anything else you wish to include in your application?
         p = simple_format @application.anything_else
 

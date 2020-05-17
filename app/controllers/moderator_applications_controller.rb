@@ -10,7 +10,7 @@ class ModeratorApplicationsController < ApplicationController
   def index
     # Only the administrator can see moderator applications other than their own.
     unless current_user.is_admin
-      if current_user.moderator_application
+      if !current_user.moderator_application.nil?
         redirect_to current_user.moderator_application
       else
         redirect_to new_moderator_application_path
@@ -76,7 +76,7 @@ class ModeratorApplicationsController < ApplicationController
   # If someone has already submitted a moderator application,
   # they should edit the existing one rather than creating a new one.
   def prevent_conflict
-    return unless current_user.moderator_application
+    return if current_user.moderator_application.nil?
 
     redirect_to edit_moderator_application_path(current_user.moderator_application)
   end
