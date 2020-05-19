@@ -34,30 +34,10 @@ def it_requires_correct_login
   end
 end
 
-# The show and edit routes both have identical tests, which I have factored out here.
-def show_and_edit_tests(route)
-  before(:each) { get route, params: { id: application_id } }
-
-  it_handles_nonexistent_application
-  it_requires_that_applications_are_open
-  it_requires_correct_login
-
-  it 'allows admin access', :admin_login do
-    expect_successful_template route
-  end
-
-  it 'allows admin access even if applications are closed', :admin_login, :applications_closed do
-    expect_successful_template route
-  end
-
-  it 'works' do
-    expect_successful_template route
-  end
-end
-
 describe ModeratorApplicationsController do
   before(:each) do |example|
-    ENV['MODERATOR_APPLICATIONS'] = example.metadata[:applications_closed] ? 'closed' : 'open'
+    deadline = example.metadata[:applications_closed] ? Date.yesterday : Date.tomorrow
+    ENV['MODERATOR_APPLICATIONS_DEADLINE'] = deadline.to_s
 
     @user = create(:user)
     setup_session(example, @user)
@@ -119,11 +99,39 @@ describe ModeratorApplicationsController do
   end
 
   describe 'GET :show' do
-    show_and_edit_tests(:show)
+    before(:each) { get :show, params: { id: application_id } }
+
+    it_handles_nonexistent_application
+    it_requires_that_applications_are_open
+    it_requires_correct_login
+
+    it 'allows admin access', :admin_login do
+      expect_successful_template :show
+    end
+
+    it 'allows admin access even if applications are closed', :admin_login, :applications_closed do
+      expect_successful_template :show
+    end
+
+    it 'works' do
+      expect_successful_template :show
+    end
   end
 
   describe 'GET :edit' do
-    show_and_edit_tests(:edit)
+    before(:each) { get :edit, params: { id: application_id } }
+
+    it_handles_nonexistent_application
+    it_requires_that_applications_are_open
+    it_requires_correct_login
+
+    it 'does not allow admin access', :admin_login do
+      expect_unauthorized
+    end
+
+    it 'works' do
+      expect_successful_template :edit
+    end
   end
 
   describe 'PUT :update' do
@@ -149,26 +157,13 @@ describe ModeratorApplicationsController do
     it_requires_correct_login
     it_requires_that_applications_are_open
 
-    expect_record_missing = lambda do
-      expect(ModeratorApplication.find_by(id: @application.id)).to be_nil
-    end
-
-    expect_admin_access_behavior = lambda do
-      expect(response).to redirect_to(moderator_applications_path)
-      expect_record_missing
-    end
-
-    it 'allows admin access', :admin_login do
-      expect_admin_access_behavior
-    end
-
-    it 'allows admin access even if applications are closed', :admin_login, :applications_closed do
-      expect_admin_access_behavior
+    it 'does not allow admin access', :admin_login do
+      expect_unauthorized
     end
 
     it 'works' do
       expect(response).to redirect_to(root_path)
-      expect_record_missing
+      expect(ModeratorApplication.find_by(id: @application.id)).to be_nil
     end
   end
 end

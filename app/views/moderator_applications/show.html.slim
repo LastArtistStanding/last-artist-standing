@@ -10,8 +10,9 @@
       - if current_user.is_admin?
         a.btn.btn-primary href=moderator_applications_path style='margin-right: 5px;'
           span.fa.fa-undo Back
-      = link_to '<span class="fa fa-edit"></span>'.html_safe, edit_moderator_application_path(@application), class: 'btn btn-primary', style: 'margin-right: 5px;'
-      = link_to '<span class="fa fa-trash"></span>'.html_safe, @application, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-primary'
+      - if current_user.id == @application.user.id
+        = link_to '<span class="fa fa-edit"></span>'.html_safe, edit_moderator_application_path(@application), class: 'btn btn-primary', style: 'margin-right: 5px;'
+        = link_to '<span class="fa fa-trash"></span>'.html_safe, @application, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-primary'
 
       h2 What time zone are you in?
       p = "(GMT#{@application.time_zone_offset}) #{@application.time_zone}"

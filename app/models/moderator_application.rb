@@ -53,4 +53,8 @@ class ModeratorApplication < ApplicationRecord
   def time_zone_offset
     ActiveSupport::TimeZone[time_zone].formatted_offset
   end
+
+  def modified?
+    updated_at != created_at
+  end
 end

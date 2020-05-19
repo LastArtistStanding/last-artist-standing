@@ -3,9 +3,20 @@
 class ModeratorApplicationsController < ApplicationController
   before_action :set_application, only: %i[show edit update destroy]
   before_action :ensure_authenticated, only: %i[index show new create edit update destroy]
-  before_action :ensure_authorized_or_admin, only: %i[show edit update destroy]
+  before_action -> { ensure_authorized @application.user_id }, only: %i[edit update destroy]
+  before_action :ensure_authorized_or_admin, only: %i[show]
   before_action :ensure_applications_open, only: %i[show new create edit update destroy]
   before_action :prevent_conflict, only: %i[new create]
+
+  def self.applications_deadline
+    ENV['MODERATOR_APPLICATIONS_DEADLINE']
+  end
+
+  def self.applications_open?
+    return false if applications_deadline.nil?
+
+    Date.parse(applications_deadline) > Time.now.utc.to_date
+  end
 
   def index
     # Only the administrator can see moderator applications other than their own.
@@ -65,12 +76,14 @@ class ModeratorApplicationsController < ApplicationController
   end
 
   def ensure_authorized_or_admin
-    # The administrator can view and edit *every* moderator application.
+    # Only the administrator can view *every* moderator application.
     ensure_authorized @application.user_id unless current_user.is_admin
   end
 
   def ensure_applications_open
-    render_unauthorized unless ENV['MODERATOR_APPLICATIONS'] == 'open' || current_user.is_admin
+    return if ModeratorApplicationsController.applications_open? || current_user.is_admin
+
+    render_unauthorized
   end
 
   # If someone has already submitted a moderator application,

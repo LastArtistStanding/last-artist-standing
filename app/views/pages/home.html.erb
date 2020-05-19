@@ -153,6 +153,19 @@
         </div>
       </div>
 
+      <% if ModeratorApplicationsController.applications_open? %>
+        <div class="card homeCardStyle blueCard">
+          <div class="card-header">
+            Moderator applications are now open.
+          </div>
+          <div class="card-body">
+            They will be open until
+            <%= Date.parse(ModeratorApplicationsController.applications_deadline).to_formatted_s(:long_ordinal) %>.<br>
+            <a href="/moderator_applications">Submit yours now!</a>
+          </div>
+        </div>
+      <% end %>
+
       <div class="card homeCardStyle blueCard">
         <div class="card-body" style="text-align: center;">
           <table class="table table-sm">
