@@ -6,12 +6,14 @@ For more information about DAD, [check out the help page](https://dad.gallery/he
 First, install Ruby 2.6.5 via [RVM](https://rvm.io/), Bundler, and PostgreSQL if you do not have them already.
 
 To install RVM:
+
 ```console
 $ gpg2 --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 $ curl -sSL https://get.rvm.io | bash -s stable
 ```
 
 To install Ruby using RVM:
+
 ```console
 $ rvm install 2.6.5
 $ rvm --default use 2.6.5
@@ -71,14 +73,25 @@ You will need to add this permission policy to your bucket:
 }
 ```
 
-You may have noticed that the website has a test suite.
-Do not bother trying to run it; it is unmaintained and *will* fail.
+The website has a test suite, which you can run to make sure things are set up properly.
+If you make a change to the site, you should make sure that all of the tests still pass.
+Here's how you run the tests:
+
+```console
+$ rake test
+$ bundle exec rspec spec/
+```
+
+It does *not* test your S3 configuration; you can verify that S3 works by manually uploading a submission.
 
 Now, you'll be ready to run the app in a local server:
 
 ```console
 $ rails server
 ```
+
+To cause the site to process user streaks, eliminations, and challenges, you will need to run `rake dad_tasks:rollover_script`.
+On the production website, that task runs at 12:00 AM UTC every night.
 
 For more information, see the
 [*Ruby on Rails Tutorial* book](http://www.railstutorial.org/book).
