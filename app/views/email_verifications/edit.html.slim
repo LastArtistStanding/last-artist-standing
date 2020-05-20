@@ -1,0 +1,9 @@
+- provide(:title, 'Confirm your email address')
+.row.justify-content-center
+  h1 Confirm your email address
+
+.row.justify-content-center
+  .col-md-6.col-md-offset-3
+    = form_with(url: '', method: 'post') do |form|
+      = form.submit "Confirm #{@user.username} is my DAD account",
+                  class: "btn btn-primary"

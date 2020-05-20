@@ -31,7 +31,12 @@ class User < ApplicationRecord
                     uniqueness: { case_sensitive: false }
 
   has_secure_password
-  validates :password, presence: true, length: { minimum: 6, maximum: 30 }
+  # FIXME: Not every user update should require entering your password!
+  #   Commenting it for now, but this should be re-enabled and the issue fixed before this PR is merged!
+  # validates :password, presence: true, length: { minimum: 6, maximum: 30 }
+
+  validates :email_pending_verification, allow_nil: true, length: { maximum: 255 },
+                                         format: { with: VALID_EMAIL_REGEX }
 
   # Returns the hash digest of the given string.
   def self.digest(string)
@@ -61,6 +66,41 @@ class User < ApplicationRecord
 
   def password_reset_expired?
     reset_sent_at < 2.hours.ago
+  end
+
+  def send_email_verification
+    token = User.new_token
+    update!(email_pending_verification: email,
+            email_verification_digest: User.digest(token),
+            email_verification_sent_at: Time.now.utc.to_s)
+
+    UserMailer.email_verification(self, token).deliver_now
+  end
+
+  def verified?
+    verified
+  end
+
+  def email_verified?
+    email_verified
+  end
+
+  def email_verification_present?
+    !email_pending_verification.nil? &&
+      !email_verification_digest.nil? &&
+      !email_verification_sent_at.nil?
+  end
+
+  def email_verification_valid?
+    email_pending_verification == email
+  end
+
+  def email_verification_expired?
+    !email_verification_present? || email_verification_sent_at < Time.now.utc.yesterday
+  end
+
+  def email_verification_correct?(code)
+    BCrypt::Password.new(email_verification_digest) == code
   end
 
   def username
@@ -106,7 +146,7 @@ class User < ApplicationRecord
 
   def submission_limit
     max_dad_level = highest_level
-    return 1 if max_dad_level == 0
+    return 1 if max_dad_level.zero?
 
     return max_dad_level if max_dad_level < UNLIMITED_SUBMISSIONS_REQUIREMENT
 

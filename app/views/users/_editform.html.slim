@@ -10,6 +10,20 @@
 
         .card-body
           = f.label :email
+          - unless @curruser.email_verified?
+            br
+            small style='color: grey;'
+              - if @curruser.verified?
+                | Your email address
+              - else
+                | Your account
+              |  has not yet been verified.
+              = link_to new_email_verification_path(@curruser.id) do
+                |  Click here to
+                - if @curruser.email_verification_expired?
+                  |  verify your email address.
+                - else
+                  |  re-send your verification email.
           = f.email_field :email, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:email) ? 'is-invalid' : 'is-valid') : '' }"
           - if @curruser.errors.key?(:email)
             .invalid-feedback-rails

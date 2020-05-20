@@ -1,85 +1,44 @@
-Rails.application.routes.draw do
+# frozen_string_literal: true
 
-  resources :submissions do
-    resources :comments
-  end
-  resources :users
+Rails.application.routes.draw do
   resources :challenges
-  resources :password_resets, only: [:new, :create, :edit, :update]
+  get 'challenges/:id/entries' => 'challenges#entries'
+
   resources :moderator_applications
 
-  resources :notifications, only: [:index] do
+  resources :notifications, only: %i[index] do
     collection do
       post :mark_as_read
     end
   end
 
-  root   'pages#home'
-  get 'signup' => "users#new"
-  get "find" => "users#index"
-  get 'about' => "pages#about"
-  get 'help' => "pages#help"
-  get "welcome" => "pages#home"
-  get 'news' => "pages#news"
-  get    '/login'   => "sessions#new"
-  post   '/login'   => "sessions#create"
-  delete '/logout'   => "sessions#destroy"
-  get "submissions" => "submissions#index"
-  get 'challenges/:id/entries' => 'challenges#entries'
+  root 'pages#home'
+  get 'about' => 'pages#about'
+  get 'help' => 'pages#help'
+  get 'welcome' => 'pages#home'
+  get 'news' => 'pages#news'
+
+  resources :password_resets, only: %i[new create edit update]
+
+  resources :submissions do
+    resources :comments
+  end
+
+  get '/login' => 'sessions#new'
+  post '/login' => 'sessions#create'
+  delete '/logout' => 'sessions#destroy'
+
+  resources :users
+  get 'find' => 'users#index'
+  get 'signup' => 'users#new'
   get 'users/:id/submissions' => 'users#submissions'
 
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
-
-  # You can have the root of your site routed with "root"
-  # root 'welcome#index'
-
-  # Example of regular route:
-  #   get 'products/:id' => 'catalog#view'
-
-  # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
-
-  # Example resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Example resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
-
-  # Example resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
-
-  # Example resource route with more complex sub-resources:
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', on: :collection
-  #     end
-  #   end
-
-  # Example resource route with concerns:
-  #   concern :toggleable do
-  #     post 'toggle'
-  #   end
-  #   resources :posts, concerns: :toggleable
-  #   resources :photos, concerns: :toggleable
-
-  # Example resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
+  get 'users/:user_id/email_verification' => 'email_verifications#new',
+      as: :new_email_verification
+  post 'users/:user_id/email_verification' => 'email_verifications#create',
+       as: :email_verifications
+  get 'users/:user_id/email_verification/:digest' => 'email_verifications#edit',
+      as: :edit_email_verification
+  post 'users/:user_id/email_verification/:digest' => 'email_verifications#update',
+       as: :email_verification
 end
