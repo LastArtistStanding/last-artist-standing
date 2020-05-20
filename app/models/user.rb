@@ -31,9 +31,8 @@ class User < ApplicationRecord
                     uniqueness: { case_sensitive: false }
 
   has_secure_password
-  # FIXME: Not every user update should require entering your password!
-  #   Commenting it for now, but this should be re-enabled and the issue fixed before this PR is merged!
-  # validates :password, presence: true, length: { minimum: 6, maximum: 30 }
+  validates :password, presence: true, length: { minimum: 6, maximum: 30 },
+                       unless: :retain_old_password?
 
   validates :email_pending_verification, allow_nil: true, length: { maximum: 255 },
                                          format: { with: VALID_EMAIL_REGEX }
@@ -68,13 +67,28 @@ class User < ApplicationRecord
     reset_sent_at < 2.hours.ago
   end
 
+  def update_retain_password(data)
+    @retain_old_password = true
+    update(data)
+    @retain_old_password = false
+  end
+
+  def retain_old_password?
+    @retain_old_password
+  end
+
   def send_email_verification
     token = User.new_token
-    update!(email_pending_verification: email,
-            email_verification_digest: User.digest(token),
-            email_verification_sent_at: Time.now.utc.to_s)
+
+    update_retain_password(email_pending_verification: email,
+                           email_verification_digest: User.digest(token),
+                           email_verification_sent_at: Time.now.utc.to_s)
 
     UserMailer.email_verification(self, token).deliver_now
+  end
+
+  def verify_email
+    update_retain_password(verified: true, email_verified: true)
   end
 
   def verified?

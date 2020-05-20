@@ -24,7 +24,7 @@ class EmailVerificationsController < ApplicationController
   def create
     @user.send_email_verification
 
-    flash[:success] = 'An email verification token has been sent to'\
+    flash[:success] = 'An email verification link has been sent to'\
       " #{@user.email_pending_verification}."
     redirect_to root_path
   end
@@ -32,7 +32,7 @@ class EmailVerificationsController < ApplicationController
   def edit; end
 
   def update
-    @user.update(verified: true, email_verified: true)
+    @user.verify_email
 
     flash[:success] = 'Your email address has been verified!'
     redirect_to root_path
@@ -66,21 +66,21 @@ class EmailVerificationsController < ApplicationController
 
     # This isn't necessarily all that great of a UX for error handling,
     # but I don't think it matters much because these errors are likely to be very rare in practice.
-    flash[:danger] = 'You have not requested an email verification token! Try sending a new one.'
+    flash[:danger] = 'You have not requested an email verification link! Try sending a new one.'
     redirect_to edit_user_path(@user)
   end
 
   def ensure_verification_correct
     return if @user.email_verification_correct?(@digest)
 
-    flash[:danger] = 'That is not the correct email verification token! Try sending a new one.'
+    flash[:danger] = 'That is not the correct email verification link! Try sending a new one.'
     redirect_to edit_user_path(@user)
   end
 
   def ensure_verification_active
     return unless @user.email_verification_expired?
 
-    flash[:danger] = "Your email verification token has expired! You'll need to send a new one."
+    flash[:danger] = "Your email verification link has expired! You'll need to send a new one."
     redirect_to edit_user_path(@user)
   end
 
