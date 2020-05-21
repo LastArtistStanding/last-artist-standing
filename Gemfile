@@ -13,7 +13,6 @@ gem 'bcrypt', '~> 3.1'
 gem 'bootstrap', '>= 4.3.1'
 # For popovers
 gem 'popper_js', '>= 1.12.9'
-gem 'rails-assets-tether', '>= 1.3.3', source: 'https://rails-assets.org'
 gem 'autoprefixer-rails'
 # Use SCSS for stylesheets
 gem 'sassc-rails', '>= 2.1.2', '< 2.2'
