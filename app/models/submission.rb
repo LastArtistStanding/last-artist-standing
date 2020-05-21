@@ -25,7 +25,7 @@ class Submission < ApplicationRecord
 
     return [false, 'The artist has locked comments for this submission.'] unless commentable
 
-    return [true, ''] if user_id == user.id
+    return [true, nil] if user_id == user.id
 
     user.can_make_comments
   end

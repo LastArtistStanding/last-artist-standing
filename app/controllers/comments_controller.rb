@@ -1,74 +1,49 @@
-class CommentsController < ApplicationController
-include SubmissionsHelper
+# frozen_string_literal: true
 
-before_action :find_target
+class CommentsController < ApplicationController
+  include SubmissionsHelper
+
+  before_action :set_target, only: %i[new create]
+  before_action :set_comment, only: %i[destroy]
+  before_action :ensure_authenticated, only: %i[new create destroy]
+  before_action -> { ensure_authorized @comment.user_id }, only: %i[destroy]
+  before_action :ensure_authorized_to_comment, only: %i[create]
 
   def new
     @comment = Comment.new
   end
 
   def create
-    @comment = @target.comments.new comment_params
+    @comment = @target.comments.new(comment_params)
     @comment.user_id = current_user.id
-    @comment.body = @comment.body.gsub(/ +/, " ").strip
+    @comment.body = @comment.body.gsub(/ +/, ' ').strip
 
-    can_comment = @target.can_be_commented_on_by(current_user)
-
-    if !can_comment
-      flash[:error] = "You do not have permission to comment on this submission."
-      redirect_back(fallback_location: "/")
-    elsif @comment.save
-      flash[:success] = "Comment posted successfully!"
-      discussion_users = @target.comments.group(:user_id).pluck(:user_id)
-      poster_name = current_user.username
-
-      if @target.class.name == "Submission"
-        submission = Submission.find(@comment.source_id)
-        submission.num_comments += 1
-        submission.save
-
-        discussion_users.each do |duid|
-          # Lets not send notifications to ourselves.
-          next if duid == current_user.id
-          # Lets not duplicate the message to the artist.
-          next if @target.user_id == duid
-
-          Notification.create(body: "#{poster_name} has also commented on submission #{@target.display_title} (ID #{@target.id}).",
-                              source_type: "Submission",
-                              source_id: @target.id,
-                              user_id: duid,
-                              url: submission_path(@target.id))
-        end
-        # Send a notification to the artist if it's not ourself.
-        Notification.create(body: "#{poster_name} has commented on your submission #{@target.display_title} (ID #{@target.id}).",
-                            source_type: "Submission",
-                            source_id: @target.id,
-                            user_id: @target.user_id,
-                            url: submission_path(@target.id)) unless @target.user_id == current_user.id
-      end
-      redirect_back(fallback_location: "/")
-    else
-      flash[:error] = "Comment failed to post: " + @comment.errors.full_messages.join(", ")
-      redirect_back(fallback_location: "/")
+    unless @comment.save
+      flash[:error] = 'Comment failed to post: ' + @comment.errors.full_messages.join(', ')
+      redirect_back(fallback_location: '/')
+      return
     end
+
+    if @target.is_a? Submission
+      submission = Submission.find(@comment.source_id)
+      submission.num_comments += 1
+      submission.save!
+    end
+
+    send_notifications
+
+    flash[:success] = 'Comment posted successfully!'
+    redirect_back(fallback_location: '/')
   end
 
   def destroy
-    @comment = Comment.find(params[:id])
-    if current_user.id == @comment.user_id
-      type = @comment.source_type
-      id = @comment.source_id
-      if @comment.destroy
-        if type == "Submission"
-          target = Submission.find(id)
-        end
-        target.num_comments -= 1
-        target.save
-      end
-    else
-      flash[:error] = "You can't delete other people's comments. Please cease these shenanigans."
+    target = Submission.find_by(id: @comment.source_id) if @comment.source_type == 'Submission'
+    @comment.destroy!
+    unless target.nil?
+      target.num_comments -= 1
+      target.save!
     end
-    redirect_back(fallback_location: "/")
+    redirect_back(fallback_location: root_path)
   end
 
   private
@@ -77,8 +52,54 @@ before_action :find_target
     params.require(:comment).permit(:body, :user_id)
   end
 
-  def find_target
+  def set_target
     @target = Submission.find_by_id(params[:submission_id]) if params[:submission_id]
+
+    render_not_found if @target.nil?
   end
 
+  def set_comment
+    @comment = Comment.find_by(id: params[:id])
+
+    render_not_found if @comment.nil?
+  end
+
+  def ensure_authorized_to_comment
+    has_permission, error = @target.can_be_commented_on_by(current_user)
+    return if has_permission
+
+    flash[:error] = error
+    redirect_back(fallback_location: '/')
+  end
+
+  def send_notification(message, user_id)
+    Notification.create(
+      body: format(message, poster: current_user.username,
+                            target: "#{@target.display_title} (ID: #{@target.id}"),
+      source_type: 'Submission',
+      source_id: @target.id,
+      user_id: user_id,
+      url: submission_path(@target)
+    )
+  end
+
+  def send_notifications
+    # Notifications are not currently implemented for targets other than submissions.
+    return unless @target.is_a? Submission
+
+    # Send a notification to the artist if it's not ourself.
+    unless @target.user_id == current_user.id
+      send_notification('%<poster>s has commented on your submission %<target>s.', @target.user_id)
+    end
+
+    discussion_users = @target.comments.group(:user_id).pluck(:user_id)
+    discussion_users.each do |user_id|
+      # Don't send notifications to ourselves.
+      next if user_id == current_user.id
+      # Don't send the artist two notifications for the same comment.
+      next if @target.user_id == user_id
+
+      send_notification('%<poster>s has also commented on submission %<target>s.', user_id)
+    end
+  end
 end
