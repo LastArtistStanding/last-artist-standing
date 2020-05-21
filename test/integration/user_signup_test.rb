@@ -10,8 +10,7 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
     assert_no_difference 'User.count' do
       post users_path, xhr: true, params: { user: { name: '', email: 'g@g.com', password: 'password', password_confirmation: 'password' } }
       post users_path, xhr: true, params: { user: { name: 'name', email: '', password: 'password', password_confirmation: 'password' } }
-      post users_path, xhr: true,
-      params: { user: { name: 'name', email: 'g@g.com', password: '', password_confirmation: 'password' } }
+      post users_path, xhr: true, params: { user: { name: 'name', email: 'g@g.com', password: '', password_confirmation: 'password' } }
       post users_path, xhr: true, params: { user: { name: 'name', email: 'g@g.com', password: 'password', password_confirmation: '' } }
     end
     assert_template 'layouts/_signup_form'

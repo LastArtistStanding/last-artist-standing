@@ -20,20 +20,6 @@ def it_requires_that_applications_are_open
   end
 end
 
-def it_requires_login
-  it 'requires login', :no_login do
-    expect_unauthenticated
-  end
-end
-
-def it_requires_correct_login
-  it_requires_login
-
-  it 'requires correct login', :incorrect_login do
-    expect_unauthorized
-  end
-end
-
 describe ModeratorApplicationsController do
   before(:each) do |example|
     deadline = example.metadata[:applications_closed] ? Date.yesterday : Date.tomorrow

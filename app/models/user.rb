@@ -11,6 +11,8 @@ class User < ApplicationRecord
   MAX_CONCURRENT_CHALLENGES = 2
   UNLIMITED_SUBMISSIONS_REQUIREMENT = 5
 
+
+
   mount_uploader :avatar, ImageUploader
 
   attr_accessor :remember_token, :reset_token
@@ -36,6 +38,11 @@ class User < ApplicationRecord
 
   validates :email_pending_verification, allow_nil: true, length: { maximum: 255 },
                                          format: { with: VALID_EMAIL_REGEX }
+
+  def initialize(*args)
+    super(*args)
+    @retain_old_password = false
+  end
 
   # Returns the hash digest of the given string.
   def self.digest(string)
@@ -77,13 +84,18 @@ class User < ApplicationRecord
     @retain_old_password
   end
 
-  def send_email_verification
+  def reset_email_verification
     token = User.new_token
 
     update_retain_password(email_pending_verification: email,
                            email_verification_digest: User.digest(token),
                            email_verification_sent_at: Time.now.utc.to_s)
 
+    token
+  end
+
+  def send_email_verification
+    token = reset_email_verification
     UserMailer.email_verification(self, token).deliver_now
   end
 

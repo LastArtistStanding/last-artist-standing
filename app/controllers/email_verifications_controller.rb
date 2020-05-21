@@ -3,7 +3,7 @@
 # Verify that a user
 class EmailVerificationsController < ApplicationController
   before_action :set_user
-  before_action :set_digest
+  before_action :set_token
   before_action :ensure_user_exists
 
   # The user does not need to be logged in to verify their email address,
@@ -44,8 +44,8 @@ class EmailVerificationsController < ApplicationController
     @user = User.find_by(id: params[:user_id])
   end
 
-  def set_digest
-    @digest = params[:digest]
+  def set_token
+    @token = params[:token]
   end
 
   def ensure_user_exists
@@ -71,7 +71,7 @@ class EmailVerificationsController < ApplicationController
   end
 
   def ensure_verification_correct
-    return if @user.email_verification_correct?(@digest)
+    return if @user.email_verification_correct?(@token)
 
     flash[:danger] = 'That is not the correct email verification link! Try sending a new one.'
     redirect_to edit_user_path(@user)

@@ -37,8 +37,8 @@ Rails.application.routes.draw do
       as: :new_email_verification
   post 'users/:user_id/email_verification' => 'email_verifications#create',
        as: :email_verifications
-  get 'users/:user_id/email_verification/:digest' => 'email_verifications#edit',
+  get 'users/:user_id/email_verification/:token' => 'email_verifications#edit',
       as: :edit_email_verification
-  post 'users/:user_id/email_verification/:digest' => 'email_verifications#update',
+  post 'users/:user_id/email_verification/:token' => 'email_verifications#update',
        as: :email_verification
 end
