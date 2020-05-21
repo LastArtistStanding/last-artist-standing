@@ -87,7 +87,7 @@ class CommentsController < ApplicationController
     # Notifications are not currently implemented for targets other than submissions.
     return unless @target.is_a? Submission
 
-    # Send a notification to the artist if it's not ourself.
+    # Send a notification to the artist unless they're the commenter.
     unless @target.user_id == current_user.id
       send_notification('%<poster>s has commented on your submission %<target>s.', @target.user_id)
     end

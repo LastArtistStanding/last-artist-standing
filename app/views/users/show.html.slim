@@ -6,7 +6,7 @@ javascript:
     $('[data-toggle="tooltip"]').tooltip()
   })
 
-- provide(:title, @curruser.username)
+- provide(:title, @user.username)
 .container-fluid style="margin-top: 2rem;"
   .row
     .col-lg-1
@@ -14,11 +14,11 @@ javascript:
     .col-lg-2
       .card
         .card-body.table-responsive style="text-align: center;"
-          = render partial: "application/usercard", locals: { user: @curruser }
+          = render partial: "application/usercard", locals: { user: @user }
 
-          - if logged_in? && current_user.id == @curruser.id
+          - if logged_in? && current_user.id == @user.id
             br
-            a.btn.btn-primary href="#{edit_user_path(@curruser)}"
+            a.btn.btn-primary href="#{edit_user_path(@user)}"
               span.fa.fa-edit
               |  Edit Profile
 
@@ -39,7 +39,7 @@ javascript:
       .card
         .card-header
           b Latest Submissions
-          a.btn.btn-primary style="float: right; margin-top: -0.25rem; margin-bottom: -0.5rem;" href="#{@curruser.id}/submissions"
+          a.btn.btn-primary style="float: right; margin-top: -0.25rem; margin-bottom: -0.5rem;" href="#{@user.id}/submissions"
             i.fa.fa-picture-o aria-hidden="true"
             |  Show All Submissions
 

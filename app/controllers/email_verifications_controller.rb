@@ -13,7 +13,7 @@ class EmailVerificationsController < ApplicationController
   before_action :ensure_verification_active, only: %i[edit update]
 
   # The user does, however, need to be logged in to *request* a verification.
-  before_action :ensure_authenticated, only: %i[new create]
+  before_action :ensure_logged_in, only: %i[new create]
   before_action -> { ensure_authorized @user.id }, only: %i[new create]
   before_action :ensure_not_too_soon, only: %i[create]
 

@@ -2,8 +2,9 @@
 
 class UsersController < ApplicationController
   before_action :set_curruser, only: %i[submissions show edit update]
-  before_action :ensure_authenticated, only: %i[edit update]
-  before_action -> { ensure_authorized @curruser.id }, only: %i[edit update]
+  before_action :ensure_logged_in, only: %i[edit update]
+  before_action -> { ensure_authorized @user.id }, only: %i[edit update]
+  before_action :ensure_verified_to_upload_avatar, only: %i[create update]
   # TODO: Also handle registration being closed for the registration form, i.e. :new.
   before_action :ensure_registration_open, only: %i[new create]
 
@@ -13,13 +14,13 @@ class UsersController < ApplicationController
   end
 
   def submissions
-    @user_submissions = Submission.where(user_id: @curruser.id).order('created_at DESC')
+    @user_submissions = Submission.where(user_id: @user.id).order('created_at DESC')
                                   .paginate(page: params[:page], per_page: 25)
   end
 
   def show
-    @awards = Award.where('user_id = ? AND badge_id <> 1', @curruser.id).order('prestige DESC')
-    @submissions = Submission.where(user_id: @curruser.id).order('created_at DESC').limit(10)
+    @awards = Award.where('user_id = ? AND badge_id <> 1', @user.id).order('prestige DESC')
+    @submissions = Submission.where(user_id: @user.id).order('created_at DESC').limit(10)
   end
 
   def new
@@ -51,8 +52,8 @@ class UsersController < ApplicationController
   def update
     oldpassword = params[:oldpassword]
 
-    unless @curruser.authenticate(oldpassword)
-      @curruser.errors[:oldpassword][0] = 'Invalid password.'
+    unless @user.authenticate(oldpassword)
+      @user.errors[:oldpassword][0] = 'Invalid password.'
       render 'edit'
       return
     end
@@ -62,9 +63,9 @@ class UsersController < ApplicationController
       params[:user][:password_confirmation] = oldpassword
     end
 
-    if @curruser.update_attributes(user_edit_params)
+    if @user.update_attributes(user_edit_params)
       flash[:success] = 'Profile updated.'
-      redirect_to @curruser
+      redirect_to @user
     else
       render 'edit'
     end
@@ -73,13 +74,7 @@ class UsersController < ApplicationController
   private
 
   def set_curruser
-    @curruser = User.find(params[:id])
-  end
-
-  def ensure_registration_open
-    return unless ENV['DISABLE_REGISTRATION'] == 'TRUE'
-
-    render 'registration_closed'
+    @user = User.find(params[:id])
   end
 
   def user_params
@@ -88,5 +83,18 @@ class UsersController < ApplicationController
 
   def user_edit_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation, :avatar, :nsfw_level, :display_name)
+  end
+
+  def ensure_registration_open
+    return unless ENV['DISABLE_REGISTRATION'] == 'TRUE'
+
+    render 'registration_closed'
+  end
+
+  def ensure_verified_to_upload_avatar
+    return unless params[:user][:avatar] && !@user.verified?
+
+    flash[:danger] = 'You must verify your account before changing your avatar!'
+    render_unverified
   end
 end

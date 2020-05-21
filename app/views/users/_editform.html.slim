@@ -1,4 +1,4 @@
-= form_for(@curruser ||= User.new, html: { novalidate: true }) do |f|
+= form_for(@user ||= User.new, html: { novalidate: true }) do |f|
   input type="text" style="display:none"
   input type="password" style="display:none"
 
@@ -10,36 +10,36 @@
 
         .card-body
           = f.label :email
-          - unless @curruser.email_verified?
+          - unless @user.email_verified?
             br
             small style='color: grey;'
-              - if @curruser.verified?
+              - if @user.verified?
                 | Your email address
               - else
                 | Your account
               |  has not yet been verified.
-              = link_to new_email_verification_path(@curruser.id) do
+              = link_to new_email_verification_path(@user.id) do
                 |  Click here to
-                - if @curruser.email_verification_expired?
+                - if @user.email_verification_expired?
                   |  verify your email address.
                 - else
                   |  re-send your verification email.
-          = f.email_field :email, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:email) ? 'is-invalid' : 'is-valid') : '' }"
-          - if @curruser.errors.key?(:email)
+          = f.email_field :email, class: "form-control #{@user.errors.any? ? (@user.errors.key?(:email) ? 'is-invalid' : 'is-valid') : '' }"
+          - if @user.errors.key?(:email)
             .invalid-feedback-rails
-              | Email #{@curruser.errors[:email][0]}
+              | Email #{@user.errors[:email][0]}
 
           = f.label :password, "New Password"
-          = f.password_field :password, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:password) ? 'is-invalid' : 'is-valid') : '' }"
-          - if @curruser.errors.key?(:password)
+          = f.password_field :password, class: "form-control #{@user.errors.any? ? (@user.errors.key?(:password) ? 'is-invalid' : 'is-valid') : '' }"
+          - if @user.errors.key?(:password)
             .invalid-feedback-rails
-              | Password #{@curruser.errors[:password][0]}
+              | Password #{@user.errors[:password][0]}
 
           = f.label :password_confirmation, "New Password Confirmation"
-          = f.password_field :password_confirmation, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:password_confirmation) ? 'is-invalid' : 'is-valid') : '' }"
-          - if @curruser.errors.key?(:password_confirmation)
+          = f.password_field :password_confirmation, class: "form-control #{@user.errors.any? ? (@user.errors.key?(:password_confirmation) ? 'is-invalid' : 'is-valid') : '' }"
+          - if @user.errors.key?(:password_confirmation)
             .invalid-feedback-rails
-              | Password confirmation #{@curruser.errors[:password_confirmation][0]}
+              | Password confirmation #{@user.errors[:password_confirmation][0]}
 
       .card
         .card-header
@@ -47,10 +47,10 @@
 
         .card-body
           = label_tag :oldpassword, "Old Password"
-          = password_field_tag :oldpassword, '', class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:oldpassword) ? 'is-invalid' : 'is-valid') : '' }"
-          - if @curruser.errors.key?(:oldpassword)
+          = password_field_tag :oldpassword, '', class: "form-control #{@user.errors.any? ? (@user.errors.key?(:oldpassword) ? 'is-invalid' : 'is-valid') : '' }"
+          - if @user.errors.key?(:oldpassword)
             .invalid-feedback-rails
-              | #{@curruser.errors[:oldpassword][0]}
+              | #{@user.errors[:oldpassword][0]}
 
           = f.submit "Save Changes", class: "btn btn-primary"
 
@@ -61,19 +61,26 @@
 
         .card-body
           = f.label :display_name
-          = f.text_field :display_name, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:display_name) ? 'is-invalid' : 'is-valid') : '' }"
-          - if @curruser.errors.key?(:display_name)
+          = f.text_field :display_name, class: "form-control #{@user.errors.any? ? (@user.errors.key?(:display_name) ? 'is-invalid' : 'is-valid') : '' }"
+          - if @user.errors.key?(:display_name)
             .invalid-feedback-rails
-              | Display Name #{@curruser.errors[:display_name][0]}
+              | Display Name #{@user.errors[:display_name][0]}
 
           = f.label :avatar
-          = f.file_field :avatar, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:avatar) ? 'is-invalid' : 'is-valid') : '' }"
-          - if @curruser.errors.key?(:avatar)
+          - unless @user.verified?
+            br
+            small style='color: grey;' You must verify your email address to upload an avatar.
+          - avatar_field_class = "form-control #{@user.errors.any? ? (@user.errors.key?(:avatar) ? 'is-invalid' : 'is-valid') : '' }"
+          - if @user.verified?
+            = f.file_field :avatar, class: avatar_field_class
+          - else
+            = f.file_field :avatar, class: avatar_field_class, disabled: true
+          - if @user.errors.key?(:avatar)
             .invalid-feedback-rails
-              | Avatar #{@curruser.errors[:avatar][0]}
+              | Avatar #{@user.errors[:avatar][0]}
 
           = f.label :nsfw_level, "Content Filter Level"
-          = f.select :nsfw_level, options_for_select([['Safe', 1], ['Questionable', 2], ['Explicit', 3]], @curruser.nsfw_level), {}, class: "form-control #{@curruser.errors.any? ? (@curruser.errors.key?(:nsfw_level) ? 'is-invalid' : 'is-valid') : '' }"
-          - if @curruser.errors.key?(:nsfw_level)
+          = f.select :nsfw_level, options_for_select([['Safe', 1], ['Questionable', 2], ['Explicit', 3]], @user.nsfw_level), {}, class: "form-control #{@user.errors.any? ? (@user.errors.key?(:nsfw_level) ? 'is-invalid' : 'is-valid') : '' }"
+          - if @user.errors.key?(:nsfw_level)
             .invalid-feedback-rails
-              | NSFW Level #{@curruser.errors[:nsfw_level][0]}
+              | NSFW Level #{@user.errors[:nsfw_level][0]}

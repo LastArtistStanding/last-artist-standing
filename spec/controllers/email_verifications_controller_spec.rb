@@ -46,18 +46,27 @@ def it_requires_correct_token
   end
 end
 
+def setup_token(example)
+  if example.metadata[:incorrect_token]
+    @token = 'asdf'
+    return
+  end
+
+  if example.metadata[:has_token] || example.metadata[:has_expired_token]
+    @token = @user.reset_email_verification
+  end
+
+  if example.metadata[:has_expired_token]
+    @user.update_retain_password(email_verification_sent_at: Time.now.utc.yesterday.to_s)
+  end
+end
+
 describe EmailVerificationsController do
   before(:each) do |example|
     verified = example.metadata[:verified] || false
     @user = create(:user, verified: verified, email_verified: verified)
     setup_session(example, @user)
-    if example.metadata[:has_token] || example.metadata[:has_expired_token]
-      @token = @user.reset_email_verification
-      if example.metadata[:has_expired_token]
-        @user.update_retain_password(email_verification_sent_at: Time.now.utc.yesterday.to_s)
-      end
-    end
-    @token = 'asdf' if example.metadata[:incorrect_token]
+    setup_token(example)
   end
 
   describe 'GET :new' do

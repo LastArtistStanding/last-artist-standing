@@ -136,6 +136,7 @@ class User < ApplicationRecord
   end
 
   def can_make_comments
+    return [false, 'You must verify your email address before you can comment.'] unless verified?
     return [true, nil] if highest_level >= COMMENT_CREATION_REQUIREMENT
 
     [false, "You must have achieved DAD level #{COMMENT_CREATION_REQUIREMENT}\
