@@ -186,6 +186,15 @@ class User < ApplicationRecord
     nil
   end
 
+  def invalidate_sessions
+    user_sessions = UserSession.where(user_id: id)
+    user_sessions.each do |us|
+      us.name = name
+      us.user_id = nil
+      us.save
+    end
+  end
+
   def self.search(params)
     users = all # for not existing params args
     if params[:searchname]
