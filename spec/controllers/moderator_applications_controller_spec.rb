@@ -20,20 +20,6 @@ def it_requires_that_applications_are_open
   end
 end
 
-def it_requires_login
-  it 'requires login', :no_login do
-    expect_unauthenticated
-  end
-end
-
-def it_requires_correct_login
-  it_requires_login
-
-  it 'requires correct login', :incorrect_login do
-    expect_unauthorized
-  end
-end
-
 describe ModeratorApplicationsController do
   before(:each) do |example|
     deadline = example.metadata[:applications_closed] ? Date.yesterday : Date.tomorrow
@@ -49,7 +35,7 @@ describe ModeratorApplicationsController do
   describe 'GET :index' do
     before(:each) { get :index }
 
-    it_requires_login
+    it_requires_verified_login
 
     it 'redirects to :new if the user is not an admin and has not yet applied', :does_not_exist do
       expect(response).to redirect_to(new_moderator_application_path)
@@ -71,7 +57,7 @@ describe ModeratorApplicationsController do
   describe 'GET :new' do
     before(:each) { get :new }
 
-    it_requires_login
+    it_requires_verified_login
     it_requires_that_applications_are_open
 
     it 'redirects if the user already applied' do
@@ -86,7 +72,7 @@ describe ModeratorApplicationsController do
   describe 'POST :create' do
     before(:each) { post :create, params: { moderator_application: @application.attributes } }
 
-    it_requires_login
+    it_requires_verified_login
     it_requires_that_applications_are_open
 
     it 'redirects if the user already applied' do
@@ -103,7 +89,7 @@ describe ModeratorApplicationsController do
 
     it_handles_nonexistent_application
     it_requires_that_applications_are_open
-    it_requires_correct_login
+    it_requires_correct_verified_login
 
     it 'allows admin access', :admin_login do
       expect_successful_template :show
@@ -123,7 +109,7 @@ describe ModeratorApplicationsController do
 
     it_handles_nonexistent_application
     it_requires_that_applications_are_open
-    it_requires_correct_login
+    it_requires_correct_verified_login
 
     it 'does not allow admin access', :admin_login do
       expect_unauthorized
@@ -140,7 +126,7 @@ describe ModeratorApplicationsController do
     end
 
     it_handles_nonexistent_application
-    it_requires_correct_login
+    it_requires_correct_verified_login
     it_requires_that_applications_are_open
 
     it 'works' do
@@ -154,7 +140,7 @@ describe ModeratorApplicationsController do
     before(:each) { delete :destroy, params: { id: application_id } }
 
     it_handles_nonexistent_application
-    it_requires_correct_login
+    it_requires_correct_verified_login
     it_requires_that_applications_are_open
 
     it 'does not allow admin access', :admin_login do

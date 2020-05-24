@@ -364,12 +364,7 @@ namespace :dad_tasks do
     puts "Destroying #{participations.count} participations..."
     participations.destroy_all
 
-    user_sessions = UserSession.where(user_id: user_id)
-    user_sessions.each do |us|
-      us.name = user.name
-      us.user_id = nil
-      us.save
-    end
+    user.invalidate_sessions
 
     if !user.nil?
       puts "Executing #{user.username}."
@@ -412,5 +407,20 @@ namespace :dad_tasks do
       badge.challenge_id = challenge.id
       badge.save
     end
+  end
+
+  task purge_unverified_users: :environment do
+    # NOTE: The migration automatically sets `verified = TRUE` for all existing accounts.
+    deletion_candidates =
+      User.where('verified = FALSE AND email_verification_sent_at <= ?', Time.now.utc.yesterday)
+
+    if deletion_candidates.count.zero?
+      puts 'There are no unverified accounts to be deleted.'
+      next
+    end
+
+    puts "Deleting #{deletion_candidates.count} unverified accounts."
+    deletion_candidates.each(&:invalidate_sessions)
+    deletion_candidates.destroy_all
   end
 end

@@ -11,6 +11,8 @@ class User < ApplicationRecord
   MAX_CONCURRENT_CHALLENGES = 2
   UNLIMITED_SUBMISSIONS_REQUIREMENT = 5
 
+
+
   mount_uploader :avatar, ImageUploader
 
   attr_accessor :remember_token, :reset_token
@@ -31,7 +33,16 @@ class User < ApplicationRecord
                     uniqueness: { case_sensitive: false }
 
   has_secure_password
-  validates :password, presence: true, length: { minimum: 6, maximum: 30 }
+  validates :password, presence: true, length: { minimum: 6, maximum: 30 },
+                       unless: :retain_old_password?
+
+  validates :email_pending_verification, allow_nil: true, length: { maximum: 255 },
+                                         format: { with: VALID_EMAIL_REGEX }
+
+  def initialize(*args)
+    super(*args)
+    @retain_old_password = false
+  end
 
   # Returns the hash digest of the given string.
   def self.digest(string)
@@ -63,6 +74,61 @@ class User < ApplicationRecord
     reset_sent_at < 2.hours.ago
   end
 
+  def update_retain_password(data)
+    @retain_old_password = true
+    update(data)
+    @retain_old_password = false
+  end
+
+  def retain_old_password?
+    @retain_old_password
+  end
+
+  def reset_email_verification
+    token = User.new_token
+
+    update_retain_password(email_pending_verification: email,
+                           email_verification_digest: User.digest(token),
+                           email_verification_sent_at: Time.now.utc.to_s)
+
+    token
+  end
+
+  def send_email_verification
+    token = reset_email_verification
+    UserMailer.email_verification(self, token).deliver_now
+  end
+
+  def verify_email
+    update_retain_password(verified: true, email_verified: true)
+  end
+
+  def verified?
+    verified
+  end
+
+  def email_verified?
+    email_verified
+  end
+
+  def email_verification_present?
+    !email_pending_verification.nil? &&
+      !email_verification_digest.nil? &&
+      !email_verification_sent_at.nil?
+  end
+
+  def email_verification_valid?
+    email_pending_verification == email
+  end
+
+  def email_verification_expired?
+    !email_verification_present? || email_verification_sent_at < Time.now.utc.yesterday
+  end
+
+  def email_verification_correct?(code)
+    BCrypt::Password.new(email_verification_digest) == code
+  end
+
   def username
     return display_name unless display_name.blank?
 
@@ -70,6 +136,7 @@ class User < ApplicationRecord
   end
 
   def can_make_comments
+    return [false, 'You must verify your email address before you can comment.'] unless verified?
     return [true, nil] if highest_level >= COMMENT_CREATION_REQUIREMENT
 
     [false, "You must have achieved DAD level #{COMMENT_CREATION_REQUIREMENT}\
@@ -106,7 +173,7 @@ class User < ApplicationRecord
 
   def submission_limit
     max_dad_level = highest_level
-    return 1 if max_dad_level == 0
+    return 1 if max_dad_level.zero?
 
     return max_dad_level if max_dad_level < UNLIMITED_SUBMISSIONS_REQUIREMENT
 
@@ -130,6 +197,15 @@ class User < ApplicationRecord
     return dad_frequency unless dad_frequency.blank?
 
     nil
+  end
+
+  def invalidate_sessions
+    user_sessions = UserSession.where(user_id: id)
+    user_sessions.each do |us|
+      us.name = name
+      us.user_id = nil
+      us.save
+    end
   end
 
   def self.search(params)

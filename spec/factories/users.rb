@@ -5,5 +5,7 @@ FactoryBot.define do
     name { 'Jack' }
     email { 'jack@example.com' }
     password { 'password' }
+    password_confirmation { 'password' }
+    verified { true }
   end
 end

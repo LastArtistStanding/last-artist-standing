@@ -1,0 +1,7 @@
+/ The formatting here is deliberately explicit because Slim handles whitespace inconveniently.
+= "To confirm your email address:\n"
+= edit_email_verification_url(@user.id, @token)
+= "\n\n"
+= "This link will expire in one day.\n"
+= "\n"
+= "If you did not try to create a DAD account with this email address, please ignore this email and nothing will happen.\n"

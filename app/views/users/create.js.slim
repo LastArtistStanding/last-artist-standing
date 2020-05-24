@@ -1,8 +1,4 @@
-- if ENV['DISABLE_REGISTRATION'] == 'TRUE'
-  | $('#signup-form').html('<div class="alert alert-danger">Registration has temporarily been closed. Please check back later.</div>
-  = j render("layouts/signup_form")
-  | ');
-- elsif @user.valid?
+- if @user.valid?
   - # hide the modal and go to the new user's profile page
   | $('#login-modal').modal('hide');
   | window.location='

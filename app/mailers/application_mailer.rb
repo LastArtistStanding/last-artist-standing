@@ -1,4 +1,6 @@
+# frozen_string_literal: true
+
 class ApplicationMailer < ActionMailer::Base
-  default from: 'noreply@dad.gallery'
+  default from: 'Do Art Daily <noreply@dad.gallery>'
   layout 'mailer'
 end

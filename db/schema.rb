@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_13_203600) do
+ActiveRecord::Schema.define(version: 2020_05_19_135500) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -185,6 +185,11 @@ ActiveRecord::Schema.define(version: 2020_05_13_203600) do
     t.string "display_name"
     t.integer "current_streak", default: 0
     t.integer "highest_level", default: 0
+    t.boolean "verified", default: false, null: false
+    t.boolean "email_verified", default: false, null: false
+    t.string "email_pending_verification"
+    t.string "email_verification_digest"
+    t.datetime "email_verification_sent_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["name"], name: "index_users_on_name", unique: true
   end

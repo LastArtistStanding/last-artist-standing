@@ -52,6 +52,16 @@ AWS_S3_BUCKET=<your bucket id>
 AWS_REGION=<the region your bucket is in, or us-east-2 if unspecified>
 ```
 
+If you are on a Unix-based system with `sendmail` installed,
+and are able to access your user email folder on `/var/mail`,
+you can also add this setting to redirect all emails that get sent to you.
+Otherwise, emails will fail to be sent (although they will still be visible in the server log).
+This only applies to the development environment.
+
+```properties
+REDIRECT_MAIL=unix
+```
+
 You will need to add this permission policy to your bucket:
 
 ```JSON

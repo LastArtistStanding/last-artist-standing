@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -13,9 +15,18 @@ Rails.application.configure do
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
-  # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.default_url_options = { :host => 'las-staging.herokuapp.com' }
+  if ENV['REDIRECT_MAIL'] == 'unix'
+    # This should be whatever host `rails server` is going to be bound to.
+    # For now, I'm going to go ahead and assume the default host.
+    config.action_mailer.default_url_options = { host: 'localhost:3000' }
+    config.action_mailer.delivery_method = :sendmail
+    # This flag will also register the development email interceptor,
+    # which will redirect all emails to the local Unix user.
+  else
+    # Don't care if the mailer can't send.
+    config.action_mailer.raise_delivery_errors = true
+    config.action_mailer.default_url_options = { host: 'las-staging.herokuapp.com' }
+  end
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

@@ -14,7 +14,7 @@
         .col-lg-12
           .card
             .card-header
-              b = "#{@curruser.username} - Submissions"
+              b = "#{@user.username} - Submissions"
 
             .card-body
               - if @user_submissions.count == 0
@@ -37,7 +37,7 @@
                             | &nbsp;
                             = submission.num_comments
 
-      a.btn.btn-primary href="/users/#{@curruser.id}"
+      a.btn.btn-primary href="/users/#{@user.id}"
         span.fa.fa-undo
         |  Back
 

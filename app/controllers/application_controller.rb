@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -7,6 +9,8 @@ class ApplicationController < ActionController::Base
   before_action :record_user_session
 
   def render_unauthenticated
+    # Technically, the HTTP response code intended for unauthenticated requests is `401`.
+    # However, to use it, you must support HTTP's authentication mechanism, which we don't.
     render '/pages/unauthenticated', status: :forbidden
   end
 
@@ -14,15 +18,27 @@ class ApplicationController < ActionController::Base
     render '/pages/unauthorized', status: :forbidden
   end
 
+  def render_unverified
+    render '/pages/unverified', status: :forbidden
+  end
+
   def render_not_found
     render file: "#{Rails.root}/public/404.html", status: :not_found
   end
 
-  # Check that if a user is logged in.
-  def ensure_authenticated
-    # Technically, the HTTP response code intended for unauthenticated requests is `401`.
-    # However, to use it, you must support HTTP's authentication mechanism, which we don't.
+  # Ensure that a user is logged in.
+  # Actions which have visible effects for other users should use `ensure_authenticated` instead.
+  def ensure_logged_in
     render_unauthenticated unless logged_in?
+  end
+
+  # Check that if a user is logged in and allowed to do most normal tasks.
+  def ensure_authenticated
+    if !logged_in?
+      render_unauthenticated
+    elsif !current_user.verified?
+      render_unverified
+    end
   end
 
   # Check that the logged-in user is authorized to modify this submission.
@@ -38,26 +54,25 @@ class ApplicationController < ActionController::Base
   end
 
   def record_user_session
-    active_user = current_user
+    return if current_user.nil?
+
     ip_address = request.remote_ip
-    if !active_user.nil?
-      user_sessions = UserSession.where(user_id: active_user.id).order("created_at DESC").limit(1)
-      last_session = user_sessions.first
-      if last_session && last_session.ip_address == ip_address
-        last_session.updated_at = DateTime.current
-        last_session.save
-      else
-        UserSession.create(user_id: active_user.id, ip_address: ip_address)
-      end
+    user_sessions = UserSession.where(user_id: current_user.id).order('created_at DESC').limit(1)
+    last_session = user_sessions.first
+
+    if last_session && last_session.ip_address == ip_address
+      last_session.updated_at = DateTime.current
+      last_session.save
+    else
+      UserSession.create(user_id: current_user.id, ip_address: ip_address)
     end
   end
 
   def verify_domain
-    unless request.host == ENV['DAD_DOMAIN']
-      redirect_to "https://#{ENV['DAD_DOMAIN']}"\
-        "#{request.original_fullpath}",
-        status: :moved_permanently
-    end
+    return if request.host == ENV['DAD_DOMAIN']
+
+    redirect_to "https://#{ENV['DAD_DOMAIN']}#{request.original_fullpath}",
+                status: :moved_permanently
   end
 
   include SessionsHelper
