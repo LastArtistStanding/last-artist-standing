@@ -93,11 +93,6 @@ namespace :dad_tasks do
         end
 
         if !p_user.new_frequency.blank?
-          # If the new frequency is easier, reset the streak
-          if !p_user.dad_frequency.blank? && (p_user.dad_frequency < p_user.new_frequency)
-            p.score = (p.score / 2.0).ceil
-            p_user.update_attribute(:current_streak, p.score)
-          end
           p_user.update_attribute(:dad_frequency, p_user.new_frequency)
           p.next_submission_date = p.last_submission_date + p_user.dad_frequency.days
           p.next_submission_date = today if p.next_submission_date < today
