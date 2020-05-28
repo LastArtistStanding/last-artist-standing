@@ -75,7 +75,7 @@ class CommentsController < ApplicationController
   def send_notification(message, user_id)
     Notification.create(
       body: format(message, poster: current_user.username,
-                            target: "#{@target.display_title} (ID: #{@target.id}"),
+                            target: "#{@target.display_title} (ID: #{@target.id})"),
       source_type: 'Submission',
       source_id: @target.id,
       user_id: user_id,
