@@ -121,6 +121,10 @@ class User < ApplicationRecord
     email_pending_verification == email
   end
 
+  def email_verification_too_recent_to_resend?
+    !email_verification_sent_at.nil? && email_verification_sent_at >= (Time.now.utc - 5.minutes)
+  end
+
   def email_verification_expired?
     !email_verification_present? || email_verification_sent_at < Time.now.utc.yesterday
   end

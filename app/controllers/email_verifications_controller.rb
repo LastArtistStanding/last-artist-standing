@@ -85,10 +85,7 @@ class EmailVerificationsController < ApplicationController
   end
 
   def ensure_not_too_soon
-    if @user.email_verification_sent_at.nil? ||
-       @user.email_verification_sent_at < (Time.now.utc - 5.minutes)
-      return
-    end
+    return unless @user.email_verification_too_recent_to_resend?
 
     flash[:danger] = 'You already sent an email confirmation too recently! '\
       'Please re-check your inbox or wait a few minutes and try again.'

@@ -58,12 +58,25 @@ class UsersController < ApplicationController
       return
     end
 
+    email_changed = !params[:user][:email].blank? && params[:user][:email] != @user.email
+    if email_changed && @user.email_verification_too_recent_to_resend?
+      flash[:danger] = 'You have changed your email address too recently to do that!'
+      render 'edit'
+      return
+    end
+
     if params[:user][:password].blank? && params[:user][:password_confirmation].blank?
       params[:user][:password] = oldpassword
       params[:user][:password_confirmation] = oldpassword
     end
 
     if @user.update_attributes(user_edit_params)
+      # If the user has changed their email address, their email address is no longer verified.
+      if email_changed
+        @user.update_retain_password(email_verified: false)
+        @user.send_email_verification
+      end
+
       flash[:success] = 'Profile updated.'
       redirect_to @user
     else
