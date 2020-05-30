@@ -24,7 +24,7 @@ class UsersController < ApplicationController
   end
 
   def new
-    @user = User.new
+    @new_user = User.new
     respond_to do |format|
       # Kick anyone trying to directly access /login back to the home page
       format.html { redirect_to root_url }
@@ -34,11 +34,11 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(user_params)
+    @new_user = User.new(user_params)
     respond_to do |format|
-      if @user.save
-        log_in @user
-        @user.send_email_verification
+      if @new_user.save
+        log_in @new_user
+        @new_user.send_email_verification
         flash[:success] =
           'Welcome to Do Art Daily! Please check your inbox for your email verification link.'
       end

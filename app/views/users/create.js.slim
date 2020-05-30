@@ -1,8 +1,8 @@
-- if @user.valid?
+- if @new_user.valid?
   - # hide the modal and go to the new user's profile page
   | $('#login-modal').modal('hide');
   | window.location='
-  = user_path(@user)
+  = user_path(@new_user)
   | ';
 - else
   - # Render the form again with any errors from @user
