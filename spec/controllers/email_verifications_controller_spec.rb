@@ -22,6 +22,24 @@ def expect_unverified
   expect(@user.verified?).to be false
 end
 
+# This is largely duplicate of `it_requires_correct_login`, only with an additional bit of metadata.
+# TODO: Allow passing additional metadata for the whole block as an argument?
+def it_requires_correct_login_with_token
+  # The correctness of the token should be irrelevant to avoid metadata leaks.
+  # However, *a* token is necessary as part of the URL/route.
+  it 'requires login', :no_login, :incorrect_token do
+    expect_unauthenticated
+  end
+
+  it 'requires verified login', :unverified, :incorrect_token do
+    expect_unverified
+  end
+
+  it 'requires correct login', :incorrect_login, :incorrect_token do
+    expect_unauthorized
+  end
+end
+
 def it_requires_correct_token
   expect_failure = lambda do
     expect(response).to redirect_to(edit_user_path(@user))
@@ -102,9 +120,10 @@ describe EmailVerificationsController do
     end
   end
 
-  describe 'GET :edit', :no_login do
+  describe 'GET :edit' do
     before(:each) { get :edit, params: { user_id: @user.id, token: @token } }
 
+    it_requires_correct_login_with_token
     it_requires_correct_token
 
     it 'works', :has_token do
@@ -112,9 +131,10 @@ describe EmailVerificationsController do
     end
   end
 
-  describe 'POST :update', :no_login do
+  describe 'POST :update' do
     before(:each) { post :update, params: { user_id: @user.id, token: @token } }
 
+    it_requires_correct_login_with_token
     it_requires_correct_token
 
     it 'works', :has_token do

@@ -6,18 +6,19 @@ class EmailVerificationsController < ApplicationController
   before_action :set_token
   before_action :ensure_user_exists
 
-  # The user does not need to be logged in to verify their email address,
-  # because they had to be logged in to send the verification in the first place.
+  # Even though a user already must be logged in to request a verification email,
+  # they should still be logged in to use that link to avoid leaking metadata.
+  # It's just data regarding whether their email address is verified, but still.
+  before_action :ensure_logged_in, only: %i[new create edit update]
+  before_action -> { ensure_authorized @user.id }, only: %i[new create edit update]
+
+  before_action :ensure_not_already_verified, only: %i[new create edit update]
+
+  before_action :ensure_not_too_soon, only: %i[create]
+
   before_action :ensure_verification_present, only: %i[edit update]
   before_action :ensure_verification_correct, only: %i[edit update]
   before_action :ensure_verification_active, only: %i[edit update]
-
-  # The user does, however, need to be logged in to *request* a verification.
-  before_action :ensure_logged_in, only: %i[new create]
-  before_action -> { ensure_authorized @user.id }, only: %i[new create]
-  before_action :ensure_not_too_soon, only: %i[create]
-
-  before_action :ensure_not_already_verified, only: %i[new create edit update]
 
   def new; end
 

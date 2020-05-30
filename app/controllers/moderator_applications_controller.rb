@@ -65,8 +65,15 @@ class ModeratorApplicationsController < ApplicationController
 
   def set_application
     @application = ModeratorApplication.find_by(id: params[:id])
+    return unless @application.nil?
 
-    render_not_found if @application.nil?
+    # If any user could see the number of moderator applications, that would leak metadata:
+    # specifically, the number of users who have already applied to be moderators.
+    if current_user.is_admin
+      render_not_found
+    else
+      render_unauthorized
+    end
   end
 
   def application_params

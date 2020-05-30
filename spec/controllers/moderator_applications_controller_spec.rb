@@ -10,6 +10,10 @@ end
 
 def it_handles_nonexistent_application
   it 'handles a non-existent application', :does_not_exist do
+    expect_unauthorized
+  end
+
+  it 'handles a non-existent application if the user is an admin', :does_not_exist, :admin_login do
     expect_not_found
   end
 end
