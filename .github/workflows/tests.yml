@@ -49,4 +49,4 @@ jobs:
         run: bin/rspec spec/
 
       - name: Run Rubocop
-        run: bin/rubocop --fail-level E
+        run: bin/rubocop --fail-level W

@@ -11,11 +11,10 @@ class User < ApplicationRecord
   MAX_CONCURRENT_CHALLENGES = 2
   UNLIMITED_SUBMISSIONS_REQUIREMENT = 5
 
-
-
   mount_uploader :avatar, ImageUploader
 
   attr_accessor :remember_token, :reset_token
+
   has_many :awards
   has_many :submissions
   has_many :participations
@@ -134,7 +133,7 @@ class User < ApplicationRecord
   end
 
   def username
-    return display_name unless display_name.blank?
+    return display_name if display_name.present?
 
     name
   end
@@ -196,9 +195,9 @@ class User < ApplicationRecord
 
   # Shows current frequency, accounting for a change that may have happened at submit-time.
   def current_dad_frequency
-    return new_frequency unless new_frequency.blank?
+    return new_frequency if new_frequency.present?
 
-    return dad_frequency unless dad_frequency.blank?
+    return dad_frequency if dad_frequency.present?
 
     nil
   end

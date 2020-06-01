@@ -9,7 +9,7 @@ module ParticipationsHelper
   }.freeze
 
   def user_is_participating(user, challenge)
-    !Participation.find_by(user_id: user.id, challenge_id: challenge.id).blank?
+    Participation.find_by(user_id: user.id, challenge_id: challenge.id).present?
   end
 
   def participation_icon(value)

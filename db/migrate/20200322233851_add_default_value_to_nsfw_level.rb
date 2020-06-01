@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddDefaultValueToNsfwLevel < ActiveRecord::Migration[6.0]
   def change
     change_column_default :users, :nsfw_level, from: nil, to: 1

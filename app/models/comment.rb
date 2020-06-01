@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Comment < ApplicationRecord
   include ActionView::Helpers::UrlHelper
 
@@ -8,23 +10,23 @@ class Comment < ApplicationRecord
   validates :body, length: { maximum: 2000 }, presence: true
 
   def link_form
-    return body if body.index('>>') == nil
+    return body if body.index('>>').nil?
 
     split_body = body.split('')
 
     first_gt = false
     second_gt = false
-    model = ""
-    id_link = ""
+    model = ''
+    id_link = ''
     s_index = -1
     s_indices = []
     e_indices = []
     links = []
     models = []
 
-    def is_valid_id(string)
-      string.scan(/\D/).empty? && string[0] != '0' && !string.blank?
-    end
+    is_valid_id = lambda { |string|
+      string.scan(/\D/).empty? && string[0] != '0' && string.present?
+    }
 
     split_body.each_with_index do |c, i|
       if !first_gt && c == '>'
@@ -39,18 +41,18 @@ class Comment < ApplicationRecord
       if first_gt && second_gt
         if c == '>'
           if id_link.blank?
-            s_index = i-1
+            s_index = i - 1
             next
           else
             links.push id_link.to_i
             s_indices.push s_index
-            e_indices.push i-1
+            e_indices.push i - 1
             models.push model
             s_index = i
             first_gt = true
             second_gt = false
-            id_link = ""
-            model = ""
+            id_link = ''
+            model = ''
             next
           end
         elsif c == 'C' || c == 'S'
@@ -60,24 +62,24 @@ class Comment < ApplicationRecord
           elsif id_link.blank?
             first_gt = false
             second_gt = false
-            model = ""
+            model = ''
             next
           else
             links.push id_link.to_i
             s_indices.push s_index
-            e_indices.push i-1
+            e_indices.push i - 1
             models.push model
             first_gt = true
             second_gt = false
-            id_link = ""
-            model = ""
+            id_link = ''
+            model = ''
             next
           end
         elsif !!(c =~ /\d/)
           if c == '0' && id_link.blank?
             first_gt = false
             second_gt = false
-            id_link = ""
+            id_link = ''
             next
           elsif model.blank?
             model = :Z
@@ -87,29 +89,29 @@ class Comment < ApplicationRecord
           if id_link.blank?
             first_gt = false
             second_gt = false
-            model = ""
+            model = ''
             next
           else
             links.push id_link.to_i
             s_indices.push s_index
-            e_indices.push i-1
+            e_indices.push i - 1
             models.push model
             first_gt = false
             second_gt = false
-            id_link = ""
-            model = ""
+            id_link = ''
+            model = ''
             next
           end
         end
       else
         first_gt = false
         second_gt = false
-        id_link = ""
-        model = ""
+        id_link = ''
+        model = ''
       end
     end
 
-    if is_valid_id(id_link)
+    if is_valid_id[id_link]
       links.push id_link.to_i
       s_indices.push s_index
       e_indices.push body.length - 1
@@ -117,10 +119,10 @@ class Comment < ApplicationRecord
     end
 
     display_body = body
-    final_comment = ""
+    final_comment = ''
     current_index = 0
 
-    model_hash = {Z: Comment, C: Challenge, S: Submission}
+    model_hash = { Z: Comment, C: Challenge, S: Submission }
 
     links.each_with_index do |s, i|
       link_id = s.to_i
@@ -129,19 +131,19 @@ class Comment < ApplicationRecord
       next if linked_content.blank?
 
       if current_index != s_indices[i]
-        final_comment = final_comment + CGI::escapeHTML(display_body[current_index..(s_indices[i] - 1)])
+        final_comment += CGI.escapeHTML(display_body[current_index..(s_indices[i] - 1)])
       end
 
       if model_type == :Z
         if source_type == linked_content.source_type && source_id == linked_content.source_id
-          final_comment = final_comment + "<a href=\"#{"#" + link_id.to_s}\">>>#{link_id}</a>".html_safe
+          final_comment += "<a href=\"#{'#' + link_id.to_s}\">>>#{link_id}</a>".html_safe
         else
-          final_comment = final_comment + link_to(">>#{link_id}", Rails.application.routes.url_helpers.submission_path(linked_content.source_id, anchor: "#{link_id}")).html_safe
+          final_comment += link_to(">>#{link_id}", Rails.application.routes.url_helpers.submission_path(linked_content.source_id, anchor: link_id.to_s)).html_safe
         end
       elsif model_type == :C
-        final_comment = final_comment + link_to(">>C#{link_id}", Rails.application.routes.url_helpers.challenge_path(link_id)).html_safe
+        final_comment += link_to(">>C#{link_id}", Rails.application.routes.url_helpers.challenge_path(link_id)).html_safe
       elsif model_type == :S
-        final_comment = final_comment + link_to(">>S#{link_id}", Rails.application.routes.url_helpers.submission_path(link_id)).html_safe
+        final_comment += link_to(">>S#{link_id}", Rails.application.routes.url_helpers.submission_path(link_id)).html_safe
       else
         next # what the fuck?????
       end
@@ -149,7 +151,7 @@ class Comment < ApplicationRecord
     end
 
     if current_index != display_body.length
-      final_comment = final_comment + CGI::escapeHTML(display_body[current_index..(display_body.length - 1)])
+      final_comment += CGI.escapeHTML(display_body[current_index..(display_body.length - 1)])
     end
 
     final_comment

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddProcessedToParticipations < ActiveRecord::Migration[5.0]
   def change
     add_column :participations, :processed, :date

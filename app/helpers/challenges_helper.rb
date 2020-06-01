@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module ChallengesHelper
   def challenge_creator_link(id)
-    return "Site Challenge" unless id.present?
+    return 'Site Challenge' if id.blank?
 
-    return "User Account Deleted" if id == -1
+    return 'User Account Deleted' if id == -1
 
     user = User.find(id)
     link_to(user.username, user)
@@ -11,7 +13,7 @@ module ChallengesHelper
   # TODO: This suite of methods is absolutely fucking awful.
   # Will be removed once the challenge page is refactored.
   def getBadgeThreshold(challenge)
-    BadgeMap.where(:challenge_id => challenge.id).order("required_score ASC").first.required_score
+    BadgeMap.where(challenge_id: challenge.id).order('required_score ASC').first.required_score
   end
 
   def getParticipationLevel(participation, challenge)
@@ -27,11 +29,11 @@ module ChallengesHelper
   def getUserParticipationLevel(user, challenge, active)
     return 0 if user.nil?
 
-    if active
-      participation = Participation.find_by(:user_id => user.id, :challenge_id => challenge.id, :active => true)
-    else
-      participation = Participation.find_by(:user_id => user.id, :challenge_id => challenge.id)
-    end
+    participation = if active
+                      Participation.find_by(user_id: user.id, challenge_id: challenge.id, active: true)
+                    else
+                      Participation.find_by(user_id: user.id, challenge_id: challenge.id)
+                    end
 
     getParticipationLevel(participation, challenge)
   end

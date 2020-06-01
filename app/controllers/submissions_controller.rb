@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SubmissionsController < ApplicationController
   before_action :set_submission, only: %i[show edit update destroy]
   before_action :ensure_authenticated, only: %i[new create edit update destroy]
@@ -6,16 +8,16 @@ class SubmissionsController < ApplicationController
   # GET /submissions
   # GET /submissions.json
   def index
-    if !params[:to].blank? || !params[:from].blank?
-      if params[:to].blank?
-        @submissions = Submission.where("id >= :from", {from: params[:from]}).order('id ASC')
-      elsif params[:from].blank?
-        @submissions = Submission.where("id <= :to", {to: params[:to]}).order('id ASC')
-      else
-        @submissions = Submission.where(id: params[:from]..params[:to]).order('id ASC')
-      end
+    if params[:to].present? || params[:from].present?
+      @submissions = if params[:to].blank?
+                       Submission.where('id >= :from', { from: params[:from] }).order('id ASC')
+                     elsif params[:from].blank?
+                       Submission.where('id <= :to', { to: params[:to] }).order('id ASC')
+                     else
+                       Submission.where(id: params[:from]..params[:to]).order('id ASC')
+                     end
     else
-      if !params[:date].blank?
+      if params[:date].present?
         begin
           @date = Date.parse(params[:date])
           @date = Time.now.utc.to_date if @date > Time.now.utc.to_date
@@ -38,12 +40,12 @@ class SubmissionsController < ApplicationController
   # GET /submissions/new
   def new
     @submission = Submission.new
-    @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
+    @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
   end
 
   # GET /submissions/1/edit
   def edit
-    @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
+    @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
   end
 
   # POST /submissions
@@ -54,14 +56,14 @@ class SubmissionsController < ApplicationController
     @submission = Submission.new(submission_params)
     artist_id = current_user.id
     @submission.user_id = artist_id
-    @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
+    @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
 
     respond_to do |format|
       if failure
         format.html { render :new }
         format.json { render json: @submission.errors, status: :unprocessable_entity }
       elsif @submission.save
-        #lock in time to account for lag time
+        # lock in time to account for lag time
         @submission.created_at = initial_date_time
         @submission.save
 
@@ -71,21 +73,21 @@ class SubmissionsController < ApplicationController
         seasonalChallenge = Challenge.current_season
 
         # Add submission to DAD/Current Seasonal Challenge
-        dad_ce = ChallengeEntry.create({challenge_id: 1, submission_id: @submission.id, user_id: artist_id})
+        dad_ce = ChallengeEntry.create({ challenge_id: 1, submission_id: @submission.id, user_id: artist_id })
         dad_ce.created_at = initial_date_time
         dad_ce.save
-        season_ce = ChallengeEntry.create({challenge_id: seasonalChallenge.id, submission_id: @submission.id, user_id: artist_id})
+        season_ce = ChallengeEntry.create({ challenge_id: seasonalChallenge.id, submission_id: @submission.id, user_id: artist_id })
         season_ce.created_at = initial_date_time
         season_ce.save
 
         # Last, manage all custom challenge submissions selected (to do).
-        @participations = Participation.where({user_id: artist_id, active: true}).order("challenge_id ASC")
+        @participations = Participation.where({ user_id: artist_id, active: true }).order('challenge_id ASC')
         @participations.each do |p|
-          if !params[p.challenge_id.to_s].blank?
-            ce = ChallengeEntry.create({challenge_id: p.challenge_id, submission_id: @submission.id, user_id: artist_id})
-            ce.created_at = initial_date_time
-            ce.save
-          end
+          next if params[p.challenge_id.to_s].blank?
+
+          ce = ChallengeEntry.create({ challenge_id: p.challenge_id, submission_id: @submission.id, user_id: artist_id })
+          ce.created_at = initial_date_time
+          ce.save
         end
 
         format.html { redirect_to @submission }
@@ -100,18 +102,18 @@ class SubmissionsController < ApplicationController
   # PATCH/PUT /submissions/1
   # PATCH/PUT /submissions/1.json
   def update
-    @participations = Participation.where({user_id: current_user.id, active: true}).order("challenge_id ASC")
+    @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
     curr_user_id = current_user.id
 
-    if @submission.created_at.to_date == Time.now.utc.to_date
-      usedParams = submission_params
-    else
-      usedParams = limited_params
-    end
+    usedParams = if @submission.created_at.to_date == Time.now.utc.to_date
+                   submission_params
+                 else
+                   limited_params
+                 end
     respond_to do |format|
       if @submission.update(usedParams)
 
-        if !params[:postfrequency].nil?
+        unless params[:postfrequency].nil?
           newFrequency = params[:postfrequency].to_i
           current_user.update_attribute(:new_frequency, newFrequency)
         end
@@ -119,15 +121,15 @@ class SubmissionsController < ApplicationController
         # This sort of information (challenge submissions) shouldn't ever change after the day it was submitted.
         if @submission.created_at.to_date == Time.now.utc.to_date
           @participations.each do |p|
-            if p.challenge_id != 1 && !p.challenge.seasonal
-              entry = ChallengeEntry.find_by({challenge_id: p.challenge_id, submission_id: @submission.id, user_id: curr_user_id})
-              # If we selected the checkbox, check if an extry exists before creating it.
-              if !params[p.challenge_id.to_s].blank? && entry.blank?
-                ChallengeEntry.create({challenge_id: p.challenge_id, submission_id: @submission.id, user_id: curr_user_id})
-              # If we unchecked the box, check if an entry doesn't exist before deleting it.
-              elsif params[p.challenge_id.to_s].blank? && !entry.blank?
-                entry.destroy
-              end
+            next unless p.challenge_id != 1 && !p.challenge.seasonal
+
+            entry = ChallengeEntry.find_by({ challenge_id: p.challenge_id, submission_id: @submission.id, user_id: curr_user_id })
+            # If we selected the checkbox, check if an extry exists before creating it.
+            if params[p.challenge_id.to_s].present? && entry.blank?
+              ChallengeEntry.create({ challenge_id: p.challenge_id, submission_id: @submission.id, user_id: curr_user_id })
+            # If we unchecked the box, check if an entry doesn't exist before deleting it.
+            elsif params[p.challenge_id.to_s].blank? && entry.present?
+              entry.destroy
             end
           end
         end

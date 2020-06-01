@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.array! @notifications do |notification|
   json.recipient notification.user.username
   json.recipient_id notification.user_id

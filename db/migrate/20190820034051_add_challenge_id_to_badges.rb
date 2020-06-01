@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddChallengeIdToBadges < ActiveRecord::Migration[5.0]
   def change
     add_column :badges, :challenge_id, :integer

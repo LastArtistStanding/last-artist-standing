@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateSubmissions < ActiveRecord::Migration[5.0]
   def change
     create_table :submissions do |t|
@@ -7,6 +9,5 @@ class CreateSubmissions < ActiveRecord::Migration[5.0]
 
       t.timestamps
     end
-
   end
 end

@@ -1,11 +1,11 @@
+# frozen_string_literal: true
+
 class ChallengeEntry < ApplicationRecord
+  belongs_to :challenge
+  belongs_to :submission
 
-    belongs_to :challenge
-    belongs_to :submission
+  validates :challenge_id, presence: true
+  validates :submission_id, presence: true
 
-    validates :challenge_id, presence: true
-    validates :submission_id, presence: true
-
-    validates_uniqueness_of :challenge_id, scope: :submission_id
-
+  validates :challenge_id, uniqueness: { scope: :submission_id }
 end

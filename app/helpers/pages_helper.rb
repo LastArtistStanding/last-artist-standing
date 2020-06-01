@@ -36,7 +36,7 @@ module PagesHelper
   end
 
   def frequency_string(frequency, long)
-    return long ? "Inactive" : "None" if frequency.nil? || frequency.zero?
+    return long ? 'Inactive' : 'None' if frequency.nil? || frequency.zero?
 
     return FREQUENCY_STRINGS_LONG[frequency] || "Posts Every #{frequency} Days" if long
 
@@ -78,14 +78,14 @@ module PagesHelper
   end
 
   def season_to_icon_class(season_challenge_name)
-    return "fa fa-leaf" if season_challenge_name.include? "Spring"
+    return 'fa fa-leaf' if season_challenge_name.include? 'Spring'
 
-    return "fa fa-sun-o" if season_challenge_name.include? "Summer"
+    return 'fa fa-sun-o' if season_challenge_name.include? 'Summer'
 
-    return "fa fa-cloud" if season_challenge_name.include? "Autumn"
+    return 'fa fa-cloud' if season_challenge_name.include? 'Autumn'
 
-    return "fa fa-snowflake-o" if season_challenge_name.include? "Winter"
+    return 'fa fa-snowflake-o' if season_challenge_name.include? 'Winter'
 
-    ""
+    ''
   end
 end

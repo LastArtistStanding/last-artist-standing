@@ -19,7 +19,7 @@ class Badge < ApplicationRecord
   validate :avatar_exists
 
   def avatar_exists
-    return unless !avatar.present? && !direct_image.present?
+    return unless avatar.blank? && direct_image.blank?
 
     errors.add(:avatar, 'should be provided for the badge.')
   end

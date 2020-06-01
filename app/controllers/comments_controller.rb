@@ -53,7 +53,7 @@ class CommentsController < ApplicationController
   end
 
   def set_target
-    @target = Submission.find_by_id(params[:submission_id]) if params[:submission_id]
+    @target = Submission.find_by(id: params[:submission_id]) if params[:submission_id]
 
     render_not_found if @target.nil?
   end

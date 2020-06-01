@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateModeratorApplications < ActiveRecord::Migration[6.0]
   def change
     create_table :moderator_applications do |t|

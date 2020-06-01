@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateSiteStatuses < ActiveRecord::Migration[5.0]
   def change
     create_table :site_statuses do |t|

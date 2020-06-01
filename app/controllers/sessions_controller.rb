@@ -1,5 +1,6 @@
-class SessionsController < ApplicationController
+# frozen_string_literal: true
 
+class SessionsController < ApplicationController
   def new
     respond_to do |format|
       # Kick anyone trying to access /login directly back to the home page
@@ -13,7 +14,7 @@ class SessionsController < ApplicationController
     user = User.find_by(email: params[:session][:email].downcase)
 
     respond_to do |format|
-      if user && user.authenticate(params[:session][:password])
+      if user&.authenticate(params[:session][:password])
         # Log the user in
         log_in user
       end

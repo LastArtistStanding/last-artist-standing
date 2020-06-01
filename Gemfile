@@ -1,19 +1,21 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 # Prerequisite for upgraded heroku stack
-ruby "2.6.5"
+ruby '2.6.5'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '>= 6.0.3.1', '< 6.1'
-#Use Rails controller testing for testing stability and error-proneness of site.
+# Use Rails controller testing for testing stability and error-proneness of site.
 gem 'rails-controller-testing'
 # Use bcrypt for Password hashing to protect against attackers
 gem 'bcrypt', '~> 3.1'
 
 gem 'bootstrap', '>= 4.3.1'
 # For popovers
-gem 'popper_js', '>= 1.12.9'
 gem 'autoprefixer-rails'
+gem 'popper_js', '>= 1.12.9'
 # Use SCSS for stylesheets
 gem 'sassc-rails', '>= 2.1.2', '< 2.2'
 # Use Uglifier as compressor for JavaScript assets
@@ -32,7 +34,7 @@ gem 'jbuilder', '~> 2.0'
 # Gems for assisting with Image Upload on the site.
 gem 'carrierwave'
 gem 'mini_magick', '>= 4.9.4'
-#Formating timestamps for site
+# Formating timestamps for site
 gem 'strftime', '~>1.0.0'
 
 gem 'rake', '>= 13.0.1', '< 13.1'
@@ -40,15 +42,15 @@ gem 'rake', '>= 13.0.1', '< 13.1'
 gem 'puma', '>= 4.3.3', '< 4.4'
 
 ###########################
-  # 1/21/18 - - Use Postgres as the database for Active Record
-  # Fix found based off of:
-  #https://stackoverflow.com/questions/39261996/heroku-and-rails-gem-load-error-with-postgres-however-it-is-specified-in-gemfi
-  #https://stackoverflow.com/questions/24755673/gemloaderror-specified-postgresql-for-database-adapter-but-the-gem-is-not/24755814
+# 1/21/18 - - Use Postgres as the database for Active Record
+# Fix found based off of:
+# https://stackoverflow.com/questions/39261996/heroku-and-rails-gem-load-error-with-postgres-however-it-is-specified-in-gemfi
+# https://stackoverflow.com/questions/24755673/gemloaderror-specified-postgresql-for-database-adapter-but-the-gem-is-not/24755814
 
 ###########################
-gem 'pg', '>= 1.2.2', '< 1.3'
 gem 'figaro'
 gem 'fog-aws', '>= 3.5.2', '< 3.6'
+gem 'pg', '>= 1.2.2', '< 1.3'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -80,15 +82,15 @@ group :production do
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 ## Gemfile for Rails 3+, Sinatra, or Merb
 gem 'will_paginate', '>= 3.3.0', '< 3.4'
 
 ## Security updates
-gem "nokogiri", ">= 1.10.9", '< 2.0'
-gem "rack", ">= 2.0.8"
-gem "loofah", ">= 2.3.1"
-gem "excon", ">= 0.71.0"
-gem "sentry-raven"
-gem "slim-rails"
+gem 'excon', '>= 0.71.0'
+gem 'loofah', '>= 2.3.1'
+gem 'nokogiri', '>= 1.10.9', '< 2.0'
+gem 'rack', '>= 2.0.8'
+gem 'sentry-raven'
+gem 'slim-rails'
