@@ -5,15 +5,14 @@ html
     meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"
 
     link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    <!-- Fira Mono -->
+    / Fira Mono
     link href="https://fonts.googleapis.com/css?family=Fira+Mono:700" rel="stylesheet"
 
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = csrf_meta_tags
 
-    <!-- Permit Unique Titles -->
-    title = yield(:title) 
+    title = yield(:title)
 
   body
     #wrapper

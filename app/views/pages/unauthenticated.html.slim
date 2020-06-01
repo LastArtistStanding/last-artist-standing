@@ -1,6 +1,6 @@
-html
-  body
-    .center.jumbotron
-      = image_tag "lastan_1.png", height: '400', width: '400'
-      h1 Oops! Las-tan says you need to log in to do that.
-      a.btn.btn-lg.btn-primary href="#login-modal" data-toggle="modal" Sign up now!
+- provide(:title, 'Unauthenticated')
+
+.center.jumbotron
+  = image_tag "lastan_1.png", height: '400', width: '400'
+  h1 Oops! Las-tan says you need to log in to do that.
+  a.btn.btn-lg.btn-primary href="#login-modal" data-toggle="modal" Sign up now!
