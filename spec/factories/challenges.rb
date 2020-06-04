@@ -9,4 +9,11 @@ FactoryBot.define do
     start_date { Time.now.utc.to_date + 10 }
     end_date { Time.now.utc.to_date + 30 }
   end
+
+  factory :seasonal_challenge, parent: :challenge do
+    name { 'Seasonal challenge' }
+    seasonal { true }
+    start_date { Time.now.utc.to_date - 10 }
+    end_date { Time.now.utc.to_date + 10 }
+  end
 end

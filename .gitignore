@@ -26,7 +26,10 @@
 # Ignore application configuration
 /config/application.yml
 
-# Ignore file upload folder.
+# Ignore file upload folders.
 /public/uploads/*
+/public/submissions
+/public/badges
+/public/users
 
 .env

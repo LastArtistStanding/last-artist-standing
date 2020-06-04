@@ -1,116 +1,90 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 class ImageUploader < CarrierWave::Uploader::Base
-
-  # Include RMagick or MiniMagick support:
-  # include CarrierWave::RMagick
   include CarrierWave::MiniMagick
 
-  # Choose what kind of storage to use for this uploader:
-  # storage :file
-  storage :fog
-  process :resize_to_limit => [3000, 3000], if: :requires_resize?
+  process resize_to_limit: [3000, 3000], if: :requires_resize?
   process :strip_exif
 
   # Override the directory where uploaded files will be stored.
-  # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
-    if is_submission?("")
+    # FIXME: This sort of instanceof dispatch isn't good OO practice.
+    if model.is_a? Submission
       "submissions/#{model.user.name}/#{mounted_as}/#{model.id}"
-    elsif is_badge?("")
+    elsif model.is_a? Badge
       "badges/#{model.id}/#{mounted_as}"
-    elsif is_user?("")
+    elsif model.is_a? User
       "users/#{model.name}/#{mounted_as}"
     end
+    # FIXME: There should probably be error handling for an undefined case.
   end
 
-  # Provide a default URL as a default if there hasn't been a file uploaded:
-  # def default_url
-  #   # For Rails 3.1+ asset pipeline compatibility:
-  #   # ActionController::Base.helpers.asset_path("fallback/" + [version_name, "default.png"].compact.join('_'))
-  #
-  #   "/images/fallback/" + [version_name, "default.png"].compact.join('_')
-  # end
+  # Alternative versions of uploaded files.
 
-  # Process files as they are uploaded:
-
-  # Create different versions of your uploaded files:
   version :thumb do
-    process :remove_animation, if: :is_animated_gif?
-    process :resize_to_fill => [400, 400]
+    process :remove_animation, if: :animated_gif?
+    process resize_to_fill: [400, 400]
   end
 
   version :avatar, from_version: :thumb do
-    process :resize_to_fill => [100, 100]
+    process resize_to_fill: [100, 100]
   end
 
   protected
-  def is_submission?(picture)
-    model.class.to_s.underscore == "submission"
-  end
 
-  protected
-  def is_badge?(picture)
-    model.class.to_s.underscore == "badge"
-  end
-
-  protected
-  def is_user?(picture)
-    model.class.to_s.underscore == "user"
-  end
-
-  protected
   def remove_animation
-    manipulate! { |image| image.collapse! }
+    manipulate!(&:collapse!)
   end
 
-  protected
   def strip_exif
-    if content_type == 'image/jpeg' || content_type == 'image/jpg'
-      manipulate! do |img|
-        img.strip
-        img = yield(img) if block_given?
-        img
-      end
+    # FIXME: Other file types like PNG can also contain unwanted metadata,
+    #   which should probably also be stripped.
+    # FIXME: Is the content type really not filtered at all to allow these redundant media types?
+    #   And if not, is there a better way to determine file type?
+    return unless content_type == 'image/jpeg' || content_type == 'image/jpg'
+
+    manipulate! do |img|
+      img.strip
+      img = yield(img) if block_given?
+      img
     end
   end
 
-  protected
-  def is_animated_gif?(file)
+  def animated_gif?(file)
     animated = false
+    # FIXME: This check should probably also apply to APNGs.
     if content_type == 'image/gif' && file
       examining_image = ::MiniMagick::Image.open(file.file)
       animated = true if examining_image.layers.count > 1
     end
-    if model.class.name == "Submission"
-      model.is_animated_gif = animated
-    end
+    model.is_animated_gif = animated if model.is_a? Submission
     animated
   end
 
-  protected
   def requires_resize?(file)
-    model.errors.add(:drawing, "penis")
+    # FIXME: What is this and why is it here?
+    model.errors.add(:drawing, 'penis')
+    # FIXME: Under what circumstances would 'file' be falsy?
+    #   And is returning false the correct behavior in that circumstance?
+    #   (This also applies to other predicates.)
     if file
       width, height = ::MiniMagick::Image.open(file.file)[:dimensions]
-      return width * height > 9000000
+      # TODO: What is the purpose of this check or resizing?
+      #   It does not prevent extreme dimensions (e.g. 1x9000000),
+      #   and neither does it prevent large files (size_range does that).
+      return width * height > 9_000_000
     end
-    return false
+    false
   end
 
-  # Add a white list of extensions which are allowed to be uploaded.
-  # For images you might use something like this:
+  # Only these extensions are allowed to be uploaded.
+  # TODO: Does CarrierWave actually verify the contents of the file?
   def extension_whitelist
-    %w(jpg jpeg gif png)
+    # APNGs are supported as PNGs.
+    %w[apng jpg jpeg gif png]
   end
 
   def size_range
     0..10.megabytes
   end
-  # Override the filename of the uploaded files:
-  # Avoid using model.id or version_name here, see uploader/store.rb for details.
-  # def filename
-  #   "something.jpg" if original_filename
-  # end
-
 end
