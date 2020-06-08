@@ -52,6 +52,10 @@ gem 'figaro'
 gem 'fog-aws', '>= 3.5.2', '< 3.6'
 gem 'pg', '>= 1.2.2', '< 1.3'
 
+# Used to support cross-site authentication.
+gem 'jwt', '~> 2.2.1'
+gem 'rack-cors', '~> 1.1.1'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'

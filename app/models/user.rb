@@ -132,6 +132,22 @@ class User < ApplicationRecord
     BCrypt::Password.new(email_verification_digest) == code
   end
 
+  def reset_x_site_auth_code
+    token = User.new_token
+
+    update_retain_password(x_site_auth_digest: User.digest(token))
+
+    token
+  end
+
+  def clear_x_site_auth_code
+    update_retain_password(x_site_auth_digest: nil)
+  end
+
+  def x_site_auth_code_correct?(code)
+    x_site_auth_digest.present? && BCrypt::Password.new(x_site_auth_digest) == code
+  end
+
   def username
     return display_name if display_name.present?
 

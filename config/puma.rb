@@ -19,3 +19,13 @@ end
 rackup      DefaultRackup
 port        ENV['PORT']     || 3000
 environment ENV['RACK_ENV'] || 'development'
+
+# Allow serving HTTPS in the development environment so that we can test cross-site auth.
+if Rails.env.development? && ENV['DEVELOPMENT_TLS'].present?
+  cert_path = Rails.root.join('private')
+  ssl_bind '0.0.0.0', 3001, {
+    key: cert_path.join('key.pem').to_s,
+    cert: cert_path.join('cert.pem').to_s,
+    verify_mode: 'none'
+  }
+end

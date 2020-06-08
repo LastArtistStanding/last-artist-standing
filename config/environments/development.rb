@@ -18,7 +18,13 @@ Rails.application.configure do
   if ENV['REDIRECT_MAIL'] == 'unix'
     # This should be whatever host `rails server` is going to be bound to.
     # For now, I'm going to go ahead and assume the default host.
-    config.action_mailer.default_url_options = { host: 'localhost:3000' }
+    config.action_mailer.default_url_options =
+      if ENV['DEVELOPMENT_TLS'].present?
+        { protocol: 'https', host: "#{ENV['DEVELOPMENT_TLS']}:3001" }
+      else
+        { host: 'localhost:3000' }
+      end
+
     config.action_mailer.delivery_method = :sendmail
     # This flag will also register the development email interceptor,
     # which will redirect all emails to the local Unix user.
@@ -53,4 +59,6 @@ Rails.application.configure do
 
   # Whitelist for Cloud 9 development
   config.web_console.whitelisted_ips = '174.82.225.107'
+
+  config.hosts << ENV['DEVELOPMENT_TLS'] if ENV['DEVELOPMENT_TLS'].present?
 end

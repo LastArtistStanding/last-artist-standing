@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_19_135500) do
+ActiveRecord::Schema.define(version: 2020_06_08_073938) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -190,6 +190,7 @@ ActiveRecord::Schema.define(version: 2020_05_19_135500) do
     t.string "email_pending_verification"
     t.string "email_verification_digest"
     t.datetime "email_verification_sent_at"
+    t.string "x_site_auth_digest"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["name"], name: "index_users_on_name", unique: true
   end
