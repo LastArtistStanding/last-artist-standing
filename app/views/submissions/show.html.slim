@@ -134,14 +134,19 @@ javascript:
           .card-body
             = error
 
-      - @comments.each do |comment|
-        .card.comment-card id="#{comment.id}"
-          .card-header
-            b = link_to comment.user.username, comment.user
-            = comment.created_at.strftime(" %H:%M, %b %-d, %Y") 
-            span.quote-id onclick=("quote(#{comment.id});" if has_permissions)
-              = " No. #{comment.id}"
-            = link_to ' <span class="fa fa-trash"></span>'.html_safe, [@submission, comment], method: :delete, data: { confirm: 'Are you sure?' } if comment.user_id == current_user&.id
+      section id="comments"
+        - @comments.each do |comment|
+          .card.comment-card id="#{comment.id}"
+            .card-header
+              b = link_to comment.user.username, comment.user
+              = comment.created_at.strftime(" %H:%M, %b %-d, %Y")
+              / Mirror 4chan's behavior for this:
+              / The `No.` part is a link to this post, and the number itself is the quote function.
+              = ' '
+              a style="color: inherit;" href="##{comment.id}" = 'No.'
+              = ' '
+              span.quote-id onclick=("quote(#{comment.id});" if has_permissions) = comment.id.to_s
+              = link_to ' <span class="fa fa-trash"></span>'.html_safe, [@submission, comment], method: :delete, data: { confirm: 'Are you sure?' } if comment.user_id == current_user&.id
 
-          .card-body
-            = simple_format(comment.link_form)
+            .card-body
+              = simple_format(comment.link_form)

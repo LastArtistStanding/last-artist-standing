@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :set_curruser, only: %i[submissions show edit update]
+  before_action :set_user, only: %i[submissions show edit update]
   before_action :ensure_logged_in, only: %i[edit update]
   before_action -> { ensure_authorized @user.id }, only: %i[edit update]
   before_action :ensure_verified_to_upload_avatar, only: %i[create update]
@@ -14,13 +14,23 @@ class UsersController < ApplicationController
   end
 
   def submissions
-    @user_submissions = Submission.where(user_id: @user.id).order('created_at DESC')
-                                  .paginate(page: params[:page], per_page: 25)
+    respond_to do |format|
+      format.html do
+        @user_submissions = Submission.where(user_id: @user.id).order('created_at DESC')
+                                      .paginate(page: params[:page], per_page: 25)
+      end
+      format.json
+    end
   end
 
   def show
-    @awards = Award.where('user_id = ? AND badge_id <> 1', @user.id).order('prestige DESC')
-    @submissions = Submission.where(user_id: @user.id).order('created_at DESC').limit(10)
+    respond_to do |format|
+      format.html do
+        @awards = Award.where('user_id = ? AND badge_id <> 1', @user.id).order('prestige DESC')
+        @submissions = Submission.where(user_id: @user.id).order('created_at DESC').limit(10)
+      end
+      format.json
+    end
   end
 
   def new
@@ -86,7 +96,7 @@ class UsersController < ApplicationController
 
   private
 
-  def set_curruser
+  def set_user
     @user = User.find(params[:id])
   end
 

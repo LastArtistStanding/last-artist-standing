@@ -34,7 +34,13 @@ class SubmissionsController < ApplicationController
   # GET /submissions/1
   # GET /submissions/1.json
   def show
-    @challenge_entries = ChallengeEntry.where(submission_id: @submission.id)
+    respond_to do |format|
+      format.html do
+        # TODO: This should not be necessary. We have @submission.challenge_entries.
+        @challenge_entries = ChallengeEntry.where(submission_id: @submission.id)
+      end
+      format.json
+    end
   end
 
   # GET /submissions/new

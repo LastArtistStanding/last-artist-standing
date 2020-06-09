@@ -5,9 +5,13 @@
 class Badge < ApplicationRecord
   mount_uploader :avatar, ImageUploader
 
+  belongs_to :challenge
+
   has_many :awards
   has_many :badge_maps
   has_many :users, through: :awards
+  # What is this nonsense and why is it here?
+  # FIXME: Remove this
   has_many :challenges, through: :badge_maps
 
   NO_EXCESS_WHITESPACE = /\A(\S\s?)*\S\z/.freeze

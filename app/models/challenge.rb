@@ -2,10 +2,13 @@
 
 # Represents a challenge on the website.
 class Challenge < ApplicationRecord
+  belongs_to :creator, class_name: 'User'
+
   has_many :badge_maps, dependent: :destroy
   has_many :participations, dependent: :destroy
   has_many :notifications, as: :source, dependent: :destroy
   has_many :challenge_entries
+  has_many :entries, through: :challenge_entries, source: :submission
   has_many :users, through: :participations
   has_many :badges, through: :badge_maps, dependent: :destroy
 
@@ -27,8 +30,17 @@ class Challenge < ApplicationRecord
 
   validate :end_date_cannot_precede_start_date
 
+  def badge
+    Badge.find_by(challenge_id: id)
+  end
+
+  def started?
+    Time.now.utc.to_date > start_date
+  end
+
+  # FIXME: Rename to `deletable?`
   def can_delete?
-    Time.now.utc.to_date < start_date
+    !started?
   end
 
   def end_date_cannot_precede_start_date

@@ -8,42 +8,52 @@ class ChallengesController < ApplicationController
   # GET /challenges
   # GET /challenges.json
   def index
-    @activeChallenges = Challenge.where('start_date <= ? AND (end_date > ? OR end_date IS NULL)', Date.current, Date.current).order('start_date ASC, end_date DESC')
-    @upcomingChallenges = Challenge.where('start_date > ?', Date.current).order('start_date DESC, end_date DESC')
-    @completedChallenges = Challenge.where('end_date <= ?', Date.current).order('start_date DESC, end_date DESC')
+    respond_to do |format|
+      format.html do
+        @activeChallenges = Challenge.where('start_date <= ? AND (end_date > ? OR end_date IS NULL)', Date.current, Date.current).order('start_date ASC, end_date DESC')
+        @upcomingChallenges = Challenge.where('start_date > ?', Date.current).order('start_date DESC, end_date DESC')
+        @completedChallenges = Challenge.where('end_date <= ?', Date.current).order('start_date DESC, end_date DESC')
+      end
+
+      format.json do
+        @challenges = Challenge.all
+      end
+    end
   end
 
   # GET
   def entries
-    @challengeEntries = ChallengeEntry.includes(:submission).where(challenge_id: @challenge.id).order('created_at DESC').paginate(page: params[:page], per_page: 25).includes(submission: :comments)
+    respond_to do |format|
+      format.html do
+        @challengeEntries = ChallengeEntry.includes(:submission).where(challenge_id: @challenge.id).order('created_at DESC').paginate(page: params[:page], per_page: 25).includes(submission: :comments)
+      end
+
+      format.json
+    end
   end
 
   # GET /challenge/1
   # GET /challenge/1.json
   def show
-    # You can't join or leave a challenge after the start date.
-    if Date.current < @challenge.start_date
-      if params[:join]
-        Participation.find_or_create_by({ user_id: current_user.id, challenge_id: @challenge.id, score: 0, start_date: @challenge.start_date })
+    respond_to do |format|
+      format.html do
+        if Date.current >= @challenge.start_date && (@challenge.end_date.blank? || Date.current < @challenge.end_date)
+          @currentParticipants = Participation.where({ challenge_id: @challenge.id, active: true }).order('score DESC')
+        else
+          @currentParticipants = Participation.where({ challenge_id: @challenge.id }).order('score DESC, created_at ASC')
+        end
+        if @challenge.streak_based
+          if @challenge.id == 1
+            @latestEliminations = Participation.where('challenge_id = 1 AND eliminated AND end_date <= :endDate AND end_date >= :startDate', { endDate: Date.current, startDate: (Date.current - 7.days) }).order('end_date DESC')
+          else
+            @allEliminations = Participation.where({ challenge_id: @challenge.id, eliminated: true }).order('end_date DESC')
+          end
+        end
       end
 
-      if params[:leave]
-        participation = Participation.find_by({ user_id: current_user.id, challenge_id: @challenge.id })
-        participation.destroy if participation.present?
-      end
-    end
-
-    if Date.current >= @challenge.start_date && (@challenge.end_date.blank? || Date.current < @challenge.end_date)
-      @currentParticipants = Participation.where({ challenge_id: @challenge.id, active: true }).order('score DESC')
-    else
-      @currentParticipants = Participation.where({ challenge_id: @challenge.id }).order('score DESC, created_at ASC')
-    end
-    if @challenge.streak_based
-      if @challenge.id == 1
-        @latestEliminations = Participation.where('challenge_id = 1 AND eliminated AND end_date <= :endDate AND end_date >= :startDate', { endDate: Date.current, startDate: (Date.current - 7.days) }).order('end_date DESC')
-      else
-        @allEliminations = Participation.where({ challenge_id: @challenge.id, eliminated: true }).order('end_date DESC')
-      end
+      # TODO: Currently, this doesn't even require the badge or badge_maps set in `set_challenge`.
+      #   Maybe that stuff should be moved into the HTML view as well?
+      format.json
     end
   end
 

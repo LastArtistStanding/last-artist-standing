@@ -96,15 +96,15 @@
                         td = date_string(participation.created_at.to_date)
                         td = date_string(participation.end_date)
 
-          .card
+          .card id="participants"
             .card-header
               b Current Participant List
               - if Time.now.utc.to_date < @challenge.start_date
                 - if @challenge.id != 1 && !@challenge.seasonal && logged_in?
                   - if user_is_participating(current_user, @challenge)
-                    = link_to "Leave Challenge", challenge_path(@challenge, leave: true), class: "btn btn-primary", style: 'float: right; margin-top: -0.375rem; margin-bottom: -0.375rem;'
+                    = link_to "Leave Challenge", challenge_participation_path(@challenge, current_user), method: :delete, class: "btn btn-primary", style: 'float: right; margin-top: -0.375rem; margin-bottom: -0.375rem;'
                   - else
-                    = link_to "Join Challenge", challenge_path(@challenge, join: true), class: "btn btn-primary", style: 'float: right; margin-top: -0.375rem; margin-bottom: -0.375rem;'
+                    = link_to "Join Challenge", challenge_participations_path(@challenge), method: :post, class: "btn btn-primary", style: 'float: right; margin-top: -0.375rem; margin-bottom: -0.375rem;'
 
             .card-body.table-responsive
               - if Time.now.utc.to_date < @challenge.start_date

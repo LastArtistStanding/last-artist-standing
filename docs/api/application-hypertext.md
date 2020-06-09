@@ -1,0 +1,12 @@
+# Application hypertext
+If you're wondering what `_links` and `_embedded` mean and why some properties use them and not others: it's hard and time-consuming to explain, so I'm not going to give a specific description ([there's a spec](https://tools.ietf.org/html/draft-kelly-json-hal-08), but it's not necessarily enough to understand what's going on on its own, and to be honest I'm not sure I've followed it 100% accurately). So instead, I'll just quickly describe the *benefits* of that design:
+
+Basically, the normal JSON properties represent an object's data (like a table row), and `_links` describes the way that object is related to other objects (like `belongs_to`, `has_one`, `has_many`, etc. in the model, but also like HTML links, like how submissions link to next/previous, next by user/previous by user).
+
+`_embedded` allows the API to include some of the data referenced by `_links` directly in the response. For an example of how this is used, think about the submissions index. It's a list of submissions, but returning a JSON array of links to submissions would be extremely inefficient (requiring *hundreds* of HTTP requests), because then the API consumer would have to manually access each submission to get its thumbnail, and access each submissions' linked user to get their username to say who it's by, etc. So instead, we include some of the information about the submission directly in the response, and some information about the submission's uploader with that, so that we get all of the information we need to view the submissions list from requesting the index just once.
+
+(The one exception to this purpose of `_embedded` is for collections: you include *only* the embedded data, without `_links` to it at all. Other than that, an API consumer could technically get away with ignoring embedded data entirely, albeit at a massive cost to performance.)
+
+The other important thing to remember is that you only have to include *part* of the information about an `_embedded` object. The API consumer knows how to get all of the information through `_links` if they want to, so if they need more information than what's already present, they can just fetch it themselves.
+
+All the links have the additional benefit that the API consumer doesn't need to know anything about `id`s or routing, because all of that has already been dealt with through `_links` (consider: what is an `id` used for? routing and foreign keys), and because it's all just URLs, you get support for cross-domain linked data with zero extra work.
