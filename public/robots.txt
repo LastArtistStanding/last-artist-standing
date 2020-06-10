@@ -1,5 +1,15 @@
-# See http://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
-#
-# To ban all spiders from the entire site uncomment the next two lines:
-# User-agent: *
-# Disallow: /
+# DAD is not intended to be used as a social media platform,
+# and many users may want to be able to post here freely without worrying
+# that non-4chan users will find out about their DAD account.
+
+# For this reason, we block all search engine bots across the entire site,
+# so that DAD accounts and posts will not occur in search results,
+# and so that DAD submissions will not appear in reverse image search.
+
+# The administrator of the site currently *also* blocks bots using Cloudflare,
+# but the web scrapers for all major services respect `robots.txt`,
+# so this is the more open and perhaps reliable way to accomplish that.
+
+# Disallow all bots.
+User-agent: *
+Disallow: /
