@@ -1,0 +1,25 @@
+- provide(:title, "Log in to #{@return_to.host}")
+
+.container-fluid
+  .row
+    .col-lg-2
+
+    main.col-lg-8
+      h1 = "Log in to #{@return_to.host}"
+      p
+        = 'After you log in, you will be returned to '
+        = link_to @return_to.to_s, @return_to.to_s
+      br
+
+      .row
+        .col-lg-6
+          .card
+            .card-header Login
+            #login-form.card-body = render "layouts/login_form"
+
+        .col-lg-6
+          .card
+            .card-header Register
+            #signup-form.card-body = render "layouts/signup_form"
+
+    .col-lg-2

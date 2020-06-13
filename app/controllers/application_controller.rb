@@ -46,6 +46,13 @@ class ApplicationController < ActionController::Base
     render_unauthorized unless creator_id == current_user.id
   end
 
+  # Do not cache this page.
+  def set_no_cache
+    response.set_header('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate')
+    response.set_header('Pragma', 'no-cache')
+    response.set_header('Expires', 'Fri, 01 Jan 1990 00:00:00 GMT')
+  end
+
   private
 
   def set_raven_context

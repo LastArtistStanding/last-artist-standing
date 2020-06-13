@@ -144,6 +144,21 @@ DISABLE_REGISTRATION=TRUE
 # Opens moderator applications until the given date.
 # You may view them using an administrator account at `/moderator_applications`.
 MODERATOR_APPLICATIONS=YYYY-MM-DD
+
+# Allows serving HTTPS in the development environment.
+# You must put your key in `private/key.pem` and your cert in `private/cert.pem`.
+# HTTPS will be served on port 3001.
+# This must be the domain you're going to serve HTTPS on.
+# Using this will require un-commenting some code in `config/puma.rb`,
+# which, if uncommented, breaks production for reasons I cannot explain.
+DEVELOPMENT_TLS=example.com
+
+# Allows cross-site authentication (i.e. using your DAD account to log in to) this hostname.
+# This will usually require DEVELOPMENT_TLS to function properly/
+# A hostname is either a domain name or an IP address.
+X_AUTH_HOST=example.com
+# This secret must also be configured for the other site for which x-auth is enabled.
+X_AUTH_SECRET=shared HMAC secret
 ```
 
 #### See if it works!
@@ -172,5 +187,5 @@ On the production website, that task runs at 12:00 AM UTC every night.
 Locally, your site will (by default) be hosted at http://localhost:3000/.
 
 ## Contributing
-Please read [CONTRIBUTING.md](https://github.com/LastArtistStanding/last-artist-standing/blob/master/CONTRIBUTING.md)
+Please read [CONTRIBUTING.md](https://github.com/LastArtistStanding/last-artist-standing/blob/master/docs/CONTRIBUTING.md)
 if you would like to help contribute to the project.
