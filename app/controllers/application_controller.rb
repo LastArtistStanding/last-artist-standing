@@ -8,6 +8,8 @@ class ApplicationController < ActionController::Base
   before_action :set_raven_context
   before_action :record_user_session
 
+  protected
+
   def render_unauthenticated
     # Technically, the HTTP response code intended for unauthenticated requests is `401`.
     # However, to use it, you must support HTTP's authentication mechanism, which we don't.

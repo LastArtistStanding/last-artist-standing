@@ -8,26 +8,41 @@ class SubmissionsController < ApplicationController
   # GET /submissions
   # GET /submissions.json
   def index
-    if params[:to].present? || params[:from].present?
-      @submissions = if params[:to].blank?
-                       Submission.where('id >= :from', { from: params[:from] }).order('id ASC')
-                     elsif params[:from].blank?
-                       Submission.where('id <= :to', { to: params[:to] }).order('id ASC')
-                     else
-                       Submission.where(id: params[:from]..params[:to]).order('id ASC')
-                     end
-    else
-      if params[:date].present?
-        begin
-          @date = Date.parse(params[:date])
-          @date = Time.now.utc.to_date if @date > Time.now.utc.to_date
-        rescue ArgumentError
-          @date = Time.now.utc.to_date
+    respond_to do |format|
+      format.html do
+        if params[:to].present? || params[:from].present?
+          @submissions = if params[:to].blank?
+                           Submission.where('id >= :from', { from: params[:from] }).order('id ASC')
+                         elsif params[:from].blank?
+                           Submission.where('id <= :to', { to: params[:to] }).order('id ASC')
+                         else
+                           Submission.where(id: params[:from]..params[:to]).order('id ASC')
+                         end
+        else
+          if params[:date].present?
+            begin
+              @date = Date.parse(params[:date])
+              @date = Time.now.utc.to_date if @date > Time.now.utc.to_date
+            rescue ArgumentError
+              @date = Time.now.utc.to_date
+            end
+          else
+            @date = Time.now.utc.to_date
+          end
+          @submissions = Submission.includes(:user).where(created_at: @date.midnight..@date.end_of_day).order('created_at DESC')
         end
-      else
-        @date = Time.now.utc.to_date
       end
-      @submissions = Submission.includes(:user).where(created_at: @date.midnight..@date.end_of_day).order('created_at DESC')
+
+      format.json do
+        time = (params[:created_before] ? DateTime.parse(params[:created_before]) : Time.now.utc)
+        @submissions = Submission.where('created_at < ?', time).order('created_at DESC').limit(1000)
+        @self_url = "#{submissions_path}?created_before=#{time.iso8601}"
+        if @submissions.count.positive?
+          # @submissions.minimum('created_at') doesn't care about your query apparently.
+          minimum_time = @submissions.map(&:created_at).min
+          @next_url = "#{submissions_path}?created_before=#{minimum_time.iso8601}"
+        end
+      end
     end
   end
 

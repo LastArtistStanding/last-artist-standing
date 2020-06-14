@@ -5,5 +5,5 @@ json._links do
 end
 
 json._embedded do
-  json.challenges @challenges, partial: 'challenges/challenge', as: :challenge
+  json.challenges @challenges, partial: 'challenges/challenge_preview', as: :challenge
 end

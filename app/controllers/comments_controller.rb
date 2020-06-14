@@ -6,7 +6,7 @@ class CommentsController < ApplicationController
 
   before_action :set_source, only: %i[new create]
   before_action :use_canonical_comment_url, only: %i[show destroy]
-  before_action :set_comment, only: %i[destroy]
+  before_action :set_comment, only: %i[show destroy]
   before_action :ensure_authenticated, only: %i[new create destroy]
   before_action -> { ensure_authorized @comment.user_id }, only: %i[destroy]
   before_action :ensure_authorized_to_comment, only: %i[create]

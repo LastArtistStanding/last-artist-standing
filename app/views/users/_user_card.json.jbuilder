@@ -7,7 +7,7 @@ json._links do
   json.self { json.href user_path(user) }
 end
 
-json.call(user, :id, :current_streak, :longest_streak, :highest_level)
+json.call(user, :id, :created_at, :current_streak, :longest_streak, :highest_level)
 json.avatar { json.avatar user.avatar.avatar.url }
 json.current_streak user.current_streak
 freq = user.current_dad_frequency

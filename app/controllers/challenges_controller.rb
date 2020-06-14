@@ -14,6 +14,8 @@ class ChallengesController < ApplicationController
       end
 
       format.json do
+        # There aren't a lot of challenges, so until proper search is supported,
+        # why not just include all of them?
         @challenges = Challenge.includes({ badges: [:badge_maps] }, :creator)
       end
     end

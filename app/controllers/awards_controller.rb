@@ -36,8 +36,8 @@ class AwardsController < ApplicationController
   end
 
   def set_award
-    @award = Award.find_by(user_id: @user.id, badge_id: params[:badge_id])
-                  .includes(:badge, :badge_maps, :challenge)
+    @award = Award.includes(:badge, :badge_maps, :challenge)
+                  .find_by(user_id: @user.id, badge_id: params[:badge_id])
 
     render_not_found if @award.nil?
   end

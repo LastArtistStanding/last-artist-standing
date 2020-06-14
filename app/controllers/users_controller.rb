@@ -9,8 +9,32 @@ class UsersController < ApplicationController
   before_action :ensure_registration_open, only: %i[new create]
 
   def index
-    @users = User.search(params).order('current_streak DESC, id DESC')
-                 .paginate(page: params[:page], per_page: 25)
+    query = User.search(params).order('current_streak DESC, id DESC')
+
+    respond_to do |format|
+      format.html do
+        @users = query.paginate(page: params[:page], per_page: 25)
+      end
+
+      format.json do
+        # FIXME: This is an poor way to handle pagination for an API.
+        #   A new user getting created should not bump the pagination
+        #   so that the API consumer skips a user.
+
+        page = Integer(params[:page] || 1)
+
+        @users = query.paginate(page: params[:page], per_page: 250)
+
+        if page.nil? || page == 1
+          @self_url = users_path
+          @next_url = "#{users_path}?page=2"
+        else
+          @self_url = "#{users_path}?page=#{page}"
+          @next_url = "#{users_path}?page=#{page + 1}" if @users.length.positive?
+          @prev_url = "#{users_path}?page=#{page - 1}" if page > 1
+        end
+      end
+    end
   end
 
   def show
