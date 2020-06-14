@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ParticipationsController < ApplicationController
-  before_action :set_challenge, only: %i[index create destroy]
+  before_action :set_challenge, only: %i[create destroy]
   before_action :ensure_challenge_not_started, only: %i[create destroy]
   before_action :ensure_authenticated, only: %i[create destroy]
   before_action :set_participation, only: %i[show destroy]
@@ -14,7 +14,9 @@ class ParticipationsController < ApplicationController
       end
 
       format.json do
-        render :index
+        @challenge = Challenge.includes(participations: :user).find_by(id: params[:challenge_id])
+
+        render_not_found_json if @challenge.nil?
       end
     end
   end
@@ -22,7 +24,7 @@ class ParticipationsController < ApplicationController
   def show
     respond_to do |format|
       format.html do
-        redirect_to challenge_participations_path(@participation.challenge_id), status: :see_other
+        redirect_to challenge_participations_path(params[:challenge_id]), status: :see_other
       end
 
       format.json

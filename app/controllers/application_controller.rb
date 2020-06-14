@@ -23,7 +23,12 @@ class ApplicationController < ActionController::Base
   end
 
   def render_not_found
+    # FIXME: This should render JSON or HTML as appropriate.
     render file: "#{Rails.root}/public/404.html", status: :not_found
+  end
+
+  def render_not_found_json
+    render json: { status: 404, error: 'Not Found' }, status: :not_found
   end
 
   # Ensure that a user is logged in.

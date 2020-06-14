@@ -33,6 +33,10 @@ json._links do
     end
   end
 
+  # It would also be possible to use `submission.challenges` here,
+  # but my philosophy is that the _links section should never require
+  # actually loading the linked data from the database
+  # (regardless of whether it will end up being loaded by another section).
   json.challenge_entries submission.challenge_entries do |entry|
     json.href challenge_path(entry.challenge_id)
   end
@@ -50,7 +54,8 @@ json._embedded do
     json.user_prev { json.partial! 'submissions/submission_preview', submission: user_prev }
   end
 
-  json.challenge_entries partial: 'challenges/challenge_preview', as: :challenge
+  json.challenge_entries submission.challenges,
+                         partial: 'challenges/challenge_preview', as: :challenge
   json.comments { json.partial! 'comments/source_comments', source: submission }
   json.user { json.partial! 'users/user_card', user: submission.user }
 end

@@ -4,13 +4,14 @@
 class Challenge < ApplicationRecord
   belongs_to :creator, class_name: 'User'
 
+  # TODO: Do these two associations work together in a way that breaks deleting challenges?
+  has_many :badges, dependent: :destroy
   has_many :badge_maps, dependent: :destroy
-  has_many :participations, dependent: :destroy
-  has_many :notifications, as: :source, dependent: :destroy
   has_many :challenge_entries
   has_many :entries, through: :challenge_entries, source: :submission
+  has_many :notifications, as: :source, dependent: :destroy
+  has_many :participations, dependent: :destroy
   has_many :users, through: :participations
-  has_many :badges, through: :badge_maps, dependent: :destroy
 
   NO_EXCESS_WHITESPACE = /\A(\S\s?)*\S\z/.freeze
 
@@ -31,7 +32,9 @@ class Challenge < ApplicationRecord
   validate :end_date_cannot_precede_start_date
 
   def badge
-    Badge.find_by(challenge_id: id)
+    # There should only be one badge per challenge.
+    # FIXME: The model should ensure that this is the case!
+    badges.first
   end
 
   def started?

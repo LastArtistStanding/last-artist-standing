@@ -9,7 +9,10 @@ class AwardsController < ApplicationController
       format.html { redirect_to "#{user_path(@user)}#awards", status: :see_other }
 
       format.json do
-        @awards = Award.where(user_id: @user.id)
+        @user = User.includes(awards: [:badge, :badge_maps, :challenge])
+                    .find_by(id: params[:user_id])
+
+        render_not_found unless @user
       end
     end
   end
@@ -20,9 +23,7 @@ class AwardsController < ApplicationController
         redirect_to "#{user_path(@user)}#awards", status: :see_other
       end
 
-      format.json do
-        @badge = Badge.find(@award.badge_id)
-      end
+      format.json
     end
   end
 
@@ -36,6 +37,7 @@ class AwardsController < ApplicationController
 
   def set_award
     @award = Award.find_by(user_id: @user.id, badge_id: params[:badge_id])
+                  .includes(:badge, :badge_maps, :challenge)
 
     render_not_found if @award.nil?
   end

@@ -39,6 +39,7 @@ class SubmissionsController < ApplicationController
         # TODO: This should not be necessary. We have @submission.challenge_entries.
         @challenge_entries = ChallengeEntry.where(submission_id: @submission.id)
       end
+
       format.json
     end
   end
@@ -166,13 +167,20 @@ class SubmissionsController < ApplicationController
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_submission
-    @submission = Submission.find(params[:id])
-    @comments = Comment.where(source: @submission).includes(:user)
+    # FIXME: Not every view (and in fact, most views) do not require all this being included.
+    @submission = Submission.includes({ challenges: :badges, comments: :user }, :user)
+                            .find_by(id: params[:id])
+
+    if @submission.nil?
+      render_not_found
+      return
+    end
+
+    # FIXME: This variable is redundant.
+    @comments = @submission.comments
   end
 
-  # Never trust parameters from the scary internet, only allow the white list through.
   def submission_params
     params.require(:submission)
           .permit(:drawing, :user_id, :nsfw_level, :title, :description, :time, :commentable)

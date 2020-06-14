@@ -16,12 +16,12 @@ class User < ApplicationRecord
   attr_accessor :remember_token, :reset_token
 
   has_many :awards
-  has_many :submissions
-  has_many :participations
   has_many :badges, through: :awards
   has_many :challenges, through: :participations
   has_many :comments
   has_one :moderator_application
+  has_many :participations
+  has_many :submissions
 
   before_save { self.email = email.downcase }
 

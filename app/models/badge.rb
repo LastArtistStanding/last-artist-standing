@@ -8,7 +8,7 @@ class Badge < ApplicationRecord
   belongs_to :challenge
 
   has_many :awards
-  has_many :badge_maps
+  has_many :badge_maps, dependent: :destroy
   has_many :users, through: :awards
   # What is this nonsense and why is it here?
   # FIXME: Remove this

@@ -4,7 +4,9 @@ json._links do
   json.self { json.href challenge_path(challenge) }
 end
 
-json.call(challenge, :id, :name, :nsfw_level)
+# The start and end date of a challenge typically won't be displayed,
+# but are a likely candidate for something to sort by.
+json.call(challenge, :id, :name, :created_at, :start_date, :end_date, :nsfw_level)
 
 # So that an icon for the challenge can be displayed if desired.
 json.badge do

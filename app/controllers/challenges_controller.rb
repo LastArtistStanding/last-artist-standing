@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
 class ChallengesController < ApplicationController
-  before_action :set_challenge, only: %i[show edit update destroy join entries]
+  before_action :set_challenge, only: %i[show edit update destroy entries]
   before_action :ensure_authenticated, only: %i[new create edit update destroy]
   before_action -> { ensure_authorized @challenge.creator_id }, only: %i[edit update destroy]
 
-  # GET /challenges
-  # GET /challenges.json
   def index
     respond_to do |format|
       format.html do
@@ -16,24 +14,11 @@ class ChallengesController < ApplicationController
       end
 
       format.json do
-        @challenges = Challenge.all
+        @challenges = Challenge.includes({ badges: [:badge_maps] }, :creator)
       end
     end
   end
 
-  # GET
-  def entries
-    respond_to do |format|
-      format.html do
-        @challengeEntries = ChallengeEntry.includes(:submission).where(challenge_id: @challenge.id).order('created_at DESC').paginate(page: params[:page], per_page: 25).includes(submission: :comments)
-      end
-
-      format.json
-    end
-  end
-
-  # GET /challenge/1
-  # GET /challenge/1.json
   def show
     respond_to do |format|
       format.html do
@@ -53,7 +38,21 @@ class ChallengesController < ApplicationController
 
       # TODO: Currently, this doesn't even require the badge or badge_maps set in `set_challenge`.
       #   Maybe that stuff should be moved into the HTML view as well?
-      format.json
+      format.json do
+        @challenge = Challenge.includes({ badges: :badge_maps }, :creator).find_by(id: params[:id])
+      end
+    end
+  end
+
+  def entries
+    respond_to do |format|
+      format.html do
+        @challengeEntries = ChallengeEntry.includes(:submission).where(challenge_id: @challenge.id).order('created_at DESC').paginate(page: params[:page], per_page: 25).includes(submission: :comments)
+      end
+
+      format.json do
+        @challenge = Challenge.includes(entries: :user).find_by(id: params[:id])
+      end
     end
   end
 
@@ -182,7 +181,13 @@ class ChallengesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_challenge
-    @challenge = Challenge.find(params[:id])
+    # FIXME: All of these variables are not necessary for every view.
+    @challenge = Challenge.includes(:badges).find_by(id: params[:id])
+    if @challenge.nil?
+      render_not_found
+      return
+    end
+
     @badge_map = BadgeMap.find_by(challenge_id: @challenge.id)
     @badge_maps = BadgeMap.where(challenge_id: @challenge.id).order(:prestige)
     @badge = Badge.find(@badge_map.badge_id)

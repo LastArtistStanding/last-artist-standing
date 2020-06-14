@@ -7,6 +7,11 @@ class Award < ApplicationRecord
 
   belongs_to :user
   belongs_to :badge
+
+  # Really, an award has only one associated badge_map
+  # (assuming badge maps should have unique prestige modulo badge),
+  # but this is necessary to include that data in queries.
+  has_many :badge_maps, through: :badge
   has_one :challenge, through: :badge
 
   validates :user_id, presence: true
@@ -24,6 +29,6 @@ class Award < ApplicationRecord
     # This being present isn't actually enforced by the model,
     # so this *could* potentially return null.
     # It'll have to be good enough for now, until challenges are reworked.
-    BadgeMap.find_by(badge_id: badge_id, prestige: prestige)
+    badge_maps.select { |map| map.badge_id == badge_id && map.prestige == prestige }.first
   end
 end
