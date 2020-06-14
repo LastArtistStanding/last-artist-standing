@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class CommentsController < ApplicationController
-  include CommentsHelper
   include SubmissionsHelper
 
   before_action :set_source, only: %i[new create]
@@ -31,7 +30,9 @@ class CommentsController < ApplicationController
     respond_to do |format|
       # TODO: Is it safe to use :moved_permanently in this case,
       #   or would that interfere with JSON requests?
-      format.html { redirect_to comment_html_path(@comment), status: :temporary_redirect }
+      format.html do
+        redirect_to "#{url_for(@comment.source)}\##{@comment.id}", status: :temporary_redirect
+      end
 
       format.json do
         # The source must be included to use `url_for(source)`
@@ -128,7 +129,7 @@ class CommentsController < ApplicationController
       source_type: 'Comment',
       source_id: @comment.id,
       user_id: user_id,
-      url: comment_html_path(@comment)
+      url: comment_path(@comment)
     )
   end
 
