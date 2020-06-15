@@ -9,12 +9,16 @@ The instructions may seem long, but many steps are optional.
 
 It is recommended that you develop this site on Linux.
 If you cannot run Linux, Windows Subsystem for Linux (WSL) 2 will be sufficient.
+Do *not* try to use Cygwin; it will not work.
 
 ### Prerequisites
 You will need to install this software to build and run the site:
+
 * Ruby 2.6.5
 * Bundler
 * PostgreSQL
+* ImageMagick
+* `libpq-dev`
 
 You will need to install Ruby 2.6.5. The easiest way to do this with [RVM](https://rvm.io/), the Ruby Version Manager.
 
@@ -49,7 +53,7 @@ Use Git to clone and `cd` into the app repository.
 Next, install its dependencies:
 
 ```console
-$ bin/bundle install
+$ bundle install
 ```
 
 #### Setting up the database
@@ -69,7 +73,7 @@ for the development and testing environments respectively.
 Next, use `rake` to set up the database:
 
 ```console
-$ bin/rake db:setup dad_tasks:update_database dad_tasks:init_site_status dad_tasks:update_patch_notes
+$ rake db:setup dad_tasks:update_database dad_tasks:init_site_status dad_tasks:update_patch_notes
 ```
 
 `db:setup` will create the necessary databases and perform migrations.
