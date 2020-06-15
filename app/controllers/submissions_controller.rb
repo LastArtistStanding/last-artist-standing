@@ -51,8 +51,8 @@ class SubmissionsController < ApplicationController
   def show
     respond_to do |format|
       format.html do
-        # TODO: This should not be necessary. We have @submission.challenge_entries.
-        @challenge_entries = ChallengeEntry.where(submission_id: @submission.id)
+        # TODO: This variable should not be necessary.
+        @challenge_entries = @submission.challenge_entries
       end
 
       format.json

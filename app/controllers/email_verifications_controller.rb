@@ -4,7 +4,6 @@
 class EmailVerificationsController < ApplicationController
   before_action :set_user
   before_action :set_token
-  before_action :ensure_user_exists
 
   # Even though a user already must be logged in to request a verification email,
   # they should still be logged in to use that link to avoid leaking metadata.
@@ -43,16 +42,12 @@ class EmailVerificationsController < ApplicationController
 
   def set_user
     @user = User.find_by(id: params[:user_id])
+
+    render_not_found if @user.nil?
   end
 
   def set_token
     @token = params[:token]
-  end
-
-  def ensure_user_exists
-    return unless @user.nil?
-
-    render_not_found
   end
 
   def ensure_not_already_verified

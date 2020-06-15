@@ -17,8 +17,6 @@ class CommentsController < ApplicationController
       end
 
       format.json do
-        # FIXME: The term used in the schema is source,
-        #   so @target should be renamed to @source generally.
         @source = source_model.includes(comments: :user).find_by(id: source_id)
 
         render_not_found_json if @source.nil?
@@ -125,7 +123,7 @@ class CommentsController < ApplicationController
   def send_notification(message, user_id)
     Notification.create(
       body: format(message, poster: current_user.username,
-                            target: "#{@source.display_title} (ID: #{@source.id})"),
+                            source: "#{@source.display_title} (ID: #{@source.id})"),
       source_type: 'Comment',
       source_id: @comment.id,
       user_id: user_id,
@@ -134,12 +132,12 @@ class CommentsController < ApplicationController
   end
 
   def send_notifications
-    # Notifications are not currently implemented for targets other than submissions.
+    # Notifications are not currently implemented for sources other than submissions.
     return unless @source.is_a? Submission
 
     # Send a notification to the artist unless they're the commenter.
     unless @source.user_id == current_user.id
-      send_notification('%<poster>s has commented on your submission %<target>s.', @source.user_id)
+      send_notification('%<poster>s has commented on your submission %<source>s.', @source.user_id)
     end
 
     discussion_users = @source.comments.group(:user_id).pluck(:user_id)
@@ -149,7 +147,7 @@ class CommentsController < ApplicationController
       # Don't send the artist two notifications for the same comment.
       next if @source.user_id == user_id
 
-      send_notification('%<poster>s has also commented on submission %<target>s.', user_id)
+      send_notification('%<poster>s has also commented on submission %<source>s.', user_id)
     end
   end
 end
