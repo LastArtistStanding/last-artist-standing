@@ -12,9 +12,9 @@ When you set these environment variables:
 
 ```properties
 # The domain name of the site you want to allow DAD log-ins on
-X_SITE_HOST=example.com
+X_AUTH_HOST=example.com
 # A secret code shared with that site.
-X_SITE_SECRET=<some random secret data>
+X_AUTH_SECRET=<some random secret data>
 ```
 
 The cross-site authentication API will be enabled.
@@ -63,7 +63,7 @@ If it returns `true`, then the user is logged in on DAD, and you can log them in
 2. `POST` `{ "code": "<the code>" }` to `/x_site_auth/sign`
    * If the API returns `unauthorized`, then proceed as if the user were not logged in.
    * Otherwise, the API will return a plain-text [JSON Web Token](https://jwt.io/) with this data,
-     signed using HMAC256 and the shared secret specified by `X_SITE_SECRET`.
+     signed using HMAC256 and the shared secret specified by `X_AUTH_SECRET`.
      * `"code": "<the same code passed in>"`
      * `"user_id": <the id of the DAD user currently logged in>`
      * `"exp": "<date>"` where `date` is an ISO_8601 date representing the expiry of the token.
@@ -78,7 +78,7 @@ each time the user visits any page on your site, and proceed as follows:
    where `:url` is the page you want the user to land on after they've logged in
    (most likely, this will be whatever page they are on *before* logging in).
    The URL must be an absolute URL using the `https:` scheme
-   and the host specified by the `X_SITE_HOST` environment variable.
+   and the host specified by the `X_AUTH_HOST` environment variable.
 2. At some point, the user presses the login button and will visit the x-site auth login page.
    * If the user is not logged in, they will be prompted to log in.
    * The user's `x_auth` cookie will be set, which will cause `auto_login_available` to return true.
@@ -131,7 +131,7 @@ The API introduces these endpoints:
     * `false` otherwise
   * This endpoint cannot fail.
 * `GET /x_site_auth/login?return_to={:url}`
-  * `:url` must be an absolute URL using the `https:` scheme and `$X_SITE_HOST` host.
+  * `:url` must be an absolute URL using the `https:` scheme and `$X_AUTH_HOST` host.
     * The API will render the `unauthorized` page if `:url` is incorrect.
   * If the sender is not logged in, they will be prompted to log in.
   * If the sender *is* logged in, their `x_auth` cookie will be set and they will be redirected to {:url}.

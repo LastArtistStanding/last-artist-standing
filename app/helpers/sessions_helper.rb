@@ -16,9 +16,7 @@ module SessionsHelper
 
   def log_out
     session.delete('user_id')
-    # Deleting this cookie is somewhat more difficult because it is restricted to a specific path.
-    response.add_header('Set-Cookie',
-                        'x_auth=""; Secure; SameSite=None; Path=/x_site_auth/; Max-Age=-1')
+    clear_x_site_auth_code_cookie
     @current_user = nil
   end
 
@@ -57,5 +55,12 @@ module SessionsHelper
     # if you want to use this functionality in the development environment.
     response.add_header('Set-Cookie',
                         "x_auth=#{cookie_data}; Secure; SameSite=None; Path=/x_site_auth/")
+  end
+
+  def clear_x_site_auth_code_cookie
+    # Deleting this cookie is somewhat more difficult because it is restricted to a specific path.
+    response.add_header('Set-Cookie',
+                        'x_auth=""; Secure; SameSite=None; Path=/x_site_auth/; Max-Age=-1')
+    current_user.clear_x_site_auth_code
   end
 end
