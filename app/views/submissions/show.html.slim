@@ -24,9 +24,22 @@ javascript:
       p#notice = notice
 
     .col-lg-2
+      - if @submission.soft_deleted
+        .card class="alert alert-danger" style="padding: 0px;"
+          .card-body style="text-align: center;" 
+            b Soft Deleted
+
+      - unless @submission.approved
+        .card class="alert alert-warning" style="padding: 0px;"
+          .card-header style="text-align: center;" 
+            b Unapproved
+
+          .card-body style="text-align: center;" 
+            | Your submission is invisible until approved by a moderator.
+
       .card
         .card-header style="text-align: center;"
-          | Submission Info
+          b Submission Info
 
         .card-body style="text-align: center;"
           = render partial: "application/usercard", locals: { user: @submission.user }
@@ -61,6 +74,14 @@ javascript:
               br
               = link_to '<span class="fa fa-edit"></span>'.html_safe, edit_submission_path(@submission), class: "btn btn-primary"
               br
+
+      - if logged_in? && (current_user.is_moderator || current_user.is_admin)
+        .card
+          .card-header style="text-align: center;"
+            b Moderation
+          
+          .card-body style="text-align: center;"
+            = link_to 'Soft Delete'.html_safe, "#{submission_path(@submission)}/soft_delete", method: :post, data: { confirm: 'Are you sure?' }, class: "btn btn-primary", style: "margin-left: 5px;"
 
     .col-lg-10
       .card

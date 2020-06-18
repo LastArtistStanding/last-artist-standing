@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class SubmissionsController < ApplicationController
-  before_action :set_submission, only: %i[show edit update destroy]
-  before_action :ensure_authenticated, only: %i[new create edit update destroy]
+  before_action :set_submission, only: %i[show edit update destroy soft_delete]
+  before_action :ensure_authenticated, only: %i[new create edit update destroy soft_delete]
+  before_action :ensure_moderator, only: %i[soft_delete]
   before_action -> { ensure_authorized @submission.user_id }, only: %i[edit update destroy]
   before_action :ensure_unbanned, only: %i[new create edit update destroy]
 
@@ -55,6 +56,7 @@ class SubmissionsController < ApplicationController
     initial_date_time = Time.now.utc
     failure = false
     @submission = Submission.new(submission_params)
+    @submission.approved = current_user.approved
     artist_id = current_user.id
     @submission.user_id = artist_id
     @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
@@ -106,13 +108,19 @@ class SubmissionsController < ApplicationController
     @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
     curr_user_id = current_user.id
 
-    usedParams = if @submission.created_at.to_date == Time.now.utc.to_date
+    used_params = if @submission.created_at.to_date == Time.now.utc.to_date
                    submission_params
                  else
                    limited_params
                  end
+    
+    # If the drawing itself was updated by an unapproved user, reset the approval.
+    if used_params.has_key? :drawing
+      @submission.approved = current_user.approved
+    end
+    
     respond_to do |format|
-      if @submission.update(usedParams)
+      if @submission.update(used_params)
 
         unless params[:postfrequency].nil?
           newFrequency = params[:postfrequency].to_i
@@ -157,6 +165,14 @@ class SubmissionsController < ApplicationController
       format.html { redirect_to submissions_url }
       format.json { head :no_content }
     end
+  end
+
+  # POST
+  def soft_delete
+    @submission.soft_deleted = true
+    @submission.save
+
+    redirect_to @submission
   end
 
   private

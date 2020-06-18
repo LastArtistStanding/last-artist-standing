@@ -46,6 +46,10 @@ class ApplicationController < ActionController::Base
     render_unauthorized unless creator_id == current_user.id
   end
 
+  def ensure_moderator
+    render_unauthorized unless current_user.is_moderator || current_user.is_admin
+  end
+
   # Do not cache this page.
   def set_no_cache
     response.set_header('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate')
