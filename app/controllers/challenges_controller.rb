@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class ChallengesController < ApplicationController
-  before_action :set_challenge, only: %i[show edit update destroy join entries]
-  before_action :ensure_authenticated, only: %i[new create edit update destroy]
+  before_action :set_challenge, only: %i[show edit update destroy join entries mod_edit]
+  before_action :ensure_authenticated, only: %i[new create edit update destroy mod_edit]
+  before_action :ensure_moderator, only: %i[mod_edit]
   before_action -> { ensure_authorized @challenge.creator_id }, only: %i[edit update destroy]
   before_action :ensure_unbanned, only: %i[new create edit update destroy]
 
@@ -167,6 +168,25 @@ class ChallengesController < ApplicationController
       format.html { redirect_to challenges_url }
       format.json { head :no_content }
     end
+  end
+
+  # POST
+  def mod_edit
+    if params.has_key? :soft_deleted
+      @challenge.soft_deleted = (params[:soft_deleted] == "true")
+      if @challenge.soft_deleted
+        @challenge.soft_deleted_by = current_user.id
+      end
+    end
+    if params.has_key? :nsfw_level
+      @challenge.nsfw_level = params[:nsfw_level]
+      @badge.nsfw_level = params[:nsfw_level]
+    end
+
+    @challenge.save
+    @badge.save
+
+    redirect_to @challenge
   end
 
   private

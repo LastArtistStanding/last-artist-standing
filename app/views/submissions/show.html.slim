@@ -27,7 +27,7 @@ javascript:
       - if @submission.soft_deleted
         .card class="alert alert-danger" style="padding: 0px;"
           .card-body style="text-align: center;" 
-            b Soft Deleted
+            b Soft Deleted by #{safe_username(@submission.soft_deleted_by)}
 
       - unless @submission.approved
         .card class="alert alert-warning" style="padding: 0px;"

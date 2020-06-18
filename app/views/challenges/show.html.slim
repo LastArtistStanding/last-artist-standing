@@ -7,6 +7,11 @@
     .col-lg-10
       .row
         .col-lg-6
+          - if @challenge.soft_deleted
+            .card class="alert alert-danger" style="padding: 0px;"
+              .card-body style="text-align: center;" 
+                b Soft Deleted by #{safe_username(@challenge.soft_deleted_by)}
+
           .card
             .card-header
               b Challenge Details
@@ -75,6 +80,24 @@
                         td = html_escape(badgemap.description).html_safe
 
         .col-lg-6
+          - if logged_in? && (current_user.is_moderator || current_user.is_admin)
+            .card
+              .card-header style="text-align: center;"
+                b Moderation
+              
+              .card-body style="text-align: center;"
+                = link_to "#{@challenge.soft_deleted ? "Undo Soft Delete" : "Soft Delete" }".html_safe, "#{challenge_path(@challenge)}/mod_edit?soft_deleted=#{@challenge.soft_deleted ? false : true}", method: :post, class: "btn btn-primary", style: "margin-left: 5px; margin-top: 5px;"
+                br
+                br
+                b Change Content Level
+                br
+                - unless @challenge.nsfw_level == 1
+                  = link_to "Safe", "#{challenge_path(@challenge)}/mod_edit?nsfw_level=1", method: :post, class:"btn btn-primary", style: "margin-left: 5px; margin-top: 5px;"
+                - unless @challenge.nsfw_level == 2
+                  = link_to "Questionable", "#{challenge_path(@challenge)}/mod_edit?nsfw_level=2", method: :post, class:"btn btn-primary", style: "margin-left: 5px; margin-top: 5px;"
+                - unless @challenge.nsfw_level == 3
+                  = link_to "Explicit", "#{challenge_path(@challenge)}/mod_edit?nsfw_level=3", method: :post, class:"btn btn-primary", style: "margin-left: 5px; margin-top: 5px;"
+
           - if @challenge.id == 1 && !@latestEliminations.blank?
             .card
               .card-header style="color: red;"

@@ -171,6 +171,9 @@ class SubmissionsController < ApplicationController
   def mod_edit
     if params.has_key? :soft_deleted
       @submission.soft_deleted = (params[:soft_deleted] == "true")
+      if @submission.soft_deleted
+        @submission.soft_deleted_by = current_user.id
+      end
     end
     if params.has_key? :approved
       @submission.approved = (params[:approved] == "true")
