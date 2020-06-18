@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_08_073938) do
+ActiveRecord::Schema.define(version: 2020_06_18_004806) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,6 +66,8 @@ ActiveRecord::Schema.define(version: 2020_06_08_073938) do
     t.boolean "seasonal", default: false
     t.integer "creator_id"
     t.integer "nsfw_level", default: 1, null: false
+    t.boolean "soft_deleted", default: false, null: false
+    t.integer "soft_deleted_by"
     t.index ["name"], name: "index_challenges_on_name"
   end
 
@@ -76,7 +78,18 @@ ActiveRecord::Schema.define(version: 2020_06_08_073938) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "soft_deleted", default: false, null: false
+    t.integer "soft_deleted_by"
     t.index ["source_type", "source_id"], name: "index_comments_on_source_type_and_source_id"
+  end
+
+  create_table "ip_bans", force: :cascade do |t|
+    t.string "ip", null: false
+    t.string "alias", null: false
+    t.string "reason", null: false
+    t.string "notes"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "moderator_applications", force: :cascade do |t|
@@ -91,6 +104,16 @@ ActiveRecord::Schema.define(version: 2020_06_08_073938) do
     t.text "why_dad", null: false
     t.text "anything_else"
     t.index ["user_id"], name: "index_moderator_applications_on_user_id"
+  end
+
+  create_table "moderator_logs", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "action", null: false
+    t.string "reason"
+    t.string "url"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_moderator_logs_on_user_id"
   end
 
   create_table "notifications", id: :serial, force: :cascade do |t|
@@ -157,6 +180,17 @@ ActiveRecord::Schema.define(version: 2020_06_08_073938) do
     t.boolean "commentable"
     t.integer "num_comments", default: 0, null: false
     t.boolean "is_animated_gif", default: false, null: false
+    t.boolean "soft_deleted", default: false, null: false
+    t.boolean "approved", default: true, null: false
+    t.integer "soft_deleted_by"
+  end
+
+  create_table "user_blocks", force: :cascade do |t|
+    t.string "ip", null: false
+    t.bigint "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_user_blocks_on_user_id"
   end
 
   create_table "user_sessions", id: :serial, force: :cascade do |t|
@@ -191,10 +225,17 @@ ActiveRecord::Schema.define(version: 2020_06_08_073938) do
     t.string "email_verification_digest"
     t.datetime "email_verification_sent_at"
     t.string "x_site_auth_digest"
+    t.date "submission_ban"
+    t.date "comment_ban"
+    t.date "challenge_ban"
+    t.boolean "is_moderator", default: false, null: false
+    t.boolean "approved", default: true, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["name"], name: "index_users_on_name", unique: true
   end
 
   add_foreign_key "moderator_applications", "users"
+  add_foreign_key "moderator_logs", "users"
+  add_foreign_key "user_blocks", "users"
   add_foreign_key "user_sessions", "users"
 end

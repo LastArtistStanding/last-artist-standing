@@ -1,0 +1,2 @@
+class IpBan < ApplicationRecord
+end
