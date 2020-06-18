@@ -229,7 +229,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_004806) do
     t.date "comment_ban"
     t.date "challenge_ban"
     t.boolean "is_moderator", default: false, null: false
-    t.boolean "approved", default: true, null: false
+    t.boolean "approved", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["name"], name: "index_users_on_name", unique: true
   end
