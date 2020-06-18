@@ -154,8 +154,13 @@ class User < ApplicationRecord
     name
   end
 
+  def get_latest_ban(type)
+    return SiteBan.find_by("ban_type = '#{type}' AND '#{Time.now.utc}' < expiration AND user_id = #{id}")
+  end
+
   def can_make_comments
     return [false, 'You must verify your email address before you can comment.'] unless verified?
+    
     return [true, nil] if highest_level >= COMMENT_CREATION_REQUIREMENT
 
     [false, "You must have achieved DAD level #{COMMENT_CREATION_REQUIREMENT}\

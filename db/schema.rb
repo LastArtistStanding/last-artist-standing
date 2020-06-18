@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_18_004806) do
+ActiveRecord::Schema.define(version: 2020_06_18_025210) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -162,6 +162,16 @@ ActiveRecord::Schema.define(version: 2020_06_18_004806) do
     t.index ["patch"], name: "index_patch_notes_on_patch", unique: true
   end
 
+  create_table "site_bans", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "ban_type", null: false
+    t.date "expiration", null: false
+    t.string "reason", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_site_bans_on_user_id"
+  end
+
   create_table "site_statuses", id: :serial, force: :cascade do |t|
     t.date "current_rollover"
     t.datetime "created_at", null: false
@@ -225,9 +235,6 @@ ActiveRecord::Schema.define(version: 2020_06_18_004806) do
     t.string "email_verification_digest"
     t.datetime "email_verification_sent_at"
     t.string "x_site_auth_digest"
-    t.date "submission_ban"
-    t.date "comment_ban"
-    t.date "challenge_ban"
     t.boolean "is_moderator", default: false, null: false
     t.boolean "approved", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -236,6 +243,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_004806) do
 
   add_foreign_key "moderator_applications", "users"
   add_foreign_key "moderator_logs", "users"
+  add_foreign_key "site_bans", "users"
   add_foreign_key "user_blocks", "users"
   add_foreign_key "user_sessions", "users"
 end

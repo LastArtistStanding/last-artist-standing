@@ -9,6 +9,7 @@ class CommentsController < ApplicationController
   before_action :ensure_authenticated, only: %i[new create destroy]
   before_action -> { ensure_authorized @comment.user_id }, only: %i[destroy]
   before_action :ensure_authorized_to_comment, only: %i[create]
+  before_action :ensure_unbanned, only: %i[create destroy]
 
   def new
     @comment = Comment.new
@@ -101,6 +102,15 @@ class CommentsController < ApplicationController
       next if @target.user_id == user_id
 
       send_notification('%<poster>s has also commented on submission %<target>s.', user_id)
+    end
+  end
+
+  private
+
+  def ensure_unbanned
+    latest_ban = SiteBan.find_by("ban_type = 'Comment' AND '#{Time.now.utc}' < expiration AND user_id = #{current_user.id}")
+    unless latest_ban.nil?
+      render '/pages/banned', locals: { ban: latest_ban }
     end
   end
 end

@@ -4,6 +4,7 @@ class ChallengesController < ApplicationController
   before_action :set_challenge, only: %i[show edit update destroy join entries]
   before_action :ensure_authenticated, only: %i[new create edit update destroy]
   before_action -> { ensure_authorized @challenge.creator_id }, only: %i[edit update destroy]
+  before_action :ensure_unbanned, only: %i[new create edit update destroy]
 
   # GET /challenges
   # GET /challenges.json
@@ -169,6 +170,12 @@ class ChallengesController < ApplicationController
   end
 
   private
+  def ensure_unbanned
+    latest_ban = SiteBan.find_by("ban_type = 'Challenge' AND '#{Time.now.utc}' < expiration AND user_id = #{current_user.id}")
+    unless latest_ban.nil?
+      render '/pages/banned', locals: { ban: latest_ban }
+    end
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_challenge
