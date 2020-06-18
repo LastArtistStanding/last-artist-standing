@@ -9,3 +9,6 @@ end
 json._embedded do
   json.users @users, partial: 'user_card', as: :user
 end
+
+json.max_id User.maximum(:id)
+json.users_count User.count
