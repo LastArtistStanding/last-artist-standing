@@ -167,13 +167,17 @@ javascript:
             = error
 
       - @comments.each do |comment|
-        .card.comment-card id="#{comment.id}"
+        .card.comment-card id="#{comment.id}" class="#{"alert alert-danger" if comment.soft_deleted}" style="padding: 0px;"
           .card-header
             b = link_to comment.user.username, comment.user
             = comment.created_at.strftime(" %H:%M, %b %-d, %Y") 
             span.quote-id onclick=("quote(#{comment.id});" if has_permissions)
               = " No. #{comment.id}"
+            - if comment.soft_deleted
+              b  - Soft Deleted by #{safe_username(comment.soft_deleted_by)} -
             = link_to ' <span class="fa fa-trash"></span>'.html_safe, [@submission, comment], method: :delete, data: { confirm: 'Are you sure?' } if comment.user_id == current_user&.id
+            | &nbsp;
+            = link_to "#{comment.soft_deleted ? "Undo Soft Delete" : "Soft Delete" }".html_safe, "#{submission_path(@submission)}/comments/#{comment.id}/mod_edit?soft_deleted=#{comment.soft_deleted ? false : true}", method: :post if logged_in? && (current_user.is_moderator || current_user.is_admin)
 
           .card-body
             = simple_format(comment.link_form)

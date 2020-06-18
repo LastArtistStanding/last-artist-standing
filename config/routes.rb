@@ -24,6 +24,7 @@ Rails.application.routes.draw do
 
   resources :submissions do
     resources :comments
+    post 'comments/:id/mod_edit' => 'comments#mod_edit'
   end
 
   get '/login' => 'sessions#new'
