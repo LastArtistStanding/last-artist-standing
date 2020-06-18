@@ -81,7 +81,18 @@ javascript:
             b Moderation
           
           .card-body style="text-align: center;"
-            = link_to 'Soft Delete'.html_safe, "#{submission_path(@submission)}/soft_delete", method: :post, data: { confirm: 'Are you sure?' }, class: "btn btn-primary", style: "margin-left: 5px;"
+            = link_to "#{@submission.soft_deleted ? "Undo Soft Delete" : "Soft Delete" }".html_safe, "#{submission_path(@submission)}/mod_edit?soft_deleted=#{@submission.soft_deleted ? false : true}", method: :post, class: "btn btn-primary", style: "margin-left: 5px; margin-top: 5px;"
+            = link_to "#{@submission.approved ? "Revoke Approval" : "Approve" }".html_safe, "#{submission_path(@submission)}/mod_edit?approved=#{@submission.approved ? false : true}", method: :post, class: "btn btn-primary", style: "margin-left: 5px; margin-top: 5px;"
+            br
+            br
+            b Change Content Level
+            br
+            - unless @submission.nsfw_level == 1
+              = link_to "Safe", "#{submission_path(@submission)}/mod_edit?nsfw_level=1", method: :post, class:"btn btn-primary", style: "margin-left: 5px; margin-top: 5px;"
+            - unless @submission.nsfw_level == 2
+              = link_to "Questionable", "#{submission_path(@submission)}/mod_edit?nsfw_level=2", method: :post, class:"btn btn-primary", style: "margin-left: 5px; margin-top: 5px;"
+            - unless @submission.nsfw_level == 3
+              = link_to "Explicit", "#{submission_path(@submission)}/mod_edit?nsfw_level=3", method: :post, class:"btn btn-primary", style: "margin-left: 5px; margin-top: 5px;"
 
     .col-lg-10
       .card

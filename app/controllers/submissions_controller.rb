@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class SubmissionsController < ApplicationController
-  before_action :set_submission, only: %i[show edit update destroy soft_delete]
-  before_action :ensure_authenticated, only: %i[new create edit update destroy soft_delete]
-  before_action :ensure_moderator, only: %i[soft_delete]
+  before_action :set_submission, only: %i[show edit update destroy mod_edit]
+  before_action :ensure_authenticated, only: %i[new create edit update destroy mod_edit]
+  before_action :ensure_moderator, only: %i[mod_edit]
   before_action -> { ensure_authorized @submission.user_id }, only: %i[edit update destroy]
   before_action :ensure_unbanned, only: %i[new create edit update destroy]
 
@@ -168,8 +168,17 @@ class SubmissionsController < ApplicationController
   end
 
   # POST
-  def soft_delete
-    @submission.soft_deleted = true
+  def mod_edit
+    if params.has_key? :soft_deleted
+      @submission.soft_deleted = (params[:soft_deleted] == "true")
+    end
+    if params.has_key? :approved
+      @submission.approved = (params[:approved] == "true")
+    end
+    if params.has_key? :nsfw_level
+      @submission.nsfw_level = params[:nsfw_level]
+    end
+
     @submission.save
 
     redirect_to @submission

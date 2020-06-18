@@ -3,7 +3,7 @@
 Rails.application.routes.draw do
   resources :challenges
   get 'challenges/:id/entries' => 'challenges#entries'
-  post 'submissions/:id/soft_delete' => 'submissions#soft_delete'
+  post 'submissions/:id/mod_edit' => 'submissions#mod_edit'
 
   resources :moderator_applications
 
