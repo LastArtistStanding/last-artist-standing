@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_18_025210) do
+ActiveRecord::Schema.define(version: 2020_06_19_020857) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -113,6 +113,9 @@ ActiveRecord::Schema.define(version: 2020_06_18_025210) do
     t.string "url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "target_type"
+    t.bigint "target_id"
+    t.index ["target_type", "target_id"], name: "index_moderator_logs_on_target_type_and_target_id"
     t.index ["user_id"], name: "index_moderator_logs_on_user_id"
   end
 
@@ -164,7 +167,6 @@ ActiveRecord::Schema.define(version: 2020_06_18_025210) do
 
   create_table "site_bans", force: :cascade do |t|
     t.bigint "user_id"
-    t.string "ban_type", null: false
     t.date "expiration", null: false
     t.string "reason", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -237,6 +239,7 @@ ActiveRecord::Schema.define(version: 2020_06_18_025210) do
     t.string "x_site_auth_digest"
     t.boolean "is_moderator", default: false, null: false
     t.boolean "approved", default: false, null: false
+    t.boolean "marked_for_death", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["name"], name: "index_users_on_name", unique: true
   end

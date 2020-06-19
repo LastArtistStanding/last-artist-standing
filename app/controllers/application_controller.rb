@@ -50,6 +50,13 @@ class ApplicationController < ActionController::Base
     render_unauthorized unless current_user.is_moderator || current_user.is_admin
   end
 
+  def ensure_unbanned
+    latest_ban = SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{current_user.id}")
+    unless latest_ban.nil?
+      render '/pages/banned', locals: { ban: latest_ban }
+    end
+  end
+
   # Do not cache this page.
   def set_no_cache
     response.set_header('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate')

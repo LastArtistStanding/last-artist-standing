@@ -119,13 +119,4 @@ class CommentsController < ApplicationController
       send_notification('%<poster>s has also commented on submission %<target>s.', user_id)
     end
   end
-
-  private
-
-  def ensure_unbanned
-    latest_ban = SiteBan.find_by("ban_type = 'Comment' AND '#{Time.now.utc}' < expiration AND user_id = #{current_user.id}")
-    unless latest_ban.nil?
-      render '/pages/banned', locals: { ban: latest_ban }
-    end
-  end
 end

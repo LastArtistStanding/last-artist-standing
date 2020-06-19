@@ -13,15 +13,61 @@ javascript:
     .col-lg-1
 
     .col-lg-2
+      - if !@user.approved && logged_in_as_moderator
+        .card class="alert alert-warning" style="padding: 0px;"
+          .card-body style="text-align: center;" 
+            b Unapproved Account
+            br
+            = link_to "Approve User", "#{user_path(@user)}/approve", method: :post, class:"btn btn-success", style: "margin-left: 5px; margin-top: 5px;"
+
+      - if @user.marked_for_death && logged_in_as_moderator
+        .card class="alert alert-dark" style="padding: 0px;"
+          .card-body style="text-align: center;" 
+            span.fa.fa-skull
+            b Marked For Death
+
       .card
         .card-body.table-responsive style="text-align: center;"
           = render partial: "application/usercard", locals: { user: @user }
 
-          - if logged_in? && current_user.id == @user.id
+          - if logged_in_as_user(@user)
             br
             a.btn.btn-primary href="#{edit_user_path(@user)}"
               span.fa.fa-edit
               |  Edit Profile
+      
+      - unless @ban.nil?
+        .card class="alert alert-danger" style="padding: 0px;"
+          .card-body style="text-align: center;" 
+            b Banned until #{date_string_short(@ban.expiration)}
+            br
+            | Ban Reason: #{@ban.reason}
+            - if logged_in_as_moderator
+              br
+              = link_to "Lift Ban", "#{user_path(@user)}/lift_ban", method: :post, class:"btn btn-primary", style: "margin-left: 5px; margin-top: 5px;"
+
+      - if logged_in_as_moderator
+        .card
+          .card-header style="text-align: center;"
+            b Moderation
+          
+          .card-body style="text-align: center;"
+            - unless @user.marked_for_death
+              = link_to "Mark For Death", "#{user_path(@user)}/mark_for_death", method: :post, class:"btn btn-dark", style: "margin-left: 5px; margin-top: 5px;"
+              br
+              br
+            b Ban User Form
+            br
+            br
+            = form_for SiteBan.new, url: "#{user_path(@user)}/ban_user" do |f|
+              = f.text_field :reason, placeholder: "Ban Reason", required: true
+              = f.button "Week", name: 'duration', value: '8', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+              = f.button "Two Weeks", name: 'duration', value: '15', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+              = f.button "Month", name: 'duration', value: '31', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+              = f.button "Season", name: 'duration', value: '91', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+              = f.button "Half Year", name: 'duration', value: '183', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+              = f.button "Year", name: 'duration', value: '366', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+              = f.button "Permanent", name: 'duration', value: '99999', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
 
     .col-lg-8
       .card

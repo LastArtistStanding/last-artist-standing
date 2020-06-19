@@ -154,8 +154,8 @@ class User < ApplicationRecord
     name
   end
 
-  def get_latest_ban(type)
-    return SiteBan.find_by("ban_type = '#{type}' AND '#{Time.now.utc}' < expiration AND user_id = #{id}")
+  def get_latest_ban
+    return SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{id}")
   end
 
   def can_make_comments

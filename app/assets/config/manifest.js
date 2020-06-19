@@ -12,4 +12,5 @@
 //
 //= link application.js
 //= link lastan_1.png
+//= link banned.png
 //= link polyfills/css.escape.js

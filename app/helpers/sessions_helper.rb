@@ -6,6 +6,14 @@ module SessionsHelper
     set_x_site_auth_code_cookie if ENV['X_AUTH_SECRET'].present?
   end
 
+  def logged_in_as_user(user)
+    logged_in? && current_user.id == user.id
+  end
+
+  def logged_in_as_moderator
+    logged_in? && (current_user.is_moderator || current_user.is_admin)
+  end
+
   def current_user
     @current_user ||= User.find_by(id: session[:user_id])
   end

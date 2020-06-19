@@ -190,12 +190,6 @@ class ChallengesController < ApplicationController
   end
 
   private
-  def ensure_unbanned
-    latest_ban = SiteBan.find_by("ban_type = 'Challenge' AND '#{Time.now.utc}' < expiration AND user_id = #{current_user.id}")
-    unless latest_ban.nil?
-      render '/pages/banned', locals: { ban: latest_ban }
-    end
-  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_challenge
