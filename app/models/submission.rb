@@ -15,6 +15,7 @@ class Submission < ApplicationRecord
   #   because the source reflection class 'Notification' is associated to 'Comment' via :has_many.
   # If there is any way to solve this, feel free to do so.
   has_many :notifications, through: :comments
+  has_many :moderator_logs, as: :target
 
   validates :user_id, presence: true
   validates :drawing, presence: true

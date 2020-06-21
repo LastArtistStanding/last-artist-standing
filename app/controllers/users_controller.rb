@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :set_curruser, only: %i[submissions show edit update ban_user lift_ban approve mark_for_death]
+  before_action :set_curruser, only: %i[submissions show edit update mod_action]
   before_action :ensure_logged_in, only: %i[edit update]
   before_action -> { ensure_authorized @user.id }, only: %i[edit update]
-  before_action :ensure_authenticated, only: %i[ban_user lift_ban approve mark_for_death]
-  before_action :ensure_moderator, only: %i[ban_user lift_ban approve mark_for_death]
+  before_action :ensure_authenticated, only: %i[mod_action]
+  before_action :ensure_moderator, only: %i[mod_action]
   before_action :ensure_verified_to_upload_avatar, only: %i[create update]
   # TODO: Also handle registration being closed for the registration form, i.e. :new.
   before_action :ensure_registration_open, only: %i[new create]
@@ -87,42 +87,19 @@ class UsersController < ApplicationController
     end
   end
 
-  # POST
-  def ban_user
-    if params.has_key?(:duration) && params.has_key?(:site_ban)
-      site_ban = SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{@user.id}")
-      unless site_ban.nil?
-        site_ban.expiration = Time.now.utc.to_date + params[:duration].to_i.days
-        site_ban.reason = params[:site_ban][:reason]
-        site_ban.save
-      else
-        SiteBan.create(user_id: @user.id, 
-                       expiration: Time.now.utc.to_date + params[:duration].to_i.days, 
-                       reason: params[:site_ban][:reason])
+  def mod_action
+    if params.has_key?(:reason) && params[:reason].present?
+      if params.has_key?(:approve)
+        @user.approve(params[:reason], current_user)
+      elsif params.has_key?(:lift_ban)
+        @user.lift_ban(params[:reason], current_user)
+      elsif params.has_key?(:ban)
+        @user.ban_user(params[:ban].to_i, params[:reason], current_user)
+      elsif params.has_key?(:mark_for_death)
+        @user.mark_for_death(params[:reason], current_user)
       end
     end
 
-    redirect_to @user
-  end
-
-  def lift_ban
-    site_ban = SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{@user.id}")
-    unless site_ban.nil?
-      site_ban.destroy
-    end
-
-    redirect_to @user
-  end
-
-  def approve
-    @user.update_attribute(:approved, true)
-
-    redirect_to @user
-  end
-
-  def mark_for_death
-    @user.update_attribute(:marked_for_death, true)
-    
     redirect_to @user
   end
 

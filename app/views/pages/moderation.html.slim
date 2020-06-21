@@ -1,0 +1,31 @@
+- provide(:title, 'Moderation Center')
+
+.container-fluid
+  .row
+    .col-lg-2
+
+    .col-lg-8
+      p.h2
+        | Moderation Log
+
+      table.table
+        thead
+          tr
+            th scope="col" Moderator
+            th scope="col" Target
+            th scope="col" Action
+            th scope="col" Reason
+            th scope="col" Timestamp
+        tbody
+          - @moderator_logs.each do |log|
+            tr
+              td = link_to log.user.username, log.user
+              - if log.target_type == 'Comment'
+                td = link_to "#{log.target_type} ##{log.target_id}", "#{url_for(log.target.source)}##{log.target_id}"
+              - else
+                td = link_to "#{log.target_type} ##{log.target_id}", log.target
+              td = log.action
+              td = log.reason
+              td = log.created_at
+
+    .col-lg-2

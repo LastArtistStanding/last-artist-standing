@@ -9,13 +9,14 @@ Rails.application.routes.draw do
   get 'about' => 'pages#about'
   get 'find' => 'users#index'
   get 'help' => 'pages#help'
+  get 'moderation' => 'pages#moderation'
   get 'news' => 'pages#news'
   get 'signup' => 'users#new'
   get 'welcome' => 'pages#home'
 
   resources :challenges
   get 'challenges/:id/entries' => 'challenges#entries'
-  post 'challenges/:id/mod_edit' => 'challenges#mod_edit'
+  post 'challenges/:id/mod_action' => 'challenges#mod_action'
 
   resources :moderator_applications
 
@@ -29,15 +30,12 @@ Rails.application.routes.draw do
 
   resources :submissions do
     resources :comments
-    post 'comments/:id/mod_edit' => 'comments#mod_edit'
+    post 'comments/:id/mod_action' => 'comments#mod_action'
   end
-  post 'submissions/:id/mod_edit' => 'submissions#mod_edit'
+  post 'submissions/:id/mod_action' => 'submissions#mod_action'
 
   resources :users
-  post 'users/:id/ban_user' => 'users#ban_user'
-  post 'users/:id/lift_ban' => 'users#lift_ban'
-  post 'users/:id/approve' => 'users#approve'
-  post 'users/:id/mark_for_death' => 'users#mark_for_death'
+  post 'users/:id/mod_action' => 'users#mod_action'
   get 'users/:id/submissions' => 'users#submissions'
   get 'users/:user_id/email_verification' => 'email_verifications#new',
     as: :new_email_verification

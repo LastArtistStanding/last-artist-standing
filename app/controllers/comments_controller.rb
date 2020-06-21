@@ -4,13 +4,13 @@ class CommentsController < ApplicationController
   include CommentsHelper
   include SubmissionsHelper
 
-  before_action :set_target, only: %i[new create mod_edit]
-  before_action :set_comment, only: %i[destroy mod_edit]
-  before_action :ensure_authenticated, only: %i[new create destroy mod_edit]
+  before_action :set_target, only: %i[new create mod_action]
+  before_action :set_comment, only: %i[destroy mod_action]
+  before_action :ensure_authenticated, only: %i[new create destroy mod_action]
   before_action -> { ensure_authorized @comment.user_id }, only: %i[destroy]
   before_action :ensure_authorized_to_comment, only: %i[create]
   before_action :ensure_unbanned, only: %i[create destroy]
-  before_action :ensure_moderator, only: %i[mod_edit]
+  before_action :ensure_moderator, only: %i[mod_action]
 
   def new
     @comment = Comment.new
@@ -50,15 +50,20 @@ class CommentsController < ApplicationController
   end
 
   # POST
-  def mod_edit
-    if params.has_key? :soft_deleted
-      @comment.soft_deleted = (params[:soft_deleted] == "true")
-      if @comment.soft_deleted
-        @comment.soft_deleted_by = current_user.id
+  def mod_action
+    if params.has_key?(:reason) && params[:reason].present?
+      if params.has_key? :toggle_soft_delete
+        @comment.soft_deleted = !@comment.soft_deleted
+        if @comment.soft_deleted
+          @comment.soft_deleted_by = current_user.id
+        end
+        ModeratorLog.create(user_id: current_user.id, 
+                            target: @comment,
+                            action: "#{current_user.username} has #{@comment.soft_deleted ? 'soft deleted' : 'reverted soft deletion on'} a comment made by #{@comment.user.username}.",
+                            reason: params[:reason])
       end
+      @comment.save
     end
-
-    @comment.save
 
     redirect_to @target
   end

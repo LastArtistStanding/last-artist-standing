@@ -44,4 +44,8 @@ class PagesController < ApplicationController
     @latestPatchNote = PatchNote.last
     @latestPatchEntries = PatchEntry.where('patchnote_id = ?', @latestPatchNote.id).order('importance DESC')
   end
+
+  def moderation
+    @moderator_logs = ModeratorLog.order('created_at DESC').limit(50)
+  end
 end

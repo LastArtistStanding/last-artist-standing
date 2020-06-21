@@ -18,13 +18,17 @@ javascript:
           .card-body style="text-align: center;" 
             b Unapproved Account
             br
-            = link_to "Approve User", "#{user_path(@user)}/approve", method: :post, class:"btn btn-success", style: "margin-left: 5px; margin-top: 5px;"
 
       - if @user.marked_for_death && logged_in_as_moderator
         .card class="alert alert-dark" style="padding: 0px;"
           .card-body style="text-align: center;" 
-            span.fa.fa-skull
             b Marked For Death
+            - unless @ban.nil?
+              br
+              | Reason: #{@ban.reason}
+            - else
+              br
+              | Something strange has happened. Contact banana asap.
 
       .card
         .card-body.table-responsive style="text-align: center;"
@@ -36,38 +40,39 @@ javascript:
               span.fa.fa-edit
               |  Edit Profile
       
-      - unless @ban.nil?
+      - unless @ban.nil? || @user.marked_for_death
         .card class="alert alert-danger" style="padding: 0px;"
           .card-body style="text-align: center;" 
             b Banned until #{date_string_short(@ban.expiration)}
             br
             | Ban Reason: #{@ban.reason}
-            - if logged_in_as_moderator
-              br
-              = link_to "Lift Ban", "#{user_path(@user)}/lift_ban", method: :post, class:"btn btn-primary", style: "margin-left: 5px; margin-top: 5px;"
 
-      - if logged_in_as_moderator
+      - if logged_in_as_moderator && !@user.marked_for_death
         .card
           .card-header style="text-align: center;"
             b Moderation
           
           .card-body style="text-align: center;"
-            - unless @user.marked_for_death
-              = link_to "Mark For Death", "#{user_path(@user)}/mark_for_death", method: :post, class:"btn btn-dark", style: "margin-left: 5px; margin-top: 5px;"
-              br
-              br
-            b Ban User Form
-            br
-            br
-            = form_for SiteBan.new, url: "#{user_path(@user)}/ban_user" do |f|
-              = f.text_field :reason, placeholder: "Ban Reason", required: true
-              = f.button "Week", name: 'duration', value: '8', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
-              = f.button "Two Weeks", name: 'duration', value: '15', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
-              = f.button "Month", name: 'duration', value: '31', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
-              = f.button "Season", name: 'duration', value: '91', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
-              = f.button "Half Year", name: 'duration', value: '183', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
-              = f.button "Year", name: 'duration', value: '366', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
-              = f.button "Permanent", name: 'duration', value: '99999', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+            = form_with url: "#{user_path(@user)}/mod_action" do |f|
+              = f.text_field :reason, placeholder: "Reason", required: true
+              - unless @user.approved
+                = f.button "Approve User", name: 'approve', class:"btn btn-success", style: "margin-top: 5px;"
+                br
+              - unless @ban.nil? || @user.marked_for_death
+                = f.button "Lift Ban", name: 'lift_ban', class:"btn btn-success", style: "margin-top: 5px;"
+                br
+              - unless @user.marked_for_death
+                b Ban User
+                br
+                = f.button "Week", name: 'ban', value: '8', class: 'btn btn-sm btn-danger', style: "margin-top: 5px;"
+                = f.button "Two Weeks", name: 'ban', value: '15', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+                = f.button "Month", name: 'ban', value: '31', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+                = f.button "Season", name: 'ban', value: '91', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+                = f.button "Half Year", name: 'ban', value: '183', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+                = f.button "Year", name: 'ban', value: '366', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+                = f.button "Permanent", name: 'ban', value: '99999', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+                br
+                = f.button "Mark For Death", name: 'mark_for_death', data: { confirm: 'Are you sure? Only the admin can reverse this action!' }, class:"btn btn-dark", style: "margin-top: 5px;"
 
     .col-lg-8
       .card
