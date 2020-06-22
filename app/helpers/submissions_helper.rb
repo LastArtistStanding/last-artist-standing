@@ -38,27 +38,42 @@ module SubmissionsHelper
     submission.drawing.avatar.url
   end
 
+  def base_submissions(only_safe = false)
+    if logged_in_as_moderator && !only_safe
+      # Mods can view all submissions
+      Submission.all
+    else
+      # Normal users can view submissions from users:
+      # not marked for death
+      # not soft deleted
+      # approved (unless they made the submission)
+      Submission.includes(:user)
+                .where(users: { marked_for_death: false }, submissions: { soft_deleted: false })
+                .where("submissions.approved = true OR (submissions.approved = false AND users.id = #{current_user&.id.to_i})")
+    end
+  end
+
   def next_user_submission(submission)
     nsfw_level = current_user ? current_user.nsfw_level : 1
-    submission.user.submissions.where('id > ? AND nsfw_level <= ?',
-                                      submission.id,
-                                      nsfw_level).first
+    base_submissions.where("user_id = #{submission.user.id} AND submissions.id > #{submission.id} AND submissions.nsfw_level <= #{nsfw_level}").first
   end
 
   def prev_user_submission(submission)
     nsfw_level = current_user ? current_user.nsfw_level : 1
-    submission.user.submissions.where('id < ? AND nsfw_level <= ?',
-                                      submission.id,
-                                      nsfw_level).last
+    base_submissions.where("user_id = #{submission.user.id} AND submissions.id < #{submission.id} AND submissions.nsfw_level <= #{nsfw_level}").last
   end
 
   def next_submission(submission)
     nsfw_level = current_user ? current_user.nsfw_level : 1
-    Submission.where('id > ? AND nsfw_level <= ?', submission.id, nsfw_level).first
+    base_submissions.where('submissions.id > ? AND submissions.nsfw_level <= ?', submission.id, nsfw_level).first
   end
 
   def prev_submission(submission)
     nsfw_level = current_user ? current_user.nsfw_level : 1
-    Submission.where('id < ? AND nsfw_level <= ?', submission.id, nsfw_level).last
+    base_submissions.where('submissions.id < ? AND submissions.nsfw_level <= ?', submission.id, nsfw_level).last
+  end
+
+  def random_safe_submission
+    base_submissions(only_safe = true).where('submissions.nsfw_level = 1 and submissions.created_at >= ?', Time.now.utc - 14.days).sample
   end
 end

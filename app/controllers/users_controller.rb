@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
+  include SubmissionsHelper
+
   before_action :set_curruser, only: %i[submissions show edit update mod_action]
   before_action :ensure_logged_in, only: %i[edit update]
   before_action -> { ensure_authorized @user.id }, only: %i[edit update]
@@ -16,13 +18,13 @@ class UsersController < ApplicationController
   end
 
   def submissions
-    @user_submissions = Submission.where(user_id: @user.id).order('created_at DESC')
-                                  .paginate(page: params[:page], per_page: 25)
+    @user_submissions = base_submissions.where(user_id: @user.id).order('submissions.created_at DESC')
+                                        .paginate(page: params[:page], per_page: 25)
   end
 
   def show
     @awards = Award.where('user_id = ? AND badge_id <> 1', @user.id).order('prestige DESC')
-    @submissions = Submission.where(user_id: @user.id).order('created_at DESC').limit(10)
+    @submissions = base_submissions.where(user_id: @user.id).order('submissions.created_at DESC').limit(10)
     @ban = SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{@user.id}")
   end
 

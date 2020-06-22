@@ -19,7 +19,8 @@ class ChallengesController < ApplicationController
 
   # GET
   def entries
-    @challengeEntries = ChallengeEntry.includes(:submission).where(challenge_id: @challenge.id).order('created_at DESC').paginate(page: params[:page], per_page: 25).includes(submission: :comments)
+    #@challengeEntries = ChallengeEntry.includes(:submission).where(challenge_id: @challenge.id).order('created_at DESC').paginate(page: params[:page], per_page: 25).includes(submission: :comments)
+    @entries = base_submissions.includes(:challenge_entries).where("challenge_entries.challenge_id = #{@challenge.id}").order('challenge_entries.created_at DESC').paginate(page: params[:page], per_page: 25)
   end
 
   # GET /challenge/1
@@ -184,13 +185,13 @@ class ChallengesController < ApplicationController
           end
           ModeratorLog.create(user_id: current_user.id, 
                               target: @challenge,
-                              action: "#{current_user.username} has #{@challenge.soft_deleted ? 'soft deleted' : 'reverted soft deletion on'} #{@challenge.name} by #{@creator.username}.",
+                              action: "#{current_user.username} has #{@challenge.soft_deleted ? 'soft deleted' : 'reverted soft deletion on'} #{@challenge.name} by #{@creator&.username}.",
                               reason: params[:reason])
         elsif params.has_key? :change_nsfw
           @challenge.nsfw_level = params[:change_nsfw].to_i
           ModeratorLog.create(user_id: current_user.id, 
                               target: @challenge,
-                              action: "#{current_user.username} has changed the content level of #{@challenge.name} by #{@creator.username} to #{nsfw_string(@challenge.nsfw_level)}.",
+                              action: "#{current_user.username} has changed the content level of #{@challenge.name} by #{@creator&.username} to #{nsfw_string(@challenge.nsfw_level)}.",
                               reason: params[:reason])
         end
         @challenge.save
@@ -205,7 +206,7 @@ class ChallengesController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_challenge
     @challenge = Challenge.find(params[:id])
-    @creator = User.find(@challenge.creator_id)
+    @creator = User.find_by(id: @challenge.creator_id)
     @badge_map = BadgeMap.find_by(challenge_id: @challenge.id)
     @badge_maps = BadgeMap.where(challenge_id: @challenge.id).order(:prestige)
     @badge = Badge.find(@badge_map.badge_id)

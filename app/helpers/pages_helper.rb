@@ -63,10 +63,6 @@ module PagesHelper
     (dad_participation.next_submission_date - Time.now.utc.to_date).to_i
   end
 
-  def random_safe_submission
-    Submission.where('nsfw_level = 1 and created_at >= ?', Time.now.utc - 14.days).sample
-  end
-
   def html_escape(text)
     text.gsub! '&', '%amp;'
     text.gsub! '<', '&lt;'

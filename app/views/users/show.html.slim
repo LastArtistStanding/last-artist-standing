@@ -40,7 +40,7 @@ javascript:
               span.fa.fa-edit
               |  Edit Profile
       
-      - unless @ban.nil? || @user.marked_for_death
+      - unless @ban.nil?
         .card class="alert alert-danger" style="padding: 0px;"
           .card-body style="text-align: center;" 
             b Banned until #{date_string_short(@ban.expiration)}

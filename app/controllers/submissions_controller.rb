@@ -14,11 +14,11 @@ class SubmissionsController < ApplicationController
   def index
     if params[:to].present? || params[:from].present?
       @submissions = if params[:to].blank?
-                       Submission.where('id >= :from', { from: params[:from] }).order('id ASC')
+                       base_submissions.where('id >= :from', { from: params[:from] }).order('id ASC')
                      elsif params[:from].blank?
-                       Submission.where('id <= :to', { to: params[:to] }).order('id ASC')
+                       base_submissions.where('id <= :to', { to: params[:to] }).order('id ASC')
                      else
-                       Submission.where(id: params[:from]..params[:to]).order('id ASC')
+                       base_submissions.where(id: params[:from]..params[:to]).order('id ASC')
                      end
     else
       if params[:date].present?
@@ -31,13 +31,22 @@ class SubmissionsController < ApplicationController
       else
         @date = Time.now.utc.to_date
       end
-      @submissions = Submission.includes(:user).where(created_at: @date.midnight..@date.end_of_day).order('created_at DESC')
+      @submissions = base_submissions.includes(:user).where(created_at: @date.midnight..@date.end_of_day).order('submissions.created_at DESC')
     end
   end
 
   # GET /submissions/1
   # GET /submissions/1.json
   def show
+    if @submission.soft_deleted && !logged_in_as_moderator
+      render_hidden("This submission has hidden by moderation.") 
+    end
+    if !@submission.approved
+      unless logged_in_as_moderator || @submission.user_id == current_user&.id
+        render_hidden("This submission has not been approved by moderation yet.")
+      end
+    end
+
     @challenge_entries = ChallengeEntry.where(submission_id: @submission.id)
   end
 

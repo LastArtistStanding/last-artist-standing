@@ -26,6 +26,10 @@ class ApplicationController < ActionController::Base
     render file: "#{Rails.root}/public/404.html", status: :not_found
   end
 
+  def render_hidden(message)
+    render 'pages/hidden', locals: { message: message }
+  end
+
   # Ensure that a user is logged in.
   # Actions which have visible effects for other users should use `ensure_authenticated` instead.
   def ensure_logged_in
