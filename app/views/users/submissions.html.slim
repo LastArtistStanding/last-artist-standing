@@ -34,11 +34,10 @@ javascript:
                   - @user_submissions.each do |submission|
                     li
                       .submissionIcon
-                        - user = submission.user
-                        = link_to "<img alt='' src=#{ user.profile_picture }> #{user.username}".html_safe, user, class: "submissionAuthor #{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''}"
+                        .submissionTitle = submission.display_title
                         = link_to image_tag(safe_submission_thumb(submission), alt: "#{submission.display_title}"), submission
                         div class="submissionNotes #{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''}"
-                          = submission.created_at.strftime("%H:%M:%S")
+                          = submission.created_at.strftime("%b %-d")
                           | &nbsp;
                           - unless submission.approved
                             i.fa.fa-warning data-toggle="tooltip" data-placement="top" title="Unapproved"
