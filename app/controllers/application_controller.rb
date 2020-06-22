@@ -26,6 +26,10 @@ class ApplicationController < ActionController::Base
     render file: "#{Rails.root}/public/404.html", status: :not_found
   end
 
+  def render_hidden(message)
+    render 'pages/hidden', locals: { message: message }, status: :forbidden
+  end
+
   # Ensure that a user is logged in.
   # Actions which have visible effects for other users should use `ensure_authenticated` instead.
   def ensure_logged_in
@@ -44,6 +48,17 @@ class ApplicationController < ActionController::Base
   # Check that the logged-in user is authorized to modify this submission.
   def ensure_authorized(creator_id)
     render_unauthorized unless creator_id == current_user.id
+  end
+
+  def ensure_moderator
+    render_unauthorized unless current_user.is_moderator || current_user.is_admin
+  end
+
+  def ensure_unbanned
+    latest_ban = SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{current_user.id}")
+    unless latest_ban.nil?
+      render '/pages/banned', locals: { ban: latest_ban }, status: :forbidden
+    end
   end
 
   # Do not cache this page.

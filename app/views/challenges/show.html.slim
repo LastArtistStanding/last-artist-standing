@@ -7,6 +7,11 @@
     .col-lg-10
       .row
         .col-lg-6
+          - if @challenge.soft_deleted
+            .card class="alert alert-danger" style="padding: 0px;"
+              .card-body style="text-align: center;" 
+                b Soft Deleted by #{safe_username(@challenge.soft_deleted_by)}
+
           .card
             .card-header
               b Challenge Details
@@ -75,6 +80,26 @@
                         td = html_escape(badgemap.description).html_safe
 
         .col-lg-6
+          - if logged_in_as_moderator && @challenge.id != 1 && !@challenge.seasonal
+            .card
+              .card-header style="text-align: center;"
+                b Moderation
+              
+              .card-body style="text-align: center;"
+                = form_with url: "#{challenge_path(@challenge)}/mod_action" do |f|
+                  = f.text_field :reason, placeholder: "Reason", required: true, style: "width: 50%;"
+                  br
+                  = f.button @challenge.soft_deleted ? "Undo Soft Delete" : "Soft Delete", name: 'toggle_soft_delete', class: "btn #{@challenge.soft_deleted ? 'btn-success' : 'btn-danger'}"
+                  br
+                  b Change Content Level
+                  br
+                  - unless @challenge.nsfw_level == 1
+                    = f.button "Safe", name: 'change_nsfw', value: '1', class: 'btn btn-primary', style: "margin-top: 5px; margin-right: 5px;"
+                  - unless @challenge.nsfw_level == 2
+                    = f.button "Questionable", name: 'change_nsfw', value: '2', class: 'btn btn-primary', style: "margin-right: 5px; margin-top: 5px;"
+                  - unless @challenge.nsfw_level == 3
+                    = f.button "Explicit", name: 'change_nsfw', value: '3', class: 'btn btn-primary', style: "margin-right: 5px; margin-top: 5px;"
+
           - if @challenge.id == 1 && !@latestEliminations.blank?
             .card
               .card-header style="color: red;"

@@ -19,6 +19,16 @@ nav.navbar.navbar-expand-lg.navbar-dark.static-top style="background-color: #2A3
             a You're all caught up!
             a href='/notifications' View All Notifications
 
+        - if logged_in_as_moderator
+          li.nav-item
+          a.nav-link href="#{moderation_path}" title="Go to the moderation console." style="color: cyan;"
+            i.fa.fa-user-secret   
+            |  Moderation 
+            - unapproved_submissions_count = unapproved_submissions.count
+            - if unapproved_submissions_count.positive?
+              span.badge.badge-secondary
+                = unapproved_submissions_count 
+
         li.nav-item
           a.nav-link href="#{new_submission_path}" title="Submit your art!" style="color: yellow;"
             i.fa.fa-upload

@@ -371,6 +371,10 @@ namespace :dad_tasks do
 
     user.invalidate_sessions
 
+    site_bans = SiteBan.where(user_id: user_id)
+    puts "Destroying #{site_bans.count} site ban records..."
+    site_bans.destroy_all
+
     unless user.nil?
       puts "Executing #{user.username}."
       user.destroy

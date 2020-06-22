@@ -1,0 +1,6 @@
+- provide(:title, 'Banned')
+
+.center.jumbotron style="background-color: white;"
+  = image_tag "banned.png", width: '700'
+  h1 You cannot take this action now. Your ban will expire on #{date_string_short(ban.expiration)}.
+  h2 Reason: #{ban.reason}

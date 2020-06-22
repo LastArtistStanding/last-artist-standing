@@ -8,6 +8,7 @@ class Challenge < ApplicationRecord
   has_many :challenge_entries
   has_many :users, through: :participations
   has_many :badges, through: :badge_maps, dependent: :destroy
+  has_many :moderator_logs, as: :target
 
   NO_EXCESS_WHITESPACE = /\A(\S\s?)*\S\z/.freeze
 

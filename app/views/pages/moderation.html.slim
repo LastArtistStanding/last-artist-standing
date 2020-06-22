@@ -1,0 +1,88 @@
+- provide(:title, 'Moderation Center')
+
+.container-fluid
+  .row
+    .col-lg-2
+      .card
+        .card-header
+          b Current Roster
+
+        .card-body
+          table.table 
+            tbody
+              - @admins.each do |admin|
+                tr style="background-color: #FFDDDD"
+                  td 
+                    b = link_to admin.username, admin
+              - @moderators.each do |mod|
+                tr style="background-color: #DDDDFF"
+                  td 
+                    b = link_to mod.username, mod
+
+    .col-lg-4
+      .card
+        .card-header
+          b Unapproved Submissions
+
+        .card-body
+          - if @unapproved_submissions.count.positive?
+            table.table 
+              thead
+                tr
+                  th scope="col" Submission
+                  th scope="col" User
+                  th scope="col" Timestamp
+              tbody
+                - @unapproved_submissions.each do |submission|
+                  tr
+                    td = link_to submission.display_title, submission
+                    td = link_to submission.user.username, submission.user
+                    td = submission.created_at
+          - else
+            b Nothing left to review. Great work!
+
+      .card
+        .card-header
+          b Unapproved Users
+
+        .card-body
+          - if @unapproved_users.count.positive?
+            table.table 
+              thead
+                tr
+                  th scope="col" User
+                  th scope="col" Days Posted
+              tbody
+                - @unapproved_users.each do |user|
+                  tr
+                    td = link_to user[:user].username, user[:user]
+                    td = user[:seasonal_score]
+          - else
+            b No users to review at this time.
+
+    .col-lg-6
+      .card
+        .card-header
+          b Moderation Log
+
+        .card-body
+          table.table 
+            thead
+              tr
+                th scope="col" Moderator
+                th scope="col" Target
+                th scope="col" Action
+                th scope="col" Reason
+                th scope="col" Timestamp
+            tbody style="font-size: 12px;"
+              - @moderator_logs.each do |log|
+                tr
+                  td = link_to log.user.username, log.user
+                  - if log.target_type == 'Comment'
+                    td = link_to "#{log.target_type} ##{log.target_id}", "#{url_for(log.target.source)}##{log.target_id}"
+                  - else
+                    td = link_to "#{log.target_type} ##{log.target_id}", log.target
+                  td = log.action
+                  td = log.reason
+                  td = log.created_at
+

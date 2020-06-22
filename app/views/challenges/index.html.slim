@@ -29,7 +29,7 @@
               i.fa.fa-trash aria-hidden="true"
         tbody
           - @activeChallenges.each do |challenge|
-            tr
+            tr style="#{'background-color: #F0A0A0;' if challenge.soft_deleted}"
               td = image_tag safe_badge_avatar(challenge.badges.first), width: "25px", alt: "bdg"
               td = raw participation_icon(getUserParticipationLevel(current_user, challenge, true))
               td = link_to challenge.name, challenge
@@ -46,7 +46,7 @@
               td
 
           - @upcomingChallenges.each do |challenge|
-            tr
+            tr style="#{'background-color: #F0A0A0;' if challenge.soft_deleted}"
               td = image_tag safe_badge_avatar(challenge.badges.first), width: "25px", alt: "bdg"
               td = raw participation_icon(getUserParticipationLevel(current_user, challenge, false))
               td = link_to challenge.name, challenge
@@ -59,13 +59,13 @@
               - if logged_in? && challenge.creator_id == current_user.id
                 td = link_to '<span class="fa fa-pencil"></span>'.html_safe, edit_challenge_path(challenge), class: "btn btn-primary"
                 - if challenge.can_delete?
-                  td = link_to '<i class="fa fa-trash"></i>'.html_safe, challenge, method: :delete, data: { confirm: 'Are you sure?' }
+                  td = link_to '<i class="fa fa-trash"></i>'.html_safe, challenge, method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-primary"
               - else
                 td
                 td
 
           - @completedChallenges.each do |challenge|
-            tr style="color: grey;"
+            tr style="color: grey; #{'background-color: #F0A0A0;' if challenge.soft_deleted}"
               td = image_tag safe_badge_avatar(challenge.badges.first), width: "25px", alt: "bdg"
               td = raw participation_icon(getUserParticipationLevel(current_user, challenge, false))
               td = link_to challenge.name, challenge

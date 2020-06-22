@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
 class ChallengesController < ApplicationController
-  before_action :set_challenge, only: %i[show edit update destroy join entries]
-  before_action :ensure_authenticated, only: %i[new create edit update destroy]
+  include SubmissionsHelper
+
+  before_action :set_challenge, only: %i[show edit update destroy join entries mod_action]
+  before_action :ensure_authenticated, only: %i[new create edit update destroy mod_action]
+  before_action :ensure_moderator, only: %i[mod_action]
   before_action -> { ensure_authorized @challenge.creator_id }, only: %i[edit update destroy]
+  before_action :ensure_unbanned, only: %i[new create edit update destroy]
 
   # GET /challenges
   # GET /challenges.json
@@ -11,16 +15,25 @@ class ChallengesController < ApplicationController
     @activeChallenges = Challenge.where('start_date <= ? AND (end_date > ? OR end_date IS NULL)', Date.current, Date.current).order('start_date ASC, end_date DESC')
     @upcomingChallenges = Challenge.where('start_date > ?', Date.current).order('start_date DESC, end_date DESC')
     @completedChallenges = Challenge.where('end_date <= ?', Date.current).order('start_date DESC, end_date DESC')
+    unless logged_in_as_moderator
+      @activeChallenges = @activeChallenges.where('soft_deleted = false')
+      @upcomingChallenges = @upcomingChallenges.where('soft_deleted = false')
+      @completedChallenges = @completedChallenges.where('soft_deleted = false')
+    end
   end
 
   # GET
   def entries
-    @challengeEntries = ChallengeEntry.includes(:submission).where(challenge_id: @challenge.id).order('created_at DESC').paginate(page: params[:page], per_page: 25).includes(submission: :comments)
+    @entries = base_submissions.includes(:challenge_entries).where("challenge_entries.challenge_id = #{@challenge.id}").order('challenge_entries.created_at DESC').paginate(page: params[:page], per_page: 25)
   end
 
   # GET /challenge/1
   # GET /challenge/1.json
   def show
+    if @challenge.soft_deleted && !logged_in_as_moderator
+      render_hidden("This challenge was hidden by moderation.") 
+    end
+    
     # You can't join or leave a challenge after the start date.
     if Date.current < @challenge.start_date
       if params[:join]
@@ -168,11 +181,40 @@ class ChallengesController < ApplicationController
     end
   end
 
+  # POST
+  def mod_action
+    # don't let mods mess with official site content
+    if @challenge.id != 1 && !@challenge.seasonal
+      if params.has_key?(:reason) && params[:reason].present?
+        if params.has_key? :toggle_soft_delete
+          @challenge.soft_deleted = !@challenge.soft_deleted
+          if @challenge.soft_deleted
+            @challenge.soft_deleted_by = current_user.id
+          end
+          ModeratorLog.create(user_id: current_user.id, 
+                              target: @challenge,
+                              action: "#{current_user.username} has #{@challenge.soft_deleted ? 'soft deleted' : 'reverted soft deletion on'} #{@challenge.name} by #{@creator&.username}.",
+                              reason: params[:reason])
+        elsif params.has_key? :change_nsfw
+          @challenge.nsfw_level = params[:change_nsfw].to_i
+          ModeratorLog.create(user_id: current_user.id, 
+                              target: @challenge,
+                              action: "#{current_user.username} has changed the content level of #{@challenge.name} by #{@creator&.username} to #{nsfw_string(@challenge.nsfw_level)}.",
+                              reason: params[:reason])
+        end
+        @challenge.save
+      end
+    end
+
+    redirect_to @challenge
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.
   def set_challenge
     @challenge = Challenge.find(params[:id])
+    @creator = User.find_by(id: @challenge.creator_id)
     @badge_map = BadgeMap.find_by(challenge_id: @challenge.id)
     @badge_maps = BadgeMap.where(challenge_id: @challenge.id).order(:prestige)
     @badge = Badge.find(@badge_map.badge_id)

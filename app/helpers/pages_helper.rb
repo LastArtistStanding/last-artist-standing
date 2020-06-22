@@ -63,10 +63,6 @@ module PagesHelper
     (dad_participation.next_submission_date - Time.now.utc.to_date).to_i
   end
 
-  def random_safe_submission
-    Submission.where('nsfw_level = 1 and created_at >= ?', Time.now.utc - 14.days).sample
-  end
-
   def html_escape(text)
     text.gsub! '&', '%amp;'
     text.gsub! '<', '&lt;'
@@ -87,5 +83,12 @@ module PagesHelper
     return 'fa fa-snowflake-o' if season_challenge_name.include? 'Winter'
 
     ''
+  end
+
+  def safe_username(user_id)
+    user = User.find_by(id: user_id)
+    return link_to(user.username, user) if user.present?
+    
+    return "Account Deleted"
   end
 end
