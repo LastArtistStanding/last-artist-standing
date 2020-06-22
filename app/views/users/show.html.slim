@@ -19,7 +19,7 @@ javascript:
             b Unapproved Account
             br
             - if current_user&.id == @user.id
-              small Your account will be approved after consistent participation on the site.
+              small Your submissions will be subject to review by moderators before they will become visible to other users. Your account will be approved after consistent participation on the site.
 
       - if @user.marked_for_death && logged_in_as_moderator
         .card class="alert alert-dark" style="padding: 0px;"
