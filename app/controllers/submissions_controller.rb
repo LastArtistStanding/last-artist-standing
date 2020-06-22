@@ -39,7 +39,7 @@ class SubmissionsController < ApplicationController
   # GET /submissions/1.json
   def show
     if @submission.soft_deleted && !logged_in_as_moderator
-      render_hidden("This submission was hidden by moderation.") 
+      render_hidden("This submission was hidden by moderation.")
     end
     unless @submission.approved || (logged_in_as_moderator || @submission.user_id == current_user&.id)
       render_hidden("This submission has not been approved by moderation yet.")
@@ -122,12 +122,12 @@ class SubmissionsController < ApplicationController
                  else
                    limited_params
                  end
-    
+
     # If the drawing itself was updated by an unapproved user, reset the approval.
     if used_params.has_key? :drawing
       @submission.approved = current_user.approved
     end
-    
+
     respond_to do |format|
       if @submission.update(used_params)
 
@@ -184,19 +184,19 @@ class SubmissionsController < ApplicationController
         if @submission.soft_deleted
           @submission.soft_deleted_by = current_user.id
         end
-        ModeratorLog.create(user_id: current_user.id, 
+        ModeratorLog.create(user_id: current_user.id,
                             target: @submission,
                             action: "#{current_user.username} has #{@submission.soft_deleted ? 'soft deleted' : 'reverted soft deletion on'} #{@submission.display_title} by #{@submission.user.username}.",
                             reason: params[:reason])
       elsif params.has_key? :toggle_approve
         @submission.approved = !@submission.approved
-        ModeratorLog.create(user_id: current_user.id, 
+        ModeratorLog.create(user_id: current_user.id,
                             target: @submission,
                             action: "#{current_user.username} has #{@submission.approved ? 'approved' : 'disapproved'} #{@submission.display_title} by #{@submission.user.username}.",
                             reason: params[:reason])
       elsif params.has_key? :change_nsfw
         @submission.nsfw_level = params[:change_nsfw].to_i
-        ModeratorLog.create(user_id: current_user.id, 
+        ModeratorLog.create(user_id: current_user.id,
                             target: @submission,
                             action: "#{current_user.username} has changed the content level of #{@submission.display_title} by #{@submission.user.username} to #{nsfw_string(@submission.nsfw_level)}.",
                             reason: params[:reason])

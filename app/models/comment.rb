@@ -3,6 +3,8 @@
 class Comment < ApplicationRecord
   include ActionView::Helpers::UrlHelper
 
+  default_scope { order(id: :asc) }
+
   belongs_to :source, polymorphic: true
   belongs_to :user
   has_many :notifications, as: :source, dependent: :destroy
