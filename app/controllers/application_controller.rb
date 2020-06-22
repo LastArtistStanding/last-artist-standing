@@ -51,7 +51,7 @@ class ApplicationController < ActionController::Base
   end
 
   def ensure_moderator
-    render_unauthorized unless current_user.is_moderator || current_user.is_admin
+    render_unauthorized unless current_user&.is_moderator || current_user&.is_admin
   end
 
   def ensure_unbanned
