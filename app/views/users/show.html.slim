@@ -13,17 +13,89 @@ javascript:
     .col-lg-1
 
     .col-lg-2
+      - if !@user.approved && (logged_in_as_moderator || current_user&.id == @user.id)
+        .card class="alert alert-warning" style="padding: 0px;"
+          .card-body style="text-align: center;"
+            b Unapproved Account
+            br
+            - if current_user&.id == @user.id
+              small Your submissions will be subject to review by moderators before they will become visible to other users. Your account will be approved after consistent participation on the site.
+
+      - if @user.marked_for_death && logged_in_as_moderator
+        .card class="alert alert-dark" style="padding: 0px;"
+          .card-body style="text-align: center;"
+            b Marked For Death
+            - unless @ban.nil?
+              br
+              | Reason: #{@ban.reason}
+            - else
+              br
+              | Something strange has happened. Contact banana asap.
+
       .card
         .card-body.table-responsive style="text-align: center;"
           = render partial: "application/usercard", locals: { user: @user }
 
-          - if logged_in? && current_user.id == @user.id
+          - if logged_in_as_user(@user)
             br
             a.btn.btn-primary href="#{edit_user_path(@user)}"
               span.fa.fa-edit
               |  Edit Profile
 
+      - unless @ban.nil?
+        .card class="alert alert-danger" style="padding: 0px;"
+          .card-body style="text-align: center;" 
+            b Banned until #{date_string_short(@ban.expiration)}
+            br
+            | Ban Reason: #{@ban.reason}
+
+      - if logged_in_as_moderator && !@user.marked_for_death
+        .card
+          .card-header style="text-align: center;"
+            b Moderation
+
+          .card-body style="text-align: center;"
+            = form_with url: "#{user_path(@user)}/mod_action" do |f|
+              = f.text_field :reason, placeholder: "Reason", required: true
+              - unless @user.approved
+                = f.button "Approve User", name: 'approve', class:"btn btn-success", style: "margin-top: 5px;"
+                br
+              - unless @ban.nil? || @user.marked_for_death
+                = f.button "Lift Ban", name: 'lift_ban', class:"btn btn-success", style: "margin-top: 5px;"
+                br
+              - unless @user.marked_for_death
+                b Ban User
+                br
+                = f.button "Week", name: 'ban', value: '8', class: 'btn btn-sm btn-danger', style: "margin-top: 5px;"
+                = f.button "Two Weeks", name: 'ban', value: '15', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+                = f.button "Month", name: 'ban', value: '31', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+                = f.button "Season", name: 'ban', value: '91', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+                = f.button "Half Year", name: 'ban', value: '183', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+                = f.button "Year", name: 'ban', value: '366', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+                = f.button "Permanent", name: 'ban', value: '99999', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+                br
+                = f.button "Mark For Death", name: 'mark_for_death', data: { confirm: 'Are you sure? Only the admin can reverse this action!' }, class:"btn btn-dark", style: "margin-top: 5px;"
+
     .col-lg-8
+      - if logged_in_as_moderator && @all_bans.count.positive?
+        .card
+          .card-header style="color: red;"
+            b Ban History
+
+          .card-body
+            table.table
+              thead
+                tr
+                  th scope="col" Start
+                  th scope="col" Expiration
+                  th scope="col" Reason
+              tbody
+                - @all_bans.each do |ban|
+                  tr
+                    td = date_string_short(ban.created_at)
+                    td = date_string_short(ban.expiration)
+                    td = ban.reason
+
       .card id="awards"
         .card-header
           b Badges Awarded

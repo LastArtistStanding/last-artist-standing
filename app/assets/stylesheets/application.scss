@@ -25,6 +25,7 @@ html, body {
 body {
   display: flex;
   flex-direction: column;
+  background-color: #EEEEEE;
 }
 
 .container-fluid {
@@ -190,14 +191,22 @@ p {
   }
 
   .avatarWithName {
-  display: inline-block;
-  position: relative;
-  width: 100%;
+    display: inline-block;
+    position: relative;
+    width: 100%;
 
-  margin: 5px;
-  border-radius: 10px;
-  background: #515d68;
-  z-index: 1;
+    margin: 5px;
+    border-radius: 10px;
+    background: #515d68;
+    z-index: 1;
+
+    &.moderator {
+      background: #36458a;
+    }
+
+    &.administrator {
+      background: #8a4536;
+    }
   }
 
 }
@@ -227,13 +236,23 @@ p {
   border-radius: 10px;
   background: #515d68;
   z-index: 1;
+
+  &.moderator {
+    background: #36458a;
+  }
+
+  &.administrator {
+    background: #8a4536;
+  }
 }
 
 .avatarUserName {
-  margin-top: 5px;
+  margin-top: 7px;
   text-align: center;
   font-weight: 600;
   width: 100%;
+  line-height: 1.0;
+  height: 24px;
   color:#ffffff;
   overflow: hidden;
   white-space: nowrap;
@@ -373,6 +392,16 @@ p {
   overflow: hidden;
   white-space: nowrap;
 
+  &.softDeleted {
+    background: #ffb0b0;
+    color: #721c24;
+  }
+
+  &.unapproved {
+    background: #fff3a0;
+    color: #755404;
+  }
+
   > img {
     height: 30px;
     width: 30px;
@@ -403,6 +432,16 @@ p {
   -moz-user-select: none;     /* Firefox all */
   -ms-user-select: none;      /* IE 10+ */
   user-select: none;          /* Likely future */
+
+  &.softDeleted {
+    background: #ffb0b0;
+    color: #721c24;
+  }
+
+  &.unapproved {
+    background: #fff3a0;
+    color: #755404;
+  }
 }
 
 .submissionTime {

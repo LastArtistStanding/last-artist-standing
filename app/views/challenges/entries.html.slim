@@ -7,8 +7,8 @@
     .col-lg-10
       .row
         .digg_pagination
-          .page_info = page_entries_info @challengeEntries
-          = will_paginate @challengeEntries, container: false
+          .page_info = page_entries_info @entries
+          = will_paginate @entries, container: false
 
       .row
         .col-lg-12
@@ -18,22 +18,31 @@
 
             .card-body
               ul.submissionrow
-                - if @challengeEntries.count == 0
+                - if @entries.count == 0
                   | No entries made yet!
                 - else
-                  - @challengeEntries.each do |challengeEntry|
-                    - submission = challengeEntry.submission
+                  - @entries.each do |submission|
                     li
                       .submissionIcon
                         - user = submission.user
-                        = link_to "<img alt='' src=#{ user.profile_picture }> #{user.username}".html_safe, user, class: "submissionAuthor"
+                        = link_to "<img alt='' src=#{ user.profile_picture }> #{user.username}".html_safe, user, class: "submissionAuthor #{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''}"
                         = link_to image_tag(safe_submission_thumb(submission), alt: "#{submission.display_title}"), submission
-                        .submissionNotes
+                        div class="submissionNotes #{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''}"
+                          = submission.created_at.strftime("%H:%M:%S")
+                          | &nbsp;
+                          - unless submission.approved
+                            i.fa.fa-warning data-toggle="tooltip" data-placement="top" title="Unapproved"
+                            | &nbsp;
+                          - if submission.soft_deleted
+                            i.fa.fa-minus-circle data-toggle="tooltip" data-placement="top" title="Soft Deleted"
+                            | &nbsp;
                           - if submission.is_animated_gif
-                            i.fa.fa-film
-                          - if submission.comments.count > 0
-                            i.fa.fa-comments-o
-                            = submission.comments.count
+                            i.fa.fa-film data-toggle="tooltip" data-placement="top" title="Animated"
+                            | &nbsp;
+                          - if submission.num_comments > 0
+                            i.fa.fa-comments-o data-toggle="tooltip" data-placement="top" title="Has Comments"
+                            | &nbsp;
+                            = submission.num_comments
 
       a.btn.btn-primary href="/challenges/#{@challenge.id}"
         span.fa.fa-undo

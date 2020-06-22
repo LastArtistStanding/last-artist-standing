@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
 class PagesController < ApplicationController
+  include CommentsHelper
+  include SubmissionsHelper
+
+  before_action :ensure_moderator, only: %i[moderation]
+
   def home
-    @activeChallenges = Challenge.where('start_date <= ? AND (end_date > ? OR end_date IS NULL)', Date.current, Date.current).order('start_date ASC, end_date DESC')
-    @upcomingChallenges = Challenge.where('start_date > ?', Date.current).order('start_date ASC, end_date DESC')
-    @currentSeasonalChallenge = Challenge.where(':todays_date >= start_date AND :todays_date < end_date AND seasonal = true', { todays_date: Date.current }).first
+    @activeChallenges = Challenge.where('soft_deleted = false AND start_date <= ? AND (end_date > ? OR end_date IS NULL)', Date.current, Date.current).order('start_date ASC, end_date DESC')
+    @upcomingChallenges = Challenge.where('soft_deleted = false AND start_date > ?', Date.current).order('start_date ASC, end_date DESC')
+    @currentSeasonalChallenge = Challenge.where('soft_deleted = false AND :todays_date >= start_date AND :todays_date < end_date AND seasonal = true', { todays_date: Date.current }).first
 
     # All lists to be displayed in home
     @latestAwards = Award.where('date_received = ? AND badge_id <> 1', Date.today).order('prestige DESC, badge_id DESC').includes(:user)
@@ -41,5 +46,19 @@ class PagesController < ApplicationController
   def news
     @latestPatchNote = PatchNote.last
     @latestPatchEntries = PatchEntry.where('patchnote_id = ?', @latestPatchNote.id).order('importance DESC')
+  end
+
+  def moderation
+    @admins = User.where("is_admin = true")
+    @moderators = User.where("is_moderator = true")
+    @moderator_logs = ModeratorLog.order('created_at DESC').limit(50)
+    @unapproved_submissions = unapproved_submissions.order("submissions.created_at ASC")
+    unapproved_users_objs = User.where("approved = false").includes(:participations)
+
+    @unapproved_users = []
+    unapproved_users_objs.each do |user|
+      days_posted = user.participations.includes(:challenge).where({challenges: { seasonal: true }}).sum(:score)
+      @unapproved_users.push({user: user, seasonal_score: days_posted}) if days_posted >= 7
+    end
   end
 end

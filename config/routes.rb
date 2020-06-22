@@ -5,8 +5,9 @@ Rails.application.routes.draw do
   root 'pages#home'
   get 'about' => 'pages#about'
   get 'help' => 'pages#help'
-  get 'welcome' => 'pages#home'
+  get 'moderation' => 'pages#moderation'
   get 'news' => 'pages#news'
+  get 'welcome' => 'pages#home'
 
   # Collections
 
@@ -17,6 +18,7 @@ Rails.application.routes.draw do
     delete 'participations/:user_id' => 'participations#destroy'
   end
   get 'challenges/:id/entries' => 'challenges#entries', as: :challenge_entries
+  post 'challenges/:id/mod_action' => 'challenges#mod_action', as: :challenge_mod_action
 
   resources :comments, only: %i[show destroy]
 
@@ -24,14 +26,18 @@ Rails.application.routes.draw do
 
   resources :submissions do
     resources :comments
+    # FIXME: Use the pure `/comments` route instead.
+    post 'comments/:id/mod_action' => 'comments#mod_action'
   end
+  post 'submissions/:id/mod_action' => 'submissions#mod_action'
 
   resources :users do
     get 'awards' => 'awards#index', as: :awards
     get 'awards/:badge_id' => 'awards#show', as: :award
   end
-  get 'users/:id/submissions' => 'users#submissions', as: :user_submissions
   get 'find' => 'users#index'
+  get 'users/:id/submissions' => 'users#submissions', as: :user_submissions
+  post 'users/:id/mod_action' => 'users#mod_action', as: :user_mod_action
 
   # Sessions
   get 'signup' => 'users#new'

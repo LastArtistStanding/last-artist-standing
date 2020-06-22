@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[show submissions edit update]
+  include SubmissionsHelper
+
+  before_action :set_user, only: %i[submissions show edit update mod_action]
   before_action :ensure_logged_in, only: %i[edit update]
   before_action -> { ensure_authorized @user.id }, only: %i[edit update]
+  before_action :ensure_authenticated, only: %i[mod_action]
+  before_action :ensure_moderator, only: %i[mod_action]
   before_action :ensure_verified_to_upload_avatar, only: %i[create update]
   # TODO: Also handle registration being closed for the registration form, i.e. :new.
   before_action :ensure_registration_open, only: %i[new create]
@@ -41,7 +45,9 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html do
         @awards = Award.where('user_id = ? AND badge_id <> 1', @user.id).order('prestige DESC')
-        @submissions = Submission.where(user_id: @user.id).order('created_at DESC').limit(10)
+        @submissions = base_submissions.where(user_id: @user.id).order('submissions.created_at DESC').limit(10)
+        @ban = SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{@user.id}")
+        @all_bans = SiteBan.where(user_id: @user.id)
       end
       format.json do
         @user = User.includes(awards: [:badge, :badge_maps, :challenge]).find(params[:id])
@@ -52,11 +58,12 @@ class UsersController < ApplicationController
   def submissions
     respond_to do |format|
       format.html do
-        @user_submissions = Submission.where(user_id: @user.id).order('created_at DESC')
-                                      .paginate(page: params[:page], per_page: 25)
+        @user_submissions = base_submissions.where(user_id: @user.id).order('submissions.created_at DESC')
+                                            .paginate(page: params[:page], per_page: 25)
       end
 
       format.json do
+        # FIXME: Don't include soft-removed submissions.
         @user = User.includes(:submissions).find(params[:id])
       end
     end
@@ -121,6 +128,22 @@ class UsersController < ApplicationController
     else
       render 'edit'
     end
+  end
+
+  def mod_action
+    if params.has_key?(:reason) && params[:reason].present?
+      if params.has_key?(:approve)
+        @user.approve(params[:reason], current_user)
+      elsif params.has_key?(:lift_ban)
+        @user.lift_ban(params[:reason], current_user)
+      elsif params.has_key?(:ban)
+        @user.ban_user(params[:ban].to_i, params[:reason], current_user)
+      elsif params.has_key?(:mark_for_death)
+        @user.mark_for_death(params[:reason], current_user)
+      end
+    end
+
+    redirect_to @user
   end
 
   private

@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
 class SubmissionsController < ApplicationController
-  before_action :set_submission, only: %i[show edit update destroy]
-  before_action :ensure_authenticated, only: %i[new create edit update destroy]
+  include SubmissionsHelper
+
+  before_action :set_submission, only: %i[show edit update destroy mod_action]
+  before_action :ensure_authenticated, only: %i[new create edit update destroy mod_action]
+  before_action :ensure_moderator, only: %i[mod_action]
   before_action -> { ensure_authorized @submission.user_id }, only: %i[edit update destroy]
+  before_action :ensure_unbanned, only: %i[new create edit update destroy]
 
   # GET /submissions
   # GET /submissions.json
@@ -12,11 +16,11 @@ class SubmissionsController < ApplicationController
       format.html do
         if params[:to].present? || params[:from].present?
           @submissions = if params[:to].blank?
-                           Submission.where('id >= :from', { from: params[:from] }).order('id ASC')
+                           base_submissions.where('id >= :from', { from: params[:from] }).order('id ASC')
                          elsif params[:from].blank?
-                           Submission.where('id <= :to', { to: params[:to] }).order('id ASC')
+                           base_submissions.where('id <= :to', { to: params[:to] }).order('id ASC')
                          else
-                           Submission.where(id: params[:from]..params[:to]).order('id ASC')
+                           base_submissions.where(id: params[:from]..params[:to]).order('id ASC')
                          end
         else
           if params[:date].present?
@@ -29,13 +33,14 @@ class SubmissionsController < ApplicationController
           else
             @date = Time.now.utc.to_date
           end
-          @submissions = Submission.includes(:user).where(created_at: @date.midnight..@date.end_of_day).order('created_at DESC')
+          @submissions = base_submissions.includes(:user).where(created_at: @date.midnight..@date.end_of_day).order('submissions.created_at DESC')
         end
       end
 
       format.json do
         time = (params[:created_before] ? DateTime.parse(params[:created_before]) : Time.now.utc)
-        @submissions = Submission.where('created_at < ?', time).order('created_at DESC').limit(1000)
+        # FIXME: Use time range syntax.
+        @submissions = base_submissions.where('created_at < ?', time).order('submissions.created_at DESC').limit(1000)
         @self_url = "#{submissions_path}?created_before=#{time.iso8601}"
         if @submissions.count.positive?
           # @submissions.minimum('created_at') doesn't care about your query apparently.
@@ -49,6 +54,13 @@ class SubmissionsController < ApplicationController
   # GET /submissions/1
   # GET /submissions/1.json
   def show
+    if @submission.soft_deleted && !logged_in_as_moderator
+      render_hidden("This submission was hidden by moderation.")
+    end
+    unless @submission.approved || (logged_in_as_moderator || @submission.user_id == current_user&.id)
+      render_hidden("This submission has not been approved by moderation yet.")
+    end
+
     respond_to do |format|
       format.html do
         # TODO: This variable should not be necessary.
@@ -76,6 +88,7 @@ class SubmissionsController < ApplicationController
     initial_date_time = Time.now.utc
     failure = false
     @submission = Submission.new(submission_params)
+    @submission.approved = current_user.approved
     artist_id = current_user.id
     @submission.user_id = artist_id
     @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
@@ -127,13 +140,19 @@ class SubmissionsController < ApplicationController
     @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
     curr_user_id = current_user.id
 
-    usedParams = if @submission.created_at.to_date == Time.now.utc.to_date
+    used_params = if @submission.created_at.to_date == Time.now.utc.to_date
                    submission_params
                  else
                    limited_params
                  end
+
+    # If the drawing itself was updated by an unapproved user, reset the approval.
+    if used_params.has_key? :drawing
+      @submission.approved = current_user.approved
+    end
+
     respond_to do |format|
-      if @submission.update(usedParams)
+      if @submission.update(used_params)
 
         unless params[:postfrequency].nil?
           newFrequency = params[:postfrequency].to_i
@@ -180,6 +199,37 @@ class SubmissionsController < ApplicationController
     end
   end
 
+  # POST
+  def mod_action
+    if params.has_key?(:reason) && params[:reason].present?
+      if params.has_key? :toggle_soft_delete
+        @submission.soft_deleted = !@submission.soft_deleted
+        if @submission.soft_deleted
+          @submission.soft_deleted_by = current_user.id
+        end
+        ModeratorLog.create(user_id: current_user.id,
+                            target: @submission,
+                            action: "#{current_user.username} has #{@submission.soft_deleted ? 'soft deleted' : 'reverted soft deletion on'} #{@submission.display_title} by #{@submission.user.username}.",
+                            reason: params[:reason])
+      elsif params.has_key? :toggle_approve
+        @submission.approved = !@submission.approved
+        ModeratorLog.create(user_id: current_user.id,
+                            target: @submission,
+                            action: "#{current_user.username} has #{@submission.approved ? 'approved' : 'disapproved'} #{@submission.display_title} by #{@submission.user.username}.",
+                            reason: params[:reason])
+      elsif params.has_key? :change_nsfw
+        @submission.nsfw_level = params[:change_nsfw].to_i
+        ModeratorLog.create(user_id: current_user.id,
+                            target: @submission,
+                            action: "#{current_user.username} has changed the content level of #{@submission.display_title} by #{@submission.user.username} to #{nsfw_string(@submission.nsfw_level)}.",
+                            reason: params[:reason])
+      end
+      @submission.save
+    end
+
+    redirect_to @submission
+  end
+
   private
 
   def set_submission
@@ -192,8 +242,11 @@ class SubmissionsController < ApplicationController
       return
     end
 
-    # FIXME: This variable is redundant.
-    @comments = @submission.comments
+    if logged_in_as_moderator
+      @comments = Comment.where(source: @submission).includes(:user)
+    else
+      @comments = Comment.where(source: @submission, soft_deleted: false).includes(:user)
+    end
   end
 
   def submission_params

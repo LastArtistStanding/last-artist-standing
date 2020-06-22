@@ -24,9 +24,22 @@ javascript:
       p#notice = notice
 
     .col-lg-2
+      - if @submission.soft_deleted
+        .card class="alert alert-danger" style="padding: 0px;"
+          .card-body style="text-align: center;" 
+            b Soft Deleted by #{safe_username(@submission.soft_deleted_by)}
+
+      - unless @submission.approved
+        .card class="alert alert-warning" style="padding: 0px;"
+          .card-header style="text-align: center;" 
+            b Unapproved
+
+          .card-body style="text-align: center;" 
+            | Your submission is invisible until approved by a moderator.
+
       .card
         .card-header style="text-align: center;"
-          | Submission Info
+          b Submission Info
 
         .card-body style="text-align: center;"
           = render partial: "application/usercard", locals: { user: @submission.user }
@@ -61,6 +74,27 @@ javascript:
               br
               = link_to '<span class="fa fa-edit"></span>'.html_safe, edit_submission_path(@submission), class: "btn btn-primary"
               br
+
+      - if logged_in_as_moderator
+        .card
+          .card-header style="text-align: center;"
+            b Moderation
+
+          .card-body style="text-align: center;"
+            = form_with url: "#{submission_path(@submission)}/mod_action" do |f|
+              = f.text_field :reason, placeholder: "Reason", required: true
+              = f.button @submission.approved ? "Disapprove" : "Approve", name: 'toggle_approve', class: "btn #{@submission.approved ? 'btn-warning' : 'btn-success'}", style: "margin-top: 5px;"
+              br
+              = f.button @submission.soft_deleted ? "Undo Soft Delete" : "Soft Delete", name: 'toggle_soft_delete', class: "btn #{@submission.soft_deleted ? 'btn-success' : 'btn-danger'}", style: "margin-top: 5px;"
+              br
+              b Change Content Level
+              br
+              - unless @submission.nsfw_level == 1
+                = f.button "Safe", name: 'change_nsfw', value: '1', class: 'btn btn-primary', style: "margin-top: 5px; margin-right: 5px;"
+              - unless @submission.nsfw_level == 2
+                = f.button "Questionable", name: 'change_nsfw', value: '2', class: 'btn btn-primary', style: "margin-right: 5px; margin-top: 5px;"
+              - unless @submission.nsfw_level == 3
+                = f.button "Explicit", name: 'change_nsfw', value: '3', class: 'btn btn-primary', style: "margin-right: 5px; margin-top: 5px;"
 
     .col-lg-10
       .card
@@ -136,17 +170,24 @@ javascript:
 
       section id="comments"
         - @comments.each do |comment|
-          .card.comment-card id="#{comment.id}"
+          .card.comment-card id="#{comment.id}" class="#{"alert alert-danger" if comment.soft_deleted}" style="padding: 0px;"
             .card-header
               b = link_to comment.user.username, comment.user
-              = comment.created_at.strftime(" %H:%M, %b %-d, %Y")
+              = comment.created_at.strftime(" %H:%M, %b %-d, %Y") 
               / Mirror 4chan's behavior for this:
               / The `No.` part is a link to this post, and the number itself is the quote function.
               = ' '
               a style="color: inherit;" href="##{comment.id}" = 'No.'
               = ' '
               span.quote-id onclick=("quote(#{comment.id});" if has_permissions) = comment.id.to_s
+              - if comment.soft_deleted
+                b  - Soft Deleted by #{safe_username(comment.soft_deleted_by)} -
               = link_to ' <span class="fa fa-trash"></span>'.html_safe, [@submission, comment], method: :delete, data: { confirm: 'Are you sure?' } if comment.user_id == current_user&.id
+              | &nbsp;
+              - if logged_in_as_moderator
+                = form_with url: "#{submission_path(@submission)}/comments/#{comment.id}/mod_action", html: { style: 'width: auto; display: inline-block;' } do |f|
+                  = f.text_field :reason, placeholder: "Reason", required: true, style: "width: 200px; display: inline-block; margin-bottom: 0px;"
+                  = f.button "#{comment.soft_deleted ? "Undo Soft Delete" : "Soft Delete" }", name: 'toggle_soft_delete', class: "btn btn-sm btn-primary", style: "margin-left: 5px; line-height: 1;"
 
             .card-body
               = simple_format(comment.link_form)
