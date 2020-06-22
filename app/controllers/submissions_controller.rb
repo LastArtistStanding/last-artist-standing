@@ -39,7 +39,7 @@ class SubmissionsController < ApplicationController
   # GET /submissions/1.json
   def show
     if @submission.soft_deleted && !logged_in_as_moderator
-      render_hidden("This submission has hidden by moderation.") 
+      render_hidden("This submission was hidden by moderation.") 
     end
     if !@submission.approved
       unless logged_in_as_moderator || @submission.user_id == current_user&.id
@@ -214,7 +214,11 @@ class SubmissionsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_submission
     @submission = Submission.find(params[:id])
-    @comments = Comment.where(source: @submission).includes(:user)
+    if logged_in_as_moderator
+      @comments = Comment.where(source: @submission).includes(:user)
+    else
+      @comments = Comment.where(source: @submission, soft_deleted: false).includes(:user)
+    end
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

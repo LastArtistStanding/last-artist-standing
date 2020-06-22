@@ -15,6 +15,11 @@ class ChallengesController < ApplicationController
     @activeChallenges = Challenge.where('start_date <= ? AND (end_date > ? OR end_date IS NULL)', Date.current, Date.current).order('start_date ASC, end_date DESC')
     @upcomingChallenges = Challenge.where('start_date > ?', Date.current).order('start_date DESC, end_date DESC')
     @completedChallenges = Challenge.where('end_date <= ?', Date.current).order('start_date DESC, end_date DESC')
+    unless logged_in_as_moderator
+      @activeChallenges = @activeChallenges.where('soft_deleted = false')
+      @upcomingChallenges = @upcomingChallenges.where('soft_deleted = false')
+      @completedChallenges = @completedChallenges.where('soft_deleted = false')
+    end
   end
 
   # GET
@@ -26,6 +31,10 @@ class ChallengesController < ApplicationController
   # GET /challenge/1
   # GET /challenge/1.json
   def show
+    if @challenge.soft_deleted && !logged_in_as_moderator
+      render_hidden("This challenge was hidden by moderation.") 
+    end
+    
     # You can't join or leave a challenge after the start date.
     if Date.current < @challenge.start_date
       if params[:join]

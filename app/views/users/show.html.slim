@@ -13,11 +13,13 @@ javascript:
     .col-lg-1
 
     .col-lg-2
-      - if !@user.approved && logged_in_as_moderator
+      - if !@user.approved && (logged_in_as_moderator || current_user&.id == @user.id)
         .card class="alert alert-warning" style="padding: 0px;"
           .card-body style="text-align: center;" 
             b Unapproved Account
             br
+            - if current_user&.id == @user.id
+              small Your account will be approved after consistent participation on the site.
 
       - if @user.marked_for_death && logged_in_as_moderator
         .card class="alert alert-dark" style="padding: 0px;"
@@ -75,6 +77,25 @@ javascript:
                 = f.button "Mark For Death", name: 'mark_for_death', data: { confirm: 'Are you sure? Only the admin can reverse this action!' }, class:"btn btn-dark", style: "margin-top: 5px;"
 
     .col-lg-8
+      - if logged_in_as_moderator && @all_bans.count.positive?
+        .card
+          .card-header style="color: red;"
+            b Ban History
+
+          .card-body
+            table.table 
+              thead
+                tr
+                  th scope="col" Start
+                  th scope="col" Expiration
+                  th scope="col" Reason
+              tbody
+                - @all_bans.each do |ban|
+                  tr
+                    td = date_string_short(ban.created_at)
+                    td = date_string_short(ban.expiration)
+                    td = ban.reason
+
       .card
         .card-header
           b Badges Awarded

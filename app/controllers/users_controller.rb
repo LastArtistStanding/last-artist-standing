@@ -26,6 +26,7 @@ class UsersController < ApplicationController
     @awards = Award.where('user_id = ? AND badge_id <> 1', @user.id).order('prestige DESC')
     @submissions = base_submissions.where(user_id: @user.id).order('submissions.created_at DESC').limit(10)
     @ban = SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{@user.id}")
+    @all_bans = SiteBan.where(user_id: @user.id)
   end
 
   def new

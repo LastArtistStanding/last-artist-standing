@@ -83,15 +83,6 @@ ActiveRecord::Schema.define(version: 2020_06_20_203728) do
     t.index ["source_type", "source_id"], name: "index_comments_on_source_type_and_source_id"
   end
 
-  create_table "ip_bans", force: :cascade do |t|
-    t.string "ip", null: false
-    t.string "alias", null: false
-    t.string "reason", null: false
-    t.string "notes"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
   create_table "moderator_applications", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -196,14 +187,6 @@ ActiveRecord::Schema.define(version: 2020_06_20_203728) do
     t.integer "soft_deleted_by"
   end
 
-  create_table "user_blocks", force: :cascade do |t|
-    t.string "ip", null: false
-    t.bigint "user_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_user_blocks_on_user_id"
-  end
-
   create_table "user_sessions", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.string "ip_address"
@@ -246,6 +229,5 @@ ActiveRecord::Schema.define(version: 2020_06_20_203728) do
   add_foreign_key "moderator_applications", "users"
   add_foreign_key "moderator_logs", "users"
   add_foreign_key "site_bans", "users"
-  add_foreign_key "user_blocks", "users"
   add_foreign_key "user_sessions", "users"
 end

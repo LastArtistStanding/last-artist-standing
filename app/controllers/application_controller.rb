@@ -57,7 +57,7 @@ class ApplicationController < ActionController::Base
   def ensure_unbanned
     latest_ban = SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{current_user.id}")
     unless latest_ban.nil?
-      render '/pages/banned', locals: { ban: latest_ban }
+      render '/pages/banned', locals: { ban: latest_ban }, status: :forbidden
     end
   end
 

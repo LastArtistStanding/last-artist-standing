@@ -271,13 +271,6 @@ class User < ApplicationRecord
                         target: self,
                         action: "#{moderator.username} has marked #{username} for death!".upcase,
                         reason: reason)
-    ip_addresses = UserSession.where(user_id: id).distinct.pluck(:ip_address)
-    ip_addresses.each do |ip|
-      dup_ip = IpBan.find_by(ip: ip)
-      unless dup_ip.present?
-        IpBan.create(ip: ip, reason: reason, alias: self.username)
-      end
-    end
   end
 
   # Shows current frequency, accounting for a change that may have happened at submit-time.
