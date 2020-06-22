@@ -1,0 +1,363 @@
+<% provide(:title, "Do Art Daily") %>
+<%= javascript_include_tag "polyfills/css.escape" %>
+<script>
+  // Needed to activate tooltips.
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+  $(function () {
+    $('[data-toggle="popover"]').popover()
+  })
+
+  function pad(n) {
+    return (n < 10) ? ("0" + n) : n;
+  }
+  var interval;
+  $(document).ready(function(){
+    var seconds, minutes, hours, days;
+
+    if (interval != null) {
+      clearInterval(interval);
+    }
+    var timeInfo = $('.time_information').data('time');
+
+    var rubyDate = new Date(timeInfo);
+    var javascriptDate = Date.now();
+    var offset = rubyDate - javascriptDate;
+
+    var rubyNextDate = new Date(Date.UTC(rubyDate.getUTCFullYear(), rubyDate.getUTCMonth(), rubyDate.getUTCDate() + 1, 0, 0, 0));
+    var rubyNextSubmissionDate = new Date(Date.UTC(rubyDate.getUTCFullYear(), rubyDate.getUTCMonth(), rubyDate.getUTCDate() + $('.time_information').data('daysleft'), 0, 0, 0));
+    var currentTime = new Date(offset + Date.now());
+
+    var timeToNextDay = rubyNextDate - currentTime;
+    var timeToNextSubmissionDate = rubyNextSubmissionDate - currentTime;
+    var submitted = $('.time_information').data('submitted')
+
+    if (submitted == -2) {
+      $('#TimeDisplay').html(currentTime.toUTCString());
+      $('#StreakStatus').html("Please log in to view your streak status.");
+      $('#StreakStatus').addClass("streakNeutral");
+      $('#NextSubmissionDisplay').css("display", "none")
+    } else if (submitted == -1) {
+      $('#TimeDisplay').html(currentTime.toUTCString());
+      $('#StreakStatus').html("You currently don't have an active streak.");
+      $('#StreakStatus').addClass("streakNeutral");
+      $('#NextSubmissionDisplay').css("display", "none")
+    } else {
+      $('#TimeDisplay').html(currentTime.toUTCString());
+
+      seconds = Math.floor(timeToNextSubmissionDate / (1000)) % 60;
+      minutes = Math.floor(timeToNextSubmissionDate / (1000*60)) % 60;
+      hours = Math.floor(timeToNextSubmissionDate / (1000*60*60)) % 24;
+      days = Math.floor(timeToNextSubmissionDate / (1000*60*60*24));
+
+      if (submitted == 0) {
+        $('#StreakStatus').html("You must submit soon to protect your streak.<br>");
+        $('#StreakStatus').addClass("streakDanger");
+        $('#NextSubmissionDisplay').html("Submission Deadline: "+(days ? days+" day(s) " : "")+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
+      } else if (submitted == 1) {
+        $('#StreakStatus').html("Your streak is safe for now!<br>");
+        $('#StreakStatus').addClass("streakSafe");
+        $('#NextSubmissionDisplay').html("Next Submission Period: "+(days ? days+" day(s) " : "")+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
+      }
+
+    }
+
+    interval = setInterval(function() {
+      currentTime = new Date(offset + Date.now());
+      timeToNextDay = rubyNextDate - currentTime;
+      var pretext;
+
+      if (submitted == -2) {
+        $('#TimeDisplay').html(currentTime.toUTCString());
+      } else if (submitted == -1) {
+        $('#TimeDisplay').html(currentTime.toUTCString());
+      } else {
+        $('#TimeDisplay').html(currentTime.toUTCString());
+
+        if (submitted == 0) {
+          $('#StreakStatus').html("You must submit soon to protect your streak.<br>");
+          pretext = "Submission Deadline: ";
+        } else if (submitted == 1) {
+          $('#StreakStatus').html("Your streak is safe for now!<br>");
+          pretext = "Next Submission Period: ";
+        }
+
+        timeToNextSubmissionDate = rubyNextSubmissionDate - currentTime;
+
+        if (timeToNextSubmissionDate >= 0) {
+          seconds = Math.floor(timeToNextSubmissionDate / (1000)) % 60;
+          minutes = Math.floor(timeToNextSubmissionDate / (1000*60)) % 60;
+          hours = Math.floor(timeToNextSubmissionDate / (1000*60*60)) % 24;
+          days = Math.floor(timeToNextSubmissionDate / (1000*60*60*24));
+
+          $('#NextSubmissionDisplay').html(pretext+(days ? days+" day(s) " : "")+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
+        } else {
+          $('#NextSubmissionDisplay').html(pretext+"00:00:00");
+        }
+      }
+
+    }, 1000);
+  });
+  <% backgroundImage = random_safe_submission %>
+  <%# We must escape the URL as JavaScript because we're in a script tag, but *not* as HTML because this is a CDATA section. %>
+  <%# Afterwards, we must escape the URL as CSS because the style attribute is CSS. %>
+  <%# There is no built-in Rails function to escape CSS directly, so we must use the browser built-in. %>
+  const backgroundImageUrl = CSS.escape("<%= escape_javascript(backgroundImage.drawing.url).html_safe unless backgroundImage.blank? %>");
+  window.onload = function(e) {
+    document.getElementById("wrapper").setAttribute("style", "background: linear-gradient( rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7) ), url('" + backgroundImageUrl + "') no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;")
+  };
+</script>
+<div class="container-fluid">
+  <div class="row">
+    <!-- Spacing Column -->
+    <div class="col-lg-1"></div>
+
+    <div class="col-lg-3" style="color: white;">
+
+      <div style="font-family: Fira Mono, monospace;" class="unselectable" unselectable="on">
+        <div style="width: 100%; height: 2em;">Welcome to</div>
+        <div style="font-size: 6rem; line-height: 6rem; text-align: center; width: 100%;">
+          DoArt<br>Daily
+        </div>
+        <div style="width: 100%; height: 2em; margin-top: 1em;">
+          <div style="float: right; font-size: 0.75em;">
+            <% if backgroundImage.present? %>
+              <i><%= link_to "image", backgroundImage, {:style => 'font-family: Fira Mono, monospace; color: white; font-weight: 300'} %> by <%= link_to backgroundImage.user.username, backgroundImage.user, {:style => 'font-family: Fira Mono, monospace; color: white; font-weight: 300'} %></i>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="card homeCardStyle blueCard">
+        <div class="card-body">
+          <% timeinfo = dad_streak_status %>
+          <%= content_tag :div, :class => "time_information", data: {time: Time.now.to_f * 1000, submitted: timeinfo[0], daysleft: timeinfo[1] } do %>
+          <% end %>
+          <span><i class="fa fa-clock-o"></i> <span id="TimeDisplay"></span></span><br>
+          <% currentSeason = Challenge.current_season %>
+          <span>
+            <% if currentSeason.name.include? "Spring" %>
+            <i class="fa fa-leaf"></i>
+            <% elsif currentSeason.name.include? "Summer" %>
+            <i class="fa fa-sun-o"></i>
+            <% elsif currentSeason.name.include? "Autumn" %>
+            <i class="fa fa-cloud"></i>
+            <% elsif currentSeason.name.include? "Winter" %>
+            <i class="fa fa-snowflake-o"></i>
+            <% end %>
+            <%= currentSeason.name %>: <%= pluralize((currentSeason.end_date - Date.current).to_i, "day") %> left.
+          </span><br><br>
+          <span id="StreakStatus"></span>
+          <span id="NextSubmissionDisplay"></span>
+        </div>
+      </div>
+
+      <% if ModeratorApplicationsController.applications_open? %>
+        <div class="card homeCardStyle blueCard">
+          <div class="card-header">
+            Moderator applications are now open.
+          </div>
+          <div class="card-body">
+            They will be open until
+            <%= Date.parse(ModeratorApplicationsController.applications_deadline).to_formatted_s(:long_ordinal) %>.<br>
+            <a href="/moderator_applications">Submit yours now!</a>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="card homeCardStyle blueCard">
+        <div class="card-body" style="text-align: center;">
+          <table class="table table-sm">
+            <thead class="thead-dark">
+              <th>What's happening on DAD?</th>
+            </thead>
+            <tbody>
+              <% @activity.each do |activity| %>
+              <tr>
+                <td><%= link_to activity[:message], activity[:link], style: "color: white;" %></td>
+              </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-lg-7">
+
+    <div class="row">
+
+      <div class="col-lg-6">
+
+        <% if !@latestEliminations.blank? %>
+        <div class="card homeCardStyle redCard">
+        <div class="card-header"><b>Today's Eliminations</b></div>
+          <div class="card-body">
+            <% @latestEliminations.each do |elim| %>
+            <% user = elim.user %>
+            <% avatarURL = user.profile_picture %>
+            <%= link_to image_tag(avatarURL, :title => "#{user.username} (Streak: #{elim.score})", :style => "width: 50px; margin: 0.25rem;", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{user.username}"), user %>
+            <% end %>
+          </div>
+        </div>
+        <% end %>
+
+        <% if !@levelUps.blank? %>
+        <div class="card homeCardStyle blueCard">
+        <div class="card-header"><b>Level Up - These users hit a new DAD milestone!</b></div>
+          <div class="card-body">
+            <% @levelUps.each do |award| %>
+              <% user = award.user %>
+              <% avatarURL = user.profile_picture %>
+              <%= link_to image_tag(avatarURL, :title => "#{user.username} - Level #{award.prestige} (#{pluralize(BadgeMap.where(:prestige => award.prestige, :badge_id => 1).first.required_score, "submission")})", :style => "width: 50px; margin-right: 0.5rem; margin-bottom: 0.5rem;", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{user.username}"), user %>
+            <% end %>
+          </div>
+        </div>
+        <% end %>
+
+        <div class="card homeCardStyle blueCard">
+          <div class="card-body table-responsive">
+            <% if !@startingChallenges.blank? %>
+            <% @startingChallenges.each_with_index do |challenge, index| %>
+            <b><%= challenge.name %></b> has just begun.<br>
+            <% end %>
+            Don't forget to submit if you're participating in 
+            <% if @startingChallenges.size == 1 %>
+            this challenge!
+            <% else %>
+            these challenges!
+            <% end %>
+            <br><br>
+            <% end %>
+            <% if !@endingChallenges.blank? %>
+            <% @endingChallenges.each_with_index do |challenge, index| %>
+            <b><%= challenge.name %></b> has just ended.<br>
+            <% end %>
+            <br><br>
+            <% end %>
+            <table class="table table-sm">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">ICO</th>
+                  <th scope="col">Active Challenge</th>
+                  <th scope="col">Start</th>
+                  <th scope="col">End</th>
+                  <th scope="col">Frequency</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <% @activeChallenges.each do |challenge| %>
+                <tr>
+                  <td><%= image_tag safe_badge_avatar(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
+                  <td><%= link_to challenge.name, challenge_path(challenge.id),  style: "color: white;" %></td>
+                  <td><%= date_string_short(challenge.start_date) %></td>
+                  <td><%= date_string_short(challenge.end_date) %></td>
+                  <td><%= frequency_string(challenge.postfrequency, false) %></td>
+                </tr>
+                <% end %>
+              </tbody>
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">ICO</th>
+                  <th scope="col">Upcoming Challenge</th>
+                  <th scope="col">Start</th>
+                  <th scope="col">End</th>
+                  <th scope="col">Frequency</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @upcomingChallenges.each do |challenge| %>
+                  <tr>
+                    <td><%= image_tag safe_badge_avatar(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
+                    <td><%= link_to challenge.name, challenge_path(challenge.id), style: "color: white;" %></td>
+                    <td><%= date_string_short(challenge.start_date) %></td>
+                    <td><%= date_string_short(challenge.end_date) %></td>
+                    <td><%= frequency_string(challenge.postfrequency, false) %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-lg-6">
+
+        <% numAwards = @latestAwards.count %>
+        <% if numAwards > 0 %>
+        <div class="card homeCardStyle blueCard">
+          <div class="card-header">
+            <b><%= pluralize(numAwards, "Badge") %> Awarded Today!</b>
+          </div>
+          <div class="card-body">
+            <% awardHash = @latestAwards.group_by{|a| [a.prestige, a.badge_id]} %>
+            <% awardHash.each_with_index do |(awardData, awards), index| %>
+              <% isNotLastHash = index != (awardHash.length-1) %>
+              <div class="row" style="padding-left: 1rem; padding-right: 0.75rem; padding-bottom: 1rem;
+              <% if isNotLastHash %>
+              <%= "border-bottom: 1px solid rgba(0, 0, 0, 0.125);" %>
+              <% end %>
+              ">
+                <div style="width: 90px; float: left;">
+                  <% badge = Badge.find(awardData[1]) %>
+                  <%= link_to image_tag(safe_badge_avatar(badge), :class => "prestige#{awardData[0]}", :data => {:content => "<p style='font-weight: 600;'>#{badge.name}</p>#{simple_format(BadgeMap.find_by({:badge_id => awardData[1], :prestige => awardData[0]}).description)} (Prestige Level: #{awardData[0]})", :trigger => "hover", :toggle => "popover", :placement => "top", :html => "true" }, :alt => "#{badge.name}"), challenge_path(badge.challenge_id) %>
+                </div>
+                <div style="width: calc(100% - 90px); float: left;">
+                  <% awards.each do |award| %>
+                    <% user = award.user %>
+                    <% avatarURL = user.profile_picture %>
+
+                    <%= link_to image_tag(avatarURL, :title => "#{user.username}", :style => "width: 25px; margin-right: 0.25rem; margin-bottom: 0.25rem;", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{user.username}"), user %>
+                  <% end %>
+                </div>
+              </div>
+              <% if isNotLastHash %>
+              <br>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+        <% end %>
+
+        <% if !@seasonalLeaderboard.blank? %>
+        <div class="card homeCardStyle blueCard">
+          <div class="card-header"><b><%= link_to "#{@currentSeasonalChallenge.name} Leaderboard", challenge_path(@currentSeasonalChallenge.id), style: "color: white;" %></b></div>
+          <div class="card-body table-responsive">
+            <table class="table table-sm">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">Users</th>
+                  <th scope="col">Score</th>
+                </tr>
+              </thead>
+              <% seasonHash = @seasonalLeaderboard.group_by{|a| [a.score]} %>
+              <% seasonHash.each_with_index do |(partData, seasonParts), index| %>
+                <% currScore = partData[0] %>
+                <% if index >= 10 %>
+                  <% break %>
+                <% end %>
+                <tr><td>
+                  <% seasonParts.each do |seasonPart| %>
+                    <% user = seasonPart.user %>
+                    <% avatarURL = user.profile_picture %>
+                    <%= link_to image_tag(avatarURL, :title => "#{user.username}", :style => "width: 20px; margin: 0.125rem;", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{user.username}"), user %>
+                  <% end %>
+                </td>
+                <td><%= currScore %></td></tr>
+              <% end %>
+            </table>
+          </div>
+        </div>
+        <% end %>
+
+      </div>
+      <!-- Spacing Column -->
+    <div class="col-lg-1"></div>
+  </div>
+</div>
+</div>
+</div>

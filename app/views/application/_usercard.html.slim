@@ -1,5 +1,12 @@
-.avatarWithName
-  .avatarUserName = user.username
+div class="avatarWithName #{'moderator' if user.is_moderator} #{'administrator' if user.is_admin}"
+  .avatarUserName
+    = user.username
+    br
+    - if user.is_moderator
+      span style="font-size: 10px;" Moderator
+    - elsif user.is_admin
+      span style="font-size: 10px;" Administrator
+
   a href="#{root_url}users/#{user.id}"
     span.fullSizeAvatar
       = image_tag user.profile_picture, title: "#{frequency_string(user.current_dad_frequency, true)}", alt: "#{user.username}", data: { toggle: "tooltip", placement: "top" }

@@ -191,14 +191,22 @@ p {
   }
 
   .avatarWithName {
-  display: inline-block;
-  position: relative;
-  width: 100%;
+    display: inline-block;
+    position: relative;
+    width: 100%;
 
-  margin: 5px;
-  border-radius: 10px;
-  background: #515d68;
-  z-index: 1;
+    margin: 5px;
+    border-radius: 10px;
+    background: #515d68;
+    z-index: 1;
+
+    &.moderator {
+      background: #36458a;
+    }
+
+    &.administrator {
+      background: #8a4536;
+    }
   }
 
 }
@@ -228,13 +236,23 @@ p {
   border-radius: 10px;
   background: #515d68;
   z-index: 1;
+
+  &.moderator {
+    background: #36458a;
+  }
+
+  &.administrator {
+    background: #8a4536;
+  }
 }
 
 .avatarUserName {
-  margin-top: 5px;
+  margin-top: 7px;
   text-align: center;
   font-weight: 600;
   width: 100%;
+  line-height: 1.0;
+  height: 24px;
   color:#ffffff;
   overflow: hidden;
   white-space: nowrap;
