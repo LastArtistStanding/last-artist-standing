@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
   end
 
   def render_hidden(message)
-    render 'pages/hidden', locals: { message: message }
+    render 'pages/hidden', locals: { message: message }, status: :forbidden
   end
 
   # Ensure that a user is logged in.

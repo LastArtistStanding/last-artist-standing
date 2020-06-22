@@ -41,10 +41,8 @@ class SubmissionsController < ApplicationController
     if @submission.soft_deleted && !logged_in_as_moderator
       render_hidden("This submission was hidden by moderation.") 
     end
-    if !@submission.approved
-      unless logged_in_as_moderator || @submission.user_id == current_user&.id
-        render_hidden("This submission has not been approved by moderation yet.")
-      end
+    unless @submission.approved || (logged_in_as_moderator || @submission.user_id == current_user&.id)
+      render_hidden("This submission has not been approved by moderation yet.")
     end
 
     @challenge_entries = ChallengeEntry.where(submission_id: @submission.id)

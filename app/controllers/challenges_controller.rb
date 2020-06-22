@@ -24,7 +24,6 @@ class ChallengesController < ApplicationController
 
   # GET
   def entries
-    #@challengeEntries = ChallengeEntry.includes(:submission).where(challenge_id: @challenge.id).order('created_at DESC').paginate(page: params[:page], per_page: 25).includes(submission: :comments)
     @entries = base_submissions.includes(:challenge_entries).where("challenge_entries.challenge_id = #{@challenge.id}").order('challenge_entries.created_at DESC').paginate(page: params[:page], per_page: 25)
   end
 
