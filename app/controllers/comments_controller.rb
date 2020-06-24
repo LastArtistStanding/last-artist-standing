@@ -57,7 +57,7 @@ class CommentsController < ApplicationController
         if @comment.soft_deleted
           @comment.soft_deleted_by = current_user.id
         end
-        ModeratorLog.create(user_id: current_user.id, 
+        ModeratorLog.create(user_id: current_user.id,
                             target: @comment,
                             action: "#{current_user.username} has #{@comment.soft_deleted ? 'soft deleted' : 'reverted soft deletion on'} a comment made by #{@comment.user.username}.",
                             reason: params[:reason])
@@ -114,7 +114,7 @@ class CommentsController < ApplicationController
       send_notification('%<poster>s has commented on your submission %<target>s.', @target.user_id)
     end
 
-    discussion_users = @target.comments.group(:user_id).pluck(:user_id)
+    discussion_users = @target.comments.unscoped.select(:user_id).distinct.pluck(:user_id)
     discussion_users.each do |user_id|
       # Don't send notifications to ourselves.
       next if user_id == current_user.id
