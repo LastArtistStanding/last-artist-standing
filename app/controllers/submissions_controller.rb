@@ -217,6 +217,7 @@ class SubmissionsController < ApplicationController
     else
       @comments = Comment.where(source: @submission, soft_deleted: false).includes(:user)
     end
+    @comments = @comments.order(:id)
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
