@@ -114,7 +114,7 @@ class CommentsController < ApplicationController
       send_notification('%<poster>s has commented on your submission %<target>s.', @target.user_id)
     end
 
-    discussion_users = @target.comments.unscoped.select(:user_id).distinct.pluck(:user_id)
+    discussion_users = @target.comments.select(:user_id).distinct.pluck(:user_id)
     discussion_users.each do |user_id|
       # Don't send notifications to ourselves.
       next if user_id == current_user.id
