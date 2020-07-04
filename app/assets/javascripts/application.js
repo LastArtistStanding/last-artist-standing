@@ -8,3 +8,5 @@
 //= link submissions/keyboard_navigation.js
 //= link submissions/view_size_change.js
 //= link application.css
+//= require chartkick
+//= require Chart.bundle
