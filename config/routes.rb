@@ -46,6 +46,8 @@ Rails.application.routes.draw do
   post 'users/:user_id/email_verification/:token' => 'email_verifications#update',
     as: :email_verification
 
+  resources :houses
+
   if ENV['X_AUTH_HOST'].present?
     get 'x_site_auth/auto_login_available' => 'x_site_auth#auto_login_available'
     get 'x_site_auth/login' => 'x_site_auth#login'
