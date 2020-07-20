@@ -1,16 +1,17 @@
+# frozen_string_literal: true
+
+# Controller for plotting LAS Houses times
 class HousesController < ApplicationController
   def index
     @user_list = {}
-    @total_time = 0
     # TODO: Users.where('house_id is not null').each do |user|
     User.where('1 = 1').each do |user|
-      sum = 0
-      Submission.where('user_id = ? and created_at >= ?', user.id, Date.today - 30.days).each do |submission|
-        sum += submission.time.to_f / 60.0
-        @total_time += submission.time.to_f / 60.0
+      @user_list[user.name] = 0
+      Submission.where('user_id = ? and created_at >= ?', user.id, Date.today - 30.days).each do |s|
+        @user_list[user.name] += s.time.to_f / 60.0
       end
-      @user_list[user.name] = sum if sum.positive?
     end
-    @user_list = @user_list.sort_by { |hash| -hash.last }
+    @total_time = @user_list.values.sum
+    @user_list = @user_list.delete_if{|k, v| !v.positive?}.sort_by { |hash| -hash.last }
   end
 end
