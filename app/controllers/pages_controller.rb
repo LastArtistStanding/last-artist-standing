@@ -39,6 +39,12 @@ class PagesController < ApplicationController
     end
     @activity = @activity.sort_by { |h| h[:datetime] }.reverse!
     @activity = @activity[0..9]
+
+    if logged_in?
+      @participations = Participation.includes(challenge: [:challenge_entries])
+                                     .where(participations: { user_id: current_user.id, active: true }, challenges: {seasonal: false})
+                                     .where.not(challenges: { id: 1 })
+    end
   end
 
   def login; end
