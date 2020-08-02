@@ -157,28 +157,26 @@
           <span id="StreakStatus"></span>
           <span id="NextSubmissionDisplay"></span>
           <% if @participations.present? && @participations.length.positive? %>
-            <div id="OtherStatuses">
-              <% @participations.each do |p| %>
-                <br>
-                <b><%= p.challenge.name %></b><br>
-                <% if p.challenge.postfrequency == 0 %>
-                  <span class="streakNeutral">You may submit to the challenge as frequently as desired. You must meet the submission count requirement by: <%= date_string_short(p.next_submission_date) %></span>
-                <% else %>
-                  <% submitted = p.challenge.challenge_entries.where("created_at >= :last_date AND created_at < :next_date AND user_id = :user_id", {last_date: p.last_submission_date, next_date: p.next_submission_date, user_id: current_user.id}).count.positive? %>
-                  <% if submitted %>
-                    <% if p.challenge.streak_based %>
-                      <span class="streakSafe">You are safe from elimination for now.</span><br>
-                    <% else %>
-                      <span class="streakSafe">You have met the deadline, and your score has been, or will be incremented.</span><br>
-                    <% end %>
-                    <span>Safe Until: <%= p.next_submission_date.strftime("%a, %d %b %Y") %></span><br>
+            <% @participations.each do |p| %>
+              <br><br>
+              <b><%= p.challenge.name %></b><br>
+              <% if p.challenge.postfrequency == 0 %>
+                <span class="streakNeutral">No post frequency. Meet the submission count requirement by: <%= p.next_submission_date.strftime("%a, %d %b %Y") %></span>
+              <% else %>
+                <% submitted = p.challenge.challenge_entries.where("created_at >= :last_date AND created_at < :next_date AND user_id = :user_id", {last_date: p.last_submission_date, next_date: p.next_submission_date, user_id: current_user.id}).count.positive? %>
+                <% if submitted %>
+                  <% if p.challenge.streak_based %>
+                    <span class="streakSafe">You are safe from elimination for now.</span><br>
                   <% else %>
-                    <span class="streakDanger">Submit before the deadline to <%= p.challenge.streak_based ? "avoid elimination" : "earn a point" %>.</span><br>
-                    <span>Current Deadline: <%= p.next_submission_date.strftime("%a, %d %b %Y") %></span><br>
+                    <span class="streakSafe">You have met the deadline, and your score has been, or will be incremented.</span><br>
                   <% end %>
+                  <span>Safe Until: <%= p.next_submission_date.strftime("%a, %d %b %Y") %></span><br>
+                <% else %>
+                  <span class="streakDanger">Submit before the deadline to <%= p.challenge.streak_based ? "avoid elimination" : "earn a point" %>.</span><br>
+                  <span>Current Deadline: <%= p.next_submission_date.strftime("%a, %d %b %Y") %></span><br>
                 <% end %>
               <% end %>
-            </div>
+            <% end %>
           <% end %>
         </div>
       </div>
