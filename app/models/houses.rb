@@ -1,2 +1,0 @@
-class Houses < ApplicationRecord
-end

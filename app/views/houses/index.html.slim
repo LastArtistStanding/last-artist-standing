@@ -1,8 +1,6 @@
-div style="display: flex; flex-direction: column; align-items: center;"
-  h1  Together, DADs have drawn for over #{@total_time.round(0)} hours in the last month!
-  = bar_chart @user_list,
-    height: (@user_list.length * (20 * 1.1)).to_s + 'px', 
-    round: 2,
-    dataset: {bar_thickness: 20},
-    library: {tooltip: {pointFormat: 'Awesome values: <b>{point.y}</b>'}}
-    
+.form-group.row
+  a.btn.btn-primary href="#{new_house_path}"
+    div CREATE NEW HOUSE 
+
+- @current_houses.each do |h|
+  p #{h.house_name}

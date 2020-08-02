@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_20_203728) do
+ActiveRecord::Schema.define(version: 2020_07_28_023657) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -81,6 +81,13 @@ ActiveRecord::Schema.define(version: 2020_06_20_203728) do
     t.boolean "soft_deleted", default: false, null: false
     t.integer "soft_deleted_by"
     t.index ["source_type", "source_id"], name: "index_comments_on_source_type_and_source_id"
+  end
+
+  create_table "houses", force: :cascade do |t|
+    t.string "house_name", null: false
+    t.datetime "house_start", null: false
+    t.datetime "house_end", null: false
+    t.integer "user_ids", default: [], array: true
   end
 
   create_table "moderator_applications", force: :cascade do |t|

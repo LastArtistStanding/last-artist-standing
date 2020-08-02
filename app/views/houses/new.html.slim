@@ -1,0 +1,26 @@
+div style="display: flex; flex-direction: column; align-items: center"
+  = form_for @house, html: { multipart: true } do |h|
+    / todo figure this crap out
+    .card style="width: 700px"
+      .card-header
+        b Create a new house
+      .card-body
+        - if @house.errors.any?
+          #error_explanation
+            h3 = "#{pluralize(@house.errors.count, "error")} prohibited this house from being created:"
+            ul
+              - @house.errors.messages.each do |message|
+                li = message[1][0]
+                
+        .form-group.row 
+          .col-3 = h.label :house_name, "House Name"
+          .col-9 = h.text_field :house_name
+        .form-group.row
+          .col-3 = h.label :house_start, "House Start Date"
+          .col-9 = h.date_select :house_start, {order: [:month, :day, :year], start_year: Time.now.utc.to_date.year}, {class: 'col-3'}
+        .form-group.row
+          .col-3 = h.label :house_end, "House Start end"
+          .col-9 = h.date_select :house_end, {order: [:month, :day, :year], start_year: Time.now.utc.to_date.year}, {class: 'col-3'}
+        .form-group.row
+          .offset-sm-6.col-sm-6 = h.submit class: 'btn btn-primary', style: "margin-bottom: 0;"
+          

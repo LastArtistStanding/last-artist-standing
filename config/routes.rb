@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+
   root 'pages#home'
   get '/login' => 'sessions#new'
   post '/login' => 'sessions#create'
@@ -46,6 +47,7 @@ Rails.application.routes.draw do
   post 'users/:user_id/email_verification/:token' => 'email_verifications#update',
     as: :email_verification
 
+  #todo move this to pages
   resources :houses
 
   if ENV['X_AUTH_HOST'].present?

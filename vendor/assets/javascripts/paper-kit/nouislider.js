@@ -1201,7 +1201,7 @@ function closure ( target, options, originalOptions ){
 			}
 
 			// Low can be 0, so test for false. If high is undefined,
-			// we are at the last subrange. Index 0 is already handled.
+			// we are at the last subrange. index 0 is already handled.
 			if ( low === false || high === undefined ) {
 				return;
 			}

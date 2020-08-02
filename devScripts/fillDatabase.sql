@@ -11,11 +11,12 @@ DO $$
 DECLARE uid INTEGER;
 BEGIN
     FOR counter IN 1..100 LOOP
+        insert into users (name, email, created_at, updated_at, verified, email_verified)
+        values (cast (counter as varchar), cast (counter as varchar), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, true);
 
-            insert into users (name, email, created_at, updated_at, verified, email_verified)
-            values (cast (counter as varchar), cast (counter as varchar), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, true);
-
+        FOR user_submissions IN 1..floor(random()*30) LOOP
             insert into submissions (user_id, time, created_at, updated_at)
             values ((select id from users where name = cast (counter as varchar)), floor(random()*100), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
         END LOOP;
+    END LOOP;
 END; $$
