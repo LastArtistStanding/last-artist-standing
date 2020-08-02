@@ -170,10 +170,10 @@
                   <% else %>
                     <span class="streakSafe">You have met the deadline, and your score has been, or will be incremented.</span><br>
                   <% end %>
-                  <span>Safe Until: <%= p.next_submission_date.strftime("%a, %d %b %Y") %></span><br>
+                  <span>Safe Until: <%= p.next_submission_date.strftime("%a, %d %b %Y") %></span>
                 <% else %>
                   <span class="streakDanger">Submit before the deadline to <%= p.challenge.streak_based ? "avoid elimination" : "earn a point" %>.</span><br>
-                  <span>Current Deadline: <%= p.next_submission_date.strftime("%a, %d %b %Y") %></span><br>
+                  <span>Current Deadline: <%= p.next_submission_date.strftime("%a, %d %b %Y") %></span>
                 <% end %>
               <% end %>
             <% end %>
