@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 namespace :dad_tasks do
+
+  desc 'Nightly rollover script'
   task rollover_script: :environment do
     # The rollover script runs at 12:00 AM every night UTC.
     # Yesterday represents all of the submissions made the day prior,
