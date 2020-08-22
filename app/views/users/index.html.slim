@@ -19,15 +19,23 @@ javascript:
           .col-md-8
             .card
               .card-body
-                .digg_pagination style="height: #{@users.total_pages > 1 ? "80px" : "36px"}"
-                  .page_info
-                    = page_entries_info @users
+                = page_entries_info @users
 
-                  = will_paginate @users, container: false, inner_window: 2, outer_window: 1
+            - if @users.count > @user_per_page
+              .card
+                .card-body
+                  .digg_pagination
+                    = will_paginate @users, container: false, inner_window: 1, outer_window: 1
 
             .card
               .card-body
                 - @users.each do |user|
                   = render partial: "application/usercard", locals: { user: user }
+
+            - if @users.count > @user_per_page
+              .card
+                .card-body
+                  .digg_pagination
+                    = will_paginate @users, container: false, inner_window: 2, outer_window: 1
 
     .col-lg-1
