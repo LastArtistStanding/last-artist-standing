@@ -26,6 +26,18 @@ module SubmissionsHelper
     submission.drawing.thumb.url
   end
 
+  def safe_submission_drawing(submission)
+    unless logged_in?
+      return NSFW_THUMB if submission.nsfw_level > 1
+
+      return submission.drawing.url
+    end
+
+    return NSFW_THUMB if current_user.nsfw_level < submission.nsfw_level
+
+    submission.drawing.url
+  end
+
   def safe_submission_avatar(submission)
     unless logged_in?
       return NSFW_AVATAR if submission.nsfw_level > 1

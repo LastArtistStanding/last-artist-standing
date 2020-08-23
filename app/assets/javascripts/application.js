@@ -7,4 +7,5 @@
 //= link comments/writing_utils.js
 //= link submissions/keyboard_navigation.js
 //= link submissions/view_size_change.js
+//= link submissions/submission_modal.js
 //= link application.css

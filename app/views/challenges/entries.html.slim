@@ -1,5 +1,8 @@
 - provide(:title, "Entries for #{@challenge.name}")
 
+javascript:
+= javascript_include_tag 'submissions/submission_modal'
+
 .container-fluid style="margin-top: 2rem;"
   .row
     .col-lg-1
@@ -25,8 +28,15 @@
                     li
                       .submissionIcon
                         - user = submission.user
-                        = link_to "<img alt='' src=#{ user.profile_picture }> #{user.username}".html_safe, user, class: "submissionAuthor #{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''}"
-                        = link_to image_tag(safe_submission_thumb(submission), alt: "#{submission.display_title}"), submission
+                        = link_to "<img alt='' src=#{ user.profile_picture }> #{user.username}".html_safe, user, \
+                          class: "submissionAuthor #{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''}"
+                        = image_tag safe_submission_drawing(submission), \
+                          class: "submission", \
+                          style: "cursor: zoom-in;", \
+                          alt: "#{user.username} - #{submission.display_title}", \
+                          detail_link: "/submissions/#{submission.id}", \
+                          full_size_link: safe_submission_drawing(submission), \
+                          avatar_link: user.profile_picture
                         div class="submissionNotes #{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''}"
                           = submission.created_at.strftime("%H:%M:%S")
                           | &nbsp;
@@ -49,3 +59,22 @@
         |  Back
 
     .col-lg-1
+
+.modal class="fade" id="submission-modal" tabindex="-1" role="dialog" aria-labelledby="submission-modal-label" aria-hidden="true"
+  .modal-dialog class="modal-dialog-centered modal-lg" role="document"
+    .modal-content
+      .modal-header
+        img id="avatar" style="max-width: 50px; max-height: 50px;"
+        h5 class="modal-title" id="title" style="align-self: center; margin-left: 20px;"
+        button type="button" class="close" data-dismiss="modal" aria-label="Close"
+          span aria-hidden="true"
+            | &times;
+      .modal-body data-dismiss="modal"
+        img id="drawing" style="width: 100%; border-radius: 0.3rem;"
+      .modal-footer
+        a type="button" target="_blank" class="btn btn-primary" id="full-size-button"
+          span.fa.fa-arrows-alt
+          |  Full Size
+        a type="button" class="btn btn-primary" id="detail-button"
+          span.fa.fa-search 
+          |  Details
