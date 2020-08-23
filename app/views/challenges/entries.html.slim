@@ -5,10 +5,15 @@
     .col-lg-1
 
     .col-lg-10
-      .row
-        .digg_pagination
-          .page_info = page_entries_info @entries
-          = will_paginate @entries, container: false
+      .card
+        .card-body
+          = page_entries_info @entries
+
+      - if @entries.count > @entry_per_page
+        .card
+          .card-body
+            .digg_pagination
+              = will_paginate @entries, container: false
 
       .row
         .col-lg-12
@@ -43,6 +48,12 @@
                             i.fa.fa-comments-o data-toggle="tooltip" data-placement="top" title="Has Comments"
                             | &nbsp;
                             = submission.num_comments
+
+      - if @entries.count > @entry_per_page
+        .card
+          .card-body
+            .digg_pagination
+              = will_paginate @entries, container: false
 
       a.btn.btn-primary href="/challenges/#{@challenge.id}"
         span.fa.fa-undo
