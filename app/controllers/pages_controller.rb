@@ -25,7 +25,7 @@ class PagesController < ApplicationController
       activity_hash = { message: "Challenge '#{c.name}' was created.", datetime: c.created_at, link: challenge_path(c.id) }
       @activity.push(activity_hash)
     end
-    submission_activity = base_submissions.order('created_at DESC').limit(10).includes(:user)
+    submission_activity = Submission.order('created_at DESC').limit(10).includes(:user)
     submission_activity.each do |s|
       activity_hash = { message: "#{s.user.username} submitted their art.", datetime: s.created_at, link: submission_path(s.id) }
       @activity.push(activity_hash)
