@@ -12,28 +12,28 @@ namespace :dad_tasks do
     today = yesterday + 1.day
 
     # Do not run the rollover script for a given day if it isn't over yet.
-    return if yesterday >= Time.now.utc.to_date
+    #return if yesterday >= Time.now.utc.to_date
 
     # STEP 1: Check the challenge entries, identify users that aren't participating in DAD/Seasonal Challenge, and create those participations.
     # Get the users that have posted on the current rollover date
     user_ids = ChallengeEntry.where('created_at >= ? AND created_at < ? AND challenge_id = 1', yesterday, today).pluck(:user_id).uniq
 
-    seasonal_challenge = Challenge.where(':yesterdays_date >= start_date AND :yesterdays_date < end_date AND seasonal = true', { yesterdays_date: yesterday }).first
+    seasonal_challenge = Challenge.where(':yesterdays_date >= start_date AND :yesterdays_date < end_date AND seasonal = true', {yesterdays_date: yesterday}).first
 
     # For each user, check if they have an active DAD or seasonal participation. If not, create it.
     user_ids.each do |uid|
       dad_part = Participation.find_by(user_id: uid, challenge_id: 1, active: true)
       if dad_part.blank?
         Participation.create({
-                               user_id: uid,
-                               challenge_id: 1,
-                               active: true,
-                               eliminated: false,
-                               score: 0,
-                               start_date: yesterday,
-                               last_submission_date: yesterday,
-                               next_submission_date: today,
-                               processed: yesterday - 1.day # so that this participation gets processed
+                                 user_id: uid,
+                                 challenge_id: 1,
+                                 active: true,
+                                 eliminated: false,
+                                 score: 0,
+                                 start_date: yesterday,
+                                 last_submission_date: yesterday,
+                                 next_submission_date: today,
+                                 processed: yesterday - 1.day # so that this participation gets processed
                              })
       end
 
@@ -41,15 +41,15 @@ namespace :dad_tasks do
       next if season_part.present?
 
       Participation.create({
-                             user_id: uid,
-                             challenge_id: seasonal_challenge.id,
-                             active: true,
-                             eliminated: false,
-                             score: 0,
-                             start_date: yesterday,
-                             last_submission_date: yesterday,
-                             next_submission_date: today,
-                             processed: yesterday - 1.day
+                               user_id: uid,
+                               challenge_id: seasonal_challenge.id,
+                               active: true,
+                               eliminated: false,
+                               score: 0,
+                               start_date: yesterday,
+                               last_submission_date: yesterday,
+                               next_submission_date: today,
+                               processed: yesterday - 1.day
                            })
     end
 
@@ -77,13 +77,13 @@ namespace :dad_tasks do
 
           dad_badge_map = BadgeMap.where("required_score <= #{p.score} AND challenge_id = 1").order('required_score DESC').first
           if dad_badge_map.present?
-            previous_award = Award.find_by({ user_id: p_user.id, badge_id: dad_badge_map.badge_id })
+            previous_award = Award.find_by({user_id: p_user.id, badge_id: dad_badge_map.badge_id})
             if previous_award.blank?
               Award.create({
-                             user_id: p_user.id,
-                             badge_id: dad_badge_map.badge_id,
-                             date_received: today,
-                             prestige: dad_badge_map.prestige
+                               user_id: p_user.id,
+                               badge_id: dad_badge_map.badge_id,
+                               date_received: today,
+                               prestige: dad_badge_map.prestige
                            })
               p_user.update_attribute(:highest_level, dad_badge_map.prestige)
             elsif previous_award.prestige < dad_badge_map.prestige
@@ -147,13 +147,13 @@ namespace :dad_tasks do
         if score_changed
           badge_map = BadgeMap.where("required_score <= #{p.score} AND challenge_id = #{challenge.id}").order('required_score DESC').first
           if badge_map.present?
-            previous_award = Award.find_by({ user_id: p_user.id, badge_id: badge_map.badge_id })
+            previous_award = Award.find_by({user_id: p_user.id, badge_id: badge_map.badge_id})
             if previous_award.blank?
               Award.create({
-                             user_id: p_user.id,
-                             badge_id: badge_map.badge_id,
-                             date_received: today,
-                             prestige: badge_map.prestige
+                               user_id: p_user.id,
+                               badge_id: badge_map.badge_id,
+                               date_received: today,
+                               prestige: badge_map.prestige
                            })
             elsif previous_award.prestige < badge_map.prestige
               previous_award.prestige = badge_map.prestige
@@ -206,11 +206,11 @@ namespace :dad_tasks do
 
       # Participants should be notified
       Notification.create({
-                            body: notification_text,
-                            source_type: 'Challenge',
-                            source_id: s.challenge_id,
-                            user_id: s.user_id,
-                            url: "/challenges/#{s.challenge_id}"
+                              body: notification_text,
+                              source_type: 'Challenge',
+                              source_id: s.challenge_id,
+                              user_id: s.user_id,
+                              url: "/challenges/#{s.challenge_id}"
                           })
 
       s.save
@@ -228,16 +228,37 @@ namespace :dad_tasks do
         next if Submission.find_by('created_at >= ? and user_id = ?', today - 14.days, u.id).nil?
 
         Notification.create({
-                              body: "#{challenge_name} has ended. Why not check out some of the entries?",
-                              source_type: 'Challenge',
-                              source_id: challenge_id,
-                              user_id: u.id,
-                              url: "/challenges/#{challenge_id}/entries"
+                                body: "#{challenge_name} has ended. Why not check out some of the entries?",
+                                source_type: 'Challenge',
+                                source_id: challenge_id,
+                                user_id: u.id,
+                                url: "/challenges/#{challenge_id}/entries"
                             })
       end
     end
 
-    # STEP 6: Now that the daily job is complete, update.
+    # STEP 6: Smoke some weed.
+
+    # STEP 7: Create new Houses if it is the start of the month
+    # TODO DON'T COMMIT THIS
+    if 1 #Time.now.utc.to_date == Time.now.utc.at_beginning_of_month.to_date'
+      House.where("house_start < ?", Time.now.utc.prev_month.at_beginning_of_month.to_date).each do |h|
+        h.delete
+      end
+
+      HouseParticipation.where("join_date < ?", Time.now.utc.prev_month.at_beginning_of_month.to_date).each do |p|
+        p.delete
+      end
+
+      (1..3).each do |i|
+        House.create(
+            house_name: "House #{i}",
+            house_start: Time.now.utc.at_beginning_of_month.to_date,
+        )
+      end
+    end
+
+    # STEP 8: Now that the daily job is complete, update.
     SiteStatus.first.update_attribute(:current_rollover, today)
   end
 
@@ -254,7 +275,7 @@ namespace :dad_tasks do
     challenge = Challenge.find(args[:challenge_id])
     next if challenge.blank? || !challenge.seasonal
 
-    participation = Participation.find_by({ user_id: user.id, challenge_id: challenge.id })
+    participation = Participation.find_by({user_id: user.id, challenge_id: challenge.id})
     next if participation.blank?
 
     score = 0
@@ -276,12 +297,12 @@ namespace :dad_tasks do
 
     badge_map = BadgeMap.where("required_score <= #{participation.score} AND challenge_id = #{challenge.id}").order('required_score DESC').first
     if badge_map.present?
-      previous_award = Award.find_by({ user_id: user.id, badge_id: badge_map.badge_id })
+      previous_award = Award.find_by({user_id: user.id, badge_id: badge_map.badge_id})
       if previous_award.blank?
         Award.create({
-                       user_id: user.id,
-                       badge_id: badge_map.badge_id,
-                       prestige: badge_map.prestige
+                         user_id: user.id,
+                         badge_id: badge_map.badge_id,
+                         prestige: badge_map.prestige
                      })
         puts 'Award not found. Creating one.'
       else
@@ -301,14 +322,14 @@ namespace :dad_tasks do
       patchNote = PatchNote.find_by(patch: noteDetails['patch'])
       next if patchNote.present?
 
-      patchNote = PatchNote.create({ before: noteDetails['before'], after: noteDetails['after'], patch: noteDetails['patch'] })
+      patchNote = PatchNote.create({before: noteDetails['before'], after: noteDetails['after'], patch: noteDetails['patch']})
       if PatchNote.column_names.include?('title')
         patchNote.title = noteDetails['title']
         patchNote.save
       end
       patchEntriesData.each do |_currentPatchEntry, entryDetails|
         if patchNote.id == entryDetails['patchnote_id']
-          PatchEntry.create({ patchnote_id: entryDetails['patchnote_id'], body: entryDetails['body'], importance: entryDetails['importance'] })
+          PatchEntry.create({patchnote_id: entryDetails['patchnote_id'], body: entryDetails['body'], importance: entryDetails['importance']})
         end
       end
     end
@@ -323,9 +344,10 @@ namespace :dad_tasks do
     if user.nil?
       puts 'User is missing or deleted.'
     else
-      puts "Crosshairs locked on User #{user_id} - #{user.name} (#{if user.username != user.name
-                                                                     user.username
-                                                                   end})"
+      puts "Crosshairs locked on User #{user_id} - #{user.name} (#{
+      if user.username != user.name
+        user.username
+      end})"
     end
     proceed = '?'
     until proceed.downcase == "y\n" || proceed.downcase == "n\n"
@@ -421,7 +443,7 @@ namespace :dad_tasks do
   task purge_unverified_users: :environment do
     # NOTE: The migration automatically sets `verified = TRUE` for all existing accounts.
     deletion_candidates =
-      User.where('verified = FALSE AND email_verification_sent_at <= ?', Time.now.utc.yesterday)
+        User.where('verified = FALSE AND email_verification_sent_at <= ?', Time.now.utc.yesterday)
 
     if deletion_candidates.count.zero?
       puts 'There are no unverified accounts to be deleted.'

@@ -1,0 +1,3 @@
+class HouseParticipation < ApplicationRecord
+
+end

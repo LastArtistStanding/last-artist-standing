@@ -93,7 +93,6 @@ gem 'will_paginate', '>= 3.3.0', '< 3.4'
 
 ## Security updates
 gem 'excon', '>= 0.71.0'
-gem 'chartkick', '~> 3.3.1'
 gem 'loofah', '>= 2.3.1'
 gem 'nokogiri', '>= 1.10.9', '< 2.0'
 gem 'rack', '>= 2.0.8'

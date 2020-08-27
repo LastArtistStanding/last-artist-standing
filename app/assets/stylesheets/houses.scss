@@ -1,3 +1,71 @@
 // Place all the styles related to the Houses controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+
+.house-card {
+  width: 28%;
+  min-width: 300px;
+  max-width: 400px;
+
+  // Don't use these they look bad when the table is huge
+  &.first:not(.empty) {
+    background: linear-gradient(117deg, rgba(215, 181, 0, 1) 0%, rgba(255, 218, 23, 1) 17%, rgba(255, 245, 182, 1) 29%, rgba(255, 216, 10, 1) 40%, rgba(255, 242, 166, 1) 52%, rgba(255, 216, 9, 1) 71%, rgba(236, 198, 0, 1) 100%);
+  }
+
+  &.second:not(.empty) {
+    background: linear-gradient(117deg, rgba(143, 143, 143, 1) 0%, rgba(208, 208, 208, 1) 17%, rgba(255, 255, 255, 1) 29%, rgba(219, 219, 219, 1) 40%, rgba(255, 255, 255, 1) 52%, rgba(199, 199, 199, 1) 71%, rgba(149, 149, 149, 1) 100%)
+  }
+
+  &.third:not(.empty) {
+    background: linear-gradient(117deg, rgba(124, 92, 62, 1) 0%, rgba(141, 109, 73, 1) 6%, rgba(233, 193, 131, 1) 28%, rgba(141, 109, 73, 1) 42%, rgba(233, 193, 131, 1) 54%, rgba(141, 109, 73, 1) 90%, rgba(124, 92, 62, 1) 100%);
+  }
+
+}
+
+.house-card-header {
+  display: flex;
+  align-items: baseline;
+}
+
+.house-icon {
+  padding: 0 5px;
+}
+
+.house-card-body {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.house-title {
+  font-weight: bold;
+}
+
+.house-participant {
+  display: flex;
+  justify-content: space-between;
+  margin: 1em 0;
+  border-bottom: solid 1px rgba(0, 0, 0, .2);
+}
+
+.house-spacer {
+  flex: 1;
+}
+
+.house-table-cell {
+  display: flex;
+  justify-content: space-between;
+}
+
+.house-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.house-neighborhood {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  width: 100%
+}

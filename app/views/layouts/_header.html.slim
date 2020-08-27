@@ -40,6 +40,11 @@ nav.navbar.navbar-expand-lg.navbar-dark.static-top style="background-color: #2A3
             |  Browse
 
         li.nav-item
+          a.nav-link href="#{houses_path}" title="View Houses Status"
+            i.fa.fa-home
+            |  Houses
+
+        li.nav-item
           a.nav-link href="#{challenges_path}" title="Join and create challenges."
             i.fa.fa-bolt
             |  Challenges
@@ -68,6 +73,8 @@ nav.navbar.navbar-expand-lg.navbar-dark.static-top style="background-color: #2A3
           a.nav-link href="#{logout_path}" data-method="delete" title="Log out of your account."
             i.fa.fa-sign-out
             |  Log out
+        
+        
 
       - else
         li.nav-item

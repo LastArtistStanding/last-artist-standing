@@ -14,9 +14,9 @@ class SubmissionsController < ApplicationController
   def index
     if params[:to].present? || params[:from].present?
       @submissions = if params[:to].blank?
-                       base_submissions.where('id >= :from', { from: params[:from] }).order('id ASC')
+                       base_submissions.where('id >= :from', {from: params[:from]}).order('id ASC')
                      elsif params[:from].blank?
-                       base_submissions.where('id <= :to', { to: params[:to] }).order('id ASC')
+                       base_submissions.where('id <= :to', {to: params[:to]}).order('id ASC')
                      else
                        base_submissions.where(id: params[:from]..params[:to]).order('id ASC')
                      end
@@ -51,12 +51,14 @@ class SubmissionsController < ApplicationController
   # GET /submissions/new
   def new
     @submission = Submission.new
-    @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
+    @participations = Participation.where({user_id: current_user.id, active: true}).order('challenge_id ASC')
+    @house_participations = current_user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date).first
+    @points = @house_participations ? @house_participations.time_spent : 0
   end
 
   # GET /submissions/1/edit
   def edit
-    @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
+    @participations = Participation.where({user_id: current_user.id, active: true}).order('challenge_id ASC')
   end
 
   # POST /submissions
@@ -68,7 +70,14 @@ class SubmissionsController < ApplicationController
     @submission.approved = current_user.approved
     artist_id = current_user.id
     @submission.user_id = artist_id
-    @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
+    @participations = Participation.where({user_id: current_user.id, active: true}).order('challenge_id ASC')
+
+
+    if (house_participations = current_user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date).first)
+      house_participations.time_spent += submission_params[:time].to_i / 30
+      house_participations.save
+    end
+
 
     respond_to do |format|
       if failure
@@ -85,19 +94,19 @@ class SubmissionsController < ApplicationController
         seasonalChallenge = Challenge.current_season
 
         # Add submission to DAD/Current Seasonal Challenge
-        dad_ce = ChallengeEntry.create({ challenge_id: 1, submission_id: @submission.id, user_id: artist_id })
+        dad_ce = ChallengeEntry.create({challenge_id: 1, submission_id: @submission.id, user_id: artist_id})
         dad_ce.created_at = initial_date_time
         dad_ce.save
-        season_ce = ChallengeEntry.create({ challenge_id: seasonalChallenge.id, submission_id: @submission.id, user_id: artist_id })
+        season_ce = ChallengeEntry.create({challenge_id: seasonalChallenge.id, submission_id: @submission.id, user_id: artist_id})
         season_ce.created_at = initial_date_time
         season_ce.save
 
         # Last, manage all custom challenge submissions selected (to do).
-        @participations = Participation.where({ user_id: artist_id, active: true }).order('challenge_id ASC')
+        @participations = Participation.where({user_id: artist_id, active: true}).order('challenge_id ASC')
         @participations.each do |p|
           next if params[p.challenge_id.to_s].blank?
 
-          ce = ChallengeEntry.create({ challenge_id: p.challenge_id, submission_id: @submission.id, user_id: artist_id })
+          ce = ChallengeEntry.create({challenge_id: p.challenge_id, submission_id: @submission.id, user_id: artist_id})
           ce.created_at = initial_date_time
           ce.save
         end
@@ -114,18 +123,25 @@ class SubmissionsController < ApplicationController
   # PATCH/PUT /submissions/1
   # PATCH/PUT /submissions/1.json
   def update
-    @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
+    @participations = Participation.where({user_id: current_user.id, active: true}).order('challenge_id ASC')
     curr_user_id = current_user.id
 
     used_params = if @submission.created_at.to_date == Time.now.utc.to_date
-                   submission_params
-                 else
-                   limited_params
-                 end
+                    submission_params
+                  else
+                    limited_params
+                  end
 
     # If the drawing itself was updated by an unapproved user, reset the approval.
     if used_params.has_key? :drawing
       @submission.approved = current_user.approved
+    end
+
+    house_participations = current_user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date).first
+    if (used_params.has_key? :time) && house_participations
+      house_participations.time_spent -= @submission.time.to_i / 30
+      house_participations.time_spent += used_params[:time].to_i / 30
+      house_participations.save
     end
 
     respond_to do |format|
@@ -141,11 +157,11 @@ class SubmissionsController < ApplicationController
           @participations.each do |p|
             next unless p.challenge_id != 1 && !p.challenge.seasonal
 
-            entry = ChallengeEntry.find_by({ challenge_id: p.challenge_id, submission_id: @submission.id, user_id: curr_user_id })
+            entry = ChallengeEntry.find_by({challenge_id: p.challenge_id, submission_id: @submission.id, user_id: curr_user_id})
             # If we selected the checkbox, check if an extry exists before creating it.
             if params[p.challenge_id.to_s].present? && entry.blank?
-              ChallengeEntry.create({ challenge_id: p.challenge_id, submission_id: @submission.id, user_id: curr_user_id })
-            # If we unchecked the box, check if an entry doesn't exist before deleting it.
+              ChallengeEntry.create({challenge_id: p.challenge_id, submission_id: @submission.id, user_id: curr_user_id})
+              # If we unchecked the box, check if an entry doesn't exist before deleting it.
             elsif params[p.challenge_id.to_s].blank? && entry.present?
               entry.destroy
             end
@@ -166,6 +182,11 @@ class SubmissionsController < ApplicationController
   def destroy
     # You can only delete a submission on the day you submitted it.
     return if @submission.created_at.to_date != Time.now.utc.to_date
+
+    if (house_participations = current_user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date).first)
+      house_participations.time_spent -= @submission.time.to_i / 30
+      house_participations.save
+    end
 
     @submission.destroy
     @submission.comments.each { |comment| comment.notifications.destroy_all }
@@ -223,7 +244,7 @@ class SubmissionsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def submission_params
     params.require(:submission)
-          .permit(:drawing, :user_id, :nsfw_level, :title, :description, :time, :commentable)
+        .permit(:drawing, :user_id, :nsfw_level, :title, :description, :time, :commentable)
   end
 
   def limited_params

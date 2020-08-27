@@ -1,49 +1,52 @@
 class HousesController < ApplicationController
-  before_action :ensure_moderator, only: %i[new create]
+  include HousesHelper
+  before_action :ensure_moderator, only: %i[edit update]
 
   def index
-    @current_houses = House.all
+    @old_houses = House.where('house_start = ?', Time.now.utc.prev_month.at_beginning_of_month).sort_by &:id
+    @current_houses = House.where('house_start = ?', Time.now.utc.at_beginning_of_month.to_date).sort_by { |h| -h.total_score }
   end
 
-  def new
-    @house = House.new
+  def edit
+    @house = House.find(params[:id])
   end
 
-  def create
-    # todo stuff:
-    @house = House.new(house_params)
-
-    unless @house.house_name?
-      @house.errors.add(:house_name, 'House name cannot be empty.')
-    end
-
-    unless @house.house_start > Time.now.utc
-      @house.errors.add(:house_start, 'Houses cannot begin in the past')
-    end
-
-    unless @house.house_start.day == 1
-      @house.errors.add(:house_start, 'Houses must start on the first of the month.')
-    end
-
-    dnm = [31, @house.house_start.year % 4 == 0 ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][@house.house_start.month - 1]
-
-    unless (@house.house_end - @house.house_start)/3600/24 + 1 == dnm
-      @house.errors.add(:house_end, 'Houses must be 1 calendar month long.')
-    end
-
-    p @house.errors
+  def update
+    @house = House.find(params[:id])
     respond_to do |format|
-      if @house.errors.any?
-        format.html {render :new}
+      if @house.update(house_params)
+        format.html { redirect_to '/houses' }
       else
-        @house.save
+        format.html { render :edit }
+      end
+    end
+  end
+
+  def join
+    @house = House.find(params[:id])
+    if @house.nil?
+      render_not_found
+    elsif is_in_a_house?
+      render_unauthorized
+    else
+      respond_to do |format|
+        # add the last 10 days of submissions if they are joining late in the month
+        search_date = (Time.now.utc.to_date - @house.house_start).to_i > 10 ? Time.now.utc.to_date - 10 : @house.house_start
+        time_spent = 0
+        current_user.submissions.where("created_at >= ?", search_date).each do |s|
+          time_spent += s.time.to_i / 30
+        end
+        HouseParticipation.create(user_id: current_user.id, house_id: params[:id], join_date: Time.now.utc.to_date, time_spent: time_spent)
+        flash[:success] = "You've joined #{@house.house_name}!"
         format.html { redirect_to '/houses' }
       end
     end
   end
 
+
   private
+
   def house_params
-    params.require(:house).permit(:house_name, :house_start, :house_end)
+    params.require(:house).permit(:house_name, :house_start, :joinable)
   end
 end

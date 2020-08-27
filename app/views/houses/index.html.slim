@@ -1,6 +1,48 @@
-.form-group.row
-  a.btn.btn-primary href="#{new_house_path}"
-    div CREATE NEW HOUSE 
+javascript:
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
 
-- @current_houses.each do |h|
-  p #{h.house_name}
+div.house-container
+  h3 This Month's Houses:
+  div.house-neighborhood
+    - @current_houses.each_with_index do |h, i|
+      div class="card house-card"
+        .card-header.house-card-header
+          b style="flex: 1" #{h.house_name}  
+          | #{"🥇" if h.place == 'first'} #{"🥈" if h.place == 'second'} #{"🥉" if h.place == 'third'}
+          - unless is_in_a_house? || !logged_in?
+            a.nav-link.house-icon href="houses/#{h.id}/join" title="Join House"
+              i.fa.fa-user-plus
+          - if logged_in_as_moderator
+            a.nav-link.house-icon href="#{edit_house_path(h)}" title="Edit House"
+              i.fa.fa-edit
+        .card-body.house-card-body
+          div.house-table-cell
+            p.house-title Name
+            p.house-title Score
+          - h.participants.each do |u|
+            div.house-participant
+              p #{u[:name]}
+              p #{u[:score]}
+          b.house-spacer
+          b Total: #{h.total_score}
+          
+  
+  h3 Last Month's Houses:
+  div.house-neighborhood
+    - @old_houses.each_with_index do |h, i|
+      div class="card house-card"
+        .card-header.house-card-header
+          b style="flex: 1" #{h.house_name}
+          | #{"🥇" if h.place == 'first'} #{"🥈" if h.place == 'second'} #{"🥉" if h.place == 'third'}
+        .card-body.house-card-body
+          div.house-table-cell
+            p.house-title Name
+            p.house-title Score
+          - h.participants.each do |u|
+            div.house-participant
+              p #{u[:name]}
+              p #{u[:score]}
+          b.house-spacer
+          b Total: #{h.total_score}
