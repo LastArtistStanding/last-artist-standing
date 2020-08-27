@@ -2,6 +2,10 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
+.house-container > h3 {
+  margin-top: 2em;
+}
+
 .house-card {
   width: 28%;
   min-width: 300px;
