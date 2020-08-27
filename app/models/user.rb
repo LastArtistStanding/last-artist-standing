@@ -26,7 +26,6 @@ class User < ApplicationRecord
   has_one :moderator_application
   has_many :house_participations
 
-
   before_save { self.email = email.downcase }
 
   validates :name, presence: true, length: { maximum: 50 },

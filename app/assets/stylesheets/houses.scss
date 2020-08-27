@@ -6,20 +6,6 @@
   width: 28%;
   min-width: 300px;
   max-width: 400px;
-
-  // Don't use these they look bad when the table is huge
-  &.first:not(.empty) {
-    background: linear-gradient(117deg, rgba(215, 181, 0, 1) 0%, rgba(255, 218, 23, 1) 17%, rgba(255, 245, 182, 1) 29%, rgba(255, 216, 10, 1) 40%, rgba(255, 242, 166, 1) 52%, rgba(255, 216, 9, 1) 71%, rgba(236, 198, 0, 1) 100%);
-  }
-
-  &.second:not(.empty) {
-    background: linear-gradient(117deg, rgba(143, 143, 143, 1) 0%, rgba(208, 208, 208, 1) 17%, rgba(255, 255, 255, 1) 29%, rgba(219, 219, 219, 1) 40%, rgba(255, 255, 255, 1) 52%, rgba(199, 199, 199, 1) 71%, rgba(149, 149, 149, 1) 100%)
-  }
-
-  &.third:not(.empty) {
-    background: linear-gradient(117deg, rgba(124, 92, 62, 1) 0%, rgba(141, 109, 73, 1) 6%, rgba(233, 193, 131, 1) 28%, rgba(141, 109, 73, 1) 42%, rgba(233, 193, 131, 1) 54%, rgba(141, 109, 73, 1) 90%, rgba(124, 92, 62, 1) 100%);
-  }
-
 }
 
 .house-card-header {

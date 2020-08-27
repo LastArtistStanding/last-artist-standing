@@ -1903,7 +1903,7 @@ var modifiers = {
    * @inner
    */
   shift: {
-    /** @prop {number} order=100 - index used to define the order of execution */
+    /** @prop {number} order=100 - Index used to define the order of execution */
     order: 100,
     /** @prop {Boolean} enabled=true - Whether the modifier is enabled or not */
     enabled: true,

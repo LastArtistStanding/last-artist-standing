@@ -3,7 +3,7 @@ class HousesController < ApplicationController
   before_action :ensure_moderator, only: %i[edit update]
 
   def index
-    @old_houses = House.where('house_start = ?', Time.now.utc.prev_month.at_beginning_of_month).sort_by &:id
+    @old_houses = House.where('house_start = ?', Time.now.utc.prev_month.at_beginning_of_month).sort_by { |h| -h.total_score }
     @current_houses = House.where('house_start = ?', Time.now.utc.at_beginning_of_month.to_date).sort_by { |h| -h.total_score }
   end
 
