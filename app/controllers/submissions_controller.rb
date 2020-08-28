@@ -219,6 +219,14 @@ class SubmissionsController < ApplicationController
                             target: @submission,
                             action: "#{current_user.username} has changed the content level of #{@submission.display_title} by #{@submission.user.username} to #{nsfw_string(@submission.nsfw_level)}.",
                             reason: params[:reason])
+      elsif params.has_key? :new_time
+        house_participations = HouseParticipation.where('user_id = ? AND join_date >= ?', @submission.user_id, @submission.created_at.at_beginning_of_month.to_date).first
+        if (Time.now.utc.month == @submission.created_at.month) && (!house_participations.nil?)
+          house_participations.time_spent -= @submission.time.to_i / 30
+          house_participations.time_spent += params[:new_time].to_i / 30
+          house_participations.save
+        end
+        @submission.time = params[:new_time]
       end
       @submission.save
     end

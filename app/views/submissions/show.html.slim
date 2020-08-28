@@ -95,6 +95,12 @@ javascript:
                 = f.button "Questionable", name: 'change_nsfw', value: '2', class: 'btn btn-primary', style: "margin-right: 5px; margin-top: 5px;"
               - unless @submission.nsfw_level == 3
                 = f.button "Explicit", name: 'change_nsfw', value: '3', class: 'btn btn-primary', style: "margin-right: 5px; margin-top: 5px;"
+              br
+              b Change Time Spent
+              br
+                .div style="display: flex; align-items: baseline;"
+                  = f.number_field :new_time
+                  = f.button "Submit", name: "change_time", value: :new_time, class: 'btn btn-primary', style: "margin-right: 5px; margin-top: 5px;"
 
     .col-lg-10
       .card
