@@ -7,6 +7,12 @@ javascript:
   $(function () {
     $('[data-toggle="tooltip"]').tooltip()
   })
+  $(function () {
+    $(".submission").click((e) => {
+      console.log(e.target)
+      $('#drawing').attr("src", e.target.dataset.drawing)
+    })
+  })
 
 .container-fluid
   .row
@@ -31,7 +37,7 @@ javascript:
               .submissionIcon
                 - user = submission.user
                 = link_to "<img alt='' src=#{ user.profile_picture }> #{user.username}".html_safe, user, class: "submissionAuthor #{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''}"
-                = link_to image_tag(safe_submission_thumb(submission), alt: "#{submission.display_title}"), submission
+                img.submission src="#{safe_submission_thumb(submission)}" alt="#{submission.display_title}" data-toggle="modal" data-target="#subModal" data-drawing="#{safe_submission_drawing(submission)}"
                 div class="submissionNotes #{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''}"
                   = submission.created_at.strftime("%H:%M:%S")
                   | &nbsp;
@@ -50,3 +56,11 @@ javascript:
                     = submission.num_comments
 
     .col-lg-2
+
+
+.modal.fade#subModal tabindex="-1" role="dialog"
+  .modal-dialog.modal-dialog-centered.modal-xl role="document"
+    .modal-content
+      .modal-body.m-0.p-0
+        img.w-100.rounded-left#drawing data-dismiss="modal"
+
