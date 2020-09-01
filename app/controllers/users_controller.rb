@@ -12,14 +12,21 @@ class UsersController < ApplicationController
   # TODO: Also handle registration being closed for the registration form, i.e. :new.
   before_action :ensure_registration_open, only: %i[new create]
 
+
   def index
-    @users = User.search(params).order('current_streak DESC, id DESC')
-                 .paginate(page: params[:page], per_page: 25)
+    @user_per_page = 25
+    @users = User
+      .search(params)
+      .order('current_streak DESC, id DESC')
+      .paginate(page: params[:page], per_page: @user_per_page)
   end
 
   def submissions
-    @user_submissions = base_submissions.where(user_id: @user.id).order('submissions.created_at DESC')
-                                        .paginate(page: params[:page], per_page: 25)
+    @user_submissions_per_page = 25
+    @user_submissions = base_submissions
+      .where(user_id: @user.id)
+      .order('submissions.created_at DESC')
+      .paginate(page: params[:page], per_page: @user_submissions_per_page)
   end
 
   def show
