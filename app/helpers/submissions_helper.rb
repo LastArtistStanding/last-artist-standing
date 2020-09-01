@@ -42,7 +42,7 @@ module SubmissionsHelper
     unless logged_in?
       return NSFW_THUMB if submission.nsfw_level > 1
 
-      return submission.drawing.avatar.url
+      return submission.drawing.url
     end
 
     return NSFW_THUMB if current_user.nsfw_level < submission.nsfw_level
