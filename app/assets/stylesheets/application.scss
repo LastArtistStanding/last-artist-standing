@@ -144,32 +144,33 @@ p {
   .card-body.table-responsive {
     font-size: 0.8em;
   }
-  #StreakStatus {
+
+  .streakSafe {
     font-weight: 600;
-    &.streakSafe {
-      color: #AAFFAA;
-    }
-    &.streakDanger {
-      color: #FF5A5A;
-    }
-    &.streakNeutral {
-      color: #DFDF5A;
-    }
+    color: #AAFFAA;
+  }
+  .streakDanger {
+    font-weight: 600;
+    color: #FF5A5A;
+  }
+  .streakNeutral {
+    font-weight: 600;
+    color: #DFDF5A;
   }
 }
 
 .card {
-  #StreakStatus {
+  &.streakSafe {
     font-weight: 600;
-    &.streakSafe {
-      color: #1A7F1A;
-    }
-    &.streakDanger {
-      color: #7F0A0A;
-    }
-    &.streakNeutral {
-      color: #6F6F0A;
-    }
+    color: #1A7F1A;
+  }
+  &.streakDanger {
+    font-weight: 600;
+    color: #7F0A0A;
+  }
+  &.streakNeutral {
+    font-weight: 600;
+    color: #6F6F0A;
   }
 }
 

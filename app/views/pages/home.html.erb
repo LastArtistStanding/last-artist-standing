@@ -54,11 +54,11 @@
       if (submitted == 0) {
         $('#StreakStatus').html("You must submit soon to protect your streak.<br>");
         $('#StreakStatus').addClass("streakDanger");
-        $('#NextSubmissionDisplay').html("Submission Deadline: "+(days ? days+" day(s) " : "")+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
+        $('#NextSubmissionDisplay').html("DAD Submission Deadline: "+(days ? days+" day(s) " : "")+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
       } else if (submitted == 1) {
         $('#StreakStatus').html("Your streak is safe for now!<br>");
         $('#StreakStatus').addClass("streakSafe");
-        $('#NextSubmissionDisplay').html("Next Submission Period: "+(days ? days+" day(s) " : "")+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
+        $('#NextSubmissionDisplay').html("Next DAD Submission Period: "+(days ? days+" day(s) " : "")+pad(hours)+":"+pad(minutes)+":"+pad(seconds));
       }
 
     }
@@ -77,10 +77,10 @@
 
         if (submitted == 0) {
           $('#StreakStatus').html("You must submit soon to protect your streak.<br>");
-          pretext = "Submission Deadline: ";
+          pretext = "DAD Submission Deadline: ";
         } else if (submitted == 1) {
           $('#StreakStatus').html("Your streak is safe for now!<br>");
-          pretext = "Next Submission Period: ";
+          pretext = "Next DAD Submission Period: ";
         }
 
         timeToNextSubmissionDate = rubyNextSubmissionDate - currentTime;
@@ -147,9 +147,37 @@
             <i class="fa fa-snowflake-o"></i>
             <% end %>
             <%= currentSeason.name %>: <%= pluralize((currentSeason.end_date - Date.current).to_i, "day") %> left.
-          </span><br><br>
+          </span>
+        </div>
+      </div>
+
+      <div class="card homeCardStyle blueCard">
+        <div class="card-body">
+          <b>Do Art Daily - Main Challenge</b><br>
           <span id="StreakStatus"></span>
           <span id="NextSubmissionDisplay"></span>
+          <% if @participations.present? && @participations.length.positive? %>
+            <% @participations.each do |p| %>
+              <br><br>
+              <b><%= p.challenge.name %></b><br>
+              <% if p.challenge.postfrequency == 0 %>
+                <span class="streakNeutral">No post frequency. Meet the submission count requirement by: <%= p.next_submission_date.strftime("%a, %d %b %Y") %></span>
+              <% else %>
+                <% submitted = p.challenge.challenge_entries.where("created_at >= :last_date AND created_at < :next_date AND user_id = :user_id", {last_date: p.last_submission_date, next_date: p.next_submission_date, user_id: current_user.id}).count.positive? %>
+                <% if submitted %>
+                  <% if p.challenge.streak_based %>
+                    <span class="streakSafe">You are safe from elimination for now.</span><br>
+                  <% else %>
+                    <span class="streakSafe">You have met the deadline, and your score has been, or will be incremented.</span><br>
+                  <% end %>
+                  <span>Safe Until: <%= p.next_submission_date.strftime("%a, %d %b %Y") %></span>
+                <% else %>
+                  <span class="streakDanger">Submit before the deadline to <%= p.challenge.streak_based ? "avoid elimination" : "earn a point" %>.</span><br>
+                  <span>Current Deadline: <%= p.next_submission_date.strftime("%a, %d %b %Y") %></span>
+                <% end %>
+              <% end %>
+            <% end %>
+          <% end %>
         </div>
       </div>
 
