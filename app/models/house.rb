@@ -14,10 +14,7 @@ class House < ApplicationRecord
     return false if is_in_a_house?(uid) || is_unbalanced? || is_old_house?
     # add the last 10 days of submissions if they are joining late in the month
     search_date = (Time.now.utc.to_date - house_start).to_i > 10 ? Time.now.utc.to_date - 10 : house_start
-    score = 0
-    User.find(uid).submissions.where("created_at >= ?", search_date).each do |s|
-      score += s.time.to_i / 30
-    end
+    score = User.find(uid).submissions.where("created_at >= ?", search_date).sum("submissions.time").to_i / 30
     HouseParticipation.create(user_id: uid, house_id: id, join_date: Time.now.utc.to_date, score: score)
     true
   end
