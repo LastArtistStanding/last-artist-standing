@@ -51,6 +51,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-width: 348px;
 }
 
 .house-neighborhood {
@@ -58,4 +59,82 @@
   justify-content: space-around;
   flex-wrap: wrap;
   width: 100%
+}
+
+a.disabled {
+  color: #a7a7a7;
+  cursor: not-allowed;
+}
+
+.house-form {
+  margin: 1em 0;
+  width: 100%;
+  max-width: 800px;
+  left: 0;
+  right: 0;
+}
+
+.house-finder {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100%;
+
+  & > .btn {
+    align-self: baseline;
+    white-space: nowrap;
+    max-width: 112px;
+    min-width: 112px;
+    color: white;
+  }
+}
+
+.house-date-picker {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  & > * {
+    align-self: baseline;
+    white-space: nowrap;
+    max-width: 112px;
+    min-width: 112px;
+    &:not(:last-child) {
+      margin-right: 1em;
+    }
+  }
+}
+
+.house-card-footer {
+  display: flex;
+  justify-content: space-around;
+}
+
+@media only screen and (max-width: 800px) {
+  .house-finder {
+    flex-direction: column;
+    min-width: 300px;
+
+    & > .btn {
+      align-self: center;
+      max-width: unset;
+      width: calc(100% - 3em);
+    }
+  }
+
+  .house-date-picker {
+    flex-direction: column;
+    min-width: 300px;
+
+    & > * {
+      align-self: center;
+      max-width: unset;
+      width: calc(100% - 3em);
+      &:not(:last-child) {
+        margin-right: 0;
+      }
+    }
+  }
 }

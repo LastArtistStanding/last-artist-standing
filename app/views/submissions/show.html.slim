@@ -98,8 +98,8 @@ javascript:
               br
               b Change Time Spent
               br
-                .div style="display: flex; align-items: baseline;"
-                  = f.number_field :new_time
+                .div style="display: flex; flex-direction: column; justify-content: center;"
+                  = f.number_field :new_time,  max: 2880, min: 0, style: "margin: 0"
                   = f.button "Submit", name: "change_time", value: :new_time, class: 'btn btn-primary', style: "margin-right: 5px; margin-top: 5px;"
 
     .col-lg-10

@@ -237,28 +237,17 @@ namespace :dad_tasks do
       end
     end
 
-    # STEP 6: Smoke some weed.
-
-    # STEP 7: Create new Houses if it is the start of the month
+    # STEP 6: Create new Houses if it is the start of the month
     if Time.now.utc.to_date == Time.now.utc.at_beginning_of_month.to_date
-      # Delete houses and participations that are > 2 months old
-      House.where("house_start < ?", Time.now.utc.prev_month.at_beginning_of_month.to_date).each do |h|
-        h.delete
-      end
-
-      HouseParticipation.where("join_date < ?", Time.now.utc.prev_month.at_beginning_of_month.to_date).each do |p|
-        p.delete
-      end
-
       (1..3).each do |i|
         House.create(
-            house_name: "House #{i}",
-            house_start: Time.now.utc.at_beginning_of_month.to_date,
+          house_name: "House #{i}",
+          house_start: Time.now.utc.at_beginning_of_month.to_date,
         )
       end
     end
 
-    # STEP 8: Now that the daily job is complete, update.
+    # STEP 7: Now that the daily job is complete, update.
     SiteStatus.first.update_attribute(:current_rollover, today)
   end
 

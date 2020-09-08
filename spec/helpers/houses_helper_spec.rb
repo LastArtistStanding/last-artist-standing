@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'spec_helper'
 
 # Specs in this file have access to a helper object that includes
 # the HousesHelper. For example:
@@ -11,5 +11,13 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe HousesHelper, type: :helper do
-  pending "add some examples to (or delete) #{__FILE__}"
+
+  describe ':is_in_a_house?' do
+    it 'identifies when a user is in a house' do
+      hp = create(:house_participation)
+      expect(is_in_a_house?(hp.user_id)).to eq(true)
+      expect(is_in_a_house?(-1)).to eq(false)
+      hp.delete
+    end
+  end
 end

@@ -1,6 +1,5 @@
 -- Fills the database with a bunch of dummy users and submissions
 -- Won't delete any admins (you)
--- You will need to clear out any sessions you have of dummy users before running.
 -- To run this script:
 --   psql -f devScripts/fillDatabase.sql postgres://<your-username>:@localhost:5432/database_development
 

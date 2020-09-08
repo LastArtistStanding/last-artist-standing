@@ -87,7 +87,7 @@ ActiveRecord::Schema.define(version: 2020_08_23_015502) do
     t.integer "user_id", null: false
     t.integer "house_id", null: false
     t.date "join_date", null: false
-    t.integer "time_spent", default: 0, null: false
+    t.integer "score", default: 0, null: false
   end
 
   create_table "houses", force: :cascade do |t|

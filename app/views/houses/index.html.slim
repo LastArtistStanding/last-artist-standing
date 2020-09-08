@@ -4,45 +4,44 @@ javascript:
   })
 
 div.house-container
-  h3 This Month's Houses:
+
+  = form_tag houses_path, method: :get, class: "house-form" do
+    div.house-finder
+      a.btn.btn-primary  href="#{houses_path(:date => {:month => @date.prev_month.strftime("%m"), :year => @date.prev_month.strftime("%Y")})}"
+        | Prev Month 
+      div.house-date-picker
+        b DAD Houses for:
+        = select_month(@date)
+        = select_year(@date, start_year: 2020, end_year: 2050)
+        = submit_tag 'Select', class: "btn btn-primary"
+      a.btn.btn-primary href="#{houses_path(:date => {:month => @date.next_month.strftime("%m"), :year => @date.next_month.strftime("%Y")})}"
+        | Next Month
+
   div.house-neighborhood
-    - @current_houses.each_with_index do |h, i|
-      div class="card house-card"
-        .card-header.house-card-header
-          b style="flex: 1" #{h.house_name}  
-          | #{"🥇" if h.place == 'first'} #{"🥈" if h.place == 'second'} #{"🥉" if h.place == 'third'}
-          - unless is_in_a_house? || !logged_in?
-            a.nav-link.house-icon href="houses/#{h.id}/join" title="Join House"
-              i.fa.fa-user-plus
-          - if logged_in_as_moderator
-            a.nav-link.house-icon href="#{edit_house_path(h)}" title="Edit House"
-              i.fa.fa-edit
-        .card-body.house-card-body
-          div.house-table-cell
-            p.house-title Name
-            p.house-title Score
-          - h.participants.each do |u|
-            div.house-participant
-              p #{u[:name]}
-              p #{u[:score]}
-          b.house-spacer
-          b Total: #{h.total_score}
-          
-  
-  h3 Last Month's Houses:
-  div.house-neighborhood
-    - @old_houses.each_with_index do |h, i|
-      div class="card house-card"
-        .card-header.house-card-header
-          b style="flex: 1" #{h.house_name}
-          | #{"🥇" if h.place == 'first'} #{"🥈" if h.place == 'second'} #{"🥉" if h.place == 'third'}
-        .card-body.house-card-body
-          div.house-table-cell
-            p.house-title Name
-            p.house-title Score
-          - h.participants.each do |u|
-            div.house-participant
-              p #{u[:name]}
-              p #{u[:score]}
-          b.house-spacer
-          b Total: #{h.total_score}
+    - if @houses.any?
+      - @houses.each_with_index do |h, i|
+        div class="card house-card"
+          .card-header.house-card-header
+            b style="flex: 1" #{h.house_name}  
+            | #{"🥇" if h.place == 'first'} #{"🥈" if h.place == 'second'} #{"🥉" if h.place == 'third'}
+            - unless !logged_in? || is_in_a_house?(current_user.id) || h.is_old_house?
+              a.house-icon class="#{"disabled" if h.is_unbalanced?}" href="#{"houses/#{h.id}/join" unless h.is_unbalanced?}" data-toggle="tooltip" data-placement="top" title="#{"Too many people right now." if h.is_unbalanced?} #{"Join " + h.house_name if !h.is_unbalanced?}"
+                i.fa.fa-user-plus
+            - if logged_in_as_moderator && !h.is_old_house?
+              a.house-icon href="#{edit_house_path(h)}" title="Edit House"
+                i.fa.fa-edit
+          .card-body.house-card-body
+            div.house-table-cell
+              p.house-title Name
+              p.house-title Score
+            - h.participants.each do |u|
+              div.house-participant
+                p #{u[:name] == nil ? "<Unknown User>" : u[:name]}
+                p #{u[:score]}
+            d.house-spacer
+            div.house-card-footer            
+              b Total: #{h.total_score}
+              b Points Per User: #{h.participants.length == 0 ? 0 : h.total_score / h.participants.length} 
+    - else
+      h1 There are no houses for this month ¯\_(ツ)_/¯
+

@@ -52,8 +52,9 @@ class SubmissionsController < ApplicationController
   def new
     @submission = Submission.new
     @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
+    # Inform the user of their houses score (if they are participating)
     @house_participations = current_user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date).first
-    @points = @house_participations ? @house_participations.time_spent : 0
+    @points = @house_participations ? @house_participations.score : 0
   end
 
   # GET /submissions/1/edit
@@ -72,10 +73,9 @@ class SubmissionsController < ApplicationController
     @submission.user_id = artist_id
     @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
 
-    if (house_participations = current_user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date).first)
-      house_participations.time_spent += submission_params[:time].to_i / 30
-      house_participations.save
-    end
+    # Add points to their house when they create if it exists
+    current_user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date)
+        &.first&.add_points(submission_params[:time].to_i / 30)
 
     respond_to do |format|
       if failure
@@ -135,11 +135,10 @@ class SubmissionsController < ApplicationController
       @submission.approved = current_user.approved
     end
 
-    house_participations = current_user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date).first
-    if (used_params.has_key? :time) && house_participations
-      house_participations.time_spent -= @submission.time.to_i / 30
-      house_participations.time_spent += used_params[:time].to_i / 30
-      house_participations.save
+    # Modify their points if they change their time spent on a submission
+    if used_params.has_key? :time
+      current_user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date)
+          &.first&.update_points(@submission.time.to_i / 30, used_params[:time].to_i / 30, @submission.created_at.month)
     end
 
     respond_to do |format|
@@ -181,10 +180,9 @@ class SubmissionsController < ApplicationController
     # You can only delete a submission on the day you submitted it.
     return if @submission.created_at.to_date != Time.now.utc.to_date
 
-    if (house_participations = current_user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date).first)
-      house_participations.time_spent -= @submission.time.to_i / 30
-      house_participations.save
-    end
+    # Remove points for deleted submissions
+    current_user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date)
+        &.first&.remove_points(@submission.time.to_i / 30)
 
     @submission.destroy
     @submission.comments.each { |comment| comment.notifications.destroy_all }
@@ -220,13 +218,14 @@ class SubmissionsController < ApplicationController
                             action: "#{current_user.username} has changed the content level of #{@submission.display_title} by #{@submission.user.username} to #{nsfw_string(@submission.nsfw_level)}.",
                             reason: params[:reason])
       elsif params.has_key? :new_time
-        house_participations = HouseParticipation.where('user_id = ? AND join_date >= ?', @submission.user_id, @submission.created_at.at_beginning_of_month.to_date).first
-        if (Time.now.utc.month == @submission.created_at.month) && (!house_participations.nil?)
-          house_participations.time_spent -= @submission.time.to_i / 30
-          house_participations.time_spent += params[:new_time].to_i / 30
-          house_participations.save
-        end
-        @submission.time = params[:new_time]
+        # Allow moderators to update a users time
+        current_user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date)
+            &.first&.update_points(@submission.time.to_i / 30, params[:new_time].to_i / 30, @submission.created_at.month)
+        @submission.time = params[:new_time].to_i
+        ModeratorLog.create(user_id: current_user.id,
+                            target: @submission,
+                            action: "#{current_user.username} has changed the time spent of #{@submission.display_title} by #{@submission.user.username} to #{@submission.time}.",
+                            reason: params[:reason])
       end
       @submission.save
     end
