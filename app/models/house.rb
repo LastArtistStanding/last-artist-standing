@@ -63,13 +63,10 @@ class House < ApplicationRecord
   private
 
   def house_name_unique
-    House.where("house_start = ? AND id != ?", house_start, id).each do |h|
-      if h.house_name == house_name
-        errors.add(:house_name, "-- Rival houses must have unique names.")
-        return false
-      end
+    if House.where("house_start = ? AND id != ? AND house_name = ?", house_start, id, house_name).any?
+      errors.add(:house_name, "-- Rival houses must have unique names.")
+      false
     end
-    true
   end
 
   def house_not_old
