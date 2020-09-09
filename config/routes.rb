@@ -38,13 +38,13 @@ Rails.application.routes.draw do
   post 'users/:id/mod_action' => 'users#mod_action'
   get 'users/:id/submissions' => 'users#submissions'
   get 'users/:user_id/email_verification' => 'email_verifications#new',
-    as: :new_email_verification
+      as: :new_email_verification
   post 'users/:user_id/email_verification' => 'email_verifications#create',
-    as: :email_verifications
+       as: :email_verifications
   get 'users/:user_id/email_verification/:token' => 'email_verifications#edit',
-    as: :edit_email_verification
+      as: :edit_email_verification
   post 'users/:user_id/email_verification/:token' => 'email_verifications#update',
-    as: :email_verification
+       as: :email_verification
 
   if ENV['X_AUTH_HOST'].present?
     get 'x_site_auth/auto_login_available' => 'x_site_auth#auto_login_available'

@@ -42,7 +42,7 @@ class PagesController < ApplicationController
 
     if logged_in?
       @participations = Participation.includes(challenge: [:challenge_entries])
-                                     .where(participations: { user_id: current_user.id, active: true }, challenges: {seasonal: false})
+                                     .where(participations: { user_id: current_user.id, active: true }, challenges: { seasonal: false })
                                      .where.not(challenges: { id: 1 })
     end
   end
@@ -55,16 +55,16 @@ class PagesController < ApplicationController
   end
 
   def moderation
-    @admins = User.where("is_admin = true")
-    @moderators = User.where("is_moderator = true")
+    @admins = User.where('is_admin = true')
+    @moderators = User.where('is_moderator = true')
     @moderator_logs = ModeratorLog.order('created_at DESC').limit(50)
-    @unapproved_submissions = unapproved_submissions.order("submissions.created_at ASC")
-    unapproved_users_objs = User.where("approved = false").includes(:participations)
+    @unapproved_submissions = unapproved_submissions.order('submissions.created_at ASC')
+    unapproved_users_objs = User.where('approved = false').includes(:participations)
 
     @unapproved_users = []
     unapproved_users_objs.each do |user|
-      days_posted = user.participations.includes(:challenge).where({challenges: { seasonal: true }}).sum(:score)
-      @unapproved_users.push({user: user, seasonal_score: days_posted}) if days_posted >= 7
+      days_posted = user.participations.includes(:challenge).where({ challenges: { seasonal: true } }).sum(:score)
+      @unapproved_users.push({ user: user, seasonal_score: days_posted }) if days_posted >= 7
     end
   end
 end

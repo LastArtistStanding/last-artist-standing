@@ -54,9 +54,7 @@ class CommentsController < ApplicationController
     if params.has_key?(:reason) && params[:reason].present?
       if params.has_key? :toggle_soft_delete
         @comment.soft_deleted = !@comment.soft_deleted
-        if @comment.soft_deleted
-          @comment.soft_deleted_by = current_user.id
-        end
+        @comment.soft_deleted_by = current_user.id if @comment.soft_deleted
         ModeratorLog.create(user_id: current_user.id,
                             target: @comment,
                             action: "#{current_user.username} has #{@comment.soft_deleted ? 'soft deleted' : 'reverted soft deletion on'} a comment made by #{@comment.user.username}.",

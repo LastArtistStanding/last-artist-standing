@@ -9,6 +9,8 @@ Layout/LineLength:
   Max: 100
 Layout/SpaceAroundMethodCallOperator:
   Enabled: true
+Layout/EndOfLine:
+  EnforcedStyle: lf
 Lint/DeprecatedOpenSSLConstant:
   Enabled: true
 Lint/RaiseException:

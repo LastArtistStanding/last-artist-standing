@@ -32,9 +32,9 @@ class ChallengesController < ApplicationController
   # GET /challenge/1.json
   def show
     if @challenge.soft_deleted && !logged_in_as_moderator
-      render_hidden("This challenge was hidden by moderation.") 
+      render_hidden('This challenge was hidden by moderation.')
     end
-    
+
     # You can't join or leave a challenge after the start date.
     if Date.current < @challenge.start_date
       if params[:join]
@@ -189,16 +189,14 @@ class ChallengesController < ApplicationController
       if params.has_key?(:reason) && params[:reason].present?
         if params.has_key? :toggle_soft_delete
           @challenge.soft_deleted = !@challenge.soft_deleted
-          if @challenge.soft_deleted
-            @challenge.soft_deleted_by = current_user.id
-          end
-          ModeratorLog.create(user_id: current_user.id, 
+          @challenge.soft_deleted_by = current_user.id if @challenge.soft_deleted
+          ModeratorLog.create(user_id: current_user.id,
                               target: @challenge,
                               action: "#{current_user.username} has #{@challenge.soft_deleted ? 'soft deleted' : 'reverted soft deletion on'} #{@challenge.name} by #{@creator&.username}.",
                               reason: params[:reason])
         elsif params.has_key? :change_nsfw
           @challenge.nsfw_level = params[:change_nsfw].to_i
-          ModeratorLog.create(user_id: current_user.id, 
+          ModeratorLog.create(user_id: current_user.id,
                               target: @challenge,
                               action: "#{current_user.username} has changed the content level of #{@challenge.name} by #{@creator&.username} to #{nsfw_string(@challenge.nsfw_level)}.",
                               reason: params[:reason])

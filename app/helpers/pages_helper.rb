@@ -88,7 +88,7 @@ module PagesHelper
   def safe_username(user_id)
     user = User.find_by(id: user_id)
     return link_to(user.username, user) if user.present?
-    
-    return "Account Deleted"
+
+    'Account Deleted'
   end
 end

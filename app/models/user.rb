@@ -157,12 +157,12 @@ class User < ApplicationRecord
   end
 
   def get_latest_ban
-    return SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{id}")
+    SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{id}")
   end
 
   def can_make_comments
     return [false, 'You must verify your email address before you can comment.'] unless verified?
-    
+
     return [true, nil] if highest_level >= COMMENT_CREATION_REQUIREMENT
 
     [false, "You must have achieved DAD level #{COMMENT_CREATION_REQUIREMENT}\
@@ -229,7 +229,7 @@ class User < ApplicationRecord
     unless marked_for_death
       site_ban = SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{id}")
       unless site_ban.nil?
-        ModeratorLog.create(user_id: moderator.id, 
+        ModeratorLog.create(user_id: moderator.id,
                             target: self,
                             action: "#{moderator.username} has lifted #{username}'s ban (original expiry: #{ApplicationController.helpers.date_string_short(site_ban.expiration)}).",
                             reason: reason)
@@ -243,31 +243,31 @@ class User < ApplicationRecord
     unless marked_for_death
       # Find and update an existing ban.
       site_ban = SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{id}")
-      unless site_ban.nil?
+      if site_ban.nil?
+        # Or create a new one if not found.
+        SiteBan.create(user_id: id,
+                       expiration: Time.now.utc.to_date + duration.to_i.days,
+                       reason: reason)
+        ModeratorLog.create(user_id: moderator.id,
+                            target: self,
+                            action: "#{moderator.username} has banned #{username} for #{duration} days.",
+                            reason: reason)
+      else
         site_ban.expiration = Time.now.utc.to_date + duration.days
         site_ban.reason = reason
         site_ban.save
-        ModeratorLog.create(user_id: moderator.id, 
+        ModeratorLog.create(user_id: moderator.id,
                             target: self,
                             action: "#{moderator.username} has adjusted #{username}'s ban to #{duration} days.",
-                            reason: reason)
-      else
-        # Or create a new one if not found.
-        SiteBan.create(user_id: id, 
-                      expiration: Time.now.utc.to_date + duration.to_i.days, 
-                      reason: reason)
-        ModeratorLog.create(user_id: moderator.id, 
-                            target: self,
-                            action: "#{moderator.username} has banned #{username} for #{duration} days.",
                             reason: reason)
       end
     end
   end
 
   def mark_for_death(reason, moderator)
-    ban_user(99999, reason, moderator)
+    ban_user(99_999, reason, moderator)
     update_attribute(:marked_for_death, true)
-    ModeratorLog.create(user_id: moderator.id, 
+    ModeratorLog.create(user_id: moderator.id,
                         target: self,
                         action: "#{moderator.username} has marked #{username} for death!".upcase,
                         reason: reason)

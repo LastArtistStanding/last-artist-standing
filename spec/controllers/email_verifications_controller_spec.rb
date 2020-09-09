@@ -80,7 +80,7 @@ def setup_token(example)
 end
 
 describe EmailVerificationsController do
-  before(:each) do |example|
+  before do |example|
     verified = example.metadata[:verified] || false
     @user = create(:user, verified: verified, email_verified: verified)
     setup_session(example, @user)
@@ -88,7 +88,7 @@ describe EmailVerificationsController do
   end
 
   describe 'GET :new' do
-    before(:each) { get :new, params: { user_id: @user.id } }
+    before { get :new, params: { user_id: @user.id } }
 
     it_requires_correct_login
 
@@ -102,12 +102,12 @@ describe EmailVerificationsController do
   end
 
   describe 'POST :create' do
-    before(:each) { post :create, params: { user_id: @user.id } }
+    before { post :create, params: { user_id: @user.id } }
 
     it_requires_correct_login
 
     it 'must not allow another email too soon', :has_token do
-      expect(response).to have_http_status 400
+      expect(response).to have_http_status :bad_request
       expect(response).to render_template :new
     end
 
@@ -121,7 +121,7 @@ describe EmailVerificationsController do
   end
 
   describe 'GET :edit' do
-    before(:each) { get :edit, params: { user_id: @user.id, token: @token } }
+    before { get :edit, params: { user_id: @user.id, token: @token } }
 
     it_requires_correct_login_with_token
     it_requires_correct_token
@@ -132,7 +132,7 @@ describe EmailVerificationsController do
   end
 
   describe 'POST :update' do
-    before(:each) { post :update, params: { user_id: @user.id, token: @token } }
+    before { post :update, params: { user_id: @user.id, token: @token } }
 
     it_requires_correct_login_with_token
     it_requires_correct_token

@@ -39,10 +39,10 @@ class SubmissionsController < ApplicationController
   # GET /submissions/1.json
   def show
     if @submission.soft_deleted && !logged_in_as_moderator
-      render_hidden("This submission was hidden by moderation.")
+      render_hidden('This submission was hidden by moderation.')
     end
     unless @submission.approved || (logged_in_as_moderator || @submission.user_id == current_user&.id)
-      render_hidden("This submission has not been approved by moderation yet.")
+      render_hidden('This submission has not been approved by moderation yet.')
     end
 
     @challenge_entries = ChallengeEntry.where(submission_id: @submission.id)
@@ -118,15 +118,13 @@ class SubmissionsController < ApplicationController
     curr_user_id = current_user.id
 
     used_params = if @submission.created_at.to_date == Time.now.utc.to_date
-                   submission_params
-                 else
-                   limited_params
+                    submission_params
+                  else
+                    limited_params
                  end
 
     # If the drawing itself was updated by an unapproved user, reset the approval.
-    if used_params.has_key? :drawing
-      @submission.approved = current_user.approved
-    end
+    @submission.approved = current_user.approved if used_params.has_key? :drawing
 
     respond_to do |format|
       if @submission.update(used_params)
@@ -181,9 +179,7 @@ class SubmissionsController < ApplicationController
     if params.has_key?(:reason) && params[:reason].present?
       if params.has_key? :toggle_soft_delete
         @submission.soft_deleted = !@submission.soft_deleted
-        if @submission.soft_deleted
-          @submission.soft_deleted_by = current_user.id
-        end
+        @submission.soft_deleted_by = current_user.id if @submission.soft_deleted
         ModeratorLog.create(user_id: current_user.id,
                             target: @submission,
                             action: "#{current_user.username} has #{@submission.soft_deleted ? 'soft deleted' : 'reverted soft deletion on'} #{@submission.display_title} by #{@submission.user.username}.",
@@ -212,11 +208,11 @@ class SubmissionsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_submission
     @submission = Submission.find(params[:id])
-    if logged_in_as_moderator
-      @comments = Comment.where(source: @submission).includes(:user)
-    else
-      @comments = Comment.where(source: @submission, soft_deleted: false).includes(:user)
-    end
+    @comments = if logged_in_as_moderator
+                  Comment.where(source: @submission).includes(:user)
+                else
+                  Comment.where(source: @submission, soft_deleted: false).includes(:user)
+                end
     @comments = @comments.order(:id)
   end
 
