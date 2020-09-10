@@ -243,9 +243,9 @@ namespace :dad_tasks do
     if Time.now.utc.to_date == Time.now.utc.at_beginning_of_month.to_date
       (1..3).each do |i|
         House.create(
-            house_name: "House #{i}",
-            house_start: Time.now.utc.at_beginning_of_month.to_date,
-            )
+          house_name: "House #{i}",
+          house_start: Time.now.utc.at_beginning_of_month.to_date,
+        )
       end
     end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 # Specs in this file have access to a helper object that includes
@@ -11,13 +13,15 @@ require 'spec_helper'
 #   end
 # end
 RSpec.describe HousesHelper, type: :helper do
-
   describe ':is_in_a_house?' do
     it 'identifies when a user is in a house' do
       hp = create(:house_participation)
-      expect(is_in_a_house?(hp.user_id)).to eq(true)
-      expect(is_in_a_house?(-1)).to eq(false)
+      expect(in_a_house?(hp.user_id)).to eq(true)
       hp.delete
+    end
+
+    it 'identifies when a user is not in a house' do
+      expect(in_a_house?(-1)).to eq(false)
     end
   end
 end

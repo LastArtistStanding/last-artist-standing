@@ -24,7 +24,7 @@ class User < ApplicationRecord
   has_many :moderator_logs
   has_many :moderator_logs, as: :target
   has_one :moderator_application
-  has_many :house_participations
+  has_many :house_participations, dependent: :nullify
 
   before_save { self.email = email.downcase }
 

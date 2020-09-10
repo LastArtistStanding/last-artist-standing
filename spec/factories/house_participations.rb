@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-#
+
 FactoryBot.define do
   factory :house_participation, class: 'HouseParticipation' do
     house_id { 1 }

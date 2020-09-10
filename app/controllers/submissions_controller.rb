@@ -74,7 +74,8 @@ class SubmissionsController < ApplicationController
     @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
 
     # Add points to their house when they create if it exists
-    current_user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date)
+    current_user.house_participations
+        .where('join_date >=  ?', Time.now.utc.at_beginning_of_month.to_date)
         &.first&.add_points(submission_params[:time].to_i / 30)
 
     respond_to do |format|
@@ -137,8 +138,14 @@ class SubmissionsController < ApplicationController
 
     # Modify their points if they change their time spent on a submission
     if used_params.has_key? :time
-      current_user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date)
-          &.first&.update_points(@submission.time.to_i / 30, used_params[:time].to_i / 30, @submission.created_at.month)
+      current_user.house_participations
+          .where('join_date >=  ?', Time.now.utc.at_beginning_of_month.to_date)
+          &.first
+          &.update_points(
+            @submission.time.to_i / 30,
+            used_params[:time].to_i / 30,
+            @submission.created_at.month
+          )
     end
 
     respond_to do |format|
@@ -181,7 +188,8 @@ class SubmissionsController < ApplicationController
     return if @submission.created_at.to_date != Time.now.utc.to_date
 
     # Remove points for deleted submissions
-    current_user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date)
+    current_user.house_participations
+        .where('join_date >=  ?', Time.now.utc.at_beginning_of_month.to_date)
         &.first&.remove_points(@submission.time.to_i / 30)
 
     @submission.destroy
@@ -219,13 +227,22 @@ class SubmissionsController < ApplicationController
                             reason: params[:reason])
       elsif params.has_key? :new_time
         # Allow moderators to update a users time
-        current_user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date)
-            &.first&.update_points(@submission.time.to_i / 30, params[:new_time].to_i / 30, @submission.created_at.month)
+        current_user.house_participations
+            .where('join_date >=  ?', Time.now.utc.at_beginning_of_month.to_date)
+            &.first&.update_points(
+              @submission.time.to_i / 30,
+              params[:new_time].to_i / 30,
+              @submission.created_at
+            )
         @submission.time = params[:new_time].to_i
-        ModeratorLog.create(user_id: current_user.id,
-                            target: @submission,
-                            action: "#{current_user.username} has changed the time spent of #{@submission.display_title} by #{@submission.user.username} to #{@submission.time}.",
-                            reason: params[:reason])
+        ModeratorLog.create do |log|
+          log.user_id = current_user.id
+          log.target = @submission
+          log.action = "#{current_user.username} has changed the time spent of" \
+                         " #{@submission.display_title} by #{@submission.user.username}" \
+                         " to #{@submission.time}."
+          log.reason = params[:reason]
+        end
       end
       @submission.save
     end
