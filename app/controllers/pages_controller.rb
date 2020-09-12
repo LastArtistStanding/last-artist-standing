@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Controls pages like home and news
 class PagesController < ApplicationController
   include CommentsHelper
   include SubmissionsHelper
@@ -7,23 +8,22 @@ class PagesController < ApplicationController
   before_action :ensure_moderator, only: %i[moderation]
 
   def home
-    @activeChallenges = Challenge.where('soft_deleted = false AND start_date <= ? AND (end_date > ? OR end_date IS NULL)', Date.current, Date.current).order('start_date ASC, end_date DESC')
-    @upcomingChallenges = Challenge.where('soft_deleted = false AND start_date > ?', Date.current).order('start_date ASC, end_date DESC')
-    @currentSeasonalChallenge = Challenge.where('soft_deleted = false AND :todays_date >= start_date AND :todays_date < end_date AND seasonal = true', { todays_date: Date.current }).first
+    @active_challenges = challenge('active')
+    @upcoming_challenges = challenge('upcoming')
+    @seasonal_challenge = challenge('seasonal').first
+    @starting_challenges = challenge('starting')
+    @ending_challenges = challenge('ending')
+    @activity = activity_feed
 
     # All lists to be displayed in home
-    @latestAwards = Award.where('date_received = ? AND badge_id <> 1', Date.today).order('prestige DESC, badge_id DESC').includes(:user)
-    @levelUps = Award.where('date_received = ? AND badge_id = 1', Date.today).order('prestige DESC').includes(:user)
-    @latestEliminations = Participation.where('challenge_id = 1 AND eliminated AND end_date = ?', (Date.current - 1.day)).order('score DESC').includes(:user)
-    @startingChallenges = @activeChallenges.where('start_date = ?', Date.current)
-    @endingChallenges = Challenge.where('end_date = ?', Date.current)
-    @seasonalLeaderboard = Participation.where('challenge_id = ?', @currentSeasonalChallenge.id).order('score DESC').includes(:user)
-
-    @activity = activity_feed
+    @latest_awards = Award.where('date_received = ? AND badge_id <> 1', Date.today).order('prestige DESC, badge_id DESC').includes(:user)
+    @level_ups = Award.where('date_received = ? AND badge_id = 1', Date.today).order('prestige DESC').includes(:user)
+    @latest_eliminations = Participation.where('challenge_id = 1 AND eliminated AND end_date = ?', (Date.current - 1.day)).order('score DESC').includes(:user)
+    @seasonal_leaderboard = Participation.where('challenge_id = ?', @seasonal_challenge.id).order('score DESC').includes(:user)
 
     if logged_in?
       @participations = Participation.includes(challenge: [:challenge_entries])
-                                     .where(participations: { user_id: current_user.id, active: true }, challenges: {seasonal: false})
+                                     .where(participations: { user_id: current_user&.id, active: true }, challenges: {seasonal: false})
                                      .where.not(challenges: { id: 1 })
     end
   end
@@ -31,8 +31,8 @@ class PagesController < ApplicationController
   def login; end
 
   def news
-    @latestPatchNote = PatchNote.last
-    @latestPatchEntries = PatchEntry.where('patchnote_id = ?', @latestPatchNote.id).order('importance DESC')
+    @latest_patch_note = PatchNote.last
+    @latest_patch_entries = PatchEntry.where('patchnote_id = ?', @latest_patch_note.id).order('importance DESC')
   end
 
   def moderation
@@ -106,5 +106,28 @@ class PagesController < ApplicationController
     return submission_path(activity_id) if type == 'submission'
 
     "/submissions/#{sub_id}##{activity_id}"
+  end
+
+  def challenge(type)
+    c = base_challenge
+
+    return c.where('end_date > ? OR end_date IS NULL', today) if type == 'active'
+
+    return c.where('start_date > ?', today) if type == 'upcoming'
+
+    return c.where('start_date = ?', today) if type == 'starting'
+
+    return c.where('end_date = ?', today) if type == 'ending'
+
+    c.where('seasonal = true AND start_date <= ? AND end_date > ?', today, today)
+  end
+
+  def base_challenge
+    Challenge.where('soft_deleted = false AND nsfw_level <= ?', current_user&.nsfw_level || 1)
+             .order('start_date ASC, end_date DESC')
+  end
+
+  def today
+    Time.now.utc.to_date
   end
 end
