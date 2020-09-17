@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_20_203728) do
+ActiveRecord::Schema.define(version: 2020_09_17_020736) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -81,6 +81,27 @@ ActiveRecord::Schema.define(version: 2020_06_20_203728) do
     t.boolean "soft_deleted", default: false, null: false
     t.integer "soft_deleted_by"
     t.index ["source_type", "source_id"], name: "index_comments_on_source_type_and_source_id"
+  end
+
+  create_table "followers", force: :cascade do |t|
+    t.bigint "follower_user_id"
+    t.bigint "followed_user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["followed_user_id"], name: "index_followers_on_followed_user_id"
+    t.index ["follower_user_id"], name: "index_followers_on_follower_user_id"
+  end
+
+  create_table "house_participations", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "house_id", null: false
+    t.date "join_date", null: false
+    t.integer "score", default: 0, null: false
+  end
+
+  create_table "houses", force: :cascade do |t|
+    t.text "house_name", null: false
+    t.date "house_start", null: false
   end
 
   create_table "moderator_applications", force: :cascade do |t|
@@ -226,6 +247,8 @@ ActiveRecord::Schema.define(version: 2020_06_20_203728) do
     t.index ["name"], name: "index_users_on_name", unique: true
   end
 
+  add_foreign_key "followers", "users", column: "followed_user_id"
+  add_foreign_key "followers", "users", column: "follower_user_id"
   add_foreign_key "moderator_applications", "users"
   add_foreign_key "moderator_logs", "users"
   add_foreign_key "site_bans", "users"

@@ -60,6 +60,10 @@ describe SubmissionsController do
         post :create, params: { submission: attributes_for(:submission) }
         response.should redirect_to(Submission.last)
       end
+
+      it 'notifies followers' do
+
+      end
     end
 
     describe 'with invalid params' do

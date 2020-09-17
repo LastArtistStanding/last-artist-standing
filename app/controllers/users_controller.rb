@@ -60,7 +60,9 @@ class UsersController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+    @followers = Follower.where({ follower_user_id: params[:id]}).includes(:followed_user)
+  end
 
   def update
     oldpassword = params[:oldpassword]

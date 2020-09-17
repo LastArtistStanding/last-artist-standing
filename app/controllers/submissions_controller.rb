@@ -12,27 +12,11 @@ class SubmissionsController < ApplicationController
   # GET /submissions
   # GET /submissions.json
   def index
-    if params[:to].present? || params[:from].present?
-      @submissions = if params[:to].blank?
-                       base_submissions.where('id >= :from', { from: params[:from] }).order('id ASC')
-                     elsif params[:from].blank?
-                       base_submissions.where('id <= :to', { to: params[:to] }).order('id ASC')
-                     else
-                       base_submissions.where(id: params[:from]..params[:to]).order('id ASC')
-                     end
-    else
-      if params[:date].present?
-        begin
-          @date = Date.parse(params[:date])
-          @date = Time.now.utc.to_date if @date > Time.now.utc.to_date
-        rescue ArgumentError
-          @date = Time.now.utc.to_date
-        end
-      else
-        @date = Time.now.utc.to_date
-      end
-      @submissions = base_submissions.includes(:user).where(created_at: @date.midnight..@date.end_of_day).order('submissions.created_at DESC')
-    end
+    @date = Date.parse(params[:date] || Time.now.utc.strftime('%Y-%m-%d'))
+    @submissions = bubble_followed_users(base_submissions)
+                     .includes(:user)
+                     .where(created_at: @date.midnight..@date.end_of_day)
+                     .order('submissions.created_at DESC')
   end
 
   # GET /submissions/1
@@ -101,6 +85,8 @@ class SubmissionsController < ApplicationController
           ce.created_at = initial_date_time
           ce.save
         end
+
+        notify_followers(@submission)
 
         format.html { redirect_to @submission }
         format.json { render :show, status: :created, location: @submission }
@@ -228,5 +214,16 @@ class SubmissionsController < ApplicationController
 
   def limited_params
     params.require(:submission).permit(:nsfw_level, :title, :description, :commentable)
+  end
+
+  def notify_followers(submission)
+    Follower.where({ followed_user_id: current_user.id }).each do |f|
+      Notification.create(
+        body: "#{current_user.name} has submitted their art",
+        source_type: 'Submission',
+        source_id: submission.id,
+        user_id: f.follower_user_id,
+        url: "/submissions/#{submission.id}")
+    end
   end
 end

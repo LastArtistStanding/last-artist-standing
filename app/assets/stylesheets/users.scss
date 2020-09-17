@@ -7,3 +7,28 @@
   background: image-url("seasonal/g1.png");
   background-repeat: no-repeat, repeat;
 }
+
+.followers {
+  display: flex;
+  flex-direction: column;
+}
+
+.following-table-cell {
+  display: flex;
+  align-items: baseline;
+  border-bottom: 1px solid grey;
+  padding: .5em 0;
+}
+
+.followed-user-cell {
+  display: flex;
+  align-items: baseline;
+  flex: 1;
+
+  & > a > img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 1em;
+  }
+}

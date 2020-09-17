@@ -57,6 +57,19 @@ module SubmissionsHelper
     end
   end
 
+  def bubble_followed_users(submissions)
+    return submissions unless logged_in?
+
+    return submissions unless Follower.where({ follower_user_id: current_user&.id }).any?
+
+    submissions
+      .joins("LEFT JOIN (SELECT * FROM followers where follower_user_id = #{current_user&.id})" \
+             ' AS my_followers ON my_followers.followed_user_id = submissions.user_id ')
+      .select('submissions.*, my_followers.followed_user_id')
+      .order('my_followers.followed_user_id DESC NULLS LAST')
+      .order('submissions.created_at DESC')
+  end
+
   def next_user_submission(submission)
     nsfw_level = current_user ? current_user.nsfw_level : 1
     base_submissions.where("user_id = #{submission.user.id} AND submissions.id > #{submission.id} AND submissions.nsfw_level <= #{nsfw_level}").first

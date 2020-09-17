@@ -41,7 +41,9 @@ javascript:
             a.btn.btn-primary href="#{edit_user_path(@user)}"
               span.fa.fa-edit
               |  Edit Profile
-      
+          br
+          = render partial: "application/follower_button", locals: {user: @user}
+
       - unless @ban.nil?
         .card class="alert alert-danger" style="padding: 0px;"
           .card-body style="text-align: center;" 

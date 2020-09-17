@@ -44,6 +44,8 @@ javascript:
         .card-body style="text-align: center;"
           = render partial: "application/usercard", locals: { user: @submission.user }
           br
+          = render partial: "application/follower_button", locals: { user: @submission.user }
+          br
           = @submission.created_at.strftime("Submitted at %H:%M, %b %-d, %Y")
           br
           | Time Spent: #{@submission.time_text}
