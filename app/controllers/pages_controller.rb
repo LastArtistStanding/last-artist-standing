@@ -54,7 +54,7 @@ class PagesController < ApplicationController
   # creates the activity has
   def activity_feed
     activity_rows.map do |r|
-      {message: message(r.name, r.type, r.sub_id), link: link(r.name, r.type, r.sub_id)}
+      {message: message(r.name, r.type, r.sub_id), link: link(r.id, r.type, r.sub_id)}
     end
   end
 
