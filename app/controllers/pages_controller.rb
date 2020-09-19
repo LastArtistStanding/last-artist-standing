@@ -103,7 +103,6 @@ class PagesController < ApplicationController
   def link(activity_id, type, sub_id)
     return challenge_path(activity_id) if type == 'challenge'
 
-    p activity_id
     return submission_path(activity_id) if type == 'submission'
 
     "/submissions/#{sub_id}##{activity_id}"
