@@ -100,7 +100,7 @@
                   - unless @challenge.nsfw_level == 3
                     = f.button "Explicit", name: 'change_nsfw', value: '3', class: 'btn btn-primary', style: "margin-right: 5px; margin-top: 5px;"
 
-          - if @challenge.id == 1 && !@latestEliminations.blank?
+          - if @challenge.id == 1 && !@latest_eliminations.blank?
             .card
               .card-header style="color: red;"
                 b Last Week's Eliminations
@@ -114,7 +114,7 @@
                       th scope="col" Join Date
                       th scope="col" End Date
                   tbody
-                    - @latestEliminations.each do |participation|
+                    - @latest_eliminations.each do |participation|
                       tr
                         td = link_to participation.user.username, participation.user
                         td = participation.score
