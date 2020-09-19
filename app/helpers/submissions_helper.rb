@@ -38,6 +38,18 @@ module SubmissionsHelper
     submission.drawing.avatar.url
   end
 
+  def safe_submission_drawing(submission)
+    unless logged_in?
+      return NSFW_THUMB if submission.nsfw_level > 1
+
+      return submission.drawing.url
+    end
+
+    return NSFW_THUMB if current_user.nsfw_level < submission.nsfw_level
+
+    submission.drawing.url
+  end
+
   def unapproved_submissions
     Submission.includes(:user).where({submissions: { approved: false, soft_deleted: false }, users: {marked_for_death: false}})
   end

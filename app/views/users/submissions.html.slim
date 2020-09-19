@@ -7,6 +7,13 @@ javascript:
   $(function () {
     $('[data-toggle="tooltip"]').tooltip()
   })
+  $(function () {
+    $(".submissionThumbnail").click((e) => {
+      $('#drawing').attr("src", e.target.dataset.drawing)
+      $('#fullSize').attr("href", e.target.dataset.drawing)
+      $('#details').attr("href", e.target.dataset.details)
+    })
+  })
 
 .container-fluid style="margin-top: 2rem;"
   .row
@@ -23,36 +30,45 @@ javascript:
             .digg_pagination
               = will_paginate @user_submissions, container: false
 
-      .card
-        .card-header
-          b = "#{@user.username} - Submissions"
+      .row
+        .col-lg-12
+          .card
+            .card-header
+              b = "#{@user.username} - Submissions"
 
-        .card-body
-          - if @user_submissions.count == 0
-            | This user has no submissions!
-          - else
-            ul.submissionrow
-              - @user_submissions.each do |submission|
-                li
-                  .submissionIcon
-                    .submissionTitle = submission.display_title
-                    = link_to image_tag(safe_submission_thumb(submission), alt: "#{submission.display_title}"), submission
-                    div class="submissionNotes #{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''}"
-                      = submission.created_at.strftime("%b %-d")
-                      | &nbsp;
-                      - unless submission.approved
-                        i.fa.fa-warning data-toggle="tooltip" data-placement="top" title="Unapproved"
-                        | &nbsp;
-                      - if submission.soft_deleted
-                        i.fa.fa-minus-circle data-toggle="tooltip" data-placement="top" title="Soft Deleted"
-                        | &nbsp;
-                      - if submission.is_animated_gif
-                        i.fa.fa-film data-toggle="tooltip" data-placement="top" title="Animated"
-                        | &nbsp;
-                      - if submission.num_comments > 0
-                        i.fa.fa-comments-o data-toggle="tooltip" data-placement="top" title="Has Comments"
-                        | &nbsp;
-                        = submission.num_comments
+            .card-body
+              - if @user_submissions.count == 0
+                | This user has no submissions!
+              - else
+                ul.submissionrow
+                  - @user_submissions.each do |submission|
+                    li
+                      .submissionIcon
+                        .submissionTitle = submission.display_title
+                        img.submissionThumbnail { 
+                          src="#{safe_submission_thumb(submission)}"
+                          alt="#{submission.display_title}" 
+                          data-toggle="modal" 
+                          data-target="#submissionModal" 
+                          data-drawing="#{safe_submission_drawing(submission)}" 
+                          data-details="/submissions/#{submission.id}"
+                        }
+                        div class="submissionNotes #{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''}"
+                          = submission.created_at.strftime("%b %-d")
+                          | &nbsp;
+                          - unless submission.approved
+                            i.fa.fa-warning data-toggle="tooltip" data-placement="top" title="Unapproved"
+                            | &nbsp;
+                          - if submission.soft_deleted
+                            i.fa.fa-minus-circle data-toggle="tooltip" data-placement="top" title="Soft Deleted"
+                            | &nbsp;
+                          - if submission.is_animated_gif
+                            i.fa.fa-film data-toggle="tooltip" data-placement="top" title="Animated"
+                            | &nbsp;
+                          - if submission.num_comments > 0
+                            i.fa.fa-comments-o data-toggle="tooltip" data-placement="top" title="Has Comments"
+                            | &nbsp;
+                            = submission.num_comments
 
       - if @user_submissions.count > @user_submissions_per_page
         .card
@@ -65,3 +81,15 @@ javascript:
         |  Back
 
     .col-lg-1
+
+.modal.fade#submissionModal style="background-color:rgba(0,0,0,.7)" tabindex="-1" role="dialog"
+  .modal-dialog.modal-dialog-centered.modal-xl role="document"
+    .modal-content
+      .modal-body.m-0.p-0#modalBody
+        img.w-100#drawing data-dismiss="modal"
+        .row
+					.button-group.position-absolute.mt-2.mr-2#detailButtons style="top:0;right:0;"
+						a.btn.btn-dark.mr-2#details type="button"
+							span.fa.fa-search 
+						a.btn.btn-dark#fullSize type="button" target="_blank"
+							span.fa.fa-arrows-alt
