@@ -69,10 +69,10 @@ class ApplicationController < ActionController::Base
   end
 
   def follow
-    return if Follower.where({ follower_user_id: current_user&.id, followed_user_id: params[:id] })
-                      .any?
+    if Follower.where({ follower_user_id: current_user&.id, followed_user_id: params[:id] }).empty?
+      Follower.create(follower_user_id: current_user&.id, followed_user_id: params[:id])
+    end
 
-    Follower.create(follower_user_id: current_user&.id, followed_user_id: params[:id])
     redirect_back(fallback_location: root_path)
   end
 
