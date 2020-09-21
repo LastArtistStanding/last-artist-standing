@@ -551,6 +551,18 @@ p {
   color: blue;
 }
 
+.modal.fade .modal-dialog {
+	-moz-transition: none !important;
+	-o-transition: none !important;
+	-webkit-transition: none !important;
+	transition: none !important;
+	-moz-transform: none !important;
+	-ms-transform: none !important;
+	-o-transform: none !important;
+	-webkit-transform: none !important;
+	transform: none !important;
+}
+
 /*
  * This application's CSS overwrites many default styles for some reason.
  * This section will restore them back to their usual values within a section.
@@ -575,3 +587,4 @@ p {
     margin: 1em 0px;
   }
 }
+
