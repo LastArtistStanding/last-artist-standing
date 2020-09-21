@@ -3,9 +3,24 @@
 javascript:
   $(function () {
     $('[data-toggle="popover"]').popover()
-  })
-  $(function () {
     $('[data-toggle="tooltip"]').tooltip()
+    $(".submissionThumbnail").click((e) => {
+      $('#drawing').attr("src", e.target.dataset.drawing)
+			$('#fullSize').attr("href", e.target.dataset.drawing)
+      $('#details').attr("href", e.target.dataset.details)
+			$('#drawing').load(() => {
+				var width = document.querySelector("#drawing").naturalWidth
+				width = width < 150 ? 150 : width;
+				if (width < 1140) {
+					$('#modalDialog').css("max-width", width)
+					$('#modalDialog').removeClass('modal-xl')
+				} else {
+					$('#modalDialog').css("max-width", "")
+					$('#modalDialog').addClass('modal-xl')
+				}
+				$('#submissionModal').modal('toggle')
+			})
+    })
   })
 
 .container-fluid
@@ -31,7 +46,12 @@ javascript:
               .submissionIcon
                 - user = submission.user
                 = link_to "<img alt='' src=#{ user.profile_picture }> #{user.username}".html_safe, user, class: "submissionAuthor #{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''}"
-                = link_to image_tag(safe_submission_thumb(submission), alt: "#{submission.display_title}"), submission
+                img.submissionThumbnail { 
+                  src="#{safe_submission_thumb(submission)}"
+                  alt="#{submission.display_title}" 
+                  data-drawing="#{safe_submission_drawing(submission)}" 
+                  data-details="/submissions/#{submission.id}"
+                }
                 div class="submissionNotes #{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''}"
                   = submission.created_at.strftime("%H:%M:%S")
                   | &nbsp;
@@ -50,3 +70,15 @@ javascript:
                     = submission.num_comments
 
     .col-lg-2
+
+.modal.fade#submissionModal style="background-color:rgba(0,0,0,.7)" tabindex="-1" role="dialog"
+  .modal-dialog.modal-dialog-centered.modal-xl#modalDialog role="document" style="margin: auto;"
+    .modal-content
+      .modal-body.m-0.p-0
+        img.w-100#drawing data-dismiss="modal" style="image-rendering: crisp-edges;"
+        .row
+					.button-group.position-absolute.mt-2.mr-2#detailButtons style="top:0;right:0;"
+						a.btn.btn-dark.mr-2#details type="button"
+							span.fa.fa-search 
+						a.btn.btn-dark#fullSize type="button" target="_blank"
+							span.fa.fa-arrows-alt

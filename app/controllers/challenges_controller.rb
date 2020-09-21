@@ -12,12 +12,12 @@ class ChallengesController < ApplicationController
   # GET /challenges
   # GET /challenges.json
   def index
-    @activeChallenges = Challenge.where('start_date <= ? AND (end_date > ? OR end_date IS NULL)', Date.current, Date.current).order('start_date ASC, end_date DESC')
-    @upcomingChallenges = Challenge.where('start_date > ?', Date.current).order('start_date DESC, end_date DESC')
+    @active_challenges = Challenge.where('start_date <= ? AND (end_date > ? OR end_date IS NULL)', Date.current, Date.current).order('start_date ASC, end_date DESC')
+    @upcoming_challenges = Challenge.where('start_date > ?', Date.current).order('start_date DESC, end_date DESC')
     @completedChallenges = Challenge.where('end_date <= ?', Date.current).order('start_date DESC, end_date DESC')
     unless logged_in_as_moderator
-      @activeChallenges = @activeChallenges.where('soft_deleted = false')
-      @upcomingChallenges = @upcomingChallenges.where('soft_deleted = false')
+      @active_challenges = @active_challenges.where('soft_deleted = false')
+      @upcoming_challenges = @upcoming_challenges.where('soft_deleted = false')
       @completedChallenges = @completedChallenges.where('soft_deleted = false')
     end
   end
@@ -32,9 +32,9 @@ class ChallengesController < ApplicationController
   # GET /challenge/1.json
   def show
     if @challenge.soft_deleted && !logged_in_as_moderator
-      render_hidden("This challenge was hidden by moderation.") 
+      render_hidden("This challenge was hidden by moderation.")
     end
-    
+
     # You can't join or leave a challenge after the start date.
     if Date.current < @challenge.start_date
       if params[:join]
@@ -54,7 +54,7 @@ class ChallengesController < ApplicationController
     end
     if @challenge.streak_based
       if @challenge.id == 1
-        @latestEliminations = Participation.where('challenge_id = 1 AND eliminated AND end_date <= :endDate AND end_date >= :startDate', { endDate: Date.current, startDate: (Date.current - 7.days) }).order('end_date DESC')
+        @latest_eliminations = Participation.where('challenge_id = 1 AND eliminated AND end_date <= :endDate AND end_date >= :startDate', {endDate: Date.current, startDate: (Date.current - 7.days) }).order('end_date DESC')
       else
         @allEliminations = Participation.where({ challenge_id: @challenge.id, eliminated: true }).order('end_date DESC')
       end
@@ -192,13 +192,13 @@ class ChallengesController < ApplicationController
           if @challenge.soft_deleted
             @challenge.soft_deleted_by = current_user.id
           end
-          ModeratorLog.create(user_id: current_user.id, 
+          ModeratorLog.create(user_id: current_user.id,
                               target: @challenge,
                               action: "#{current_user.username} has #{@challenge.soft_deleted ? 'soft deleted' : 'reverted soft deletion on'} #{@challenge.name} by #{@creator&.username}.",
                               reason: params[:reason])
         elsif params.has_key? :change_nsfw
           @challenge.nsfw_level = params[:change_nsfw].to_i
-          ModeratorLog.create(user_id: current_user.id, 
+          ModeratorLog.create(user_id: current_user.id,
                               target: @challenge,
                               action: "#{current_user.username} has changed the content level of #{@challenge.name} by #{@creator&.username} to #{nsfw_string(@challenge.nsfw_level)}.",
                               reason: params[:reason])
