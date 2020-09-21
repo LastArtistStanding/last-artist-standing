@@ -218,7 +218,8 @@ class SubmissionsController < ApplicationController
 
   def notify_followers(submission)
     Follower.where({ followed_user_id: current_user.id }).each do |f|
-      Notification.create(
+      p '-----------------'
+      p Notification.create(
         body: "#{current_user.name} has submitted their art",
         source_type: 'Submission',
         source_id: submission.id,

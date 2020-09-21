@@ -62,7 +62,11 @@ describe SubmissionsController do
       end
 
       it 'notifies followers' do
-
+        allow(controller).to receive(:current_user).and_return(user)
+        follower = Follower.new(follower_user_id: user.id, followed_user_id: user.id)
+        allow(Follower).to receive(:where).and_return([follower])
+        post :create, params: { submission: attributes_for(:submission) }
+        expect(Notification).to receive(:create)
       end
     end
 
