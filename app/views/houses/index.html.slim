@@ -22,7 +22,7 @@ div.house-container
         div class="card house-card"
           .card-header.house-card-header
             b style="flex: 1" #{h.house_name}  
-            | #{"🥇" if h.place == 'first'} #{"🥈" if h.place == 'second'} #{"🥉" if h.place == 'third'}
+            | #{"🥇" if h.place == '1st'} #{"🥈" if h.place == '2nd'} #{"🥉" if h.place == '3rd'}
             - unless !logged_in? || in_a_house?(current_user.id) || h.old_house?
               a.house-icon class="#{"disabled" if h.unbalanced?}" href="#{"houses/#{h.id}/join" unless h.unbalanced?}" data-toggle="tooltip" data-placement="top" title="#{"Too many people right now." if h.unbalanced?} #{"Join " + h.house_name if !h.unbalanced?}"
                 i.fa.fa-user-plus

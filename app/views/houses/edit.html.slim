@@ -14,8 +14,12 @@
           .col-3 = h.label :house_name, "House Name:"
           .col-9 = h.text_field :house_name
         .form-group.row
+          .col-3 = label :reason, "Reason:"
+          .col-9 = text_field :reason, :reason
+        .form-group.row
           .col-sm-5
             = link_to "Cancel", :houses, class: "btn btn-danger", style: "width: 100%"
           .col-sm-2
           .col-sm-5
             = h.submit class: "btn btn-primary", style: "margin: 0;" 
+        = hidden_field_tag :old_name, value: @house.house_name

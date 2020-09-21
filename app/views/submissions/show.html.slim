@@ -99,8 +99,8 @@ javascript:
               b Change Time Spent
               br
                 .div style="display: flex; flex-direction: column; justify-content: center;"
-                  = f.number_field :new_time,  max: 2880, min: 0, style: "margin: 0"
-                  = f.button "Submit", name: "change_time", value: :new_time, class: 'btn btn-primary', style: "margin-right: 5px; margin-top: 5px;"
+                  = f.number_field :change_time,  max: 2880, min: 0, style: "margin: 0"
+                  = f.button "Submit", name: "change time", value: :change_time, class: 'btn btn-primary', style: "margin-right: 5px; margin-top: 5px;"
 
     .col-lg-10
       .card
@@ -160,7 +160,7 @@ javascript:
           .card-header Comment On Submission
 
           .card-body
-            | By commenting, you agree to adhere to DAD's guidelines for comment ettiquite as defined 
+            | By commenting, you agree to adhere to DAD's guidelines for comment etiquette as defined 
             a href="/help" here.
             br
             br

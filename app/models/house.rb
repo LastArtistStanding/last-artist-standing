@@ -11,12 +11,13 @@ class House < ApplicationRecord
   # @function add_user
   # @abstract adds the current user
   def add_user(uid)
-    return false unless can_join?(uid)
+    return can_join?(uid) unless can_join?(uid).blank?
 
     score = User.find(uid).submissions
-                .where('created_at >= ?', search_date).sum('submissions.time').to_i / 30
+                .where('created_at >= ?', search_date).sum('submissions.time').to_i
     HouseParticipation
       .create(user_id: uid, house_id: id, join_date: Time.now.utc.to_date, score: score)
+    ''
   end
 
   # @function participants
@@ -37,14 +38,12 @@ class House < ApplicationRecord
   end
 
   # @function place
-  # @return the ranked place compared ot rival houses based on score ("first", "second", or "third")
-  # @note teams can tie for first and second.
+  # @return the ranked place compared ot rival houses based on score
   def place
-    return 'first' if first?
-
-    return 'second' if second?
-
-    'third'
+    (1 + House
+      .where('house_start = ?', house_start)
+      .sort_by { |h| -h.total }
+      .find_index { |h| h.id = id }).ordinalize
   end
 
   # @function is_unbalanced?
@@ -77,7 +76,16 @@ class House < ApplicationRecord
   end
 
   def can_join?(uid)
-    !in_a_house?(uid) && !unbalanced? && !old_house?
+    if in_a_house?(uid)
+      'you are already in a house'
+    elsif unbalanced?
+      'this house has too many members.' \
+             ' Join a different house or wait for more people to join other houses'
+    elsif old_house?
+      'this is an old house'
+    else
+      ''
+    end
   end
 
   def search_date
@@ -86,14 +94,5 @@ class House < ApplicationRecord
 
   def rival(index)
     House.where('house_start = ? AND id != ?', house_start, id)[index]
-  end
-
-  def first?
-    total >= rival(0).total && total >= rival(1).total
-  end
-
-  def second?
-    (total < rival(0).total) && (total >= rival(1).total) ||
-      (total < rival(1).total) && (total >= rival(0).total)
   end
 end
