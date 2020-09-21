@@ -35,12 +35,16 @@ div.house-container
               p.house-title Score
             - h.users.each do |u|
               div.house-participant
-                p #{u[:name] == nil ? "<Unknown User>" : u[:name]}
-                p #{u[:score]}
+                - if u[:name].nil?
+                  p <Unknown User>
+                - else
+                  a href="/users/#{u[:id]}"
+                    p #{u[:name]}
+                p #{u[:score] / 60} hr #{u[:score] % 60}min
             d.house-spacer
             div.house-card-footer            
-              b Total: #{h.total}
-              b Points Per User: #{h.users.length == 0 ? 0 : h.total / h.users.length} 
+              b Total Time: #{h.total / 60} hr #{h.total % 60} min
+              b Time Per User: #{h.users.length == 0 ? 0 : ((h.total / 60) / h.users.length).to_s + "hr " + ((h.total % 60) / h.users.length).to_s + "min" } 
     - else
       h1 There are no houses for this month #{'(yet)' if @date > Time.now.utc}
 

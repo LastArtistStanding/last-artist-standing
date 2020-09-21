@@ -27,7 +27,7 @@ class House < ApplicationRecord
     HouseParticipation
       .joins('LEFT OUTER JOIN users ON users.id = house_participations.user_id')
       .where(house_participations: { house_id: id })
-      .select('users.name as name, house_participations.score as score')
+      .select('users.name as name, house_participations.score as score, users.id as id')
       .order('score DESC')
   end
 
@@ -40,10 +40,10 @@ class House < ApplicationRecord
   # @function place
   # @return the ranked place compared ot rival houses based on score
   def place
-    (1 + House
+    (1 + (House
       .where('house_start = ?', house_start)
-      .sort_by { |h| -h.total }
-      .find_index { |h| h.id = id }).ordinalize
+      .sort_by { |h| -h.total })
+      .find_index { |h| h.id == id }).ordinalize
   end
 
   # @function is_unbalanced?

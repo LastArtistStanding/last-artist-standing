@@ -147,7 +147,7 @@ class SubmissionsController < ApplicationController
               &.update_points(
                   @submission.time.to_i,
                   used_params[:time].to_i,
-                  @submission.created_at.month
+                  @submission.created_at
               )
         end
 
@@ -227,7 +227,7 @@ class SubmissionsController < ApplicationController
                             reason: params[:reason])
       elsif params.has_key? :change_time
         # Allow moderators to update a users time
-        current_user.house_participations
+        User.find(@submission.user_id).house_participations
             .where('join_date >=  ?', Time.now.utc.at_beginning_of_month.to_date)
             &.first&.update_points(
               @submission.time.to_i,

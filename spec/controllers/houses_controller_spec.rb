@@ -44,12 +44,18 @@ describe HousesController do
 
   describe 'POST :update' do
     it 'redirects to houses if it was a success' do
-      patch :update, params: { id: houses[0].id, house: { house_name: 'StupidHouse' } }
+      allow(ModeratorLog).to receive(:create).and_return(true)
+      patch :update, params: { id: houses[0].id,
+                               house: { house_name: 'StupidHouse' },
+                               reason: { reason: "because" } }
       expect(response).to redirect_to('/houses')
     end
 
     it 'renders edit when there was a failure' do
-      patch :update, params: { id: houses[0].id, house: { house_name: houses[1].house_name } }
+      allow(ModeratorLog).to receive(:create).and_return(true)
+      patch :update, params: { id: houses[0].id,
+                               house: { house_name: houses[1].house_name },
+                               reason: { reason: "because" } }
       expect(response).to render_template(:edit)
     end
   end

@@ -9,7 +9,7 @@
             h3 = "#{pluralize(@house.errors.count, "error")} prohibited this house from being created:"
             ul
               - @house.errors.messages.each do |message|
-                li = "#{(message[0].to_s.sub! '_', ' ').titleize + ' ' + message[1][0]}"
+                li = "#{(message[0].to_s.sub('_', ' ').sub('base', '')).titleize + ' ' + message[1][0]}"
         .form-group.row
           .col-3 = h.label :house_name, "House Name:"
           .col-9 = h.text_field :house_name

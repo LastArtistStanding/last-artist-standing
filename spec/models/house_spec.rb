@@ -39,7 +39,7 @@ RSpec.describe House, type: :model do
 
   describe ':place' do
     it 'states the place of each house' do
-      expect(houses[0].place).to eq('first')
+      expect(houses[0].place).to eq('1st')
     end
   end
 

@@ -23,13 +23,15 @@ class HousesController < ApplicationController
   # @abstract updates the house with a new name
   # @note requires moderator attribute
   def update
+    p params[:reason].blank?
     @house = House.find(params[:id])
     old_house_name = @house.house_name
     respond_to do |format|
-      if @house.update(house_params)
+      if @house.update(house_params) && mod_params[:reason].present?
         log_update(old_house_name)
         format.html { redirect_to '/houses' }
       else
+        @house.errors.add(:base, 'Must specify a reason.') if mod_params[:reason].blank?
         format.html { render :edit }
       end
     end
@@ -56,7 +58,7 @@ class HousesController < ApplicationController
   # @function house_params
   # @abstract requires the house parameter and allows the house_name parameter for :edit
   def house_params
-    params.require(:house).permit(:house_name)
+    params.require(:house).permit(:house_name, :reason)
   end
 
   def mod_params
