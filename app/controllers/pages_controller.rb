@@ -111,7 +111,7 @@ class PagesController < ApplicationController
   def challenge(type)
     c = base_challenge
 
-    return c.where('start_date <= ? AND (end_date > ? OR end_date IS NULL)', today) if type == 'active'
+    return c.where('start_date <= ? AND (end_date > ? OR end_date IS NULL)', today, today) if type == 'active'
 
     return c.where('start_date > ?', today) if type == 'upcoming'
 
