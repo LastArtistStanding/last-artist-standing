@@ -54,7 +54,7 @@ class PagesController < ApplicationController
   # creates the activity has
   def activity_feed
     activity_rows.map do |r|
-      {message: message(r.name, r.type, r.sub_id), link: link(r.id, r.type, r.sub_id)}
+      {message: message(r.display_name.present? ? r.display_name : r.name, r.type, r.sub_id), link: link(r.id, r.type, r.sub_id)}
     end
   end
 
@@ -68,13 +68,13 @@ class PagesController < ApplicationController
 
   # returns the sql string used to get the recent challenges
   def challenge_act
-    'SELECT name, id, nsfw_level, created_at, 1 as sub_id, \'challenge\' as type' \
+    'SELECT name, NULL as display_name, id, nsfw_level, created_at, 1 as sub_id, \'challenge\' as type' \
     ' FROM challenges WHERE creator_id > 0 AND soft_deleted = false'
   end
 
   # returns the sql string used to get the recent submissions
   def sub_act
-    'SELECT users.name as name, submissions.id as id, submissions.nsfw_level as nsfw_level,' \
+    'SELECT users.name as name, users.display_name as display_name, submissions.id as id, submissions.nsfw_level as nsfw_level,' \
     ' submissions.created_at as created_at, 1 as sub_id, \'submission\' as type' \
     ' FROM Submissions' \
     ' INNER JOIN users ON users.id = submissions.user_id' \
@@ -83,7 +83,7 @@ class PagesController < ApplicationController
 
   # returns the sql string used to get recent comments
   def comment_act
-    'SELECT users.name as name, comments.id as id, submissions.nsfw_level as nsfw_level,' \
+    'SELECT users.name as name, users.display_name as display_name, comments.id as id, submissions.nsfw_level as nsfw_level,' \
     ' comments.created_at as created_at, comments.source_id as sub_id, \'comment\' as type' \
     ' FROM comments' \
     ' INNER JOIN users ON users.id = comments.user_id' \
@@ -92,11 +92,11 @@ class PagesController < ApplicationController
 
   # creates the message part of the feed based on the type of activity
   def message(name, type, sub_id)
-    return "Challenge '#{name}' was created" if type == 'challenge'
+    return "Challenge '#{name}' was created." if type == 'challenge'
 
-    return "#{name} submitted their art" if type == 'submission'
+    return "#{name} submitted their art." if type == 'submission'
 
-    "#{name} posted a comment on submission #{sub_id}" if type == 'comment'
+    "#{name} posted a comment on submission #{sub_id}." if type == 'comment'
   end
 
   # creates the link part of the feed based on the type of activity
@@ -111,7 +111,7 @@ class PagesController < ApplicationController
   def challenge(type)
     c = base_challenge
 
-    return c.where('end_date > ? OR end_date IS NULL', today) if type == 'active'
+    return c.where('start_date <= ? AND (end_date > ? OR end_date IS NULL)', today, today) if type == 'active'
 
     return c.where('start_date > ?', today) if type == 'upcoming'
 
