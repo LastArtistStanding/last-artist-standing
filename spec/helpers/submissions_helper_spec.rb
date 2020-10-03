@@ -11,10 +11,4 @@
 #   end
 # end
 describe SubmissionsHelper do
-
-  describe 'bubble_followed_users' do
-    it 'bubbles followed users to the top' do
-
-    end
-  end
 end

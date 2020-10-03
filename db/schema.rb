@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_17_020736) do
+ActiveRecord::Schema.define(version: 2020_10_03_223128) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -93,10 +93,11 @@ ActiveRecord::Schema.define(version: 2020_09_17_020736) do
   end
 
   create_table "house_participations", force: :cascade do |t|
-    t.integer "user_id", null: false
     t.integer "house_id", null: false
     t.date "join_date", null: false
     t.integer "score", default: 0, null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_house_participations_on_user_id"
   end
 
   create_table "houses", force: :cascade do |t|
@@ -243,12 +244,19 @@ ActiveRecord::Schema.define(version: 2020_09_17_020736) do
     t.boolean "is_moderator", default: false, null: false
     t.boolean "approved", default: false, null: false
     t.boolean "marked_for_death", default: false, null: false
+    t.boolean "note_submission", default: true
+    t.boolean "note_new_challenges", default: true
+    t.boolean "note_end_challenges", default: true
+    t.boolean "note_start_challenges", default: true
+    t.boolean "note_comments", default: true
+    t.boolean "note_also_commented", default: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["name"], name: "index_users_on_name", unique: true
   end
 
   add_foreign_key "followers", "users", column: "followed_user_id"
   add_foreign_key "followers", "users", column: "follower_user_id"
+  add_foreign_key "house_participations", "users"
   add_foreign_key "moderator_applications", "users"
   add_foreign_key "moderator_logs", "users"
   add_foreign_key "site_bans", "users"

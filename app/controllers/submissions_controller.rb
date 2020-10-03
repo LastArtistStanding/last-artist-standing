@@ -86,8 +86,6 @@ class SubmissionsController < ApplicationController
           ce.save
         end
 
-        notify_followers(@submission)
-
         format.html { redirect_to @submission }
         format.json { render :show, status: :created, location: @submission }
       else
@@ -214,17 +212,5 @@ class SubmissionsController < ApplicationController
 
   def limited_params
     params.require(:submission).permit(:nsfw_level, :title, :description, :commentable)
-  end
-
-  def notify_followers(submission)
-    Follower.where({ followed_user_id: current_user.id }).each do |f|
-      p '-----------------'
-      p Notification.create(
-        body: "#{current_user.name} has submitted their art",
-        source_type: 'Submission',
-        source_id: submission.id,
-        user_id: f.follower_user_id,
-        url: "/submissions/#{submission.id}")
-    end
   end
 end

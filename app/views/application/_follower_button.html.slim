@@ -8,7 +8,8 @@ javascript:
         unfollowBtn.innerHTML = "Follow"
         unfollowBtn.classList.remove('btn-danger')
         unfollowBtn.classList.add('btn-primary')
-        unfollowBtn.href = "javascript:follow(" + id +")"
+        unfollowBtn.onclick = () => { follow(id); return false }
+        unfollowBtn.href = "/follow/#{user.id}"
         unfollowBtn.id = 'follow--' + id
       }
     };
@@ -24,7 +25,8 @@ javascript:
         followBtn.innerHTML = "Unfollow"
         followBtn.classList.remove('btn-primary')
         followBtn.classList.add('btn-danger')
-        followBtn.href = "javascript:unfollow(" + id + ")"
+        followBtn.onclick = () => { unfollow(id); return false }
+        followBtn.href = "/unfollow/#{user.id}"
         followBtn.id = 'unfollow--' + id
       }
     };
@@ -33,8 +35,8 @@ javascript:
 
 - unless logged_in_as_user(user)
   - if follows?(user.id)
-    a.btn.btn-danger href="javascript:unfollow(#{user.id})" id="unfollow--#{user.id}"
+    a.btn.btn-danger href="/unfollow/#{user.id}" onclick="javascript:unfollow(#{user.id}); return false;" id="unfollow--#{user.id}"
       | Unfollow
   - else
-    a.btn.btn-primary href="javascript:follow(#{user.id})" id="follow--#{user.id}"
+    a.btn.btn-primary href="/follow/#{user.id}" onclick="javascript:follow(#{user.id}); return false;" id="follow--#{user.id}"
       | Follow

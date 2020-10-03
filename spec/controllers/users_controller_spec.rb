@@ -12,10 +12,4 @@ describe UsersController do
       expect(response).to render_template(:new)
     end
   end
-
-  describe 'GET :edit' do
-    it 'populates user\'s followers' do
-
-    end
-  end
 end
