@@ -35,11 +35,11 @@ div.house-container
               p.house-title Score
             - h.users.each do |u|
               div.house-participant
-                - if u[:name].nil?
+                - if u.user.nil?
                   p <Unknown User>
                 - else
-                  a href="/users/#{u[:id]}"
-                    p #{u[:name]}
+                  a href="/users/#{u.user.id}"
+                    p #{u.user.username}
                 p #{u[:score] / 60} hr #{u[:score] % 60}min
             d.house-spacer
             div.house-card-footer            

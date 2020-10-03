@@ -25,9 +25,8 @@ class House < ApplicationRecord
   # @note will return nil for the name if the user was banned or deleted
   def users
     HouseParticipation
-      .joins('LEFT OUTER JOIN users ON users.id = house_participations.user_id')
       .where(house_participations: { house_id: id })
-      .select('users.name as name, house_participations.score as score, users.id as id')
+      .includes(:user)
       .order('score DESC')
   end
 
