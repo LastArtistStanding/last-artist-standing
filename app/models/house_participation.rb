@@ -23,7 +23,7 @@ class HouseParticipation < ApplicationRecord
   # @function update_points
   # @abstract removes points and then adds a different
   # amount of points (when updating submission time)
-  # does not update if the submizssion is older than a month.
+  # does not update if the submission is older than a month.
   def update_points(old_points, new_points, submission_created_at)
     return unless submission_created_at.to_date >= Time.now.utc.at_beginning_of_month.to_date
 
