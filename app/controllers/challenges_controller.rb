@@ -14,11 +14,11 @@ class ChallengesController < ApplicationController
   def index
     @active_challenges = Challenge.where('start_date <= ? AND (end_date > ? OR end_date IS NULL)', Date.current, Date.current).order('start_date ASC, end_date DESC')
     @upcoming_challenges = Challenge.where('start_date > ?', Date.current).order('start_date DESC, end_date DESC')
-    @completedChallenges = Challenge.where('end_date <= ?', Date.current).order('start_date DESC, end_date DESC')
+    @completed_challenges = Challenge.where('end_date <= ?', Date.current).order('start_date DESC, end_date DESC')
     unless logged_in_as_moderator
       @active_challenges = @active_challenges.where('soft_deleted = false')
       @upcoming_challenges = @upcoming_challenges.where('soft_deleted = false')
-      @completedChallenges = @completedChallenges.where('soft_deleted = false')
+      @completed_challenges = @completed_challenges.where('soft_deleted = false')
     end
   end
 

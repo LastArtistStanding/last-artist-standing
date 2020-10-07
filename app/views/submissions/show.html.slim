@@ -97,6 +97,12 @@ javascript:
                 = f.button "Questionable", name: 'change_nsfw', value: '2', class: 'btn btn-primary', style: "margin-right: 5px; margin-top: 5px;"
               - unless @submission.nsfw_level == 3
                 = f.button "Explicit", name: 'change_nsfw', value: '3', class: 'btn btn-primary', style: "margin-right: 5px; margin-top: 5px;"
+              br
+              b Change Time Spent
+              br
+                .div style="display: flex; flex-direction: column; justify-content: center;"
+                  = f.number_field :change_time,  max: 2880, min: 0, style: "margin: 0"
+                  = f.button "Submit", name: "change time", value: :change_time, class: 'btn btn-primary', style: "margin-right: 5px; margin-top: 5px;"
 
     .col-lg-10
       .card
@@ -156,7 +162,7 @@ javascript:
           .card-header Comment On Submission
 
           .card-body
-            | By commenting, you agree to adhere to DAD's guidelines for comment ettiquite as defined 
+            | By commenting, you agree to adhere to DAD's guidelines for comment etiquette as defined 
             a href="/help" here.
             br
             br
