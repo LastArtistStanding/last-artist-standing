@@ -52,6 +52,9 @@ class SubmissionsController < ApplicationController
   def new
     @submission = Submission.new
     @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
+    # Inform the user of their houses score (if they are participating)
+    @house_participations = current_user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date).first
+    @points = @house_participations ? @house_participations.score : 0
   end
 
   # GET /submissions/1/edit
@@ -78,6 +81,11 @@ class SubmissionsController < ApplicationController
         # lock in time to account for lag time
         @submission.created_at = initial_date_time
         @submission.save
+
+        # Add points to their house when they create if it exists
+        current_user.house_participations
+            .where('join_date >=  ?', Time.now.utc.at_beginning_of_month.to_date)
+            &.first&.add_points(submission_params[:time].to_i)
 
         newFrequency = params[:postfrequency].to_i
         current_user.update_attribute(:new_frequency, newFrequency)
@@ -131,6 +139,18 @@ class SubmissionsController < ApplicationController
     respond_to do |format|
       if @submission.update(used_params)
 
+        # Modify their points if they change their time spent on a submission
+        if used_params.has_key? :time
+          current_user.house_participations
+              .where('join_date >=  ?', Time.now.utc.at_beginning_of_month.to_date)
+              &.first
+              &.update_points(
+                  @submission.time.to_i,
+                  used_params[:time].to_i,
+                  @submission.created_at
+              )
+        end
+
         unless params[:postfrequency].nil?
           newFrequency = params[:postfrequency].to_i
           current_user.update_attribute(:new_frequency, newFrequency)
@@ -167,6 +187,11 @@ class SubmissionsController < ApplicationController
     # You can only delete a submission on the day you submitted it.
     return if @submission.created_at.to_date != Time.now.utc.to_date
 
+    # Remove points for deleted submissions
+    current_user.house_participations
+        .where('join_date >=  ?', Time.now.utc.at_beginning_of_month.to_date)
+        &.first&.remove_points(@submission.time.to_i)
+
     @submission.destroy
     @submission.comments.each { |comment| comment.notifications.destroy_all }
 
@@ -200,6 +225,24 @@ class SubmissionsController < ApplicationController
                             target: @submission,
                             action: "#{current_user.username} has changed the content level of #{@submission.display_title} by #{@submission.user.username} to #{nsfw_string(@submission.nsfw_level)}.",
                             reason: params[:reason])
+      elsif params.has_key? :change_time
+        # Allow moderators to update a users time
+        User.find(@submission.user_id).house_participations
+            .where('join_date >=  ?', Time.now.utc.at_beginning_of_month.to_date)
+            &.first&.update_points(
+              @submission.time.to_i,
+              params[:change_time].to_i,
+              @submission.created_at
+            )
+        @submission.time = params[:change_time].to_i
+        ModeratorLog.create do |log|
+          log.user_id = current_user.id
+          log.target = @submission
+          log.action = "#{current_user.username} has changed the time spent of" \
+                         " #{@submission.display_title} by #{@submission.user.username}" \
+                         " to #{@submission.time}."
+          log.reason = params[:reason]
+        end
       end
       @submission.save
     end

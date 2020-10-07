@@ -239,7 +239,17 @@ namespace :dad_tasks do
       end
     end
 
-    # STEP 6: Now that the daily job is complete, update.
+    # STEP 6: Create new Houses if it is the start of the month
+    if Time.now.utc.to_date == Time.now.utc.at_beginning_of_month.to_date
+      (1..3).each do |i|
+        House.create(
+          house_name: "House #{i}",
+          house_start: Time.now.utc.at_beginning_of_month.to_date,
+        )
+      end
+    end
+
+    # STEP 7: Now that the daily job is complete, update.
     SiteStatus.first.update_attribute(:current_rollover, today)
   end
 

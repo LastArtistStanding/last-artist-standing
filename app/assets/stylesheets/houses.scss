@@ -1,0 +1,141 @@
+// Place all the styles related to the Houses controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+.house-container > h3 {
+  margin-top: 2em;
+}
+
+.house-card {
+  width: 28%;
+  min-width: 300px;
+  max-width: 400px;
+}
+
+.house-card-header {
+  display: flex;
+  align-items: baseline;
+}
+
+.house-icon {
+  padding: 0 5px;
+}
+
+.house-card-body {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.house-title {
+  font-weight: bold;
+}
+
+.house-participant {
+  display: flex;
+  justify-content: space-between;
+  margin: 1em 0;
+  border-bottom: solid 1px rgba(0, 0, 0, .2);
+}
+
+.house-spacer {
+  flex: 1;
+}
+
+.house-table-cell {
+  display: flex;
+  justify-content: space-between;
+}
+
+.house-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 348px;
+}
+
+.house-neighborhood {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  width: 100%
+}
+
+a.disabled {
+  color: #a7a7a7;
+  cursor: not-allowed;
+}
+
+.house-form {
+  margin: 1em 0;
+  width: 100%;
+  max-width: 800px;
+  left: 0;
+  right: 0;
+}
+
+.house-finder {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100%;
+
+  & > .btn {
+    align-self: baseline;
+    white-space: nowrap;
+    max-width: 112px;
+    min-width: 112px;
+    color: white;
+  }
+}
+
+.house-date-picker {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  & > * {
+    align-self: baseline;
+    white-space: nowrap;
+    max-width: 112px;
+    min-width: 112px;
+    &:not(:last-child) {
+      margin-right: 1em;
+    }
+  }
+}
+
+.house-card-footer {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+}
+
+@media only screen and (max-width: 800px) {
+  .house-finder {
+    flex-direction: column;
+    min-width: 300px;
+
+    & > .btn {
+      align-self: center;
+      max-width: unset;
+      width: calc(100% - 3em);
+    }
+  }
+
+  .house-date-picker {
+    flex-direction: column;
+    min-width: 300px;
+
+    & > * {
+      align-self: center;
+      max-width: unset;
+      width: calc(100% - 3em);
+      &:not(:last-child) {
+        margin-right: 0;
+      }
+    }
+  }
+}

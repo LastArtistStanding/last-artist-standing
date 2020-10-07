@@ -80,6 +80,8 @@
                   td = link_to log.user.username, log.user
                   - if log.target_type == 'Comment'
                     td = link_to "#{log.target_type} ##{log.target_id}", "#{url_for(log.target.source)}##{log.target_id}"
+                  - elsif log.target_type == 'House'
+                    td = link_to "#{log.target_type} ##{log.target_id}", "/houses?date=#{log.created_at.at_beginning_of_month.to_date}"
                   - else
                     td = link_to "#{log.target_type} ##{log.target_id}", log.target
                   td = log.action
