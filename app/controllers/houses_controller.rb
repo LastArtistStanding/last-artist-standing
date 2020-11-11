@@ -23,7 +23,6 @@ class HousesController < ApplicationController
   # @abstract updates the house with a new name
   # @note requires moderator attribute
   def update
-    p params[:reason].blank?
     @house = House.find(params[:id])
     old_house_name = @house.house_name
     respond_to do |format|

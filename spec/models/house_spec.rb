@@ -7,14 +7,29 @@ RSpec.describe House, type: :model do
     (0..2).each do |_i|
       houses.push(create(:house))
     end
-    (0..7).each do |_i|
-      house_participants.push(create(:house_participation, house_id: houses[0].id, score: 1))
+    (0..7).each do |i|
+      user = build(:user)
+      user.name = i.to_s
+      user.email = i.to_s + '@dad.gallery'
+      user.save
+      house_participants.push(
+        create(:house_participation, house_id: houses[0].id, user_id: user.id, score: 1))
     end
-    (8..10).each do |_i|
-      house_participants.push(create(:house_participation, house_id: houses[1].id, score: 2))
+    (8..10).each do |i|
+      user = build(:user)
+      user.name = i.to_s
+      user.email = i.to_s + '@dad.gallery'
+      user.save
+      house_participants.push(
+        create(:house_participation, house_id: houses[1].id, user_id: user.id, score: 2))
     end
-    (11..11).each do |_i|
-      house_participants.push(create(:house_participation, house_id: houses[2].id, score: 6))
+    (11..11).each do |i|
+      user = build(:user)
+      user.name = i.to_s
+      user.email = i.to_s + '@dad.gallery'
+      user.save
+      house_participants.push(
+        create(:house_participation, house_id: houses[2].id, user_id: user.id, score: 6))
     end
   end
 

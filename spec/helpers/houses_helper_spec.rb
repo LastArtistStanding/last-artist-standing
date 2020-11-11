@@ -15,7 +15,8 @@ require 'spec_helper'
 RSpec.describe HousesHelper, type: :helper do
   describe ':is_in_a_house?' do
     it 'identifies when a user is in a house' do
-      hp = create(:house_participation)
+      user = create(:user)
+      hp = create(:house_participation, user_id: user.id)
       expect(in_a_house?(hp.user_id)).to eq(true)
       hp.delete
     end
