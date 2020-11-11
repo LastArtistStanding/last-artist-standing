@@ -26,7 +26,6 @@ class HouseParticipation < ApplicationRecord
   # does not update if the submission is older than a month.
   def update_points(old_points, new_points, submission_created_at)
     return unless submission_created_at.to_date >= Time.now.utc.at_beginning_of_month.to_date
-    p 'HERE'
 
     self.score -= old_points
     self.score += new_points
