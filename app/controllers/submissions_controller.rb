@@ -137,7 +137,7 @@ class SubmissionsController < ApplicationController
     end
 
     respond_to do |format|
-      old_time = @submission.time
+      old_time = @submission.time || 0
       if @submission.update(used_params)
 
         # Modify their points if they change their time spent on a submission
