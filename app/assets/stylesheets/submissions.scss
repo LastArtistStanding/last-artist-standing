@@ -1,3 +1,21 @@
 // Place all the styles related to the Submissions controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+#preview-row {
+  position: relative;
+  height: 400px;
+  overflow: hidden;
+}
+
+#drawing-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  overflow: hidden;
+  text-align: center;
+}
+
+#drawing-row > h2 {
+  text-align: center;
+}

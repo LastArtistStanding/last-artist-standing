@@ -137,16 +137,16 @@ javascript:
           |  Also, be aware that after submitting, <span style="font-weight: 600;">your ability to edit your submission will be
           |  limited after rollover, and deletion will be impossible.</span><br><br>
 
-          .form-group.row
+          .form-group.row id="drawing-row"
             .col-3 style="font-weight: 600;" = f.label :drawing
             br
             .col-3 onchange="setPreview(event.target.files[0])" id="drawing" = f.file_field :drawing
-            h2.col-2 OR
+            h2.col-2 or
             input.col-4 type="text" maxlength="0"  placeholder="Paste your drawing here"
 
-          .form-group.row
+          .form-group.row id="preview-row"
             .col-3 Preview:
-            img.col-9 id="drawing-preview" src="" alt="upload-preview"
+            img.col-9 id="drawing-preview" src="" alt="[No File Selected]"
             
           .form-group.row
             .col-3 style="font-weight:600;" = f.label :nsfw_level
