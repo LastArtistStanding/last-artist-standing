@@ -121,6 +121,7 @@ class SubmissionsController < ApplicationController
     end
 
     respond_to do |format|
+      old_time = @submission.time || 0
       if @submission.update(used_params)
 
         # Modify their points if they change their time spent on a submission
@@ -129,7 +130,7 @@ class SubmissionsController < ApplicationController
               .where('join_date >=  ?', Time.now.utc.at_beginning_of_month.to_date)
               &.first
               &.update_points(
-                  @submission.time.to_i,
+                  old_time,
                   used_params[:time].to_i,
                   @submission.created_at
               )

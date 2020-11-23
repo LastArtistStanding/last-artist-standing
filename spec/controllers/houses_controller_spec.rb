@@ -6,9 +6,9 @@ describe HousesController do
   houses = []
   user = []
   before do
-    user = build(:user)
+    user = create(:user)
     user.is_moderator = true
-    user.id = 1
+    user.save
     allow(controller).to receive(:current_user).and_return(user)
     allow(UserSession).to receive(:create).and_return(nil)
     allow(User).to receive(:find).and_return(user)
