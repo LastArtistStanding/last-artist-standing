@@ -72,13 +72,13 @@ module SubmissionsHelper
   def bubble_followed_users(submissions)
     return submissions unless logged_in?
 
-    return submissions unless Follower.where({ follower_user_id: current_user&.id }).any?
+    return submissions unless Follower.where({ user: current_user&.id }).any?
 
     submissions
-      .joins("LEFT JOIN (SELECT * FROM followers where follower_user_id = #{current_user&.id})" \
-             ' AS my_followers ON my_followers.followed_user_id = submissions.user_id ')
-      .select('submissions.*, my_followers.followed_user_id')
-      .order('my_followers.followed_user_id DESC NULLS LAST')
+      .joins("LEFT JOIN (SELECT * FROM followers where user_id = #{current_user&.id})" \
+             ' AS my_followers ON my_followers.following_id = submissions.user_id ')
+      .select('submissions.*, my_followers.following_id')
+      .order('my_followers.following_id DESC NULLS LAST')
       .order('submissions.created_at DESC')
   end
 

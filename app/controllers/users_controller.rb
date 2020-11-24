@@ -61,7 +61,7 @@ class UsersController < ApplicationController
   end
 
   def edit
-    @followers = Follower.where({ follower_user_id: params[:id]}).includes(:followed_user)
+    @followers = Follower.where({ user: params[:id]}).includes(:following)
   end
 
   def update

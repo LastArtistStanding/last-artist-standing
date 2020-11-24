@@ -68,21 +68,6 @@ class ApplicationController < ActionController::Base
     response.set_header('Expires', 'Fri, 01 Jan 1990 00:00:00 GMT')
   end
 
-  def follow
-    if Follower.where({ follower_user_id: current_user&.id, followed_user_id: params[:id] }).empty?
-      Follower.create(follower_user_id: current_user&.id, followed_user_id: params[:id])
-    end
-
-    redirect_back(fallback_location: root_path)
-  end
-
-  def unfollow
-    Follower.where({ follower_user_id: current_user&.id, followed_user_id: params[:id] })
-            &.first
-            &.destroy
-    redirect_back(fallback_location: root_path)
-  end
-
   private
 
   def set_raven_context

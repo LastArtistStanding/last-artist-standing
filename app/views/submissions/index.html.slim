@@ -43,7 +43,7 @@ javascript:
         a.btn.btn-primary style="margin-left: 5px; width: 100px; vertical-align: top;" href="#{submissions_path(:date => @date - 1.day)}"
           | Prev Day
         - unless @date == Time.now.utc.to_date
-          a.btn.btn-primary style="margin-left: 5px; width: 100px; vertical-align: top;" href="#{submissions_path(:date => @date + 1.day)}" disabled="#{}"
+          a.btn.btn-primary style="margin-left: 5px; width: 100px; vertical-align: top;" href="#{submissions_path(:date => @date + 1.day)}"
             | Next Day
 
       .row

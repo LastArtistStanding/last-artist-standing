@@ -14,8 +14,8 @@ Rails.application.routes.draw do
   get 'signup' => 'users#new'
   get 'welcome' => 'pages#home'
 
-  get 'follow/:id/' => 'application#follow'
-  get 'unfollow/:id/' => 'application#unfollow'
+  get 'follow/:id/' => 'followers#follow'
+  get 'unfollow/:id/' => 'followers#unfollow'
 
   resources :challenges
   get 'challenges/:id/entries' => 'challenges#entries'
