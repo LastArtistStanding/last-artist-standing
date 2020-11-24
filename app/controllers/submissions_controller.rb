@@ -12,27 +12,11 @@ class SubmissionsController < ApplicationController
   # GET /submissions
   # GET /submissions.json
   def index
-    if params[:to].present? || params[:from].present?
-      @submissions = if params[:to].blank?
-                       base_submissions.where('id >= :from', { from: params[:from] }).order('id ASC')
-                     elsif params[:from].blank?
-                       base_submissions.where('id <= :to', { to: params[:to] }).order('id ASC')
-                     else
-                       base_submissions.where(id: params[:from]..params[:to]).order('id ASC')
-                     end
-    else
-      if params[:date].present?
-        begin
-          @date = Date.parse(params[:date])
-          @date = Time.now.utc.to_date if @date > Time.now.utc.to_date
-        rescue ArgumentError
-          @date = Time.now.utc.to_date
-        end
-      else
-        @date = Time.now.utc.to_date
-      end
-      @submissions = base_submissions.includes(:user).where(created_at: @date.midnight..@date.end_of_day).order('submissions.created_at DESC')
-    end
+    @date = Date.parse(params[:date] || Time.now.utc.strftime('%Y-%m-%d'))
+    @submissions = bubble_followed_users(base_submissions)
+                     .includes(:user)
+                     .where(created_at: @date.midnight..@date.end_of_day)
+                     .order('submissions.created_at DESC')
   end
 
   # GET /submissions/1

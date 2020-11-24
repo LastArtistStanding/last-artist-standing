@@ -38,19 +38,20 @@ javascript:
         h2 = "#{@date == Time.now.utc.to_date ? "Today's" : @date.strftime("%B %e, %Y")} Submissions"
 
       = form_tag submissions_path, method: :get do
-        = date_field_tag :date, @date, class: "form-control", style: "width: 150px; display: inline-block; vertical-align: middle;"
+        = date_field_tag :date, @date, class: "form-control", style: "width: 150px; display: inline-block; vertical-align: middle;", max: "#{Time.now.utc.to_date}"
         = submit_tag 'Select', class: "btn btn-primary", style: "width: 100px; margin-left: 5px;"
         a.btn.btn-primary style="margin-left: 5px; width: 100px; vertical-align: top;" href="#{submissions_path(:date => @date - 1.day)}"
           | Prev Day
-        a.btn.btn-primary style="margin-left: 5px; width: 100px; vertical-align: top;" href="#{submissions_path(:date => @date + 1.day)}"
-          | Next Day
+        - unless @date == Time.now.utc.to_date
+          a.btn.btn-primary style="margin-left: 5px; width: 100px; vertical-align: top;" href="#{submissions_path(:date => @date + 1.day)}"
+            | Next Day
 
       .row
         ul.submissionrow
           - @submissions.each do |submission|
             li
               .submissionIcon
-                a.submissionAuthor href="/users/#{submission.user.id}" class="#{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''}"
+                a.submissionAuthor href="/users/#{submission.user.id}" class="#{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''} #{follows?(submission.user_id) ? 'followed-user' : ''}"
                   img src="#{ submission.user.profile_picture }"
                   = submission.user.username
                 a.submissionThumbnail href="/submissions/#{submission.id}" style="cursor: zoom-in;"
@@ -60,7 +61,7 @@ javascript:
                     data-drawing="#{safe_submission_drawing(submission)}" 
                     data-details="/submissions/#{submission.id}"
                   }
-                .submissionNotes class="#{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''}"
+                .submissionNotes class="#{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''} #{follows?(submission.user_id) ? 'followed-user' : ''}"
                   = submission.created_at.strftime("%H:%M:%S")
                   | &nbsp;
                   - unless submission.approved
