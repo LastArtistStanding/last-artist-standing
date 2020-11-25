@@ -395,6 +395,10 @@ p {
   overflow: hidden;
   white-space: nowrap;
 
+  &.followed-user {
+    background: rgba(11, 118, 184, 0.5);
+  }
+
   &.softDeleted {
     background: #ffb0b0;
     color: #721c24;
@@ -435,6 +439,10 @@ p {
   -moz-user-select: none;     /* Firefox all */
   -ms-user-select: none;      /* IE 10+ */
   user-select: none;          /* Likely future */
+
+  &.followed-user {
+    background: rgba(11, 118, 184, 0.5);
+  }
 
   &.softDeleted {
     background: #ffb0b0;

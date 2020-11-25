@@ -1,0 +1,42 @@
+javascript:
+  function unfollow(id) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("get", '/unfollow/' + id, true)
+    xhttp.onreadystatechange = function () {
+      if (this.readyState === 4 && this.status === 200) {
+        var unfollowBtn = document.getElementById('unfollow--' + id)
+        unfollowBtn.innerHTML = "Follow"
+        unfollowBtn.classList.remove('btn-danger')
+        unfollowBtn.classList.add('btn-primary')
+        unfollowBtn.onclick = () => { follow(id); return false }
+        unfollowBtn.href = "/follow/#{user.id}"
+        unfollowBtn.id = 'follow--' + id
+      }
+    };
+    xhttp.send()
+  }
+
+  function follow(id) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("get", '/follow/' + id, true)
+    xhttp.onreadystatechange = function () {
+      if (this.readyState === 4 && this.status === 200) {
+        var followBtn = document.getElementById('follow--' + id)
+        followBtn.innerHTML = "Unfollow"
+        followBtn.classList.remove('btn-primary')
+        followBtn.classList.add('btn-danger')
+        followBtn.onclick = () => { unfollow(id); return false }
+        followBtn.href = "/unfollow/#{user.id}"
+        followBtn.id = 'unfollow--' + id
+      }
+    };
+    xhttp.send()
+  }
+
+- unless logged_in_as_user(user) or !logged_in?
+  - if follows?(user.id)
+    a.btn.btn-danger href="/unfollow/#{user.id}" onclick="javascript:unfollow(#{user.id}); return false;" id="unfollow--#{user.id}"
+      | Unfollow
+  - else
+    a.btn.btn-primary href="/follow/#{user.id}" onclick="javascript:follow(#{user.id}); return false;" id="follow--#{user.id}"
+      | Follow

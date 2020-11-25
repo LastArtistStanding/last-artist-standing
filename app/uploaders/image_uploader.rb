@@ -23,11 +23,11 @@ class ImageUploader < CarrierWave::Uploader::Base
 
   version :thumb do
     process :remove_animation, if: :animated_gif?
-    process resize_to_fill: [400, 400]
+    process resize_to_fill: [150, 150]
   end
 
   version :avatar, from_version: :thumb do
-    process resize_to_fill: [100, 100]
+    process resize_to_fill: [50, 50]
   end
 
   protected
@@ -62,8 +62,6 @@ class ImageUploader < CarrierWave::Uploader::Base
   end
 
   def requires_resize?(file)
-    # FIXME: What is this and why is it here?
-    model.errors.add(:drawing, 'penis')
     # FIXME: Under what circumstances would 'file' be falsy?
     #   And is returning false the correct behavior in that circumstance?
     #   (This also applies to other predicates.)
