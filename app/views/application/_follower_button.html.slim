@@ -33,7 +33,7 @@ javascript:
     xhttp.send()
   }
 
-- unless logged_in_as_user(user)
+- unless logged_in_as_user(user) or !logged_in?
   - if follows?(user.id)
     a.btn.btn-danger href="/unfollow/#{user.id}" onclick="javascript:unfollow(#{user.id}); return false;" id="unfollow--#{user.id}"
       | Unfollow
