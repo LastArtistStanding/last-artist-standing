@@ -5,10 +5,11 @@ class FollowersController < ActionController::Base
   include SessionsHelper
 
   def follow
-    if Follower.where({ user_id: current_user&.id, following: User.find(params[:id]) }).empty?
-      Follower.create(user_id: current_user&.id, following: User.find(params[:id]))
+    if current_user&.id != params[:id]
+      Follower
+        .where({ user_id: current_user&.id, following: User.find(params[:id]) })
+        .first_or_create
     end
-
     redirect_back(fallback_location: root_path)
   end
 
