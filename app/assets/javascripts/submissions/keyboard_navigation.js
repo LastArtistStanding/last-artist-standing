@@ -1,4 +1,8 @@
 window.onkeyup = function(e) {
+  if (window.location.toString().match(/submissions\/\d+$/) === null) {
+    return
+  }
+
   if (document.getElementById("comment-box") !== document.activeElement) {
     if (ppath && e.keyCode == 37) {
       window.open(ppath,"_self");
