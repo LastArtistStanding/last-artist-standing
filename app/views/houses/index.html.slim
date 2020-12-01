@@ -46,7 +46,7 @@ div.house-container
               b Total Time: #{h.total / 60} hr #{h.total % 60} min
               - if h.users.length.positive?
                 - time_per_user = h.total / h.users.length
-                b Time Per User: #{time_per_user / 60} hr " #{time_per_user % 60} min
+                b Time Per User: #{time_per_user / 60} hr #{time_per_user % 60} min
               - else
                 b Time Per User: 0 hr 0 min
     - else
