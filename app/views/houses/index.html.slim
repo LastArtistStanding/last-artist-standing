@@ -44,7 +44,11 @@ div.house-container
             d.house-spacer
             div.house-card-footer            
               b Total Time: #{h.total / 60} hr #{h.total % 60} min
-              b Time Per User: #{h.users.length == 0 ? 0 : ((h.total / 60) / h.users.length).to_s + "hr " + ((h.total % 60) / h.users.length).to_s + "min" } 
+              - if h.users.length.positive?
+                - time_per_user = h.total / h.users.length
+                b Time Per User: #{time_per_user / 60} hr " #{time_per_user % 60} min
+              - else
+                b Time Per User: 0 hr 0 min
     - else
       h1 There are no houses for this month #{'(yet)' if @date > Time.now.utc}
 
