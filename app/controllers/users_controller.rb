@@ -19,6 +19,7 @@ class UsersController < ApplicationController
       .search(params)
       .order('current_streak DESC, id DESC')
       .paginate(page: params[:page], per_page: @user_per_page)
+      .includes(:house_participations)
   end
 
   def submissions
@@ -34,6 +35,7 @@ class UsersController < ApplicationController
     @submissions = base_submissions.where(user_id: @user.id).order('submissions.created_at DESC').limit(10)
     @ban = SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{@user.id}")
     @all_bans = SiteBan.where(user_id: @user.id)
+    @house = @user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date).first&.house
   end
 
   def new

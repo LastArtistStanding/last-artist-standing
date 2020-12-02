@@ -30,6 +30,7 @@ class SubmissionsController < ApplicationController
     end
 
     @challenge_entries = ChallengeEntry.where(submission_id: @submission.id)
+    @house = @submission.user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date).first&.house
   end
 
   # GET /submissions/new

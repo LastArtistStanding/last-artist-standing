@@ -34,7 +34,7 @@ javascript:
 
       .card
         .card-body.table-responsive style="text-align: center;"
-          = render partial: "application/usercard", locals: { user: @user }
+          = render partial: "application/usercard", locals: { user: @user, house: @house }
 
           - if logged_in_as_user(@user)
             br

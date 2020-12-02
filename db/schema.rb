@@ -95,7 +95,9 @@ ActiveRecord::Schema.define(version: 2020_11_23_051326) do
   create_table "house_participations", force: :cascade do |t|
     t.integer "house_id", null: false
     t.date "join_date", null: false
-    t.integer "score", default: 0, null: false
+    t.integer "score", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.bigint "user_id"
     t.index ["user_id"], name: "index_house_participations_on_user_id"
   end
@@ -103,6 +105,8 @@ ActiveRecord::Schema.define(version: 2020_11_23_051326) do
   create_table "houses", force: :cascade do |t|
     t.text "house_name", null: false
     t.date "house_start", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "moderator_applications", force: :cascade do |t|
@@ -244,12 +248,6 @@ ActiveRecord::Schema.define(version: 2020_11_23_051326) do
     t.boolean "is_moderator", default: false, null: false
     t.boolean "approved", default: false, null: false
     t.boolean "marked_for_death", default: false, null: false
-    t.boolean "note_submission", default: true
-    t.boolean "note_new_challenges", default: true
-    t.boolean "note_end_challenges", default: true
-    t.boolean "note_start_challenges", default: true
-    t.boolean "note_comments", default: true
-    t.boolean "note_also_commented", default: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["name"], name: "index_users_on_name", unique: true
   end

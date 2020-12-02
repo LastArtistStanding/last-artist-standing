@@ -17,7 +17,6 @@ class House < ApplicationRecord
                 .where('created_at >= ?', search_date).sum('submissions.time').to_i
     HouseParticipation
       .create(user_id: uid, house_id: id, join_date: Time.now.utc.to_date, score: score)
-    ''
   end
 
   # @function participants

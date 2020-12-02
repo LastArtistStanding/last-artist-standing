@@ -42,7 +42,7 @@ javascript:
           b Submission Info
 
         .card-body style="text-align: center;"
-          = render partial: "application/usercard", locals: { user: @submission.user }
+          = render partial: "application/usercard", locals: { user: @submission.user, house: @house }
           br
           = render partial: "application/follower_button", locals: { user: @submission.user }
           br

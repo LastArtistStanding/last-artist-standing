@@ -30,7 +30,7 @@ javascript:
             .card
               .card-body
                 - @users.each do |user|
-                  = render partial: "application/usercard", locals: { user: user }
+                  = render partial: "application/usercard", locals: { user: user, house: user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date).first&.house }
 
             - if @users.count > @user_per_page
               .card
