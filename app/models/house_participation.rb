@@ -3,6 +3,7 @@
 # represents a users participation in a house
 class HouseParticipation < ApplicationRecord
   belongs_to :user
+  belongs_to :house
   validates :user_id, :house_id, :join_date, :score, presence: true
 
   # @funciton add_points
