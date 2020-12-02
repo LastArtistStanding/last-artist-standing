@@ -2,10 +2,14 @@ div class="avatarWithName #{'moderator' if user.is_moderator} #{'administrator' 
   .avatarUserName
     = user.username
     br
-    - if user.is_moderator
-      span style="font-size: 10px;" Moderator
-    - elsif user.is_admin
-      span style="font-size: 10px;" Administrator
+      - if user.is_moderator
+        span style="font-size: 10px;" Moderator
+        br
+      - elsif user.is_admin
+        span style="font-size: 10px;" Administrator
+        br
+      - if house.present?
+        span style="font-size: 10px" #{house.house_name}
 
   a href="#{root_url}users/#{user.id}"
     span.fullSizeAvatar
