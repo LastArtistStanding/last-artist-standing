@@ -9,7 +9,7 @@ div class="avatarWithName #{'moderator' if user.is_moderator} #{'administrator' 
         span style="font-size: 10px;" Administrator
         br
       - if house.present?
-        span style="font-size: 10px" #{house.house_name}
+        span style="font-size: 10px" of #{house.house_name}
 
   a href="#{root_url}users/#{user.id}"
     span.fullSizeAvatar
