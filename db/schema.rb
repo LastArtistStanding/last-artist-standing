@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_23_051326) do
+ActiveRecord::Schema.define(version: 2020_12_03_033417) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,15 @@ ActiveRecord::Schema.define(version: 2020_11_23_051326) do
     t.integer "nsfw_level", default: 1, null: false
     t.integer "challenge_id"
     t.index ["name"], name: "index_badges_on_name", unique: true
+  end
+
+  create_table "boards", force: :cascade do |t|
+    t.string "title"
+    t.integer "permission_level"
+    t.string "alias"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["alias"], name: "index_boards_on_alias"
   end
 
   create_table "challenge_entries", id: :serial, force: :cascade do |t|
@@ -81,6 +90,18 @@ ActiveRecord::Schema.define(version: 2020_11_23_051326) do
     t.boolean "soft_deleted", default: false, null: false
     t.integer "soft_deleted_by"
     t.index ["source_type", "source_id"], name: "index_comments_on_source_type_and_source_id"
+  end
+
+  create_table "discussions", force: :cascade do |t|
+    t.string "title", null: false
+    t.integer "nsfw_level", null: false
+    t.bigint "user_id"
+    t.boolean "locked", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "board_id"
+    t.index ["board_id"], name: "index_discussions_on_board_id"
+    t.index ["user_id"], name: "index_discussions_on_user_id"
   end
 
   create_table "followers", force: :cascade do |t|
@@ -252,6 +273,8 @@ ActiveRecord::Schema.define(version: 2020_11_23_051326) do
     t.index ["name"], name: "index_users_on_name", unique: true
   end
 
+  add_foreign_key "discussions", "boards"
+  add_foreign_key "discussions", "users"
   add_foreign_key "house_participations", "users"
   add_foreign_key "moderator_applications", "users"
   add_foreign_key "moderator_logs", "users"

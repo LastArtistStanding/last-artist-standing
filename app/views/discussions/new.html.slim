@@ -1,0 +1,22 @@
+- provide(:title, "#{@board.title} - New Thread")
+
+.container-fluid style="margin-top: 2rem;"
+  .row
+    .col-lg-1
+
+    .col-lg-10
+      - #can_create_discussion, error_message = current_user.can_create_discussion
+      - if true #can_create_discussion
+        = render 'form', discussion: @discussion
+      - else
+        .card
+          .card-header
+            b Can't Create Discussion
+
+          .card-body
+            = error_message
+            a.btn.btn-primary style="float: right" href="/challenges"
+              span.fa.fa-undo
+              |  Back
+
+    .col-lg-1

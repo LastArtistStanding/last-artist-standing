@@ -42,10 +42,15 @@ class CommentsController < ApplicationController
   def destroy
     target = @comment.source
     @comment.destroy!
+    
     unless target.nil?
-      target.num_comments -= 1
+      if target.is_a? Submission
+        target.num_comments -= 1
+      end
+
       target.save!
     end
+
     redirect_back(fallback_location: root_path)
   end
 
@@ -76,6 +81,7 @@ class CommentsController < ApplicationController
 
   def set_target
     @target = Submission.find_by(id: params[:submission_id]) if params[:submission_id]
+    @target = Discussion.find_by(id: params[:discussion_id]) if params[:discussion_id]
 
     render_not_found if @target.nil?
   end

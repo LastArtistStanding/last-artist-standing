@@ -14,6 +14,11 @@ Rails.application.routes.draw do
   get 'signup' => 'users#new'
   get 'welcome' => 'pages#home'
 
+  get 'forums' => 'forums#index'
+  resources :discussions, path: 'forums/:alias', only: %i[index show new create destroy] do
+    resources :comments
+  end
+
   get 'follow/:id/' => 'followers#follow'
   get 'unfollow/:id/' => 'followers#unfollow'
 
