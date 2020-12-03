@@ -167,7 +167,7 @@ class User < ApplicationRecord
     return [true, nil] if highest_level >= COMMENT_CREATION_REQUIREMENT
 
     [false, "You must have achieved DAD level #{COMMENT_CREATION_REQUIREMENT}\
-     to make comments on other artists' submissions."]
+     to write comments."]
   end
 
   def can_make_submissions

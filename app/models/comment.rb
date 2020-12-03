@@ -5,11 +5,14 @@ class Comment < ApplicationRecord
 
   belongs_to :source, polymorphic: true
   belongs_to :user
+
   has_many :notifications, as: :source, dependent: :destroy
   has_many :moderator_logs, as: :target
 
   validates :user_id, presence: true
   validates :body, length: { maximum: 2000 }, presence: true
+
+  scope :creation_order, -> { order(created_at: :asc) }
 
   # HACK: What a mess!!
   #   I *think* this parses comment bodies, finds `>>`-syntax replies,

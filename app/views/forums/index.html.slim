@@ -1,0 +1,18 @@
+- provide(:title, 'Boards')
+
+.container-fluid
+  .row
+    .col-lg-2
+
+    .col-lg-8
+      p.h2
+        | DAD Forums
+
+      table.table
+        tbody
+          - @boards.each do |board|
+            tr
+              td
+                a href="/forums/#{board.alias}" #{board.title}
+
+    .col-lg-2

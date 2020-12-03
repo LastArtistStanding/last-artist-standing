@@ -1,0 +1,50 @@
+= form_for @discussion, html: { multipart: true } do |f|
+  .row
+    .col-lg-1
+
+    .col-lg-10
+      .card
+        .card-header
+          b Create New Thread
+
+        .card-body
+          - if @discussion.errors.any?
+            #error_explanation
+              h3 = "#{pluralize(@discussion.errors.count, "error")} prohibited this discussion from being created:"
+              ul
+                - @discussion.errors.full_messages.each do |message|
+                  li = message
+          
+          .form-group.row
+            .col-3 Board:
+            .col-9 = @board.title
+        
+          .form-group.row
+            .col-3 = f.label :title
+            .col-9 = f.text_field :title
+
+          .form-group.row
+            .col-3 = f.label :nsfw_level
+            .col-9 = f.select :nsfw_level, options_for_select([['Safe', 1], ['Questionable', 2], ['Explicit', 3]], @discussion.nsfw_level), {}, { class: 'custom-select' }
+
+      .card
+        .card-header
+          b Opening Post
+          
+        .card-body
+          = fields_for @comment do |u|
+            - if @comment.errors.any?
+              #error_explanation
+                h3 = "#{pluralize(@comment.errors.count, "error")} prohibited the opening post from being created:"
+                ul
+                  - @comment.errors.full_messages.each do |message|
+                    li = message
+
+            .form-group.row
+              .col-3 = u.label :body
+              .col-9 = u.text_area :body
+          
+          .form-group.row
+            .offset-sm-6.col-sm-6 = f.submit "Create Thread", class: 'btn btn-primary', style: "margin-bottom: 0;"
+    
+    .col-lg-1
