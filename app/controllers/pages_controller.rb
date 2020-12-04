@@ -68,7 +68,7 @@ class PagesController < ApplicationController
   end
 
   def forum_activity_rows
-    forum_posts = Comment.where(source_type: "Discussion").includes(:user).includes(:source).limit(10)
+    forum_posts = Comment.where(source_type: "Discussion").includes(:user).includes(:source).order_by("created_at DESC").limit(10)
     preloader = ActiveRecord::Associations::Preloader.new
     preloader.preload(forum_posts.select { |p| p.source_type == 'Discussion' }, source: [:board])
 
