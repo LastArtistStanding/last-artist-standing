@@ -181,6 +181,72 @@
         </div>
       </div>
 
+      <div class="card homeCardStyle blueCard">
+        <div class="card-body table-responsive">
+          <% if !@starting_challenges.blank? %>
+          <% @starting_challenges.each_with_index do |challenge, index| %>
+          <b><%= challenge.name %></b> has just begun.<br>
+          <% end %>
+          Don't forget to submit if you're participating in 
+          <% if @starting_challenges.size == 1 %>
+          this challenge!
+          <% else %>
+          these challenges!
+          <% end %>
+          <br><br>
+          <% end %>
+          <% if !@ending_challenges.blank? %>
+          <% @ending_challenges.each_with_index do |challenge, index| %>
+          <b><%= challenge.name %></b> has just ended.<br>
+          <% end %>
+          <br><br>
+          <% end %>
+          <table class="table table-sm">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">ICO</th>
+                <th scope="col">Active Challenge</th>
+                <th scope="col">Start</th>
+                <th scope="col">End</th>
+                <th scope="col">Frequency</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <% @active_challenges.each do |challenge| %>
+              <tr>
+                <td><%= image_tag safe_badge_avatar(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
+                <td><%= link_to challenge.name, challenge_path(challenge.id),  style: "color: white;" %></td>
+                <td><%= date_string_short(challenge.start_date) %></td>
+                <td><%= date_string_short(challenge.end_date) %></td>
+                <td><%= frequency_string(challenge.postfrequency, false) %></td>
+              </tr>
+              <% end %>
+            </tbody>
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">ICO</th>
+                <th scope="col">Upcoming Challenge</th>
+                <th scope="col">Start</th>
+                <th scope="col">End</th>
+                <th scope="col">Frequency</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @upcoming_challenges.each do |challenge| %>
+                <tr>
+                  <td><%= image_tag safe_badge_avatar(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
+                  <td><%= link_to challenge.name, challenge_path(challenge.id), style: "color: white;" %></td>
+                  <td><%= date_string_short(challenge.start_date) %></td>
+                  <td><%= date_string_short(challenge.end_date) %></td>
+                  <td><%= frequency_string(challenge.postfrequency, false) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <% if ModeratorApplicationsController.applications_open? %>
         <div class="card homeCardStyle blueCard">
           <div class="card-header">
@@ -193,24 +259,6 @@
           </div>
         </div>
       <% end %>
-
-      <div class="card homeCardStyle blueCard">
-        <div class="card-body" style="text-align: center;">
-          <table class="table table-sm">
-            <thead class="thead-dark">
-              <th>What's happening on DAD?</th>
-            </thead>
-            <tbody>
-              <% @activity.each do |activity| %>
-              <tr>
-                <td><%= link_to activity[:message], activity[:link], style: "color: white;" %></td>
-              </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
     </div>
 
     <div class="col-lg-7">
@@ -246,65 +294,41 @@
         <% end %>
 
         <div class="card homeCardStyle blueCard">
-          <div class="card-body table-responsive">
-            <% if !@starting_challenges.blank? %>
-            <% @starting_challenges.each_with_index do |challenge, index| %>
-            <b><%= challenge.name %></b> has just begun.<br>
-            <% end %>
-            Don't forget to submit if you're participating in 
-            <% if @starting_challenges.size == 1 %>
-            this challenge!
-            <% else %>
-            these challenges!
-            <% end %>
-            <br><br>
-            <% end %>
-            <% if !@ending_challenges.blank? %>
-            <% @ending_challenges.each_with_index do |challenge, index| %>
-            <b><%= challenge.name %></b> has just ended.<br>
-            <% end %>
-            <br><br>
-            <% end %>
+          <div class="card-body" style="text-align: center;">
             <table class="table table-sm">
               <thead class="thead-dark">
-                <tr>
-                  <th scope="col">ICO</th>
-                  <th scope="col">Active Challenge</th>
-                  <th scope="col">Start</th>
-                  <th scope="col">End</th>
-                  <th scope="col">Frequency</th>
-                </tr>
+                <th>What's happening on DAD?</th>
               </thead>
               <tbody>
-
-                <% @active_challenges.each do |challenge| %>
+                <% @activity.each do |activity| %>
                 <tr>
-                  <td><%= image_tag safe_badge_avatar(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
-                  <td><%= link_to challenge.name, challenge_path(challenge.id),  style: "color: white;" %></td>
-                  <td><%= date_string_short(challenge.start_date) %></td>
-                  <td><%= date_string_short(challenge.end_date) %></td>
-                  <td><%= frequency_string(challenge.postfrequency, false) %></td>
+                  <td><%= link_to activity[:message], activity[:link], style: "color: white;" %></td>
                 </tr>
                 <% end %>
               </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card homeCardStyle blueCard">
+          <div class="card-body" style="text-align: center;">
+            <table class="table table-sm">
               <thead class="thead-dark">
-                <tr>
-                  <th scope="col">ICO</th>
-                  <th scope="col">Upcoming Challenge</th>
-                  <th scope="col">Start</th>
-                  <th scope="col">End</th>
-                  <th scope="col">Frequency</th>
-                </tr>
+                <th>Forum Discussion</th>
               </thead>
               <tbody>
-                <% @upcoming_challenges.each do |challenge| %>
-                  <tr>
-                    <td><%= image_tag safe_badge_avatar(challenge.badges.first), :width => "20px", :alt => "bdg" %></td>
-                    <td><%= link_to challenge.name, challenge_path(challenge.id), style: "color: white;" %></td>
-                    <td><%= date_string_short(challenge.start_date) %></td>
-                    <td><%= date_string_short(challenge.end_date) %></td>
-                    <td><%= frequency_string(challenge.postfrequency, false) %></td>
-                  </tr>
+                <% @forum_posts.each do |post| %>
+                <tr>
+                  <td>
+                    <a style="color: white;" href="<%= post.source.present? ? "/forums/#{post.source&.board.alias}/#{post.source_id}##{post.id}" : "#" %>">  
+                      <% if post.source.present? %>
+                        <%= "#{post.user.username} replied to thread '#{post.source.title}'." %>
+                      <% else %>
+                        <%= "#{post.user.username} replied to a now deleted thread." %>
+                      <% end %>
+                    </a>
+                  </td>
+                </tr>
                 <% end %>
               </tbody>
             </table>

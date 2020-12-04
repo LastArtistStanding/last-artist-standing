@@ -1,5 +1,6 @@
 class Discussion < ApplicationRecord
   belongs_to :user
+  belongs_to :board
   has_many :comments, as: :source
 
   validates :title, length: { maximum: 100 }, presence: true
