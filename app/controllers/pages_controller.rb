@@ -14,6 +14,7 @@ class PagesController < ApplicationController
     @starting_challenges = challenge('starting')
     @ending_challenges = challenge('ending')
     @activity = activity_feed
+    @forum_posts = forum_activity_rows
 
     # All lists to be displayed in home
     @latest_awards = Award.where('date_received = ? AND badge_id <> 1', Date.today).order('prestige DESC, badge_id DESC').includes(:user)
@@ -54,49 +55,58 @@ class PagesController < ApplicationController
   # creates the activity has
   def activity_feed
     activity_rows.map do |r|
-      {message: message(r.display_name.present? ? r.display_name : r.name, r.type, r.sub_id), link: link(r.id, r.type, r.sub_id)}
+      {message: message(r.display_name.present? ? r.display_name : r.name, r.type, r.sub_id, r.title), link: link(r.id, r.type, r.sub_id)}
     end
   end
 
   # combines sql strings and filters out results based on nsfw level
   def activity_rows
     Challenge.find_by_sql(
-      "SELECT * FROM (#{challenge_act} UNION #{sub_act} UNION #{comment_act}) AS new_table" \
+      "SELECT * FROM (#{challenge_act} UNION #{sub_act} UNION #{comment_submission_act}) AS new_table" \
       " WHERE nsfw_level <= #{current_user&.nsfw_level || 1} ORDER BY created_at DESC LIMIT 10"
     )
   end
 
+  def forum_activity_rows
+    forum_posts = Comment.where(source_type: "Discussion").includes(:user).includes(:source).limit(10)
+    preloader = ActiveRecord::Associations::Preloader.new
+    preloader.preload(forum_posts.select { |p| p.source_type == 'Discussion' }, source: [:board])
+
+    return forum_posts
+  end
+
   # returns the sql string used to get the recent challenges
   def challenge_act
-    'SELECT name, NULL as display_name, id, nsfw_level, created_at, 1 as sub_id, \'challenge\' as type' \
-    ' FROM challenges WHERE creator_id > 0 AND soft_deleted = false'
+    """SELECT name, NULL as display_name, id, nsfw_level, created_at, 1 as sub_id, 'challenge' as type, '' as title
+    FROM challenges WHERE creator_id > 0 AND soft_deleted = false"""
   end
 
   # returns the sql string used to get the recent submissions
   def sub_act
-    'SELECT users.name as name, users.display_name as display_name, submissions.id as id, submissions.nsfw_level as nsfw_level,' \
-    ' submissions.created_at as created_at, 1 as sub_id, \'submission\' as type' \
-    ' FROM Submissions' \
-    ' INNER JOIN users ON users.id = submissions.user_id' \
-    ' WHERE submissions.approved = true AND submissions.soft_deleted = false'
+    """SELECT users.name as name, users.display_name as display_name, submissions.id as id, submissions.nsfw_level as nsfw_level,
+    submissions.created_at as created_at, 1 as sub_id, 'submission' as type, submissions.title as title
+    FROM Submissions
+    INNER JOIN users ON users.id = submissions.user_id
+    WHERE submissions.approved = true AND submissions.soft_deleted = false"""
   end
 
   # returns the sql string used to get recent comments
-  def comment_act
-    'SELECT users.name as name, users.display_name as display_name, comments.id as id, submissions.nsfw_level as nsfw_level,' \
-    ' comments.created_at as created_at, comments.source_id as sub_id, \'comment\' as type' \
-    ' FROM comments' \
-    ' INNER JOIN users ON users.id = comments.user_id' \
-    ' INNER JOIN submissions ON submissions.id = comments.source_id'
+  def comment_submission_act
+    """SELECT users.name as name, users.display_name as display_name, comments.id as id, submissions.nsfw_level as nsfw_level,
+    comments.created_at as created_at, comments.source_id as sub_id, 'comment' as type, submissions.title as title
+    FROM comments
+    INNER JOIN users ON users.id = comments.user_id
+    INNER JOIN submissions ON submissions.id = comments.source_id
+    WHERE comments.source_type='Submission'"""
   end
 
   # creates the message part of the feed based on the type of activity
-  def message(name, type, sub_id)
+  def message(name, type, sub_id, title)
     return "Challenge '#{name}' was created." if type == 'challenge'
 
-    return "#{name} submitted their art." if type == 'submission'
+    return "#{name} submitted #{title.present? ? title : "Untitled"}." if type == 'submission'
 
-    "#{name} posted a comment on submission #{sub_id}." if type == 'comment'
+    "#{name} posted a comment on #{title.present? ? title : "Untitled"}." if type == 'comment'
   end
 
   # creates the link part of the feed based on the type of activity
