@@ -20,7 +20,7 @@ class Comment < ApplicationRecord
   #   I'd be willing to clean this up, but until I know for sure what it does,
   #   I don't want to mess with it.
   def link_form
-    return body if body.index('>>').nil?
+    return CGI.escapeHTML(body) if body.index('>>').nil?
 
     split_body = body.split('')
 
