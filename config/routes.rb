@@ -14,10 +14,13 @@ Rails.application.routes.draw do
   get 'signup' => 'users#new'
   get 'welcome' => 'pages#home'
 
-  get 'forums' => 'forums#index'
-  resources :discussions, path: 'forums/:alias', only: %i[index show new create destroy] do
+  resources :boards, param: :alias, path: 'forums', only: %i[index show]
+  
+  resources :discussions, path: 'forums/threads', only: %i[show new create destroy] do
     resources :comments
+    post 'comments/:id/mod_action' => 'comments#mod_action'
   end
+  post 'forums/threads/:id/mod_action' => 'discussions#mod_action'
 
   get 'follow/:id/' => 'followers#follow'
   get 'unfollow/:id/' => 'followers#unfollow'

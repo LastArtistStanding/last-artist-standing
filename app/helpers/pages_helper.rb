@@ -35,6 +35,14 @@ module PagesHelper
     date.strftime('%b %-d, %Y')
   end
 
+  def relative_time_string(datetime)
+    return datetime.strftime('Today, %l:%M:%S %P') if datetime.to_date == Time.now.to_date
+
+    return datetime.strftime('Yesterday, %l:%M:%S %P') if datetime.to_date == Time.now.to_date - 1.day
+
+    datetime.strftime('%b %-d, %Y, %l:%M:%S %P')
+  end
+
   def frequency_string(frequency, long)
     return long ? 'Inactive' : 'None' if frequency.nil? || frequency.zero?
 

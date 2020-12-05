@@ -1,0 +1,47 @@
+- provide(:title, "#{@board.title}")
+
+.container-fluid
+  .row
+    .col-lg-2
+
+    .col-lg-8
+      p.h2
+        = @board.title
+        - unless (@board.permission_level == 3 && !current_user&.is_admin) || (@board.permission_level == 2 && (!current_user&.is_admin && !current_user&.is_moderator))
+          a.btn.btn-primary style="margin-left: 0.5rem; margin-bottom: 0.5rem;" href="#{new_discussion_path}?alias=#{@board.alias}"
+            span.fa.fa-plus
+            |  Create Thread
+        a.btn.btn-primary style="margin-left: 0.5rem; margin-bottom: 0.5rem;" href="#{boards_path}"
+            i.fa.fa-undo
+            |  Back
+
+
+      table.table
+        thead
+          tr
+            th
+              i.fa.fa-thumb-tack
+            th
+              i.fa.fa-lock
+            th Name
+            th Content
+            th Posts
+            th Last Reply
+        tbody
+          - [@pinned_hashes, @thread_hashes].each do |h|
+            - h.each do |t|
+              tr
+                td
+                  - if t[:thread].pinned?
+                    i.fa.fa-thumb-tack
+                td
+                  - if t[:thread].locked?
+                    i.fa.fa-lock
+                td
+                  = link_to t[:thread].title, t[:thread]
+                td #{nsfw_string(t[:thread].nsfw_level)}
+                td #{t[:num_comments]}
+                td
+                  = link_to "#{t[:last_reply].user.username} at #{relative_time_string(t[:last_reply].created_at)}", "#{url_for(t[:last_reply].source)}##{t[:last_reply].id}"
+
+    .col-lg-2
