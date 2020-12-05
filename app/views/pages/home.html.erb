@@ -320,7 +320,7 @@
                 <% @forum_posts.each do |post| %>
                 <tr>
                   <td>
-                    <a style="color: white;" href="<%= post.source.present? ? "/forums/#{post.source&.board.alias}/#{post.source_id}##{post.id}" : "#" %>">  
+                    <a style="color: white;" href="<%= post.source.present? ? "#{url_for(post.source)}##{post.id}" : "#" %>">  
                       <% if post.source.present? %>
                         <%= "#{post.user.username} replied to thread '#{post.source.title}'." %>
                       <% else %>

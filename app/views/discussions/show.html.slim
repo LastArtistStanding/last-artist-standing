@@ -39,7 +39,7 @@ javascript:
             a href="/help" here.
             br
             br
-            = form_for Comment.new, url: discussion_comments_path(@board.alias, @discussion) do |f|
+            = form_for Comment.new, url: discussion_comments_path(@discussion) do |f|
               = f.text_area :body, placeholder: "Please keep site rules in mind when posting.", onkeyup: "charcountupdate(this.value)", id: "comment-box"
               span#charcount 0/2000
               = f.submit "Post Comment"
