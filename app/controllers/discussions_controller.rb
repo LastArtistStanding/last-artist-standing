@@ -31,7 +31,7 @@ class DiscussionsController < ApplicationController
         @discussion.save
         @comment.save
 
-        format.html { redirect_to discussion_path(@alias, @discussion) }
+        format.html { redirect_to discussion_path(@discussion) }
       else
         format.html { render :new }
       end

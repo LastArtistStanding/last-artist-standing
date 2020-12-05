@@ -13,6 +13,8 @@ javascript:
         a.btn.btn-primary style="margin-left: 0.5rem;" href="#{board_path(@board)}"
           i.fa.fa-undo
           |  Back
+        - if @discussion.user_id == current_user&.id
+          = link_to '<span class="fa fa-trash"></span>'.html_safe, discussion_path(@board.alias, @discussion), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-primary", style: "margin-left: 5px;"
         - if logged_in_as_moderator
           = form_with url: "#{discussion_path(@discussion)}/mod_action", html: { style: 'width: auto; display: inline-block;' } do |f|
             = f.button "", name: 'toggle_pinned', class: "btn #{@discussion.pinned ? 'btn-danger' : 'btn-primary'}", style: "margin-bottom: 0.5rem;" do |b|
@@ -25,8 +27,6 @@ javascript:
               - else
                 i.fa.fa-lock
               = @discussion.locked ? " Unlock Thread" : " Lock Thread"
-        - if @discussion.user_id == current_user&.id
-          = link_to '<span class="fa fa-trash"></span>'.html_safe, discussion_path(@board.alias, @discussion), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-primary", style: "margin-left: 5px;"
 
       - has_permissions, error = @discussion.can_be_commented_on_by(current_user)
 

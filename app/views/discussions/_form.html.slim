@@ -18,6 +18,8 @@
           .form-group.row
             .col-3 Board:
             .col-9 = @board.title
+          
+          = hidden_field_tag :alias, @board.alias
         
           .form-group.row
             .col-3 = f.label :title
