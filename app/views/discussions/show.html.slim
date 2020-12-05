@@ -10,9 +10,21 @@ javascript:
     .col-lg-8
       p.h2
         | #{@discussion.title}
-        a.btn.btn-primary style="margin-left: 0.5rem;" href="/forums/#{@alias}/"
+        a.btn.btn-primary style="margin-left: 0.5rem;" href="#{board_path(@board)}"
           i.fa.fa-undo
           |  Back
+        - if logged_in_as_moderator
+          = form_with url: "/forums/#{@board.alias}/#{@discussion.id}/mod_action", html: { style: 'width: auto; display: inline-block;' } do |f|
+            = f.button "", name: 'toggle_pinned', class: "btn #{@discussion.pinned ? 'btn-danger' : 'btn-primary'}", style: "margin-bottom: 0.5rem;" do |b|
+              i.fa.fa-thumb-tack
+              = @discussion.pinned ? " Unpin Thread" : " Pin Thread"
+          = form_with url: "/forums/#{@board.alias}/#{@discussion.id}/mod_action", html: { style: 'width: auto; display: inline-block;' } do |f|
+            = f.button "", name: 'toggle_locked', class: "btn #{@discussion.locked ? 'btn-primary' : 'btn-danger'}", style: "margin-left: 0.5rem; margin-bottom: 0.5rem;" do |b|
+              - if @discussion.locked?
+                i.fa.fa-unlock-alt
+              - else
+                i.fa.fa-lock
+              = @discussion.locked ? " Unlock Thread" : " Lock Thread"
         - if @discussion.user_id == current_user&.id
           = link_to '<span class="fa fa-trash"></span>'.html_safe, discussion_path(@board.alias, @discussion), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-primary", style: "margin-left: 5px;"
 
