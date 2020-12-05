@@ -14,11 +14,11 @@ javascript:
           i.fa.fa-undo
           |  Back
         - if logged_in_as_moderator
-          = form_with url: "/forums/#{@board.alias}/#{@discussion.id}/mod_action", html: { style: 'width: auto; display: inline-block;' } do |f|
+          = form_with url: "#{discussion_path(@discussion)}/mod_action", html: { style: 'width: auto; display: inline-block;' } do |f|
             = f.button "", name: 'toggle_pinned', class: "btn #{@discussion.pinned ? 'btn-danger' : 'btn-primary'}", style: "margin-bottom: 0.5rem;" do |b|
               i.fa.fa-thumb-tack
               = @discussion.pinned ? " Unpin Thread" : " Pin Thread"
-          = form_with url: "/forums/#{@board.alias}/#{@discussion.id}/mod_action", html: { style: 'width: auto; display: inline-block;' } do |f|
+          = form_with url: "#{discussion_path(@discussion)}/mod_action", html: { style: 'width: auto; display: inline-block;' } do |f|
             = f.button "", name: 'toggle_locked', class: "btn #{@discussion.locked ? 'btn-primary' : 'btn-danger'}", style: "margin-left: 0.5rem; margin-bottom: 0.5rem;" do |b|
               - if @discussion.locked?
                 i.fa.fa-unlock-alt

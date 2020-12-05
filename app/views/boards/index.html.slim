@@ -13,6 +13,6 @@
           - @boards.each do |board|
             tr
               td
-                a href="/forums/#{board.alias}" #{board.title}
+                = link_to board.title, board_path(board)
     
     .col-lg-2

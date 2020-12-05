@@ -20,7 +20,7 @@ Rails.application.routes.draw do
     resources :comments
     post 'comments/:id/mod_action' => 'comments#mod_action'
   end
-  post 'forums/:alias/:id/mod_action' => 'discussions#mod_action'
+  post 'forums/threads/:id/mod_action' => 'discussions#mod_action'
 
   get 'follow/:id/' => 'followers#follow'
   get 'unfollow/:id/' => 'followers#unfollow'
