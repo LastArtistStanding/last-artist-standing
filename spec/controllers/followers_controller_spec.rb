@@ -17,25 +17,23 @@ describe FollowersController do
     users = []
   end
 
-  describe 'GET :follow' do
+  describe 'POST :follow' do
     it 'creates a follower entry in the DB' do
-      allow(Follower).to receive(:create).and_return(true)
-      get :follow, params: { id: 1 }
+      post :follow, params: { id: users[1].id }
       expect(response).to redirect_to root_url
     end
 
     it 'does not create duplicate follows' do
-      allow(Follower).to receive(:where).and_return({ empty?: false })
-      get :follow, params: { id: 1 }
-      expect(Follower).not_to receive(:create)
+      post :follow, params: { id: users[1].id }
+      expect(response).to redirect_to root_url
     end
   end
 
-  describe 'GET :unfollow' do
+  describe 'POST :unfollow' do
     it 'deletes a follower entry from the db' do
       follower = Follower.create({ user: users[0], following: users[1] })
       allow(controller).to receive(:current_user).and_return(users[0])
-      get :unfollow, params: { id: users[1].id }
+      post :unfollow, params: { id: users[1].id }
       expect(follower).to receive(:destroy)
       follower.destroy
     end

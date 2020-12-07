@@ -68,6 +68,7 @@ class UsersController < ApplicationController
 
   def update
     oldpassword = params[:oldpassword]
+    @followers = Follower.where({ user: params[:id]}).includes(:following)
 
     unless @user.authenticate(oldpassword)
       @user.errors[:oldpassword][0] = 'Invalid password.'

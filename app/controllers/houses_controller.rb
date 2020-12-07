@@ -43,7 +43,7 @@ class HousesController < ApplicationController
   def join
     house = House.find(params[:id])
     respond_to do |format|
-      if (reason = house.add_user(current_user.id)).blank?
+      if (reason = house.add_user(current_user.id)).is_a?(HouseParticipation)
         flash[:success] = "You've joined #{house.house_name}!"
       else
         flash[:error] = "You cannot join this house because #{reason}."

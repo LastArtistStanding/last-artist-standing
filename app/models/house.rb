@@ -45,9 +45,9 @@ class House < ApplicationRecord
   end
 
   # @function is_unbalanced?
-  # @return true if this house has 6 or more users than any any other house
+  # @return true if this house has 3 or more users than any any other house
   def unbalanced?
-    users.length - rival(0).users.length > 5 || users.length - rival(1).users.length > 5
+    users.length - rival(0).users.length > 2 || users.length - rival(1).users.length > 2
   end
 
   # @function is_old_house?

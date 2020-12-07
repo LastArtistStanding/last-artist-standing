@@ -62,13 +62,13 @@ describe HousesController do
 
   describe 'GET :join' do
     it 'flashes success on success' do
-      get :join, params: { id: houses[0].id }
+      post :join, params: { id: houses[0].id }
       expect(flash[:success]).to be_truthy
     end
 
     it 'flashes error on error' do
       hp = create(:house_participation, house_id: houses[1].id, user_id: user.id)
-      get :join, params: { id: houses[0].id }
+      post :join, params: { id: houses[0].id }
       expect(flash[:error]).to be_truthy
       hp.delete
     end
