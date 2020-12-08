@@ -1,0 +1,24 @@
+.card
+  - if has_permissions
+    .card-header Reply To Thread
+
+    .card-body
+      | By commenting, you agree to adhere to DAD's guidelines for comment etiquette as defined 
+      a href="/help" here.
+      br
+      br
+      = form_for Comment.new, url: target_comments_path do |f|
+        = f.text_area :body, placeholder: "Please keep site rules in mind when posting.", onkeyup: "charcountupdate(this.value)", id: "comment-box"
+        span#charcount 0/2000
+
+        - if target.allow_anon
+          .form-group
+            = f.check_box :anonymous, style: "width: auto; margin-right: 0.5rem;"
+            = f.label :anonymous, "Post Anonymously"
+        
+        = f.submit "Post Comment"
+  - else
+    .card-header Reply To Thread
+
+    .card-body
+      = error

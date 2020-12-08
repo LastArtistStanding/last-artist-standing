@@ -96,7 +96,16 @@ javascript:
       }
 
     }, 1000);
+
+    document.getElementById('CommentableCheckbox').addEventListener('change', function(event) {
+      if (event.target.checked) {
+        document.getElementById('AllowAnonRow').hidden = false
+      } else {
+        document.getElementById('AllowAnonRow').hidden = true
+      }
+    })
   });
+
 
   // Paste image data from clipboard into submission
   window.addEventListener('paste', function (event) {
@@ -166,7 +175,11 @@ javascript:
 
           .form-group.row
             .col-6 = f.label :commentable, "Allow Comments?"
-            .col-6 = f.check_box :commentable, checked: "checked"
+            .col-6 = f.check_box :commentable, checked: "checked", id: "CommentableCheckbox"
+          
+          #AllowAnonRow.form-group.row
+            .col-6 = f.label :allow_anon, "Allow Anonymous Comments?"
+            .col-6 = f.check_box :allow_anon
 
           .form-group.row
             .offset-sm-6.col-sm-6 = f.submit class: 'btn btn-primary', style: "margin-bottom: 0;"

@@ -14,7 +14,7 @@ javascript:
           i.fa.fa-undo
           |  Back
         - if @discussion.user_id == current_user&.id
-          = link_to '<span class="fa fa-trash"></span>'.html_safe, discussion_path(@board.alias, @discussion), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-primary", style: "margin-left: 5px;"
+          = link_to '<span class="fa fa-trash"></span>'.html_safe, discussion_path(@discussion), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-primary", style: "margin-left: 5px;"
         - if logged_in_as_moderator
           = form_with url: "#{discussion_path(@discussion)}/mod_action", html: { style: 'width: auto; display: inline-block;' } do |f|
             = f.button "", name: 'toggle_pinned', class: "btn #{@discussion.pinned ? 'btn-danger' : 'btn-primary'}", style: "margin-bottom: 0.5rem;" do |b|
@@ -30,42 +30,9 @@ javascript:
 
       - has_permissions, error = @discussion.can_be_commented_on_by(current_user)
 
-      .card
-        - if has_permissions
-          .card-header Reply To Thread
-
-          .card-body
-            | By commenting, you agree to adhere to DAD's guidelines for comment etiquette as defined 
-            a href="/help" here.
-            br
-            br
-            = form_for Comment.new, url: discussion_comments_path(@discussion) do |f|
-              = f.text_area :body, placeholder: "Please keep site rules in mind when posting.", onkeyup: "charcountupdate(this.value)", id: "comment-box"
-              span#charcount 0/2000
-              = f.submit "Post Comment"
-        - else
-          .card-header Reply To Thread
-
-          .card-body
-            = error
+      = render partial: "application/comment_entry", locals: { has_permissions: has_permissions, error: error, target: @discussion, target_comments_path: discussion_comments_path(@discussion) }
 
       - @comments.each do |comment|
-        .card.comment-card id="#{comment.id}" class="#{"alert alert-danger" if comment.soft_deleted}" style="padding: 0px;"
-          .card-header
-            b = link_to comment.user.username, comment.user
-            = comment.created_at.strftime(" %H:%M, %b %-d, %Y") 
-            span.quote-id onclick=("quote(#{comment.id});" if has_permissions)
-              = " No. #{comment.id}"
-            - if comment.soft_deleted
-              b  - Soft Deleted by #{safe_username(comment.soft_deleted_by)} -
-            = link_to ' <span class="fa fa-trash"></span>'.html_safe, [@discussion, comment], method: :delete, data: { confirm: 'Are you sure?' } if comment.user_id == current_user&.id
-            | &nbsp;
-            - if logged_in_as_moderator
-              = form_with url: "#{discussion_path(@discussion)}/comments/#{comment.id}/mod_action", html: { style: 'width: auto; display: inline-block;' } do |f|
-                = f.text_field :reason, placeholder: "Reason", required: true, style: "width: 200px; display: inline-block; margin-bottom: 0px;"
-                = f.button "#{comment.soft_deleted ? "Undo Soft Delete" : "Soft Delete" }", name: 'toggle_soft_delete', class: "btn btn-sm btn-primary", style: "margin-left: 5px; line-height: 1;"
-
-          .card-body
-            = simple_format(comment.link_form)
+          = render partial: "application/comment", locals: { comment: comment, target_comment_path: discussion_comment_path(@discussion, comment), has_permissions: has_permissions }
       
     .col-lg-2
