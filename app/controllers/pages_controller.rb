@@ -14,7 +14,7 @@ class PagesController < ApplicationController
     @starting_challenges = challenge('starting')
     @ending_challenges = challenge('ending')
     @activity = activity_feed
-    @forum_posts = forum_activity_rows
+    @forum_activity = forum_activity_rows
 
     # All lists to be displayed in home
     @latest_awards = Award.where('date_received = ? AND badge_id <> 1', Date.today).order('prestige DESC, badge_id DESC').includes(:user)
@@ -55,7 +55,10 @@ class PagesController < ApplicationController
   # creates the activity has
   def activity_feed
     activity_rows.map do |r|
-      {message: message(r.display_name.present? ? r.display_name : r.name, r.type, r.sub_id, r.title), link: link(r.id, r.type, r.sub_id)}
+      {
+        message: message(r.display_name.present? ? r.display_name : (r.anonymous ? 'Anonymous' : r.name), r.type, r.sub_id, r.title), 
+        link: link(r.id, r.type, r.sub_id)
+      }
     end
   end
 
@@ -68,23 +71,27 @@ class PagesController < ApplicationController
   end
 
   def forum_activity_rows
+    discussion_posts = Discussion.order("created_at DESC").limit(10)
     forum_posts = Comment.where(source_type: "Discussion").includes(:user).includes(:source).order("created_at DESC").limit(10)
     preloader = ActiveRecord::Associations::Preloader.new
     preloader.preload(forum_posts.select { |p| p.source_type == 'Discussion' }, source: [:board])
 
-    return forum_posts
+    forum_activity = discussion_posts + forum_posts
+    forum_activity = forum_activity.sort_by(&:created_at).reverse!.first(10)
+
+    return forum_activity
   end
 
   # returns the sql string used to get the recent challenges
   def challenge_act
-    """SELECT name, NULL as display_name, id, nsfw_level, created_at, 1 as sub_id, 'challenge' as type, '' as title
+    """SELECT name, NULL as display_name, id, nsfw_level, created_at, 1 as sub_id, 'challenge' as type, '' as title, false as anonymous
     FROM challenges WHERE creator_id > 0 AND soft_deleted = false"""
   end
 
   # returns the sql string used to get the recent submissions
   def sub_act
     """SELECT users.name as name, users.display_name as display_name, submissions.id as id, submissions.nsfw_level as nsfw_level,
-    submissions.created_at as created_at, 1 as sub_id, 'submission' as type, submissions.title as title
+    submissions.created_at as created_at, 1 as sub_id, 'submission' as type, submissions.title as title, false as anonymous
     FROM Submissions
     INNER JOIN users ON users.id = submissions.user_id
     WHERE submissions.approved = true AND submissions.soft_deleted = false"""
@@ -93,7 +100,7 @@ class PagesController < ApplicationController
   # returns the sql string used to get recent comments
   def comment_submission_act
     """SELECT users.name as name, users.display_name as display_name, comments.id as id, submissions.nsfw_level as nsfw_level,
-    comments.created_at as created_at, comments.source_id as sub_id, 'comment' as type, submissions.title as title
+    comments.created_at as created_at, comments.source_id as sub_id, 'comment' as type, submissions.title as title, comments.anonymous as anonymous
     FROM comments
     INNER JOIN users ON users.id = comments.user_id
     INNER JOIN submissions ON submissions.id = comments.source_id

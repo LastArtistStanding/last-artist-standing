@@ -252,10 +252,10 @@ class SubmissionsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def submission_params
     params.require(:submission)
-          .permit(:drawing, :user_id, :nsfw_level, :title, :description, :time, :commentable)
+          .permit(:drawing, :user_id, :nsfw_level, :title, :description, :time, :commentable, :allow_anon)
   end
 
   def limited_params
-    params.require(:submission).permit(:nsfw_level, :title, :description, :commentable)
+    params.require(:submission).permit(:nsfw_level, :title, :description, :commentable, :allow_anon)
   end
 end

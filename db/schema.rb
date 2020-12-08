@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_05_020235) do
+ActiveRecord::Schema.define(version: 2020_12_08_041944) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -89,6 +89,7 @@ ActiveRecord::Schema.define(version: 2020_12_05_020235) do
     t.datetime "updated_at", null: false
     t.boolean "soft_deleted", default: false, null: false
     t.integer "soft_deleted_by"
+    t.boolean "anonymous", default: false
     t.index ["source_type", "source_id"], name: "index_comments_on_source_type_and_source_id"
   end
 
@@ -101,6 +102,8 @@ ActiveRecord::Schema.define(version: 2020_12_05_020235) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "board_id"
     t.boolean "pinned", default: false, null: false
+    t.boolean "allow_anon", default: false
+    t.boolean "anonymous", default: false
     t.index ["board_id"], name: "index_discussions_on_board_id"
     t.index ["user_id"], name: "index_discussions_on_user_id"
   end
@@ -233,6 +236,7 @@ ActiveRecord::Schema.define(version: 2020_12_05_020235) do
     t.boolean "soft_deleted", default: false, null: false
     t.boolean "approved", default: true, null: false
     t.integer "soft_deleted_by"
+    t.boolean "allow_anon", default: false
   end
 
   create_table "user_sessions", id: :serial, force: :cascade do |t|
