@@ -12,7 +12,7 @@
     span.quote-id onclick=("quote(#{comment.id});" if has_permissions)
       = " No. #{comment.id}"
     - if comment.soft_deleted
-      b  - Soft Deleted by #{safe_username(comment.soft_deleted_by)} -
+      b  - Removed by #{safe_username(comment.soft_deleted_by)} -
     = link_to ' <span class="fa fa-trash"></span>'.html_safe, target_comment_path, method: :delete, data: { confirm: 'Are you sure?' } if comment.user_id == current_user&.id
     | &nbsp;
     - if logged_in_as_moderator
@@ -21,9 +21,10 @@
         = f.button "#{comment.soft_deleted ? "Undo Soft Delete" : "Soft Delete" }", name: 'toggle_soft_delete', class: "btn btn-sm btn-primary", style: "margin-left: 5px; line-height: 1;"
 
   .card-body
-    - if comment.soft_deleted
+    - if comment.soft_deleted && !logged_in_as_moderator
       | This comment has been removed because it did not abide by Do Art Daily's comment rules. Please refer to
-      = link_to help_path, " the help page"
+      |  
+      a href="/help" the help page
       |  for more information.
     - else
       = simple_format(comment.link_form)
