@@ -1,7 +1,7 @@
-.card.comment-card id="#{comment.id}" class="#{"alert alert-danger" if comment.soft_deleted}" style="padding: 0px;"
+.card.comment-card id="#{comment.id}" style="padding: 0px;"
   .card-header
     - if comment.anonymous
-      - if logged_in_as_moderator
+      - if logged_in_as_moderator && comment.soft_deleted
         b style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Click to reveal name" onclick="javascript: this.hidden=true; document.getElementById('RevealedName#{comment.id}').hidden=false;" Anonymous
         b id="RevealedName#{comment.id}" hidden=true = link_to comment.user.username, comment.user
       - else
@@ -21,4 +21,9 @@
         = f.button "#{comment.soft_deleted ? "Undo Soft Delete" : "Soft Delete" }", name: 'toggle_soft_delete', class: "btn btn-sm btn-primary", style: "margin-left: 5px; line-height: 1;"
 
   .card-body
-    = simple_format(comment.link_form)
+    - if comment.soft_deleted
+      | This comment has been removed because it did not abide by Do Art Daily's comment rules. Please refer to
+      = link_to help_path, " the help page"
+      |  for more information.
+    - else
+      = simple_format(comment.link_form)
