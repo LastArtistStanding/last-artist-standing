@@ -106,7 +106,7 @@ class CommentsController < ApplicationController
 
   def send_notification(message, user_id)
     Notification.create(
-      body: format(message, poster: current_user.username,
+      body: format(message, poster: @comment.anonymous? ? "Anonymous" : current_user.username,
                             target: "#{@target.display_title} (ID: #{@target.id})"),
       source_type: 'Comment',
       source_id: @comment.id,

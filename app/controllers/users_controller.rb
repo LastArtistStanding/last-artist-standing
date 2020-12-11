@@ -71,14 +71,14 @@ class UsersController < ApplicationController
 
     unless @user.authenticate(oldpassword)
       @user.errors[:oldpassword][0] = 'Invalid password.'
-      render 'edit'
+      rerender_user_edit
       return
     end
 
     email_changed = params[:user][:email].present? && params[:user][:email] != @user.email
     if email_changed && @user.email_verification_too_recent_to_resend?
       flash[:danger] = 'You have changed your email address too recently to do that!'
-      render 'edit'
+      rerender_user_edit
       return
     end
 
@@ -97,7 +97,7 @@ class UsersController < ApplicationController
       flash[:success] = 'Profile updated.'
       redirect_to @user
     else
-      render 'edit'
+      rerender_user_edit
     end
   end
 
@@ -118,6 +118,11 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def rerender_user_edit
+    @followers = Follower.where({ user: params[:id]}).includes(:following)
+    render 'edit'
+  end
 
   def set_curruser
     @user = User.find(params[:id])
