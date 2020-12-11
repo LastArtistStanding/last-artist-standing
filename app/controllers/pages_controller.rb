@@ -56,7 +56,7 @@ class PagesController < ApplicationController
   def activity_feed
     activity_rows.map do |r|
       {
-        message: message(r.anonymous ? : "Anonymous" : (r.display_name.present? ? r.display_name : r.name), r.type, r.sub_id, r.title), 
+        message: message(r.anonymous ? "Anonymous" : (r.display_name.present? ? r.display_name : r.name), r.type, r.sub_id, r.title), 
         link: link(r.id, r.type, r.sub_id)
       }
     end
