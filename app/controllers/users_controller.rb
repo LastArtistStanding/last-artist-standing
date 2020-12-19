@@ -6,6 +6,7 @@ class UsersController < ApplicationController
   before_action :set_curruser, only: %i[submissions show edit update mod_action]
   before_action :ensure_logged_in, only: %i[edit update]
   before_action -> { ensure_authorized @user.id }, only: %i[edit update]
+  before_action :ensure_unbanned, only: %i[edit update]
   before_action :ensure_authenticated, only: %i[mod_action]
   before_action :ensure_moderator, only: %i[mod_action]
   before_action :ensure_verified_to_upload_avatar, only: %i[create update]
