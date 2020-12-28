@@ -1,6 +1,6 @@
 window.onkeyup = function(e) {
-  if (window.location.toString().match(/submissions\/\d+$/) === null) {
-    return
+  if (window.location.toString().match(/submissions\/\d+(\#.*)?$/) === null) {
+    return;
   }
 
   if (document.getElementById("comment-box") !== document.activeElement) {
@@ -17,4 +17,4 @@ window.onkeyup = function(e) {
       window.open(npath,"_self");
     }
   }
-}
+};
