@@ -149,7 +149,7 @@ javascript:
           .form-group.row id="drawing-row"
             .col-3 style="font-weight: 600;" = f.label :drawing
             br
-            .col-3 onchange="setPreview(event.target.files[0])" id="drawing" = f.file_field :drawing, style: "overflow: hidden;"
+            .col-3 oninput="setPreview(event.target.files[0])" id="drawing" = f.file_field :drawing, style: "overflow: hidden;"
             h2.col-2 or
             input.col-4 type="text" maxlength="0"  placeholder="Paste your drawing here"
 
