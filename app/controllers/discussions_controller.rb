@@ -25,6 +25,12 @@ class DiscussionsController < ApplicationController
     @comment = @discussion.comments.new(comment_params)
     @comment.user_id = current_user.id
     @comment.body = @comment.body.gsub(/ +/, ' ').strip
+    @comment.anonymous = @discussion.anonymous
+
+    unless @discussion.allow_anon
+      @discussion.anonymous = false
+      @comment.anonymous = false
+    end
 
     respond_to do |format|
       if @comment.valid? && @discussion.valid?
@@ -44,10 +50,11 @@ class DiscussionsController < ApplicationController
   end
 
   def destroy
+    @alias = @discussion.board.alias
     @discussion.destroy
 
     respond_to do |format|
-      format.html { redirect_to discussions_url(@alias) }
+      format.html { redirect_to board_path(@alias) }
       format.json { head :no_content }
     end
   end
@@ -84,7 +91,7 @@ class DiscussionsController < ApplicationController
   end
 
   def discussion_params
-    params.require(:discussion).permit(:title, :nsfw_level)
+    params.require(:discussion).permit(:title, :nsfw_level, :allow_anon, :anonymous)
   end
 
   def comment_params

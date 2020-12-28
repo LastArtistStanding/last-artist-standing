@@ -1,3 +1,14 @@
+javascript:
+  $(document).ready(function() {
+    document.getElementById('AllowAnonCheckbox').addEventListener('change', function(event) {
+      if (event.target.checked) {
+        document.getElementById('AnonymousRow').hidden = false
+      } else {
+        document.getElementById('AnonymousRow').hidden = true
+      }
+    })
+  })
+
 = form_for @discussion, html: { multipart: true } do |f|
   .row
     .col-lg-1
@@ -28,6 +39,14 @@
           .form-group.row
             .col-3 = f.label :nsfw_level
             .col-9 = f.select :nsfw_level, options_for_select([['Safe', 1], ['Questionable', 2], ['Explicit', 3]], @discussion.nsfw_level), {}, { class: 'custom-select' }
+
+          .form-group.row
+            .col-3 = f.label :allow_anon, "Allow Anonymous Replies?"
+            .col-9 = f.check_box :allow_anon, id: "AllowAnonCheckbox", style: "width: auto;"
+
+          #AnonymousRow.form-group.row hidden=true
+            .col-3 = f.label :anonymous, "Create Thread Anonymously?"
+            .col-9 = f.check_box :anonymous, style: "width: auto;"
 
       .card
         .card-header

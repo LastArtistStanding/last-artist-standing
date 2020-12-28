@@ -6,6 +6,7 @@ class UsersController < ApplicationController
   before_action :set_curruser, only: %i[submissions show edit update mod_action]
   before_action :ensure_logged_in, only: %i[edit update]
   before_action -> { ensure_authorized @user.id }, only: %i[edit update]
+  before_action :ensure_unbanned, only: %i[edit update]
   before_action :ensure_authenticated, only: %i[mod_action]
   before_action :ensure_moderator, only: %i[mod_action]
   before_action :ensure_verified_to_upload_avatar, only: %i[create update]
@@ -72,14 +73,14 @@ class UsersController < ApplicationController
 
     unless @user.authenticate(oldpassword)
       @user.errors[:oldpassword][0] = 'Invalid password.'
-      render 'edit'
+      rerender_user_edit
       return
     end
 
     email_changed = params[:user][:email].present? && params[:user][:email] != @user.email
     if email_changed && @user.email_verification_too_recent_to_resend?
       flash[:danger] = 'You have changed your email address too recently to do that!'
-      render 'edit'
+      rerender_user_edit
       return
     end
 
@@ -98,7 +99,7 @@ class UsersController < ApplicationController
       flash[:success] = 'Profile updated.'
       redirect_to @user
     else
-      render 'edit'
+      rerender_user_edit
     end
   end
 
@@ -119,6 +120,11 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def rerender_user_edit
+    @followers = Follower.where({ user: params[:id]}).includes(:following)
+    render 'edit'
+  end
 
   def set_curruser
     @user = User.find(params[:id])

@@ -24,6 +24,16 @@ javascript:
   }
   
 
+  $(document).ready(function() {
+    document.getElementById('CommentableCheckbox').addEventListener('change', function(event) {
+      if (event.target.checked) {
+        document.getElementById('AllowAnonRow').hidden = false
+      } else {
+        document.getElementById('AllowAnonRow').hidden = true
+      }
+    })
+  })
+
 = form_for @submission, html: { multipart: true } do |f|
   .row
     .col-lg-6
@@ -77,7 +87,11 @@ javascript:
 
           .form-group.row
             .col-6 = f.label :commentable, "Allow Comments?"
-            .col-6 = f.check_box :commentable, checked: @submission.commentable
+            .col-6 = f.check_box :commentable, checked: @submission.commentable, id: "CommentableCheckbox"
+          
+          #AllowAnonRow.form-group.row hidden=( @submission.commentable ? nil : true )
+            .col-6 = f.label :allow_anon, "Allow Anonymous Comments?"
+            .col-6 = f.check_box :allow_anon, checked: @submission.allow_anon
 
           .form-group.row
             .offset-sm-6.col-sm-6 = f.submit class: 'btn btn-primary', style: "margin-bottom: 0;"

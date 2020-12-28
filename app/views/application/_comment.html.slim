@@ -1,0 +1,30 @@
+.card.comment-card id="#{comment.id}" style="padding: 0px;"
+  .card-header
+    - if comment.anonymous
+      - if logged_in_as_moderator && comment.soft_deleted
+        b style="cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Click to reveal name" onclick="javascript: this.hidden=true; document.getElementById('RevealedName#{comment.id}').hidden=false;" Anonymous
+        b id="RevealedName#{comment.id}" hidden=true = link_to comment.user.username, comment.user
+      - else
+        b Anonymous
+    - else
+      b = link_to comment.user.username, comment.user
+    = comment.created_at.strftime(" %H:%M, %b %-d, %Y") 
+    span.quote-id onclick=("quote(#{comment.id});" if has_permissions)
+      = " No. #{comment.id}"
+    - if comment.soft_deleted
+      b  - Removed by #{safe_username(comment.soft_deleted_by)} -
+    = link_to ' <span class="fa fa-trash"></span>'.html_safe, target_comment_path, method: :delete, data: { confirm: 'Are you sure?' } if comment.user_id == current_user&.id
+    | &nbsp;
+    - if logged_in_as_moderator
+      = form_with url: "#{target_comment_path}/mod_action", html: { style: 'width: auto; display: inline-block;' } do |f|
+        = f.text_field :reason, placeholder: "Reason", required: true, style: "width: 200px; display: inline-block; margin-bottom: 0px;"
+        = f.button "#{comment.soft_deleted ? "Undo Soft Delete" : "Soft Delete" }", name: 'toggle_soft_delete', class: "btn btn-sm btn-primary", style: "margin-left: 5px; line-height: 1;"
+
+  .card-body
+    - if comment.soft_deleted && !logged_in_as_moderator
+      | This comment has been removed because it did not abide by Do Art Daily's comment rules. Please refer to
+      |  
+      a href="/help" the help page
+      |  for more information.
+    - else
+      = simple_format(comment.link_form)

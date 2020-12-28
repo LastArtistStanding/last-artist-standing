@@ -21,6 +21,10 @@ class CommentsController < ApplicationController
     @comment.user_id = current_user.id
     @comment.body = @comment.body.gsub(/ +/, ' ').strip
 
+    unless @target.allow_anon
+      @comment.anonymous = false
+    end
+
     unless @comment.save
       flash[:error] = 'Comment failed to post: ' + @comment.errors.full_messages.join(', ')
       redirect_back(fallback_location: '/')
@@ -76,7 +80,7 @@ class CommentsController < ApplicationController
   private
 
   def comment_params
-    params.require(:comment).permit(:body, :user_id)
+    params.require(:comment).permit(:body, :user_id, :anonymous)
   end
 
   def set_target
@@ -102,7 +106,7 @@ class CommentsController < ApplicationController
 
   def send_notification(message, user_id)
     Notification.create(
-      body: format(message, poster: current_user.username,
+      body: format(message, poster: @comment.anonymous? ? "Anonymous" : current_user.username,
                             target: "#{@target.display_title} (ID: #{@target.id})"),
       source_type: 'Comment',
       source_id: @comment.id,

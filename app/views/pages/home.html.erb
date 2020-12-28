@@ -317,16 +317,22 @@
                 <th>Forum Discussion</th>
               </thead>
               <tbody>
-                <% @forum_posts.each do |post| %>
+                <% @forum_activity.each do |activity| %>
                 <tr>
                   <td>
-                    <a style="color: white;" href="<%= post.source.present? ? "#{url_for(post.source)}##{post.id}" : "#" %>">  
-                      <% if post.source.present? %>
-                        <%= "#{post.user.username} replied to thread '#{post.source.title}'." %>
-                      <% else %>
-                        <%= "#{post.user.username} replied to a now deleted thread." %>
-                      <% end %>
-                    </a>
+                    <% if activity.is_a? Comment %>
+                      <a style="color: white;" href="<%= activity.source.present? ? "#{url_for(activity.source)}##{activity.id}" : "#" %>">  
+                        <% if activity.source.present? %>
+                          <%= "#{activity.anonymous ? 'Anonymous' : activity.user.username} replied to thread #{activity.source.title}." %>
+                        <% else %>
+                          <%= "#{activity.anonymous ? 'Anonymous' : activity.user.username} replied to a now deleted thread." %>
+                        <% end %>
+                      </a>
+                    <% elsif activity.is_a? Discussion %>
+                      <a style="color: white;" href="<%= discussion_path(activity) %>">
+                        <%= "#{activity.anonymous ? 'Anonymous' : activity.user.username} created the thread #{activity.title}." %>
+                      </a>
+                    <% end %>
                   </td>
                 </tr>
                 <% end %>
