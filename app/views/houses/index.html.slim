@@ -35,7 +35,7 @@ div.house-container
               b Total: #{h.total / 60} hr #{h.total % 60} min
               - if h.users.length.positive?
                 - time_per_user = h.total / h.users.length
-                b Avg: #{time_per_user / 60} hr #{time_per_user % 60} min
+                b User Avg: #{time_per_user / 60} hr #{time_per_user % 60} min
               - else
                 b Avg: 0 hr 0 min
             div.house-table-cell

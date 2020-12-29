@@ -22,20 +22,14 @@ describe FollowersController do
       post :follow, params: { id: users[1].id }
       expect(response).to redirect_to root_url
     end
-
-    it 'does not create duplicate follows' do
-      post :follow, params: { id: users[1].id }
-      expect(response).to redirect_to root_url
-    end
   end
 
   describe 'POST :unfollow' do
     it 'deletes a follower entry from the db' do
-      follower = Follower.create({ user: users[0], following: users[1] })
+      Follower.create({ user: users[0], following: users[1] })
       allow(controller).to receive(:current_user).and_return(users[0])
       post :unfollow, params: { id: users[1].id }
-      expect(follower).to receive(:destroy)
-      follower.destroy
+      expect(Follower.where({ user_id: users[0], following: users[1] })).to be_empty
     end
   end
 end

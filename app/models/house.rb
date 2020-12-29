@@ -11,7 +11,7 @@ class House < ApplicationRecord
   # @function add_user
   # @abstract adds the current user
   def add_user(uid)
-    return can_join?(uid) unless can_join?(uid).blank?
+    return can_join?(uid) if can_join?(uid).present?
 
     score = User.find(uid).submissions
                 .where('created_at >= ?', search_date).sum('submissions.time').to_i
