@@ -13,8 +13,7 @@ RSpec.describe House, type: :model do
       user.email = i.to_s + '@dad.gallery'
       user.save
       house_participants.push(
-        create(:house_participation, house_id: houses[0].id, user_id: user.id, score: 1)
-      )
+        create(:house_participation, house_id: houses[0].id, user_id: user.id, score: 1))
     end
     (8..10).each do |i|
       user = build(:user)
@@ -22,8 +21,7 @@ RSpec.describe House, type: :model do
       user.email = i.to_s + '@dad.gallery'
       user.save
       house_participants.push(
-        create(:house_participation, house_id: houses[1].id, user_id: user.id, score: 2)
-      )
+        create(:house_participation, house_id: houses[1].id, user_id: user.id, score: 2))
     end
     (11..11).each do |i|
       user = build(:user)
@@ -31,8 +29,7 @@ RSpec.describe House, type: :model do
       user.email = i.to_s + '@dad.gallery'
       user.save
       house_participants.push(
-        create(:house_participation, house_id: houses[2].id, user_id: user.id, score: 6)
-      )
+        create(:house_participation, house_id: houses[2].id, user_id: user.id, score: 6))
     end
   end
 

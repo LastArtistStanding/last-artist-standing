@@ -1,12 +1,11 @@
 javascript:
   function unfollow(id) {
-    let xhttp = new XMLHttpRequest();
-    xhttp.open("post", '/unfollow/' + id, true)
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("get", '/unfollow/' + id, true)
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
-        let unfollowBtn = document.getElementById('unfollow--' + id)
+        var unfollowBtn = document.getElementById('unfollow--' + id)
         unfollowBtn.innerHTML = "Follow"
-        unfollowBtn.value = "Follow"
         unfollowBtn.classList.remove('btn-danger')
         unfollowBtn.classList.add('btn-primary')
         unfollowBtn.onclick = () => { follow(id); return false }
@@ -18,13 +17,12 @@ javascript:
   }
 
   function follow(id) {
-    let xhttp = new XMLHttpRequest();
-    xhttp.open("post", '/follow/' + id, true)
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("get", '/follow/' + id, true)
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
-        let followBtn = document.getElementById('follow--' + id)
+        var followBtn = document.getElementById('follow--' + id)
         followBtn.innerHTML = "Unfollow"
-        followBtn.value = "Unfollow"
         followBtn.classList.remove('btn-primary')
         followBtn.classList.add('btn-danger')
         followBtn.onclick = () => { unfollow(id); return false }
@@ -35,11 +33,10 @@ javascript:
     xhttp.send()
   }
 
-- if logged_in?
+- unless logged_in_as_user(user) or !logged_in?
   - if follows?(user.id)
-    = form_with(url: "/unfollow/#{user.id}", method: 'post') do |form|
-      = form.submit "Unfollow", class: "btn btn-danger", id: "unfollow--#{user.id}", onclick: "javascript:unfollow(#{user.id}); return false;", style: "max-width: 124px"
+    a.btn.btn-danger href="/unfollow/#{user.id}" onclick="javascript:unfollow(#{user.id}); return false;" id="unfollow--#{user.id}"
+      | Unfollow
   - else
-    = form_with(url: "/follow/#{user.id}", method: 'post') do |form|
-      = form.submit "Follow", class: "btn btn-primary", id: "follow--#{user.id}", onclick: "javascript:follow(#{user.id}); return false;", style: "max-width: 124px"
-    
+    a.btn.btn-primary href="/follow/#{user.id}" onclick="javascript:follow(#{user.id}); return false;" id="follow--#{user.id}"
+      | Follow

@@ -84,18 +84,21 @@
           - if @user.errors.key?(:nsfw_level)
             .invalid-feedback-rails
               | NSFW Level #{@user.errors[:nsfw_level][0]}
-.card
-  .card-header
-    b Following
-  .card-body.followers
-    - if @followers.any?
-      - @followers.each do |f|
-        div.following-table-cell
-          div.followed-user-cell
-            a href="/users/#{f.following.id}"
-              = image_tag f.following.profile_picture
-            a href="/users/#{f.following.id}"
-              p #{f.following.username} 
-          = render partial: "application/follower_button", locals: {user: f.following}
-    - else
-      b You aren't following anyone
+      .card
+        .card-header
+          b Following
+
+        .card-body.followers
+          - if @followers.any?
+            - @followers.each do |f|
+              div.following-table-cell
+                div.followed-user-cell
+                  a href="/users/#{f.following.id}"
+                    = image_tag f.following.profile_picture
+                  a href="/users/#{f.following.id}"
+                    p #{f.following.username} 
+                = render partial: "application/follower_button", locals: {user: f.following}
+          - else
+            b You aren't following anyone
+
+              

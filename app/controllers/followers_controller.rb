@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Controller for handling followers
-class FollowersController < ApplicationController
+class FollowersController < ActionController::Base
   include SessionsHelper
 
   def follow

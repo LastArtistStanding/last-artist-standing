@@ -26,10 +26,11 @@ class HousesController < ApplicationController
     @house = House.find(params[:id])
     old_house_name = @house.house_name
     respond_to do |format|
-      if @house.update(house_params)
+      if @house.update(house_params) && mod_params[:reason].present?
         log_update(old_house_name)
         format.html { redirect_to '/houses' }
       else
+        @house.errors.add(:base, 'Must specify a reason.') if mod_params[:reason].blank?
         format.html { render :edit }
       end
     end
@@ -42,7 +43,7 @@ class HousesController < ApplicationController
   def join
     house = House.find(params[:id])
     respond_to do |format|
-      if (reason = house.add_user(current_user.id)).is_a?(HouseParticipation)
+      if (reason = house.add_user(current_user.id)).blank?
         flash[:success] = "You've joined #{house.house_name}!"
       else
         flash[:error] = "You cannot join this house because #{reason}."

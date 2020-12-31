@@ -11,7 +11,7 @@ class House < ApplicationRecord
   # @function add_user
   # @abstract adds the current user
   def add_user(uid)
-    return can_join?(uid) if can_join?(uid).present?
+    return can_join?(uid) unless can_join?(uid).blank?
 
     score = User.find(uid).submissions
                 .where('created_at >= ?', search_date).sum('submissions.time').to_i
@@ -45,9 +45,9 @@ class House < ApplicationRecord
   end
 
   # @function is_unbalanced?
-  # @return true if this house has 3 or more users than any any other house
+  # @return true if this house has 6 or more users than any any other house
   def unbalanced?
-    users.length - rival(0).users.length > 2 || users.length - rival(1).users.length > 2
+    users.length - rival(0).users.length > 5 || users.length - rival(1).users.length > 5
   end
 
   # @function is_old_house?
