@@ -111,7 +111,7 @@ a.disabled {
 .house-card-sub-header {
   display: flex;
   justify-content: space-around;
-  flex-direction: row;
+  flex-direction: column;
   margin-bottom: 1em;
 }
 
@@ -149,7 +149,7 @@ a.disabled {
   margin-right: 1em;
 }
 
-#join-house.button[type="submit"] {
+button[type="submit"]#join-house {
   color: #007bff;
   border: none;
   & :hover {
