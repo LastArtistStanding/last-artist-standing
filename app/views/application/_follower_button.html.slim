@@ -1,4 +1,6 @@
 javascript:
+  let token = $('meta[name="csrf-token"]').attr('content');
+  
   function unfollow(id) {
     let xhttp = new XMLHttpRequest();
     xhttp.open("post", '/unfollow/' + id, true)
@@ -14,6 +16,7 @@ javascript:
         unfollowBtn.id = 'follow--' + id
       }
     };
+    xhttp.setRequestHeader('X-CSRF-Token', token)
     xhttp.send()
   }
 
@@ -32,6 +35,7 @@ javascript:
         followBtn.id = 'unfollow--' + id
       }
     };
+    xhttp.setRequestHeader('X-CSRF-Token', token)
     xhttp.send()
   }
 

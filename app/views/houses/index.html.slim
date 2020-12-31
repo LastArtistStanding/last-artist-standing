@@ -25,7 +25,7 @@ div.house-container
             b #{"🥇" if h.place == '1st'} #{"🥈" if h.place == '2nd'} #{"🥉" if h.place == '3rd'}
             - unless !logged_in? || in_a_house?(current_user.id) || h.old_house?
               = form_with(url: "/houses/#{h.id}/join", method: 'post', id: "join--#{h.id}") do |form|
-                = form.button type: "submit"
+                = form.button type: "submit", id: "join-house"
                   i.fa.fa-user-plus
             - if logged_in_as_moderator && !h.old_house?
               a.house-icon href="#{edit_house_path(h)}" title="Edit House"
