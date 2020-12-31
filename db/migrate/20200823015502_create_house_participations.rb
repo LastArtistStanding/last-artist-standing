@@ -8,6 +8,7 @@ class CreateHouseParticipations < ActiveRecord::Migration[6.0]
       t.integer :house_id, null: false
       t.date :join_date, null: false
       t.integer :score, null: false
+
       t.timestamps
     end
   end

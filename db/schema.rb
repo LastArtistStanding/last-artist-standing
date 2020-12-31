@@ -120,7 +120,9 @@ ActiveRecord::Schema.define(version: 2020_12_08_041944) do
   create_table "house_participations", force: :cascade do |t|
     t.integer "house_id", null: false
     t.date "join_date", null: false
-    t.integer "score", default: 0, null: false
+    t.integer "score", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.bigint "user_id"
     t.index ["user_id"], name: "index_house_participations_on_user_id"
   end
@@ -128,6 +130,8 @@ ActiveRecord::Schema.define(version: 2020_12_08_041944) do
   create_table "houses", force: :cascade do |t|
     t.text "house_name", null: false
     t.date "house_start", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "moderator_applications", force: :cascade do |t|
