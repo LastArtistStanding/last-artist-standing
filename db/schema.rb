@@ -274,12 +274,6 @@ ActiveRecord::Schema.define(version: 2020_12_08_041944) do
     t.boolean "is_moderator", default: false, null: false
     t.boolean "approved", default: false, null: false
     t.boolean "marked_for_death", default: false, null: false
-    t.boolean "note_submission", default: true
-    t.boolean "note_new_challenges", default: true
-    t.boolean "note_end_challenges", default: true
-    t.boolean "note_start_challenges", default: true
-    t.boolean "note_comments", default: true
-    t.boolean "note_also_commented", default: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["name"], name: "index_users_on_name", unique: true
   end
