@@ -39,7 +39,7 @@ class Comment < ApplicationRecord
     end
 
     # remove any nested blockquotes (it gets ugly)
-    body.sub! /(?<=.)(?<!\\)>/, "\\>"
+    body.gsub! /(?<=.)(?<!\\)>/, "\\>"
 
     markdown.render(body)
   end
@@ -60,7 +60,10 @@ class Comment < ApplicationRecord
 
   def comment_md_link(q_id)
     c = Comment.where({id: q_id}).includes(:source).first
-    return if c.nil? or not c.source.approved or c.source.soft_deleted
+    return if c.nil? or
+      c.soft_deleted or
+      not c.source.approved or
+      c.source.soft_deleted
 
     "[\\>\\>#{q_id}](/submissions/#{c.source.id}##{c.id})"
   end
