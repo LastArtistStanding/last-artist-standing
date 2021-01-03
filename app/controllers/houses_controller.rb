@@ -24,14 +24,15 @@ class HousesController < ApplicationController
   # @note requires moderator attribute
   def update
     @house = House.find(params[:id])
-    old_house_name = @house.house_name
-      if @house.update(house_params) && mod_params[:reason].present?
-        log_update(old_house_name)
-        redirect_to '/houses'
-      else
-        @house.errors.add(:base, 'Must specify a reason.') if mod_params[:reason].blank?
-        render :edit
-      end
+    if mod_params[:reason].blank?
+      @house.errors.add(:base, 'Must specify a reason.')
+      render :edit
+    else
+      old_house_name = @house.house_name
+      @house.update(house_params)
+      log_update(old_house_name)
+      redirect_to '/houses'
+    end
   end
 
   # @function join
