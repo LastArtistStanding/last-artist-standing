@@ -39,7 +39,7 @@ class Comment < ApplicationRecord
     end
 
     # remove any nested blockquotes (it gets ugly)
-    body.gsub! /(?<=.)(?<!\\)>/, "\\>"
+    body.gsub! /(?<=.)(?<=[>|\s])>/, "\\>"
 
     markdown.render(body)
   end
