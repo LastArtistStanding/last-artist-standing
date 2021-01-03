@@ -210,7 +210,7 @@ javascript:
         .card-body
           - if @house_participations
             p.card-text
-              | You have earned #{@time / 60} hr and #{@time % 60} #{"min" + (@time % 60 == 1 ? " " : "s ")} for your house this month
+              | You have earned #{@time / 60} hr and #{@time % 60} min for your house this month
           - else
             p.card-text
               | You are not participating in houses. Consider 

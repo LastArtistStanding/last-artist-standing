@@ -25,14 +25,13 @@ class HousesController < ApplicationController
   def update
     @house = House.find(params[:id])
     old_house_name = @house.house_name
-    respond_to do |format|
-      if @house.update(house_params)
+      if @house.update(house_params) && mod_params[:reason].present?
         log_update(old_house_name)
-        format.html { redirect_to '/houses' }
+        redirect_to '/houses'
       else
-        format.html { render :edit }
+        @house.errors.add(:base, 'Must specify a reason.') if mod_params[:reason].blank?
+        render :edit
       end
-    end
   end
 
   # @function join
@@ -41,14 +40,12 @@ class HousesController < ApplicationController
   # if the house is unbalanced, or the house is old
   def join
     house = House.find(params[:id])
-    respond_to do |format|
-      if (reason = house.add_user(current_user.id)).is_a?(HouseParticipation)
-        flash[:success] = "You've joined #{house.house_name}!"
-      else
-        flash[:error] = "You cannot join this house because #{reason}."
-      end
-      format.html { redirect_to '/houses' }
+    if (reason = house.add_user(current_user.id)).is_a?(HouseParticipation)
+      flash[:success] = "You've joined #{house.house_name}!"
+    else
+      flash[:error] = "You cannot join this house because #{reason}."
     end
+    redirect_to '/houses'
   end
 
   private
@@ -74,7 +71,7 @@ class HousesController < ApplicationController
   end
 
   # @function log_update
-  # creates a moderator log when a house is updatedf
+  # creates a moderator log when a house is updated
   # @param old_house_name - the old name of the house
   def log_update(old_house_name)
     ModeratorLog.create do |log|

@@ -39,7 +39,7 @@ class SubmissionsController < ApplicationController
     @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
     # Inform the user of their houses score (if they are participating)
     @house_participations = current_user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date).first
-    @time = @house_participations ? @house_participations.score : 0
+    @time = @house_participations&.score || 0
   end
 
   # GET /submissions/1/edit
