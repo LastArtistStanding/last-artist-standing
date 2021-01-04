@@ -47,7 +47,7 @@ describe HousesController do
       allow(ModeratorLog).to receive(:create).and_return(true)
       patch :update, params: { id: houses[0].id,
                                house: { house_name: 'StupidHouse' },
-                               reason: { reason: 'because' } }
+                               reason: { reason: "because" } }
       expect(response).to redirect_to('/houses')
     end
 
@@ -55,20 +55,20 @@ describe HousesController do
       allow(ModeratorLog).to receive(:create).and_return(true)
       patch :update, params: { id: houses[0].id,
                                house: { house_name: houses[1].house_name },
-                               reason: { reason: 'because' } }
+                               reason: { reason: "because" } }
       expect(response).to render_template(:edit)
     end
   end
 
   describe 'GET :join' do
     it 'flashes success on success' do
-      post :join, params: { id: houses[0].id }
+      get :join, params: { id: houses[0].id }
       expect(flash[:success]).to be_truthy
     end
 
     it 'flashes error on error' do
       hp = create(:house_participation, house_id: houses[1].id, user_id: user.id)
-      post :join, params: { id: houses[0].id }
+      get :join, params: { id: houses[0].id }
       expect(flash[:error]).to be_truthy
       hp.delete
     end
