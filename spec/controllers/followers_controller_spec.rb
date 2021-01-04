@@ -19,8 +19,10 @@ describe FollowersController do
 
   describe 'POST :follow' do
     it 'creates a follower entry in the DB' do
+      allow(controller).to receive(:ensure_authenticated).and_return(true)
+      allow(controller).to receive(:current_user).and_return(users[0])
       post :follow, params: { id: users[1].id }
-      expect(response).to redirect_to root_url
+      expect(response).to redirect_to user_path(users[1])
     end
   end
 

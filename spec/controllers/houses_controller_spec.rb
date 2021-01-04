@@ -55,7 +55,7 @@ describe HousesController do
       allow(ModeratorLog).to receive(:create).and_return(true)
       patch :update, params: { id: houses[0].id,
                                house: { house_name: houses[1].house_name },
-                               reason: { reason: 'because' } }
+                               reason: { reason: '' } }
       expect(response).to render_template(:edit)
     end
   end
