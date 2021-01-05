@@ -15,15 +15,15 @@ Rails.application.routes.draw do
   get 'welcome' => 'pages#home'
 
   resources :boards, param: :alias, path: 'forums', only: %i[index show]
-
+  
   resources :discussions, path: 'forums/threads', only: %i[show new create destroy] do
     resources :comments
     post 'comments/:id/mod_action' => 'comments#mod_action'
   end
   post 'forums/threads/:id/mod_action' => 'discussions#mod_action'
 
-  post 'follow/:id/' => 'followers#follow'
-  post 'unfollow/:id/' => 'followers#unfollow'
+  get 'follow/:id/' => 'followers#follow'
+  get 'unfollow/:id/' => 'followers#unfollow'
 
   resources :challenges
   get 'challenges/:id/entries' => 'challenges#entries'
@@ -58,7 +58,7 @@ Rails.application.routes.draw do
        as: :email_verification
 
   resources :houses
-  post 'houses/:id/join' => 'houses#join'
+  get 'houses/:id/join' => 'houses#join'
 
   if ENV['X_AUTH_HOST'].present?
     get 'x_site_auth/auto_login_available' => 'x_site_auth#auto_login_available'

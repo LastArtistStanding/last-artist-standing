@@ -6,7 +6,6 @@ class CreateHouses < ActiveRecord::Migration[6.0]
     create_table :houses do |t|
       t.text :house_name, null: false
       t.date :house_start, null: false
-
       t.timestamps
     end
   end
