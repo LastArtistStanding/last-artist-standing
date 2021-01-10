@@ -18,37 +18,42 @@ div.house-container
 
   div.house-neighborhood
     - if @houses.any?
-      - @houses.each_with_index do |h, i|
+      - @houses.each_with_index do |h|
         div class="card house-card"
           .card-header.house-card-header
-            b style="flex: 1" #{h.house_name}  
-            | #{"🥇" if h.place == '1st'} #{"🥈" if h.place == '2nd'} #{"🥉" if h.place == '3rd'}
+            b style="flex: 1" #{h.house_name}
+            b #{"🥇" if h.place == '1st'} #{"🥈" if h.place == '2nd'} #{"🥉" if h.place == '3rd'}
             - unless !logged_in? || in_a_house?(current_user.id) || h.old_house?
-              a.house-icon class="#{"disabled" if h.unbalanced?}" href="#{"houses/#{h.id}/join" unless h.unbalanced?}" data-toggle="tooltip" data-placement="top" title="#{"Too many people right now." if h.unbalanced?} #{"Join " + h.house_name if !h.unbalanced?}"
-                i.fa.fa-user-plus
+              = form_with(url: "/houses/#{h.id}/join", method: 'post', id: "join--#{h.id}") do |form|
+                = form.button type: "submit", id: "join-house"
+                  i.fa.fa-user-plus
             - if logged_in_as_moderator && !h.old_house?
               a.house-icon href="#{edit_house_path(h)}" title="Edit House"
                 i.fa.fa-edit
           .card-body.house-card-body
+            div.house-card-sub-header            
+              b Total: #{h.total / 60} hr #{h.total % 60} min
+              - if h.users.length.positive?
+                - time_per_user = h.total / h.users.length
+                b User Avg: #{time_per_user / 60} hr #{time_per_user % 60} min
+              - else
+                b User Avg: 0 hr 0 min
             div.house-table-cell
-              p.house-title Name
+              p.house-title User
+              div.house-spacer
               p.house-title Score
             - h.users.each do |u|
               div.house-participant
                 - if u.user.nil?
                   p <Unknown User>
+                  = image_tag "https://s3.us-east-2.amazonaws.com/do-art-daily-public/Default+User+Thumb.png"
                 - else
                   a href="/users/#{u.user.id}"
+                    = image_tag u.user.profile_picture
+                  a href="/users/#{u.user.id}"
                     p #{u.user.username}
+                div.house-spacer
                 p #{u[:score] / 60} hr #{u[:score] % 60}min
-            d.house-spacer
-            div.house-card-footer            
-              b Total Time: #{h.total / 60} hr #{h.total % 60} min
-              - if h.users.length.positive?
-                - time_per_user = h.total / h.users.length
-                b Time Per User: #{time_per_user / 60} hr #{time_per_user % 60} min
-              - else
-                b Time Per User: 0 hr 0 min
     - else
       h1 There are no houses for this month #{'(yet)' if @date > Time.now.utc}
 

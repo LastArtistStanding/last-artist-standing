@@ -149,13 +149,13 @@ javascript:
           .form-group.row id="drawing-row"
             .col-3 style="font-weight: 600;" = f.label :drawing
             br
-            .col-3 onchange="setPreview(event.target.files[0])" id="drawing" = f.file_field :drawing
+            .col-3 oninput="setPreview(event.target.files[0])" id="drawing" = f.file_field :drawing, style: "overflow: hidden;"
             h2.col-2 or
             input.col-4 type="text" maxlength="0"  placeholder="Paste your drawing here"
 
           .form-group.row id="preview-row"
             .col-3 Preview:
-            img.col-9 id="drawing-preview" src="" alt="[No File Selected]"
+            img.col-9 id="drawing-preview" src="https://do-art-daily-public.s3.us-east-2.amazonaws.com/no_image.png" alt="[No File Selected]"
             
           .form-group.row
             .col-3 style="font-weight:600;" = f.label :nsfw_level
@@ -210,13 +210,13 @@ javascript:
         .card-body
           - if @house_participations
             p.card-text
-              | You have earned #{@points.to_s} #{"point" + (@points == 1 ? " " : "s ")} for your house this month
+              | You have earned #{@time / 60} hr and #{@time % 60} min for your house this month
           - else
             p.card-text
               | You are not participating in houses. Consider 
               a href="/houses" joining a house 
               | to track this month's progress.
-
+ 
 
       .card
         .card-header
