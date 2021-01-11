@@ -1,11 +1,14 @@
 javascript:
+  let token = $('meta[name="csrf-token"]').attr('content');
+  
   function unfollow(id) {
-    var xhttp = new XMLHttpRequest();
-    xhttp.open("get", '/unfollow/' + id, true)
+    let xhttp = new XMLHttpRequest();
+    xhttp.open("post", '/unfollow/' + id, true)
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
-        var unfollowBtn = document.getElementById('unfollow--' + id)
+        let unfollowBtn = document.getElementById('unfollow--' + id)
         unfollowBtn.innerHTML = "Follow"
+        unfollowBtn.value = "Follow"
         unfollowBtn.classList.remove('btn-danger')
         unfollowBtn.classList.add('btn-primary')
         unfollowBtn.onclick = () => { follow(id); return false }
@@ -13,16 +16,18 @@ javascript:
         unfollowBtn.id = 'follow--' + id
       }
     };
+    xhttp.setRequestHeader('X-CSRF-Token', token)
     xhttp.send()
   }
 
   function follow(id) {
-    var xhttp = new XMLHttpRequest();
-    xhttp.open("get", '/follow/' + id, true)
+    let xhttp = new XMLHttpRequest();
+    xhttp.open("post", '/follow/' + id, true)
     xhttp.onreadystatechange = function () {
       if (this.readyState === 4 && this.status === 200) {
-        var followBtn = document.getElementById('follow--' + id)
+        let followBtn = document.getElementById('follow--' + id)
         followBtn.innerHTML = "Unfollow"
+        followBtn.value = "Unfollow"
         followBtn.classList.remove('btn-primary')
         followBtn.classList.add('btn-danger')
         followBtn.onclick = () => { unfollow(id); return false }
@@ -30,13 +35,15 @@ javascript:
         followBtn.id = 'unfollow--' + id
       }
     };
+    xhttp.setRequestHeader('X-CSRF-Token', token)
     xhttp.send()
   }
 
-- unless logged_in_as_user(user) or !logged_in?
+- if logged_in?
   - if follows?(user.id)
-    a.btn.btn-danger href="/unfollow/#{user.id}" onclick="javascript:unfollow(#{user.id}); return false;" id="unfollow--#{user.id}"
-      | Unfollow
+    = form_with(url: "/unfollow/#{user.id}", method: 'post') do |form|
+      = form.submit "Unfollow", class: "btn btn-danger", id: "unfollow--#{user.id}", onclick: "javascript:unfollow(#{user.id}); return false;", style: "max-width: 124px"
   - else
-    a.btn.btn-primary href="/follow/#{user.id}" onclick="javascript:follow(#{user.id}); return false;" id="follow--#{user.id}"
-      | Follow
+    = form_with(url: "/follow/#{user.id}", method: 'post') do |form|
+      = form.submit "Follow", class: "btn btn-primary", id: "follow--#{user.id}", onclick: "javascript:follow(#{user.id}); return false;", style: "max-width: 124px"
+    

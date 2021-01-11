@@ -15,7 +15,7 @@
           .col-9 = h.text_field :house_name
         .form-group.row
           .col-3 = label :reason, "Reason:"
-          .col-9 = text_field :reason, :reason
+          .col-9 = text_field :reason, :reason, required: true
         .form-group.row
           .col-sm-5
             = link_to "Cancel", :houses, class: "btn btn-danger", style: "width: 100%"
