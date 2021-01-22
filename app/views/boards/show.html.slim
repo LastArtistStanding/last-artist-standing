@@ -47,6 +47,9 @@
                 td #{nsfw_string(t[:thread].nsfw_level)}
                 td #{t[:num_comments]}
                 td
-                  = link_to "#{t[:last_reply].anonymous ? "Anonymous" : t[:last_reply].user.username} at #{relative_time_string(t[:last_reply].created_at)}", "#{url_for(t[:last_reply].source)}##{t[:last_reply].id}"
+                  - if t[:last_reply].present?
+                    = link_to "#{t[:last_reply].anonymous ? "Anonymous" : t[:last_reply].user.username} at #{relative_time_string(t[:last_reply].created_at)}", "#{url_for(t[:last_reply].source)}##{t[:last_reply].id}"
+                  - else
+                    | None
 
     .col-lg-2
