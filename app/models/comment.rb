@@ -14,156 +14,57 @@ class Comment < ApplicationRecord
 
   scope :creation_order, -> { order(created_at: :asc) }
 
-  # HACK: What a mess!!
-  #   I *think* this parses comment bodies, finds `>>`-syntax replies,
-  #   and replaces them with links to the comment or submission being replied to.
-  #   I'd be willing to clean this up, but until I know for sure what it does,
-  #   I don't want to mess with it.
   def link_form
-    return CGI.escapeHTML(body) if body.index('>>').nil?
+    html_renderer = Redcarpet::Render::HTML.new(hard_wrap: true, escape_html: true)
+    markdown = Redcarpet::Markdown
+                 .new(html_renderer,
+                      no_intra_emphasis: true,
+                      strikethrough: true,
+                      underline: true,
+                      autolink: true,
+                      superscript: true,
+                      prettify: true,
+                      fenced_code_blocks: true,
+                      lax_spacing: true)
 
-    split_body = body.split('')
-
-    first_gt = false
-    second_gt = false
-    model = ''
-    id_link = ''
-    s_index = -1
-    s_indices = []
-    e_indices = []
-    links = []
-    models = []
-
-    is_valid_id = lambda { |string|
-      string.scan(/\D/).empty? && string[0] != '0' && string.present?
-    }
-
-    split_body.each_with_index do |c, i|
-      if !first_gt && c == '>'
-        first_gt = true
-        s_index = i
-        next
-      end
-      if !second_gt && c == '>'
-        second_gt = true
-        next
-      end
-      if first_gt && second_gt
-        if c == '>'
-          if id_link.blank?
-            s_index = i - 1
-            next
-          else
-            links.push id_link.to_i
-            s_indices.push s_index
-            e_indices.push i - 1
-            models.push model
-            s_index = i
-            first_gt = true
-            second_gt = false
-            id_link = ''
-            model = ''
-            next
-          end
-        elsif c == 'C' || c == 'S'
-          if model.blank?
-            model = c.to_sym
-            next
-          elsif id_link.blank?
-            first_gt = false
-            second_gt = false
-            model = ''
-            next
-          else
-            links.push id_link.to_i
-            s_indices.push s_index
-            e_indices.push i - 1
-            models.push model
-            first_gt = true
-            second_gt = false
-            id_link = ''
-            model = ''
-            next
-          end
-        elsif !!(c =~ /\d/)
-          if c == '0' && id_link.blank?
-            first_gt = false
-            second_gt = false
-            id_link = ''
-            next
-          elsif model.blank?
-            model = :Z
-          end
-          id_link += c
-        else
-          if id_link.blank?
-            first_gt = false
-            second_gt = false
-            model = ''
-            next
-          else
-            links.push id_link.to_i
-            s_indices.push s_index
-            e_indices.push i - 1
-            models.push model
-            first_gt = false
-            second_gt = false
-            id_link = ''
-            model = ''
-            next
-          end
-        end
+    # swap out insert submission, challenge, comment quotes
+    body.scan(/>>[S,C]?\d+/).each do |q|
+      if q.index('C').present?
+        body.sub! q, challenge_md_link(q.scan(/\d+/).first) || q.gsub('>', "\\>")
+      elsif q.index('S').present?
+        body.sub! q, submission_md_link(q.scan(/\d+/).first) || q.gsub('>', "\\>")
       else
-        first_gt = false
-        second_gt = false
-        id_link = ''
-        model = ''
+        body.sub! q, comment_md_link(q.scan(/\d+/).first) || q.gsub('>', "\\>")
       end
     end
 
-    if is_valid_id[id_link]
-      links.push id_link.to_i
-      s_indices.push s_index
-      e_indices.push body.length - 1
-      models.push model
-    end
+    # remove any nested blockquotes (it gets ugly)
+    body.gsub! /(?<=.)(?<=[>|\s])>/, "\\>"
 
-    display_body = body
-    final_comment = ''
-    current_index = 0
+    markdown.render(body)
+  end
 
-    model_hash = { Z: Comment, C: Challenge, S: Submission }
+  def challenge_md_link(q_id)
+    return if not Challenge.exists?(q_id) or Challenge.find(q_id).soft_deleted
 
-    links.each_with_index do |s, i|
-      link_id = s.to_i
-      model_type = models[i]
-      linked_content = model_hash[model_type].find_by(id: s)
-      next if linked_content.blank?
+    "[\\>\\>C#{q_id}](/challenges/#{q_id})"
+  end
 
-      if current_index != s_indices[i]
-        final_comment += CGI.escapeHTML(display_body[current_index..(s_indices[i] - 1)])
-      end
+  def submission_md_link(q_id)
+    return if not Submission.exists?(q_id) or
+      not Submission.find(q_id).approved or
+      Submission.find(q_id).soft_deleted
 
-      if model_type == :Z
-        if source_type == linked_content.source_type && source_id == linked_content.source_id
-          final_comment += "<a href=\"#{'#' + link_id.to_s}\">>>#{link_id}</a>".html_safe
-        else
-          final_comment += link_to(">>#{link_id}", Rails.application.routes.url_helpers.submission_path(linked_content.source_id, anchor: link_id.to_s)).html_safe
-        end
-      elsif model_type == :C
-        final_comment += link_to(">>C#{link_id}", Rails.application.routes.url_helpers.challenge_path(link_id)).html_safe
-      elsif model_type == :S
-        final_comment += link_to(">>S#{link_id}", Rails.application.routes.url_helpers.submission_path(link_id)).html_safe
-      else
-        next # what the fuck?????
-      end
-      current_index = e_indices[i] + 1
-    end
+    "[\\>\\>S#{q_id}](/submissions/#{q_id}})"
+  end
 
-    if current_index != display_body.length
-      final_comment += CGI.escapeHTML(display_body[current_index..(display_body.length - 1)])
-    end
+  def comment_md_link(q_id)
+    c = Comment.where({id: q_id}).includes(:source).first
+    return if c.nil? or
+      c.soft_deleted or
+      not c.source.approved or
+      c.source.soft_deleted
 
-    final_comment
+    "[\\>\\>#{q_id}](/submissions/#{c.source.id}##{c.id})"
   end
 end

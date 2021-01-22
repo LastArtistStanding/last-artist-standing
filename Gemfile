@@ -38,6 +38,8 @@ gem 'mini_magick', '>= 4.9.4'
 gem 'strftime', '~>1.0.0'
 
 gem 'rake', '>= 13.0.1', '< 13.1'
+
+gem 'redcarpet', '~> 3.5.0'
 # Puma for the app server
 gem 'puma', '>= 4.3.3', '< 4.4'
 

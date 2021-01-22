@@ -5,6 +5,11 @@
     .card-body
       | By commenting, you agree to adhere to DAD's guidelines for comment etiquette as defined 
       a href="/help" here.
+      |  
+      a href="https://www.markdownguide.org/cheat-sheet" 
+        | Markdown Help 
+        i.fa.fa-external-link aria-hidden=true
+
       br
       br
       = form_for Comment.new, url: target_comments_path do |f|
