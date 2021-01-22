@@ -28,8 +28,8 @@ class BoardsController < ApplicationController
       end
     end
 
-    @pinned_hashes = @pinned_hashes.sort_by { |t| t[:last_reply].created_at }.reverse!
-    @thread_hashes = @thread_hashes.sort_by { |t| t[:last_reply].created_at }.reverse!
+    @pinned_hashes = @pinned_hashes.sort_by { |t| t[:last_reply].present? ? t[:last_reply].created_at : nil }.reverse!
+    @thread_hashes = @thread_hashes.sort_by { |t| t[:last_reply].present? ? t[:last_reply].created_at : nil }.reverse!
   end
 end
   
