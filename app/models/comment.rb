@@ -45,11 +45,7 @@ class Comment < ApplicationRecord
   end
 
   def challenge_md_link(q_id)
-<<<<<<< HEAD
     return if (not Challenge.exists?(q_id)) or Challenge.find(q_id).soft_deleted
-=======
-    return if not Challenge.exists?(q_id) or Challenge.find(q_id).soft_deleted
->>>>>>> 6070196e622549aa44381971081c738786fe25bd
 
     "[\\>\\>C#{q_id}](/challenges/#{q_id})"
   end
