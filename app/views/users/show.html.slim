@@ -35,7 +35,7 @@ javascript:
       .card
         .card-body.table-responsive style="text-align: center;"
           = render partial: "application/usercard", locals: { user: @user, house: @house }
-
+          p Joined #{@user.created_at.strftime("%B %d, %Y")}
           - if logged_in_as_user(@user)
             br
             a.btn.btn-primary href="#{edit_user_path(@user)}" style="margin-bottom: 8px;"

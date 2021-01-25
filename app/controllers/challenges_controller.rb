@@ -38,6 +38,10 @@ class ChallengesController < ApplicationController
     # You can't join or leave a challenge after the start date.
     if Date.current < @challenge.start_date
       if params[:join]
+        latest_ban = SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{current_user.id}")
+        unless latest_ban.nil?
+          render '/pages/banned', locals: { ban: latest_ban }, status: :forbidden
+        end
         Participation.find_or_create_by({ user_id: current_user.id, challenge_id: @challenge.id, score: 0, start_date: @challenge.start_date })
       end
 
