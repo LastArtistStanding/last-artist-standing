@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Creates badge_maps table
 class CreateBadgeMaps < ActiveRecord::Migration[5.0]
   def change
     create_table :badge_maps do |t|

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Creates the patch_note table
 class CreatePatchNotes < ActiveRecord::Migration[5.0]
   def change
     create_table :patch_notes do |t|

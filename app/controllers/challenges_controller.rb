@@ -32,7 +32,7 @@ class ChallengesController < ApplicationController
   # GET /challenge/1.json
   def show
     if @challenge.soft_deleted && !logged_in_as_moderator
-      render_hidden("This challenge was hidden by moderation.")
+      render_hidden('This challenge was hidden by moderation.')
     end
 
     # You can't join or leave a challenge after the start date.
@@ -58,7 +58,7 @@ class ChallengesController < ApplicationController
     end
     if @challenge.streak_based
       if @challenge.id == 1
-        @latest_eliminations = Participation.where('challenge_id = 1 AND eliminated AND end_date <= :endDate AND end_date >= :startDate', {endDate: Date.current, startDate: (Date.current - 7.days) }).order('end_date DESC')
+        @latest_eliminations = Participation.where('challenge_id = 1 AND eliminated AND end_date <= :endDate AND end_date >= :startDate', { endDate: Date.current, startDate: (Date.current - 7.days) }).order('end_date DESC')
       else
         @allEliminations = Participation.where({ challenge_id: @challenge.id, eliminated: true }).order('end_date DESC')
       end
@@ -190,17 +190,15 @@ class ChallengesController < ApplicationController
   def mod_action
     # don't let mods mess with official site content
     if @challenge.id != 1 && !@challenge.seasonal
-      if params.has_key?(:reason) && params[:reason].present?
-        if params.has_key? :toggle_soft_delete
+      if params.key?(:reason) && params[:reason].present?
+        if params.key? :toggle_soft_delete
           @challenge.soft_deleted = !@challenge.soft_deleted
-          if @challenge.soft_deleted
-            @challenge.soft_deleted_by = current_user.id
-          end
+          @challenge.soft_deleted_by = current_user.id if @challenge.soft_deleted
           ModeratorLog.create(user_id: current_user.id,
                               target: @challenge,
                               action: "#{current_user.username} has #{@challenge.soft_deleted ? 'soft deleted' : 'reverted soft deletion on'} #{@challenge.name} by #{@creator&.username}.",
                               reason: params[:reason])
-        elsif params.has_key? :change_nsfw
+        elsif params.key? :change_nsfw
           @challenge.nsfw_level = params[:change_nsfw].to_i
           ModeratorLog.create(user_id: current_user.id,
                               target: @challenge,

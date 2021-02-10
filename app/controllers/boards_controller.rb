@@ -18,7 +18,7 @@ class BoardsController < ApplicationController
       thread_hash = {
         thread: t,
         num_comments: t.comments.count,
-        last_reply: t.comments.order("created_at DESC").first
+        last_reply: t.comments.order('created_at DESC').first
       }
 
       if t.pinned
@@ -32,4 +32,3 @@ class BoardsController < ApplicationController
     @thread_hashes = @thread_hashes.sort_by { |t| t[:last_reply].present? ? t[:last_reply].created_at : DateTime.new(2001, 2, 3, 4, 5, 6) }.reverse!
   end
 end
-  

@@ -51,7 +51,7 @@ module SubmissionsHelper
   end
 
   def unapproved_submissions
-    Submission.includes(:user).where({submissions: { approved: false, soft_deleted: false }, users: {marked_for_death: false}})
+    Submission.includes(:user).where({ submissions: { approved: false, soft_deleted: false }, users: { marked_for_death: false } })
   end
 
   def base_submissions(only_safe = false)

@@ -46,7 +46,7 @@ class DiscussionsController < ApplicationController
 
   def show
     @board = @discussion.board
-    @comments = @discussion.comments.order("created_at ASC")
+    @comments = @discussion.comments.order('created_at ASC')
   end
 
   def destroy
@@ -61,18 +61,18 @@ class DiscussionsController < ApplicationController
 
   # POST
   def mod_action
-    if params.has_key? :toggle_pinned
+    if params.key? :toggle_pinned
       @discussion.pinned = !@discussion.pinned
       ModeratorLog.create(user_id: current_user.id,
                           target: @discussion,
                           action: "#{current_user.username} has #{@discussion.pinned ? 'pinned' : 'unpinned'} #{@discussion.title}.",
-                          reason: "")
-    elsif params.has_key? :toggle_locked
+                          reason: '')
+    elsif params.key? :toggle_locked
       @discussion.locked = !@discussion.locked
       ModeratorLog.create(user_id: current_user.id,
                           target: @discussion,
                           action: "#{current_user.username} has #{@discussion.locked ? 'locked' : 'unlocked'} #{@discussion.title}.",
-                          reason: "")
+                          reason: '')
     end
     @discussion.save
 
@@ -98,4 +98,3 @@ class DiscussionsController < ApplicationController
     params.require(:comment).permit(:body)
   end
 end
-    

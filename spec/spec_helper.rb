@@ -14,9 +14,7 @@ def setup_session(example, user)
     user = create(:user, name: 'user2', email: 'user2@example.com')
   end
 
-  if example.metadata[:admin_login]
-    user.update_retain_password(is_admin: true)
-  end
+  user.update_retain_password(is_admin: true) if example.metadata[:admin_login]
 
   if example.metadata[:unverified]
     user.update_retain_password(verified: false, email_verified: false)
@@ -127,7 +125,7 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with(:truncation)
   end
 
-  config.around(:each) do |example|
+  config.around do |example|
     DatabaseCleaner.cleaning do
       example.run
     end

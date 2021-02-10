@@ -25,7 +25,7 @@ def it_requires_that_applications_are_open
 end
 
 describe ModeratorApplicationsController do
-  before(:each) do |example|
+  before do |example|
     deadline = example.metadata[:applications_closed] ? Date.yesterday : Date.tomorrow
     ENV['MODERATOR_APPLICATIONS_DEADLINE'] = deadline.to_s
 
@@ -37,7 +37,7 @@ describe ModeratorApplicationsController do
   end
 
   describe 'GET :index' do
-    before(:each) { get :index }
+    before { get :index }
 
     it_requires_verified_login
 
@@ -59,7 +59,7 @@ describe ModeratorApplicationsController do
   end
 
   describe 'GET :new' do
-    before(:each) { get :new }
+    before { get :new }
 
     it_requires_verified_login
     it_requires_that_applications_are_open
@@ -74,7 +74,7 @@ describe ModeratorApplicationsController do
   end
 
   describe 'POST :create' do
-    before(:each) { post :create, params: { moderator_application: @application.attributes } }
+    before { post :create, params: { moderator_application: @application.attributes } }
 
     it_requires_verified_login
     it_requires_that_applications_are_open
@@ -89,7 +89,7 @@ describe ModeratorApplicationsController do
   end
 
   describe 'GET :show' do
-    before(:each) { get :show, params: { id: application_id } }
+    before { get :show, params: { id: application_id } }
 
     it_handles_nonexistent_application
     it_requires_that_applications_are_open
@@ -109,7 +109,7 @@ describe ModeratorApplicationsController do
   end
 
   describe 'GET :edit' do
-    before(:each) { get :edit, params: { id: application_id } }
+    before { get :edit, params: { id: application_id } }
 
     it_handles_nonexistent_application
     it_requires_that_applications_are_open
@@ -125,7 +125,7 @@ describe ModeratorApplicationsController do
   end
 
   describe 'PUT :update' do
-    before(:each) do
+    before do
       put :update, params: { id: application_id, moderator_application: @application.attributes }
     end
 
@@ -141,7 +141,7 @@ describe ModeratorApplicationsController do
   end
 
   describe 'DELETE :destroy' do
-    before(:each) { delete :destroy, params: { id: application_id } }
+    before { delete :destroy, params: { id: application_id } }
 
     it_handles_nonexistent_application
     it_requires_correct_verified_login

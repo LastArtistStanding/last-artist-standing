@@ -17,6 +17,11 @@ Lint/RaiseException:
   Enabled: true
 Lint/StructNewOverride:
   Enabled: true
+Metrics/MethodLength:
+  Exclude:
+    - 'db/migrate/**'
+Rails/SkipsModelValidations:
+  AllowedMethods: ['update_all']
 Style/ExponentialNotation:
   Enabled: true
 Style/HashEachMethods:

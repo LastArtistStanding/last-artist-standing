@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Discussion < ApplicationRecord
   belongs_to :user
   belongs_to :board
@@ -15,7 +17,9 @@ class Discussion < ApplicationRecord
     return [false, 'This thread has been locked.'] if locked
 
     ban = user.get_latest_ban
-    return [false, "You have an active ban until #{date_string_short(ban.expiration)}."] unless ban.nil?
+    unless ban.nil?
+      return [false, "You have an active ban until #{date_string_short(ban.expiration)}."]
+    end
     return [true, nil] if user_id == user.id && user.verified?
 
     user.can_make_comments
