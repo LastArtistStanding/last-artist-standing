@@ -15,7 +15,7 @@ class Comment < ApplicationRecord
   scope :creation_order, -> { order(created_at: :asc) }
 
   def link_form
-    html_renderer = Redcarpet::Render::HTML.new(hard_wrap: true, escape_html: true)
+    html_renderer = Redcarpet::Render::HTML.new(hard_wrap: true, escape_html: true, no_images: true)
     markdown = Redcarpet::Markdown
                  .new(html_renderer,
                       no_intra_emphasis: true,
@@ -45,7 +45,7 @@ class Comment < ApplicationRecord
   end
 
   def challenge_md_link(q_id)
-    return if not Challenge.exists?(q_id) or Challenge.find(q_id).soft_deleted
+    return if (not Challenge.exists?(q_id)) or Challenge.find(q_id).soft_deleted
 
     "[\\>\\>C#{q_id}](/challenges/#{q_id})"
   end
