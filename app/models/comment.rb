@@ -62,8 +62,7 @@ class Comment < ApplicationRecord
     c = Comment.where({id: q_id}).includes(:source).first
     return if c.nil? or
       c.soft_deleted or
-      (c.source_type == "Submission" && !c.source.approved) or
-      c.source.soft_deleted
+      (c.source_type == "Submission" && (!c.source.approved || c.source.soft_deleted))
     
     source_link = ""
     if c.source_type == "Submission"
