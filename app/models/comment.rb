@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# represents a comment object
 class Comment < ApplicationRecord
   include ActionView::Helpers::UrlHelper
 
@@ -15,62 +16,68 @@ class Comment < ApplicationRecord
   scope :creation_order, -> { order(created_at: :asc) }
 
   def link_form
-    html_renderer = Redcarpet::Render::HTML.new(hard_wrap: true, escape_html: true, no_images: true)
+    html_renderer = Redcarpet::Render::HTML.new(escape_html: true, no_images: true)
     markdown = Redcarpet::Markdown
-                 .new(html_renderer,
-                      no_intra_emphasis: true,
-                      strikethrough: true,
-                      underline: true,
-                      autolink: true,
-                      superscript: true,
-                      prettify: true,
-                      fenced_code_blocks: true,
-                      lax_spacing: true)
+               .new(html_renderer, no_intra_emphasis: true, underline: true, autolink: true)
 
     # swap out insert submission, challenge, comment quotes
-    body.scan(/>>[S,C]?\d+/).each do |q|
-      if q.index('C').present?
-        body.sub! q, challenge_md_link(q.scan(/\d+/).first) || q.gsub('>', "\\>")
-      elsif q.index('S').present?
-        body.sub! q, submission_md_link(q.scan(/\d+/).first) || q.gsub('>', "\\>")
-      else
-        body.sub! q, comment_md_link(q.scan(/\d+/).first) || q.gsub('>', "\\>")
-      end
-    end
-
-    # remove any nested blockquotes (it gets ugly)
-    body.gsub! /(?<=.)(?<=[>|\s])>/, "\\>"
-
+    parse_comment_links(body)
+    parse_challenge_links(body)
+    parse_submission_links(body)
+    parse_quotes(body)
     markdown.render(body)
   end
 
+  def parse_comment_links(body)
+    body.scan(/>>\d+/).each do |q|
+      body.sub! q, comment_md_link(q.scan(/\d+/).first) || q.gsub('>', '\\>')
+    end
+  end
+
+  def parse_challenge_links(body)
+    body.scan(/>>C\d+/).each do |q|
+      body.sub! q, challenge_md_link(q.scan(/\d+/).first) || q.gsub('>', '\\>')
+    end
+  end
+
+  def parse_submission_links(body)
+    body.scan(/>>S\d+/).each do |q|
+      body.sub! q, submission_md_link(q.scan(/\d+/).first) || q.gsub('>', '\\>')
+    end
+  end
+
+  def parse_quotes(body)
+    body.gsub! "\r\n", "\r\n\r\n"
+    body.gsub! /(?<=.)(?<=[>|\s])>/, '\\>'
+    body.gsub! /^>/, '>\\>'
+  end
+
   def challenge_md_link(q_id)
-    return if (not Challenge.exists?(q_id)) or Challenge.find(q_id).soft_deleted
+    return if !Challenge.exists?(q_id) || Challenge.find(q_id).soft_deleted
 
     "[\\>\\>C#{q_id}](/challenges/#{q_id})"
   end
 
   def submission_md_link(q_id)
-    return if not Submission.exists?(q_id) or
-      not Submission.find(q_id).approved or
-      Submission.find(q_id).soft_deleted
+    return if !Submission.exists?(q_id) ||
+              !Submission.find(q_id).approved ||
+              Submission.find(q_id).soft_deleted
 
     "[\\>\\>S#{q_id}](/submissions/#{q_id}})"
   end
 
   def comment_md_link(q_id)
-    c = Comment.where({id: q_id}).includes(:source).first
-    return if c.nil? or
-      c.soft_deleted or
-      (c.source_type == "Submission" && (!c.source.approved || c.source.soft_deleted))
-    
-    source_link = ""
-    if c.source_type == "Submission"
-      source_link = "submissions"
-    elsif c.source_type == "Discussion"
-      source_link = "forums/threads"
-    end
+    c = Comment.where({ id: q_id }).includes(:source).first
+    return if comment_valid(c)
 
-    "[\\>\\>#{q_id}](/#{source_link}/#{c.source.id}##{c.id})"
+    "[\\>\\>#{q_id}]" \
+      "(/#{c.source_type == 'Submission' ? 'submissions' : 'forums/threads'}/"\
+      "#{c.source.id}##{c.id})"
+  end
+
+  def comment_valid(com)
+    com.nil? ||
+      com.soft_deleted ||
+      (com.source_type == 'Submission' && (!com.source.approved || com.source.soft_deleted))
   end
 end
