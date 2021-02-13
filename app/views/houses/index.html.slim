@@ -45,8 +45,9 @@ div.house-container
             - h.users.each do |u|
               div.house-participant
                 - if u.user.nil?
-                  p <Unknown User>
-                  = image_tag "https://s3.us-east-2.amazonaws.com/do-art-daily-public/Default+User+Thumb.png"
+                  a href=""
+                    = image_tag "https://s3.us-east-2.amazonaws.com/do-art-daily-public/Default+User+Thumb.png"
+                  p Deleted User
                 - else
                   a href="/users/#{u.user.id}"
                     = image_tag u.user.profile_picture

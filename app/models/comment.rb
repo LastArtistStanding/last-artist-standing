@@ -15,7 +15,7 @@ class Comment < ApplicationRecord
   scope :creation_order, -> { order(created_at: :asc) }
 
   def link_form
-    html_renderer = Redcarpet::Render::HTML.new(hard_wrap: true, escape_html: true)
+    html_renderer = Redcarpet::Render::HTML.new(hard_wrap: true, escape_html: true, no_images: true)
     markdown = Redcarpet::Markdown
                .new(html_renderer,
                     no_intra_emphasis: true,
@@ -45,7 +45,7 @@ class Comment < ApplicationRecord
   end
 
   def challenge_md_link(q_id)
-    return if !Challenge.exists?(q_id) || Challenge.find(q_id).soft_deleted
+    return if (not Challenge.exists?(q_id)) or Challenge.find(q_id).soft_deleted
 
     "[\\>\\>C#{q_id}](/challenges/#{q_id})"
   end
@@ -59,12 +59,18 @@ class Comment < ApplicationRecord
   end
 
   def comment_md_link(q_id)
-    c = Comment.where({ id: q_id }).includes(:source).first
-    return if c.nil? ||
-              c.soft_deleted ||
-              !c.source.approved ||
-              c.source.soft_deleted
+    c = Comment.where({id: q_id}).includes(:source).first
+    return if c.nil? or
+      c.soft_deleted or
+      (c.source_type == "Submission" && (!c.source.approved || c.source.soft_deleted))
 
-    "[\\>\\>#{q_id}](/submissions/#{c.source.id}##{c.id})"
+    source_link = ""
+    if c.source_type == "Submission"
+      source_link = "submissions"
+    elsif c.source_type == "Discussion"
+      source_link = "forums/threads"
+    end
+
+    "[\\>\\>#{q_id}](/#{source_link}/#{c.source.id}##{c.id})"
   end
 end
