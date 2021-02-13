@@ -68,14 +68,14 @@ class Comment < ApplicationRecord
 
   def comment_md_link(q_id)
     c = Comment.where({ id: q_id }).includes(:source).first
-    return if comment_valid(c)
+    return if comment_invalid(c)
 
     "[\\>\\>#{q_id}]" \
       "(/#{c.source_type == 'Submission' ? 'submissions' : 'forums/threads'}/"\
       "#{c.source.id}##{c.id})"
   end
 
-  def comment_valid(com)
+  def comment_invalid(com)
     com.nil? ||
       com.soft_deleted ||
       (com.source_type == 'Submission' && (!com.source.approved || com.source.soft_deleted))
