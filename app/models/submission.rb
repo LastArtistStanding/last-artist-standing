@@ -3,6 +3,7 @@
 # Represents an individual piece of art submitted to the website.
 class Submission < ApplicationRecord
   include PagesHelper
+  include MarkdownHelper
 
   mount_uploader :drawing, ImageUploader
 
@@ -28,9 +29,13 @@ class Submission < ApplicationRecord
     less_than_or_equal_to: 3
   }
 
+  def link_form
+    render_markdown(description)
+  end
+
   def can_be_commented_on_by(user)
     return [false, 'You must be logged in to comment.'] if user.blank?
-    return [false, 'The artist has locked comments for this submission.'] unless commentable 
+    return [false, 'The artist has locked comments for this submission.'] unless commentable
 
     ban = user.get_latest_ban
     return [false, "You have an active ban until #{date_string_short(ban.expiration)}."] unless ban.nil?
