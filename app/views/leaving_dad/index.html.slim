@@ -1,0 +1,16 @@
+- provide(:title, 'Leaving Dad')
+
+.center.jumbotron
+  = image_tag "lastan_1.png", height: '400', width: '400'
+  h1 Hold on there! You are about to leave Do Art Daily!
+  p This link will take you to:
+  br
+  p class="external"
+    | #{params[:external_link]}
+  br
+  p Are you sure you want to continue
+  br
+  a href="#{params[:external_link]}" class="btn btn-primary" style="margin-right: 1em;"
+    | Continue
+  a onclick="history.go(-1); return false" href="/" class="btn btn-danger"
+    | Go Back

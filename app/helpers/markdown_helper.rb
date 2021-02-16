@@ -16,6 +16,7 @@ module MarkdownHelper
     parse_challenge_links(body)
     parse_submission_links(body)
     parse_quotes(body)
+    parse_external_links(body)
     markdown.render(body)
   end
 
@@ -95,5 +96,20 @@ module MarkdownHelper
     com.nil? ||
       com.soft_deleted ||
       (com.source_type == 'Submission' && (!com.source.approved || com.source.soft_deleted))
+  end
+
+  # @function parse_external_links
+  # @param body - the body of text from the submission description, challenge description or comment
+  # @return - the body with hidden markdown links substituted
+  def parse_external_links(body)
+    body.scan(%r{(\[.*?\]\()(https?|ftp|mailto|news)(:\/\/[\S]+\))}).each do |q|
+      next if q.join('').scan(%r{(https?|ftp|mailto|news)(:\/\/[\S]+\))}).join('')
+               .starts_with?(%r{https?://#{ENV['DAD_DOMAIN']}})
+
+      body.gsub!(q.join('').scan(%r{(https?|ftp|mailto|news)(:\/\/[\S]+\))}).join(''),
+                 "/leaving_dad?external_link=#{q.join('')
+                                                .scan(%r{(https?|ftp|mailto|news)(:\/\/[\S]+\))})
+                                                .join('')}")
+    end
   end
 end
