@@ -102,14 +102,13 @@ module MarkdownHelper
   # @param body - the body of text from the submission description, challenge description or comment
   # @return - the body with hidden markdown links substituted
   def parse_external_links(body)
-    body.scan(%r{(\[.*?\]\()(https?|ftp|mailto|news)(:\/\/[\S]+\))}).each do |q|
-      next if q.join('').scan(%r{(https?|ftp|mailto|news)(:\/\/[\S]+\))}).join('')
-               .starts_with?(%r{https?://#{ENV['DAD_DOMAIN']}})
+    pos = 0
+    while %r{(https?|ftps?)://\S+}.match(body, pos)
+      p %r{(https?|ftps?)://\S+}.match(body, pos)[0]
+      pos = Regexp.last_match.begin(0) + Regexp.last_match[0].length
+      next if Regexp.last_match[0].starts_with?(%r{https?://#{ENV['DAD_DOMAIN']}})
 
-      body.gsub!(q.join('').scan(%r{(https?|ftp|mailto|news)(:\/\/[\S]+\))}).join(''),
-                 "/leaving_dad?external_link=#{q.join('')
-                                                .scan(%r{(https?|ftp|mailto|news)(:\/\/[\S]+\))})
-                                                .join('')}")
+      body.gsub! Regexp.last_match[0], '/leaving_dad?external_link=' + Regexp.last_match[0]
     end
   end
 end
