@@ -37,3 +37,6 @@ Badge12:
 Badge13:
     name: "Winter 2020 Participation Badge"
     direct_image: "https://do-art-daily-public.s3.us-east-2.amazonaws.com/Winter+Badge+2020.png"
+Badge14:
+    name: "Spring 2021 Participation Badge"
+    direct_image: "https://s3.us-east-2.amazonaws.com/do-art-daily-public/Spring+Badge+2021.png"
