@@ -521,3 +521,34 @@ Winter2020BadgeMap5:
     required_score: 89
     prestige: 5
     description: "FLAWLESS - This artist submitted daily this season!"
+#Spring 2021 Badges
+Spring2021BadgeMap1:
+    badge_name: "Spring 2021 Participation Badge"
+    challenge_name: "Spring Challenge 2021"
+    required_score: 13
+    prestige: 1
+    description: "WEEKLY - This artist submitted at least once a week this season."
+Spring2021BadgeMap2:
+    badge_name: "Spring 2021 Participation Badge"
+    challenge_name: "Spring Challenge 2021"
+    required_score: 39
+    prestige: 2
+    description: "HOBBYIST - This artist submitted at least once a day on the weekends."
+Spring2021BadgeMap3:
+    badge_name: "Spring 2021 Participation Badge"
+    challenge_name: "Spring Challenge 2021"
+    required_score: 65
+    prestige: 3
+    description: "BUSINESS - This artist submitted at least once a business day."
+Spring2021BadgeMap4:
+    badge_name: "Spring 2021 Participation Badge"
+    challenge_name: "Spring Challenge 2021"
+    required_score: 78
+    prestige: 4
+    description: "ELITE - This artist submitted almost daily this season!"
+Spring2021BadgeMap5:
+    badge_name: "Spring 2021 Participation Badge"
+    challenge_name: "Spring Challenge 2021"
+    required_score: 92
+    prestige: 5
+    description: "FLAWLESS - This artist submitted daily this season!"
