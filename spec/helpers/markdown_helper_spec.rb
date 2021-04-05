@@ -136,4 +136,19 @@ describe MarkdownHelper do
       expect(com.body).to eq('>\\>\\>\\>a')
     end
   end
+
+  context 'with hidden links' do
+    it 'does not warn about internal markdown links' do
+      com = create :comment, :submission_comment, body: "[link](http://#{ENV['DAD_DOMAIN']})"
+      parse_external_links(com.body)
+      expect(com.body).to eq("[link](http://#{ENV['DAD_DOMAIN']})")
+    end
+
+    it 'does warn about external markdown links' do
+      com = create :comment, :submission_comment, body: '[link](https://google.com)'
+      parse_external_links(com.body)
+      expect(com.body)
+        .to eq("[link](http://#{ENV['DAD_DOMAIN']}/leaving_dad?external_link=https://google.com)")
+    end
+  end
 end
