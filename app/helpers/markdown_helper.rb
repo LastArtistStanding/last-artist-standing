@@ -95,22 +95,19 @@ module MarkdownHelper
   def comment_invalid(com)
     com.nil? ||
       com.soft_deleted ||
+      com.source.nil? ||
       (com.source_type == 'Submission' && (!com.source.approved || com.source.soft_deleted))
   end
 
   # @function parse_external_links
   # @param body - the body of text from the submission description, challenge description or comment
   # @return - the body with hidden markdown links substituted
-  # @note doesn't conform to rubocop, but there's no other way of doing it so w/e
   def parse_external_links(body)
-    offset = 0
-    body.to_enum(:scan, %r{(?<l1>\[.*\])\((?<l2>https?://\S+)\)}).map { Regexp.last_match }.each do |l|
+    body.to_enum(:scan, %r{(?<l1>\[.*\])\((?<l2>https?://\S+)\)})
+        .map { Regexp.last_match }.each do |l|
       next if l[:l2].starts_with?(%r{https?://#{ENV['DAD_DOMAIN']}})
 
-      new_url = l[:l1] + "(http://#{ENV['DAD_DOMAIN']}/leaving_dad?external_link=" + l[:l2] + ')'
-      body[(l.begin(0) + offset)...(l.end(0) + offset)] = ' '
-      body[l.begin(0) + offset] = new_url
-      offset = offset + new_url.length - l[0].length
+      body.sub! l[0], "#{l[:l1]}(http://#{ENV['DAD_DOMAIN']}/leaving_dad?external_link=#{l[:l2]})"
     end
   end
 end
