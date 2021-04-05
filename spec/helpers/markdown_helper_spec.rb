@@ -138,6 +138,14 @@ describe MarkdownHelper do
   end
 
   context 'with hidden links' do
+    before do
+      ENV['DAD_DOMAIN'] = 'test.com'
+    end
+
+    after do
+      ENV['DAD_DOMAIN'] = ''
+    end
+
     it 'does not warn about internal markdown links' do
       com = create :comment, :submission_comment, body: "[link](http://#{ENV['DAD_DOMAIN']})"
       parse_external_links(com.body)
