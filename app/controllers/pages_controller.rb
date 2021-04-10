@@ -23,7 +23,7 @@ class PagesController < ApplicationController
     @seasonal_leaderboard = Participation.where('challenge_id = ?', @seasonal_challenge.id).order('score DESC').includes(:user)
 
     if logged_in?
-      @participations = Participation.includes(challenge: [:challenge_entries])
+      @participations = Participation.includes(challenge: %i[challenge_entries badge_maps])
                                      .where(participations: { user_id: current_user&.id, active: true }, challenges: {seasonal: false})
                                      .where.not(challenges: { id: 1 })
     end
@@ -56,7 +56,7 @@ class PagesController < ApplicationController
   def activity_feed
     activity_rows.map do |r|
       {
-        message: message(r.anonymous ? "Anonymous" : (r.display_name.present? ? r.display_name : r.name), r.type, r.sub_id, r.title), 
+        message: message(r.anonymous ? "Anonymous" : (r.display_name.present? ? r.display_name : r.name), r.type, r.sub_id, r.title),
         link: link(r.id, r.type, r.sub_id)
       }
     end
