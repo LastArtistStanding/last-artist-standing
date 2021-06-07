@@ -2,6 +2,7 @@
 
 # Represents a user on the website.
 class User < ApplicationRecord
+  include MarkdownHelper
   NO_EXCESS_WHITESPACE = /\A(\S\s?)*\S\z/.freeze
   NULLABLE_NO_EXCESS_WHITESPACE = /\A(\S\s?)*\S\z|\A\z/.freeze
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i.freeze
@@ -35,6 +36,7 @@ class User < ApplicationRecord
   validates :display_name, length: { maximum: 50 }, format: { with: NULLABLE_NO_EXCESS_WHITESPACE }
   validates :email, presence: true, length: { maximum: 255 }, format: { with: VALID_EMAIL_REGEX },
                     uniqueness: { case_sensitive: false }
+  validates_length_of :bio, :maximum => 200
 
   has_secure_password
   validates :password, presence: true, length: { minimum: 6, maximum: 30 },
@@ -301,5 +303,9 @@ class User < ApplicationRecord
                           "%#{params[:searchname]}%", "%#{params[:searchname]}%")
     end
     users
+  end
+
+  def link_form
+    render_markdown(bio)
   end
 end

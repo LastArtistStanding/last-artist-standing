@@ -84,12 +84,15 @@ class UsersController < ApplicationController
       return
     end
 
+    user_edit_params[:bio]&.gsub! "\r", ''
+
     if params[:user][:password].blank? && params[:user][:password_confirmation].blank?
       params[:user][:password] = oldpassword
       params[:user][:password_confirmation] = oldpassword
     end
 
     if @user.update(user_edit_params)
+
       # If the user has changed their email address, their email address is no longer verified.
       if email_changed
         @user.update_retain_password(email_verified: false)
@@ -99,6 +102,9 @@ class UsersController < ApplicationController
       flash[:success] = 'Profile updated.'
       redirect_to @user
     else
+      p user_edit_params[:bio].length
+      p user_edit_params[:bio].mb_chars.length
+      p @user.errors.full_messages.join(", ")
       rerender_user_edit
     end
   end
@@ -135,7 +141,7 @@ class UsersController < ApplicationController
   end
 
   def user_edit_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation, :avatar, :nsfw_level, :display_name)
+    params.require(:user).permit(:name, :email, :password, :password_confirmation, :avatar, :nsfw_level, :display_name, :bio)
   end
 
   def ensure_registration_open

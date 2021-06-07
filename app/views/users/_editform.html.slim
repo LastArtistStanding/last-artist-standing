@@ -1,3 +1,10 @@
+javascript:
+  function charcount(str) {
+    let lng = ((str || '').match(/./g) || []).length;
+    lng += ((str || '').match(/\n/g) || []).length
+    document.getElementById("charcount").innerHTML = lng + '/200';
+  }
+
 = form_for(@user ||= User.new, html: { novalidate: true }) do |f|
   input type="text" style="display:none"
   input type="password" style="display:none"
@@ -84,6 +91,12 @@
           - if @user.errors.key?(:nsfw_level)
             .invalid-feedback-rails
               | NSFW Level #{@user.errors[:nsfw_level][0]}
+      .card
+        .card-header
+          b User Bio
+        .card-body
+          = f.text_area :bio, placeholder: "Write something about yourself. Markdown is supported. Max 200 characters.", maxlength: 200, onkeyup: "charcount(this.value)", id: "comment-box"
+        span#charcount 0/200
 .card
   .card-header
     b Following

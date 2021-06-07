@@ -42,8 +42,8 @@ javascript:
 - if logged_in?
   - if follows?(user.id)
     = form_with(url: "/unfollow/#{user.id}", method: 'post') do |form|
-      = form.submit "Unfollow", class: "btn btn-danger", id: "unfollow--#{user.id}", onclick: "javascript:unfollow(#{user.id}); return false;", style: "max-width: 124px"
+      = form.submit "Unfollow", class: "btn btn-danger", id: "unfollow--#{user.id}", onclick: "javascript:unfollow(#{user.id}); return false;", style: "width: 124px"
   - else
     = form_with(url: "/follow/#{user.id}", method: 'post') do |form|
-      = form.submit "Follow", class: "btn btn-primary", id: "follow--#{user.id}", onclick: "javascript:follow(#{user.id}); return false;", style: "max-width: 124px"
+      = form.submit "Follow", class: "btn btn-primary", id: "follow--#{user.id}", onclick: "javascript:follow(#{user.id}); return false;", style: "width: 124px;"
     

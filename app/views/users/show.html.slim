@@ -8,120 +8,86 @@ javascript:
     $('[data-toggle="tooltip"]').tooltip()
   })
 
-.container-fluid style="margin-top: 2rem;"
-  .row
-    .col-lg-1
+.container-fluid.user-page
+  - if !@user.approved && (logged_in_as_moderator || current_user&.id == @user.id) && @ban.nil?
+    .flex-column.account-info.alert.alert-warning
+      b Unapproved Account
+      - if current_user&.id == @user.id
+        | Your submissions will be subject to review by moderators before they will become visible to other users. 
+        | Your account will be approved after consistent participation on the site.
+  - if @user.marked_for_death && logged_in_as_moderator
+    .flex-column.account-info.alert.alert-dark
+      b Marked For Death
+      - unless @ban.nil?
+        | Reason: #{@ban.reason}
+      - else
+        | Something strange has happened. Contact banana asap.
+  - else
+    - if !@ban.nil?
+      .flex-column.account-info.alert.alert-danger
+        b Banned until #{date_string_short(@ban.expiration)}
+        | Ban Reason: #{@ban.reason}
 
-    .col-lg-2
-      - if !@user.approved && (logged_in_as_moderator || current_user&.id == @user.id)
-        .card class="alert alert-warning" style="padding: 0px;"
-          .card-body style="text-align: center;" 
-            b Unapproved Account
-            br
-            - if current_user&.id == @user.id
-              small Your submissions will be subject to review by moderators before they will become visible to other users. Your account will be approved after consistent participation on the site.
-
-      - if @user.marked_for_death && logged_in_as_moderator
-        .card class="alert alert-dark" style="padding: 0px;"
-          .card-body style="text-align: center;" 
-            b Marked For Death
-            - unless @ban.nil?
-              br
-              | Reason: #{@ban.reason}
-            - else
-              br
-              | Something strange has happened. Contact banana asap.
-
-      .card
-        .card-body.table-responsive style="text-align: center;"
+  .flex-row.content
+    .flex-column.user-info
+      .card style="width: 100%"
+        .card-body style="display: flex; flex-direction: column; align-items: center;"
           = render partial: "application/usercard", locals: { user: @user, house: @house }
           p Joined #{@user.created_at.strftime("%B %d, %Y")}
-          - if logged_in_as_user(@user)
-            br
-            a.btn.btn-primary href="#{edit_user_path(@user)}" style="margin-bottom: 8px;"
-              span.fa.fa-edit
-              |  Edit Profile
-          br
-          = render partial: "application/follower_button", locals: {user: @user}
+          .flex-row.user-buttons
+            - if logged_in_as_user(@user)
+              a.btn.btn-primary href="#{edit_user_path(@user)}"
+                .fa.fa-edit
+                | Edit Profile
+            = render partial: "application/follower_button", locals: { user: @user } 
+            a.btn.btn-primary href="#{@user.id}/submissions"
+              i.fa.fa-picture-o aria-hidden="true"
+              |  View Gallery
+      .card style="width: 100%"
+        .card-header
+          b About
+        .card-body.user-bio
+          - if @user.bio.nil?
+            p This user hasn't written a bio
+          -else
+            = simple_format(@user.link_form)
 
-      - unless @ban.nil?
-        .card class="alert alert-danger" style="padding: 0px;"
-          .card-body style="text-align: center;" 
-            b Banned until #{date_string_short(@ban.expiration)}
-            br
-            | Ban Reason: #{@ban.reason}
-
-      - if logged_in_as_moderator && !@user.marked_for_death
+    .flex-column.user-submissions
+      - @submissions.each do |submission|
         .card
-          .card-header style="text-align: center;"
-            b Moderation
-          
-          .card-body style="text-align: center;"
-            = form_with url: "#{user_path(@user)}/mod_action" do |f|
-              = f.text_field :reason, placeholder: "Reason", required: true
-              - unless @user.approved
-                = f.button "Approve User", name: 'approve', class:"btn btn-success", style: "margin-top: 5px;"
-                br
-              - unless @ban.nil? || @user.marked_for_death
-                = f.button "Lift Ban", name: 'lift_ban', class:"btn btn-success", style: "margin-top: 5px;"
-                br
-              - unless @user.marked_for_death
-                b Ban User
-                br
-                = f.button "Week", name: 'ban', value: '8', class: 'btn btn-sm btn-danger', style: "margin-top: 5px;"
-                = f.button "Two Weeks", name: 'ban', value: '15', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
-                = f.button "Month", name: 'ban', value: '31', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
-                = f.button "Season", name: 'ban', value: '91', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
-                = f.button "Half Year", name: 'ban', value: '183', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
-                = f.button "Year", name: 'ban', value: '366', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
-                = f.button "Permanent", name: 'ban', value: '99999', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
-                br
-                = f.button "Mark For Death", name: 'mark_for_death', data: { confirm: 'Are you sure? Only the admin can reverse this action!' }, class:"btn btn-dark", style: "margin-top: 5px;"
+          .card-header style="text-align:center"
+            b #{submission.display_title}
+          .card-body style="text-align:center"
+            p.card-text
+              = image_tag submission.drawing.url, style: "max-width: 100%; max-height: 600px; cursor: zoom-in;", alt: "#{submission.display_title}", id: "submissionImage"
+            p.card-text
+              = simple_format(submission.link_form)
 
-    .col-lg-8
-      - if logged_in_as_moderator && @all_bans.count.positive?
-        .card
-          .card-header style="color: red;"
-            b Ban History
-
-          .card-body
-            table.table 
-              thead
-                tr
-                  th scope="col" Start
-                  th scope="col" Expiration
-                  th scope="col" Reason
-              tbody
-                - @all_bans.each do |ban|
-                  tr
-                    td = date_string_short(ban.created_at)
-                    td = date_string_short(ban.expiration)
-                    td = ban.reason
+    - if logged_in_as_moderator && !@user.marked_for_death
+      .flex-column.moderation
 
       .card
-        .card-header
-          b Badges Awarded
+        .card-header style="text-align: center;"
+          b Moderation
 
-        .card-body
-          p.card-text
-            - @awards.each do |award|
-              - badge = award.badge
-              - badgeURL = safe_badge_avatar(badge)
-              = link_to image_tag(badgeURL, class: "prestige#{award.prestige}", data: {content: "<p style='font-weight: 600;'>#{award.badge.name}</p>#{simple_format(BadgeMap.find_by({badge_id: award.badge.id, prestige: award.prestige}).description)} (Prestige Level: #{award.prestige})", trigger: "hover", toggle: "popover", placement: "top", html: "true", alt: "#{award.badge.name}" }), challenge_path(badge.challenge_id) 
-            - if @awards.blank?
-              | No badges awarded yet!
-
-      .card
-        .card-header
-          b Latest Submissions
-          a.btn.btn-primary style="float: right; margin-top: -0.25rem; margin-bottom: -0.5rem;" href="#{@user.id}/submissions"
-            i.fa.fa-picture-o aria-hidden="true"
-            |  Show All Submissions
-
-        .card-body
-          p.card-text
-            - @submissions.each do |submission|
-              - submissionUrl = safe_submission_avatar(submission)
-              = link_to image_tag(submissionUrl, alt: "#{submission.display_title}", width: '60px', height: '60px'), url_for({controller: 'submissions', action: 'show', id: submission.id})
-
-    .col-lg-1
+        .card-body style="text-align: center;"
+          = form_with url: "#{user_path(@user)}/mod_action" do |f|
+            = f.text_field :reason, placeholder: "Reason", required: true
+            - unless @user.approved
+              = f.button "Approve User", name: 'approve', class: "btn btn-success", style: "margin-top: 5px;"
+              br
+            - unless @ban.nil? || @user.marked_for_death
+              = f.button "Lift Ban", name: 'lift_ban', class: "btn btn-success", style: "margin-top: 5px;"
+              br
+            - unless @user.marked_for_death
+              b Ban User
+              br
+              = f.button "Week", name: 'ban', value: '8', class: 'btn btn-sm btn-danger', style: "margin-top: 5px;"
+              = f.button "Two Weeks", name: 'ban', value: '15', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+              = f.button "Month", name: 'ban', value: '31', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+              = f.button "Season", name: 'ban', value: '91', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+              = f.button "Half Year", name: 'ban', value: '183', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+              = f.button "Year", name: 'ban', value: '366', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+              = f.button "Permanent", name: 'ban', value: '99999', class: 'btn btn-sm btn-danger', style: "margin-left: 5px; margin-top: 5px;"
+              br
+              = f.button "Mark For Death", name: 'mark_for_death', data: { confirm: 'Are you sure? Only the admin can reverse this action!' }, class: "btn btn-dark", style: "margin-top: 5px;"
