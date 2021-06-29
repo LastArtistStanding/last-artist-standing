@@ -17,8 +17,9 @@ You will need to install this software to build and run the site:
 * Ruby 2.6.5
 * Bundler
 * PostgreSQL
-* ImageMagick
 * `libpq-dev`
+* ImageMagick
+* NodeJS
 
 You will need to install Ruby 2.6.5. The easiest way to do this with [RVM](https://rvm.io/), the Ruby Version Manager.
 
@@ -39,8 +40,9 @@ $ rvm --default use 2.6.5
 
 Next, install Bundler: `gem install bundler`.
 
-Finally, you will need to set up PostgreSQL.
-On Debian derivatives, simply `apt install postgresql`.
+The remaining dependencies do not need anything special.
+On Debian derivatives, the you can just use APT:
+`apt install postgresql libpq-dev imagemagick nodejs`
 
 ### Installing and Configuring
 Throughout this process, you may need to set environment variables.
@@ -91,7 +93,7 @@ Next, [create an access key for your user account](https://docs.aws.amazon.com/g
 Set your AWS access keys and S3 bucket ID in environment variables or in your `.env` file:
 
 ```properties
-AWS_ACCESS_KEY=<your access key>
+AWS_ACCESS_KEY_ID=<your access key>
 AWS_SECRET_ACCESS_KEY=<your secret access key>
 AWS_S3_BUCKET=<your bucket id>
 AWS_REGION=<the region your bucket is in, or us-east-2 by default>
