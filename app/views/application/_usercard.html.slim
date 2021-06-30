@@ -1,12 +1,15 @@
-div class="avatarWithName #{'moderator' if user.is_moderator} #{'administrator' if user.is_admin}"
+div class="avatarWithName #{'moderator' if user.is_moderator} #{'administrator' if user.is_admin} #{'developer' if user.is_developer}"
   .avatarUserName
     = user.username
     br
-      - if user.is_moderator
-        span style="font-size: 10px;" Moderator
+      - if user.is_admin
+        span style="font-size: 10px" Administrator
         br
-      - elsif user.is_admin
-        span style="font-size: 10px;" Administrator
+      - elsif user.is_moderator
+        span style="font-size: 10px" Moderator
+        br
+      - elsif user.is_developer
+        span style="font-size: 10px" Developer
         br
       - if house.present?
         span style="font-size: 10px" of #{house.house_name}
