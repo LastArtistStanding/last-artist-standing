@@ -200,6 +200,21 @@ class User < ApplicationRecord
      challenges. Please wait until they are completed before you create another."]
   end
 
+  def has_clearance?(permission_level)
+    case permission_level
+    when 2
+      is_moderator || is_admin
+    when 3
+      is_admin
+    when 4
+      is_developer || is_admin
+    when 5
+      is_developer || is_moderator || is_admin
+    else
+      true
+    end
+  end
+
   def submission_limit
     max_dad_level = highest_level
     return 1 if max_dad_level.zero?
