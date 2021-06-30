@@ -209,12 +209,12 @@ p {
 
     margin: 5px;
 
-    &.moderator {
-      background: #36458a;
-    }
-
     &.developer {
       background: #02690c;
+    }
+
+    &.moderator {
+      background: #36458a;
     }
 
     &.administrator {
@@ -249,12 +249,12 @@ p {
   background: #515d68;
   z-index: 1;
 
-  &.moderator {
-    background: #36458a;
-  }
-
   &.developer {
     background: #02690c;
+  }
+
+  &.moderator {
+    background: #36458a;
   }
 
   &.administrator {
