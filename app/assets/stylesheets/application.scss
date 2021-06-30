@@ -196,7 +196,7 @@ p {
 
 @media only screen and (max-width:620px)  {
   .container-fluid.mainPageSplash {
-  max-width:100%;
+    max-width:100%;
   }
 
   .page_info {
@@ -205,13 +205,13 @@ p {
 
   .avatarWithName {
     display: inline-block;
-    position: relative;
     width: 100%;
 
     margin: 5px;
-    border-radius: 10px;
-    background: #515d68;
-    z-index: 1;
+
+    &.developer {
+      background: #02690c;
+    }
 
     &.moderator {
       background: #36458a;
@@ -221,7 +221,6 @@ p {
       background: #8a4536;
     }
   }
-
 }
 
 .unselectable {
@@ -249,6 +248,10 @@ p {
   border-radius: 10px;
   background: #515d68;
   z-index: 1;
+
+  &.developer {
+    background: #02690c;
+  }
 
   &.moderator {
     background: #36458a;
@@ -607,4 +610,3 @@ p {
     margin: 1em 0px;
   }
 }
-
