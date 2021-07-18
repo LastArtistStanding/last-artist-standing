@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  get 'leaving_dad' => 'leaving_dad#index'
   root 'pages#home'
   get '/login' => 'sessions#new'
   post '/login' => 'sessions#create'

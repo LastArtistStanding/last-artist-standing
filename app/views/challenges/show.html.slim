@@ -30,7 +30,7 @@
 
               .form-group.row
                 .col-3 = label_tag :description
-                .col-9 = html_escape(@challenge.description).html_safe
+                .col-9 = simple_format(@challenge.link_form)
 
               .form-group.row
                 .col-3 = label_tag :nsfw_level

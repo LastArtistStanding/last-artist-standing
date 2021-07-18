@@ -2,6 +2,8 @@
 
 # Represents a challenge on the website.
 class Challenge < ApplicationRecord
+  include MarkdownHelper
+
   has_many :badge_maps, dependent: :destroy
   has_many :participations, dependent: :destroy
   has_many :notifications, as: :source, dependent: :destroy
@@ -27,6 +29,10 @@ class Challenge < ApplicationRecord
                                                             less_than_or_equal_to: 7 }
 
   validate :end_date_cannot_precede_start_date
+
+  def link_form
+    render_markdown(description)
+  end
 
   def can_delete?
     Time.now.utc.to_date < start_date

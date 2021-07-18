@@ -112,7 +112,7 @@ javascript:
           div style="width: 100%;"
             = image_tag @submission.drawing.url, style: "max-width: 100%; max-height: 600px; cursor: zoom-in;", alt: "#{@submission.display_title}", id: "submissionImage"
           br
-          = html_escape(@submission.display_description.dup).html_safe
+          = simple_format(@submission.link_form)
 
       .row
         .col-md-3
