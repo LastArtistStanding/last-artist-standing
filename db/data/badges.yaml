@@ -40,3 +40,6 @@ Badge13:
 Badge14:
     name: "Spring 2021 Participation Badge"
     direct_image: "https://do-art-daily-public.s3.us-east-2.amazonaws.com/Spring+Badge+2021.png"
+Badge15:
+    name: "Summer 2021 Participation Badge"
+    direct_image: "https://do-art-daily-public.s3.us-east-2.amazonaws.com/Summer+Badge+2021.png"
