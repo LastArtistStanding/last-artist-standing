@@ -145,20 +145,20 @@ class ChallengesController < ApplicationController
     failure = false
 
     respond_to do |format|
-      newChallenge = Challenge.new(allowed_challenge_params)
+      new_challenge = Challenge.new(allowed_challenge_params)
       newBadgeMap = BadgeMap.new(allowed_badge_map_params)
 
       # specialized checks
-      if Date.current < @challenge.start_date && newChallenge.start_date - Date.today < 7
+      if Date.current < @challenge.start_date && new_challenge.start_date - Date.today < 7
         @challenge.errors.add(:start_date, ' should be at least a week out from today. Allow people to have sufficient advance notice to join!')
         failure = true
       end
-      if newChallenge.streak_based && newChallenge.postfrequency == 0
+      if new_challenge.streak_based && new_challenge.postfrequency == 0
         @challenge.errors.add(:streak_based, " challenges cannot have a post frequency of 'None'.")
         failure = true
       end
-      if newChallenge.postfrequency != 0 && newBadgeMap.required_score.present?
-        possibleScore = ((newChallenge.end_date - newChallenge.start_date) / newChallenge.postfrequency).to_i
+      if new_challenge.postfrequency != 0 && newBadgeMap.required_score.present?
+        possibleScore = ((new_challenge.end_date - new_challenge.start_date) / new_challenge.postfrequency).to_i
         if newBadgeMap.required_score > possibleScore
           @badge_map.errors.add(:required_score, " is impossible to achieve within the dates and post frequency specified (only #{possibleScore} submissions possible).")
           failure = true
