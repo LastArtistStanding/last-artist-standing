@@ -174,7 +174,7 @@
               <br><br>
               <b><%= p.challenge.name %></b><br>
               <% if p.challenge.postfrequency == 0 %>
-                <% if p.challenge.end_date == Time.now.utc.tomorrow.beginning_of_day && p.challenge.challenge_entries.count < p.challenge.badge_maps.first.required_score %>
+                <% if p.challenge.end_date == Time.now.utc.to_date && p.challenge.challenge_entries.count < p.challenge.badge_maps.first.required_score %>
                   <span class="streakDanger">You must meet the submission count requirement the end of the day: <%= p.challenge.end_date.strftime("%a, %d %b %Y") %></span>
                 <% elsif p.challenge.challenge_entries.count >= p.challenge.badge_maps.first.required_score %>
                   <span class="streakSafe">You have met the submission count requirement.</span><br>
