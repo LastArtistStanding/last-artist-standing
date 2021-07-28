@@ -244,12 +244,18 @@ namespace :dad_tasks do
       (1..3).each do |i|
         House.create(
           house_name: "House #{i}",
-          house_start: Time.now.utc.at_beginning_of_month.to_date,
+          house_start: Time.now.utc.at_beginning_of_month.to_date
         )
       end
     end
 
-    # STEP 7: Now that the daily job is complete, update.
+    # STEP 8 Update any users that are not approved at level 3
+    User.where('highest_level >= 3 AND approved = false').each do |u|
+      u.approve("User #{u.name} (id=#{u.id}) was automatically approved for reaching level"\
+                " #{u.highest_level}.", User.where(is_admin: true).first)
+    end
+
+    # STEP 9: Now that the daily job is complete, update.
     SiteStatus.first.update_attribute(:current_rollover, today)
   end
 
