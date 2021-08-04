@@ -169,8 +169,8 @@ class ChallengesController < ApplicationController
       badge_params[:nsfw_level] = allowed_challenge_params[:nsfw_level] || @challenge.nsfw_level
 
       if !failure && @challenge.update(allowed_challenge_params) && @badge.update(badge_params) && @badge_map.update(allowed_badge_map_params)
-        Participations.where(challenge_id: @challenge.id).update_all(start_date: new_challenge.start_date)
-        Participations.where(challenge_id: @challenge.id).update_all(end_date: new_challenge.end_date)
+        Participation.where(challenge_id: @challenge.id).update_all(start_date: new_challenge.start_date)
+        Participation.where(challenge_id: @challenge.id).update_all(end_date: new_challenge.end_date)
         format.html { redirect_to @challenge }
       else
         format.html { render :edit }
