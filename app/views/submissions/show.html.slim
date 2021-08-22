@@ -84,10 +84,13 @@ javascript:
 
           .card-body style="text-align: center;"
             = form_with url: "#{submission_path(@submission)}/mod_action" do |f|
+              = f.button @submission.approved ? "Disapprove" : "Approve", name: 'toggle_approve', class: "btn #{@submission.approved ? 'btn-warning' : 'btn-success'}", style: "margin-bottom: 5px;"
+              - if !@submission.approved?
+                = f.button "Approve/Next", name: 'toggle_approve', class: "btn btn-success", style: "margin-bottom: 5px; margin-left: 5px", value: "next"
+            = form_with url: "#{submission_path(@submission)}/mod_action" do |f|
               = f.text_field :reason, placeholder: "Reason", required: true
-              = f.button @submission.approved ? "Disapprove" : "Approve", name: 'toggle_approve', class: "btn #{@submission.approved ? 'btn-warning' : 'btn-success'}", style: "margin-top: 5px;"
               br
-              = f.button @submission.soft_deleted ? "Undo Soft Delete" : "Soft Delete", name: 'toggle_soft_delete', class: "btn #{@submission.soft_deleted ? 'btn-success' : 'btn-danger'}", style: "margin-top: 5px;"
+              = f.button @submission.soft_deleted ? "Undo Soft Delete" : "Soft Delete", name: 'toggle_soft_delete', class: "btn #{@submission.soft_deleted ? 'btn-success' : 'btn-danger'}"
               br
               b Change Content Level
               br
