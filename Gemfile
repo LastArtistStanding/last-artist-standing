@@ -6,7 +6,7 @@ source 'https://rubygems.org'
 ruby '2.6.5'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '>= 6.1.4.1'
+gem 'rails', '>= 6.0.3.4'
 # Use Rails controller testing for testing stability and error-proneness of site.
 gem 'rails-controller-testing'
 # Use bcrypt for Password hashing to protect against attackers
@@ -83,7 +83,7 @@ end
 
 group :production do
   # "[...] configures Rails for CloudFlare so that request.remote_ip [... works] correctly."
-  gem 'cloudflare-rails', '~> 2.2.0'
+  gem 'cloudflare-rails', '~> 0.6.0'
   gem 'rails_12factor'
 end
 
@@ -100,4 +100,3 @@ gem 'nokogiri', '>= 1.10.9', '< 2.0'
 gem 'rack', '>= 2.2.3'
 gem 'sentry-raven'
 gem 'slim-rails'
-gem 'addressable', '>= 2.8.0'
