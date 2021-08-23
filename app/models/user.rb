@@ -201,18 +201,20 @@ class User < ApplicationRecord
   end
 
   def has_clearance?(permission_level)
-    case permission_level
-    when 2
-      is_moderator || is_admin
-    when 3
-      is_admin
-    when 4
-      is_developer || is_admin
-    when 5
-      is_developer || is_moderator || is_admin
-    else
-      true
-    end
+    # for each group (devs, mods, admins) there is a bit in the permission_level
+    # indicating whether that group has clearance.
+    # a user has clearance if they are a member of any of the groups which has clearance.
+    # if all bits are set, then everyone has clearance (including users not in any group);
+    # if no bits are set, then no-one has clearance.
+    everyone_clearance = permission_level == ~0
+    admin_clearance    = permission_level.anybits?(1 << 0)
+    mod_clearance      = permission_level.anybits?(1 << 1)
+    dev_clearance      = permission_level.anybits?(1 << 2)
+
+    everyone_clearance ||
+      (is_developer && dev_clearance) ||
+      (is_moderator && mod_clearance) ||
+      (is_admin     && admin_clearance)
   end
 
   def submission_limit
