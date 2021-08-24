@@ -19,29 +19,19 @@
 @import 'users';
 @import 'houses';
 @import 'submissions';
+@import 'leaving_dad';
 
 html, body {
   height: 100%;
 }
 
 blockquote {
-  background: #f9f9f9;
-  border-left: 10px solid #ccc;
-  margin: 1.5em 10px;
-  padding: 0.5em 10px;
+  margin: 0;
+  color: #789922;
 }
 
-blockquote:before {
-  color: #ccc;
-  content:"\201C";
-  font-size: 4em;
-  line-height: 0.1em;
-  margin-right: 0.25em;
-  vertical-align: -0.4em;
-}
-
-blockquote p {
-  display: inline;
+blockquote > br {
+  display: none;
 }
 
 body {
@@ -206,7 +196,7 @@ p {
 
 @media only screen and (max-width:620px)  {
   .container-fluid.mainPageSplash {
-  max-width:100%;
+    max-width:100%;
   }
 
   .page_info {
@@ -215,13 +205,13 @@ p {
 
   .avatarWithName {
     display: inline-block;
-    position: relative;
     width: 100%;
 
     margin: 5px;
-    border-radius: 10px;
-    background: #515d68;
-    z-index: 1;
+
+    &.developer {
+      background: #02690c;
+    }
 
     &.moderator {
       background: #36458a;
@@ -231,7 +221,6 @@ p {
       background: #8a4536;
     }
   }
-
 }
 
 .unselectable {
@@ -259,6 +248,10 @@ p {
   border-radius: 10px;
   background: #515d68;
   z-index: 1;
+
+  &.developer {
+    background: #02690c;
+  }
 
   &.moderator {
     background: #36458a;
@@ -617,4 +610,3 @@ p {
     margin: 1em 0px;
   }
 }
-

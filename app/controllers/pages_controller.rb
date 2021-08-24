@@ -45,8 +45,8 @@ class PagesController < ApplicationController
 
     @unapproved_users = []
     unapproved_users_objs.each do |user|
-      days_posted = user.participations.includes(:challenge).where({ challenges: { seasonal: true } }).sum(:score)
-      @unapproved_users.push({ user: user, seasonal_score: days_posted }) if days_posted >= 7
+      days_posted = user.participations.includes(:challenge).where({challenges: { seasonal: true }}).sum(:score)
+      @unapproved_users.push({user: user, seasonal_score: days_posted}) if days_posted >= 10
     end
   end
 

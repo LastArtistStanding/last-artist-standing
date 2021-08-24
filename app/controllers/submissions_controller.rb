@@ -187,21 +187,32 @@ class SubmissionsController < ApplicationController
 
   # POST
   def mod_action
-    if params.key?(:reason) && params[:reason].present?
-      if params.key? :toggle_soft_delete
+    redirect_target = @submission
+
+    if params.has_key? :toggle_approve
+      @submission.approved = !@submission.approved
+        ModeratorLog.create(user_id: current_user.id,
+                            target: @submission,
+                            action: "#{current_user.username} has #{@submission.approved ? 'approved' : 'disapproved'} #{@submission.display_title} by #{@submission.user.username}.",
+                            reason: params[:reason])
+
+      if params[:toggle_approve] == "next"
+        redirect_target = unapproved_submissions.where.not(id: @submission.id).order("submissions.created_at ASC").first
+
+        if redirect_target.nil?
+          flash[:success] = "No more submissions to approve! Great work!"
+          redirect_target = moderation_path
+        end
+      end
+    elsif params.has_key?(:reason) && params[:reason].present?
+      if params.has_key? :toggle_soft_delete
         @submission.soft_deleted = !@submission.soft_deleted
         @submission.soft_deleted_by = current_user.id if @submission.soft_deleted
         ModeratorLog.create(user_id: current_user.id,
                             target: @submission,
                             action: "#{current_user.username} has #{@submission.soft_deleted ? 'soft deleted' : 'reverted soft deletion on'} #{@submission.display_title} by #{@submission.user.username}.",
                             reason: params[:reason])
-      elsif params.key? :toggle_approve
-        @submission.approved = !@submission.approved
-        ModeratorLog.create(user_id: current_user.id,
-                            target: @submission,
-                            action: "#{current_user.username} has #{@submission.approved ? 'approved' : 'disapproved'} #{@submission.display_title} by #{@submission.user.username}.",
-                            reason: params[:reason])
-      elsif params.key? :change_nsfw
+      elsif params.has_key? :change_nsfw
         @submission.nsfw_level = params[:change_nsfw].to_i
         ModeratorLog.create(user_id: current_user.id,
                             target: @submission,
@@ -226,10 +237,11 @@ class SubmissionsController < ApplicationController
           log.reason = params[:reason]
         end
       end
-      @submission.save
     end
 
-    redirect_to @submission
+    @submission.save
+
+    redirect_to redirect_target
   end
 
   private
