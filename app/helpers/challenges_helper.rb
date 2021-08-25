@@ -30,7 +30,8 @@ module ChallengesHelper
     return 0 if user.nil?
 
     participation = if active
-                      Participation.find_by(user_id: user.id, challenge_id: challenge.id, active: true)
+                      Participation.find_by(user_id: user.id, challenge_id: challenge.id,
+                                            active: true)
                     else
                       Participation.find_by(user_id: user.id, challenge_id: challenge.id)
                     end

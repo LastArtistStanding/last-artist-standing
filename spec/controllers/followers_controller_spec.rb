@@ -5,7 +5,7 @@ describe FollowersController do
 
   before do
     (1..2).each_with_index do |_, i|
-      users.push(create(:user, name: i.to_s, email: i.to_s + '@test.com'))
+      users.push(create(:user, name: i.to_s, email: "#{i}@test.com"))
     end
   end
 

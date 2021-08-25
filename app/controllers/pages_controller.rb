@@ -17,14 +17,19 @@ class PagesController < ApplicationController
     @forum_activity = forum_activity_rows
 
     # All lists to be displayed in home
-    @latest_awards = Award.where('date_received = ? AND badge_id <> 1', Date.today).order('prestige DESC, badge_id DESC').includes(:user)
-    @level_ups = Award.where('date_received = ? AND badge_id = 1', Date.today).order('prestige DESC').includes(:user)
-    @latest_eliminations = Participation.where('challenge_id = 1 AND eliminated AND end_date = ?', (Date.current - 1.day)).order('score DESC').includes(:user)
-    @seasonal_leaderboard = Participation.where('challenge_id = ?', @seasonal_challenge.id).order('score DESC').includes(:user)
+    @latest_awards = Award.where('date_received = ? AND badge_id <> 1',
+                                 Date.today).order('prestige DESC, badge_id DESC').includes(:user)
+    @level_ups = Award.where('date_received = ? AND badge_id = 1',
+                             Date.today).order('prestige DESC').includes(:user)
+    @latest_eliminations = Participation.where('challenge_id = 1 AND eliminated AND end_date = ?',
+                                               (Date.current - 1.day)).order('score DESC').includes(:user)
+    @seasonal_leaderboard = Participation.where('challenge_id = ?',
+                                                @seasonal_challenge.id).order('score DESC').includes(:user)
 
     if logged_in?
       @participations = Participation.includes(challenge: [:challenge_entries])
-                                     .where(participations: { user_id: current_user&.id, active: true }, challenges: { seasonal: false })
+                                     .where(participations: { user_id: current_user&.id,
+                                                              active: true }, challenges: { seasonal: false })
                                      .where.not(challenges: { id: 1 })
     end
   end
@@ -33,7 +38,8 @@ class PagesController < ApplicationController
 
   def news
     @latest_patch_note = PatchNote.last
-    @latest_patch_entries = PatchEntry.where('patchnote_id = ?', @latest_patch_note.id).order('importance DESC')
+    @latest_patch_entries = PatchEntry.where('patchnote_id = ?',
+                                             @latest_patch_note.id).order('importance DESC')
   end
 
   def moderation
@@ -60,7 +66,7 @@ class PagesController < ApplicationController
                            'Anonymous'
                          else
                            (r.display_name.presence || r.name)
-end, r.type, r.sub_id, r.title),
+                         end, r.type, r.sub_id, r.title),
         link: link(r.id, r.type, r.sub_id)
       }
     end
@@ -81,9 +87,7 @@ end, r.type, r.sub_id, r.title),
     preloader.preload(forum_posts.select { |p| p.source_type == 'Discussion' }, source: [:board])
 
     forum_activity = discussion_posts + forum_posts
-    forum_activity = forum_activity.sort_by(&:created_at).reverse!.first(10)
-
-    forum_activity
+    forum_activity.sort_by(&:created_at).reverse!.first(10)
   end
 
   # returns the sql string used to get the recent challenges

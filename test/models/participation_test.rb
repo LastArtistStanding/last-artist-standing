@@ -5,7 +5,8 @@ require 'date'
 
 class ParticipationTest < ActiveSupport::TestCase
   def setup
-    @participation = Participation.new(user_id: 1, challenge_id: 1, score: 1, start_date: Date.new(2000, 1, 1))
+    @participation = Participation.new(user_id: 1, challenge_id: 1, score: 1,
+                                       start_date: Date.new(2000, 1, 1))
   end
 
   # VALID CASE

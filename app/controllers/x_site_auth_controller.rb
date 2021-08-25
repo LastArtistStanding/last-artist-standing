@@ -57,7 +57,7 @@ class XSiteAuthController < ApplicationController
     # (e.g. the user logged in elsewhere and it got reset).
     set_x_site_auth_code_cookie
 
-    redirect_to @return_to.to_s, status: 303
+    redirect_to @return_to.to_s, status: :see_other
   end
 
   # Generate a signed JWT token that the user can use to prove who they are.

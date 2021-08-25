@@ -5,7 +5,8 @@ require 'date'
 
 class ChallengeTest < ActiveSupport::TestCase
   def setup
-    @challenge = Challenge.new(name: 'Challenge', description: 'This is a challenge.', start_date: Date.new(2000, 1, 1), streak_based: false, rejoinable: false, postfrequency: 0)
+    @challenge = Challenge.new(name: 'Challenge', description: 'This is a challenge.',
+                               start_date: Date.new(2000, 1, 1), streak_based: false, rejoinable: false, postfrequency: 0)
   end
 
   # VALID CASE

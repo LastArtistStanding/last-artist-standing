@@ -35,7 +35,8 @@ class UsersController < ApplicationController
     @submissions = base_submissions.where(user_id: @user.id).order('submissions.created_at DESC').limit(10)
     @ban = SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{@user.id}")
     @all_bans = SiteBan.where(user_id: @user.id)
-    @house = @user.house_participations.where('join_date >=  ?', Time.now.utc.at_beginning_of_month.to_date).first&.house
+    @house = @user.house_participations.where('join_date >=  ?',
+                                              Time.now.utc.at_beginning_of_month.to_date).first&.house
   end
 
   def new
@@ -130,11 +131,13 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation, :avatar, :nsfw_level)
+    params.require(:user).permit(:name, :email, :password, :password_confirmation, :avatar,
+                                 :nsfw_level)
   end
 
   def user_edit_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation, :avatar, :nsfw_level, :display_name)
+    params.require(:user).permit(:name, :email, :password, :password_confirmation, :avatar,
+                                 :nsfw_level, :display_name)
   end
 
   def ensure_registration_open

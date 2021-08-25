@@ -82,7 +82,7 @@ class BadgeMapTest < ActiveSupport::TestCase
   test 'badge_id, challenge_id and prestige combination should be unique' do
     duplicate_badge_map = @badge_map.dup
     duplicate_badge_map.required_score = @badge_map.required_score + 1
-    duplicate_badge_map.description = @badge_map.description + 'a'
+    duplicate_badge_map.description = "#{@badge_map.description}a"
     @badge_map.save
     assert_not duplicate_badge_map.valid?
   end

@@ -6,12 +6,14 @@ require 'rails/test_help'
 
 FactoryBot.find_definitions
 
-class ActiveSupport::TestCase
-  include FactoryBot::Syntax::Methods
+module ActiveSupport
+  class TestCase
+    include FactoryBot::Syntax::Methods
 
-  fixtures :all
+    fixtures :all
 
-  def logged_in?
-    !session[:user_id].nil?
+    def logged_in?
+      !session[:user_id].nil?
+    end
   end
 end

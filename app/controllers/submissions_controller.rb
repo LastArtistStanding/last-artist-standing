@@ -30,21 +30,25 @@ class SubmissionsController < ApplicationController
     end
 
     @challenge_entries = ChallengeEntry.where(submission_id: @submission.id)
-    @house = @submission.user.house_participations.where('join_date >=  ?', Time.now.utc.at_beginning_of_month.to_date).first&.house
+    @house = @submission.user.house_participations.where('join_date >=  ?',
+                                                         Time.now.utc.at_beginning_of_month.to_date).first&.house
   end
 
   # GET /submissions/new
   def new
     @submission = Submission.new
-    @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
+    @participations = Participation.where({ user_id: current_user.id,
+                                            active: true }).order('challenge_id ASC')
     # Inform the user of their houses score (if they are participating)
-    @house_participations = current_user.house_participations.where('join_date >=  ?', Time.now.utc.at_beginning_of_month.to_date).first
+    @house_participations = current_user.house_participations.where('join_date >=  ?',
+                                                                    Time.now.utc.at_beginning_of_month.to_date).first
     @time = @house_participations&.score || 0
   end
 
   # GET /submissions/1/edit
   def edit
-    @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
+    @participations = Participation.where({ user_id: current_user.id,
+                                            active: true }).order('challenge_id ASC')
   end
 
   # POST /submissions
@@ -56,7 +60,8 @@ class SubmissionsController < ApplicationController
     @submission.approved = current_user.approved
     artist_id = current_user.id
     @submission.user_id = artist_id
-    @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
+    @participations = Participation.where({ user_id: current_user.id,
+                                            active: true }).order('challenge_id ASC')
 
     respond_to do |format|
       if failure
@@ -78,19 +83,23 @@ class SubmissionsController < ApplicationController
         seasonalChallenge = Challenge.current_season
 
         # Add submission to DAD/Current Seasonal Challenge
-        dad_ce = ChallengeEntry.create({ challenge_id: 1, submission_id: @submission.id, user_id: artist_id })
+        dad_ce = ChallengeEntry.create({ challenge_id: 1, submission_id: @submission.id,
+                                         user_id: artist_id })
         dad_ce.created_at = initial_date_time
         dad_ce.save
-        season_ce = ChallengeEntry.create({ challenge_id: seasonalChallenge.id, submission_id: @submission.id, user_id: artist_id })
+        season_ce = ChallengeEntry.create({ challenge_id: seasonalChallenge.id,
+                                            submission_id: @submission.id, user_id: artist_id })
         season_ce.created_at = initial_date_time
         season_ce.save
 
         # Last, manage all custom challenge submissions selected (to do).
-        @participations = Participation.where({ user_id: artist_id, active: true }).order('challenge_id ASC')
+        @participations = Participation.where({ user_id: artist_id,
+                                                active: true }).order('challenge_id ASC')
         @participations.each do |p|
           next if params[p.challenge_id.to_s].blank?
 
-          ce = ChallengeEntry.create({ challenge_id: p.challenge_id, submission_id: @submission.id, user_id: artist_id })
+          ce = ChallengeEntry.create({ challenge_id: p.challenge_id, submission_id: @submission.id,
+                                       user_id: artist_id })
           ce.created_at = initial_date_time
           ce.save
         end
@@ -107,14 +116,15 @@ class SubmissionsController < ApplicationController
   # PATCH/PUT /submissions/1
   # PATCH/PUT /submissions/1.json
   def update
-    @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
+    @participations = Participation.where({ user_id: current_user.id,
+                                            active: true }).order('challenge_id ASC')
     curr_user_id = current_user.id
 
     used_params = if @submission.created_at.to_date == Time.now.utc.to_date
                     submission_params
                   else
                     limited_params
-                 end
+                  end
 
     # If the drawing itself was updated by an unapproved user, reset the approval.
     @submission.approved = current_user.approved if used_params.key? :drawing
@@ -145,10 +155,12 @@ class SubmissionsController < ApplicationController
           @participations.each do |p|
             next unless p.challenge_id != 1 && !p.challenge.seasonal
 
-            entry = ChallengeEntry.find_by({ challenge_id: p.challenge_id, submission_id: @submission.id, user_id: curr_user_id })
+            entry = ChallengeEntry.find_by({ challenge_id: p.challenge_id,
+                                             submission_id: @submission.id, user_id: curr_user_id })
             # If we selected the checkbox, check if an extry exists before creating it.
             if params[p.challenge_id.to_s].present? && entry.blank?
-              ChallengeEntry.create({ challenge_id: p.challenge_id, submission_id: @submission.id, user_id: curr_user_id })
+              ChallengeEntry.create({ challenge_id: p.challenge_id, submission_id: @submission.id,
+                                      user_id: curr_user_id })
             # If we unchecked the box, check if an entry doesn't exist before deleting it.
             elsif params[p.challenge_id.to_s].blank? && entry.present?
               entry.destroy

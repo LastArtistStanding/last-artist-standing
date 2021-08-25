@@ -24,7 +24,7 @@ class CommentsController < ApplicationController
     @comment.anonymous = false unless @target.allow_anon
 
     unless @comment.save
-      flash[:error] = 'Comment failed to post: ' + @comment.errors.full_messages.join(', ')
+      flash[:error] = "Comment failed to post: #{@comment.errors.full_messages.join(', ')}"
       redirect_back(fallback_location: '/')
       return
     end

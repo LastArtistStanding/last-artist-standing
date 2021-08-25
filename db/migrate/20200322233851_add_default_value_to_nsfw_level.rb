@@ -6,7 +6,7 @@ class AddDefaultValueToNsfwLevel < ActiveRecord::Migration[6.0]
     change_column_default :users, :nsfw_level, from: nil, to: 1
     change_column_default :submissions, :nsfw_level, from: nil, to: 1
 
-    # note: update_all is shunned by default rubocop, but it is much faster
+    # NOTE: update_all is shunned by default rubocop, but it is much faster
     User.where(nsfw_level: nil).update_all(nsfw_level: 1)
     Submission.where(nsfw_level: nil).update_all(nsfw_level: 1)
     Challenge.where(nsfw_level: nil).update_all(nsfw_level: 1)

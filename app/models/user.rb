@@ -26,7 +26,7 @@ class User < ApplicationRecord
   has_one :moderator_application
   has_many :house_participations, dependent: :nullify
   has_many :followers, class_name: 'Follower', foreign_key: 'following_id', dependent: :destroy
-  has_many :following, class_name: 'Follower', foreign_key: 'user_id', dependent: :destroy
+  has_many :following, class_name: 'Follower', dependent: :destroy
 
   before_save { self.email = email.downcase }
 

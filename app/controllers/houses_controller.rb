@@ -69,7 +69,7 @@ class HousesController < ApplicationController
   def sane_date
     return params[:date] unless params[:date].is_a?(ActionController::Parameters)
 
-    params[:date] = params[:date][:year] + '-' + params[:date][:month]
+    params[:date] = "#{params[:date][:year]}-#{params[:date][:month]}"
   end
 
   # @function log_update

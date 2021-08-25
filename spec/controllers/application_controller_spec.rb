@@ -2,6 +2,5 @@
 
 describe ApplicationController do
   it 'does thing' do
-
   end
 end

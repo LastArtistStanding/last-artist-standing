@@ -6,7 +6,8 @@ class Participation < ApplicationRecord
 
   validates :user_id, presence: true
   validates :challenge_id, presence: true
-  validates :score, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :score, presence: true,
+                    numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :start_date, presence: true
   validate :end_date_cannot_precede_start_date
 
