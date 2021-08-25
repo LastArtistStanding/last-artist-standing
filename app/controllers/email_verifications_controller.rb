@@ -92,8 +92,4 @@ class EmailVerificationsController < ApplicationController
       'Please re-check your inbox or wait a few minutes and try again.'
     render :new, status: :bad_request
   end
-
-  def dragon_attack
-    'Eat my fire breath, rubocop! GWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARGH!'
-  end
 end
