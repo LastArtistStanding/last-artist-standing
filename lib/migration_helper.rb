@@ -40,7 +40,8 @@ module MigrationHelper
     badgeMapData.each do |_currentBadgeMap, details|
       challenge = Challenge.find_by(name: details['challenge_name'])
       badge = Badge.find_by(name: details['badge_name'])
-      newBadgeMap = BadgeMap.find_or_create_by(badge_id: badge.id, prestige: details['prestige'], challenge_id: challenge.id)
+      newBadgeMap = BadgeMap.find_or_create_by(badge_id: badge.id, prestige: details['prestige'],
+                                               challenge_id: challenge.id)
       newBadgeMap.description = details['description']
       newBadgeMap.required_score = details['required_score']
       newBadgeMap.save
@@ -55,14 +56,16 @@ module MigrationHelper
       patchNote = PatchNote.find_by(patch: noteDetails['patch'])
       next if patchNote.present?
 
-      patchNote = PatchNote.create({ before: noteDetails['before'], after: noteDetails['after'], patch: noteDetails['patch'] })
+      patchNote = PatchNote.create({ before: noteDetails['before'], after: noteDetails['after'],
+                                     patch: noteDetails['patch'] })
       if PatchNote.column_names.include?('title')
         patchNote.title = noteDetails['title']
         patchNote.save
       end
       patchEntriesData.each do |_currentPatchEntry, entryDetails|
         if patchNote.id == entryDetails['patchnote_id']
-          PatchEntry.create({ patchnote_id: entryDetails['patchnote_id'], body: entryDetails['body'], importance: entryDetails['importance'] })
+          PatchEntry.create({ patchnote_id: entryDetails['patchnote_id'],
+                              body: entryDetails['body'], importance: entryDetails['importance'] })
         end
       end
     end

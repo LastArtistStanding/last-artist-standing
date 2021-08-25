@@ -9,11 +9,12 @@ class ImageUploader < CarrierWave::Uploader::Base
   # Override the directory where uploaded files will be stored.
   def store_dir
     # FIXME: This sort of instanceof dispatch isn't good OO practice.
-    if model.is_a? Submission
+    case model
+    when Submission
       "submissions/#{model.user.name}/#{mounted_as}/#{model.id}"
-    elsif model.is_a? Badge
+    when Badge
       "badges/#{model.id}/#{mounted_as}"
-    elsif model.is_a? User
+    when User
       "users/#{model.name}/#{mounted_as}"
     end
     # FIXME: There should probably be error handling for an undefined case.

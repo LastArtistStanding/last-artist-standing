@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddModerationToUser < ActiveRecord::Migration[6.0]
   def change
     add_column :users, :is_moderator, :boolean, null: false, default: false

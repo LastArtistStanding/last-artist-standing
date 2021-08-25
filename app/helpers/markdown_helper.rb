@@ -2,16 +2,15 @@
 
 # Helper class for parsing markdown
 module MarkdownHelper
-
   # Main render function
   # @param body - the body of text from the submission description, challenge description or comment
   # @return - The rendered HTML
   def render_markdown(body)
     return if body.nil?
-    
+
     html_renderer = Redcarpet::Render::HTML.new(escape_html: true, no_images: true)
     markdown = Redcarpet::Markdown
-                 .new(html_renderer, no_intra_emphasis: true, underline: true, autolink: true)
+               .new(html_renderer, no_intra_emphasis: true, underline: true, autolink: true)
 
     # swap out insert submission, challenge, comment quotes
     parse_comment_links(body)

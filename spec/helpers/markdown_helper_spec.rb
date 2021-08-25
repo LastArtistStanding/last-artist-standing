@@ -11,7 +11,6 @@
 #   end
 # end
 describe MarkdownHelper do
-
   context 'with parsing comment links' do
     it 'links to submission comments that exist' do
       com1 = create :comment, :submission_comment

@@ -21,6 +21,5 @@ FactoryBot.define do
     end
 
     body { 'Sample body' }
-
   end
 end

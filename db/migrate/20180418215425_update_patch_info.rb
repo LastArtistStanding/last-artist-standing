@@ -2,7 +2,7 @@
 
 require File.expand_path('lib/migration_helper')
 include MigrationHelper
-
+# Updates Patch Info
 class UpdatePatchInfo < ActiveRecord::Migration[5.0]
   def change
     updatePatchInfo

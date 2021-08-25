@@ -12,9 +12,12 @@ class ChallengesController < ApplicationController
   # GET /challenges
   # GET /challenges.json
   def index
-    @active_challenges = Challenge.where('start_date <= ? AND (end_date > ? OR end_date IS NULL)', Date.current, Date.current).order('start_date ASC, end_date DESC')
-    @upcoming_challenges = Challenge.where('start_date > ?', Date.current).order('start_date DESC, end_date DESC')
-    @completed_challenges = Challenge.where('end_date <= ?', Date.current).order('start_date DESC, end_date DESC')
+    @active_challenges = Challenge.where('start_date <= ? AND (end_date > ? OR end_date IS NULL)',
+                                         Date.current, Date.current).order('start_date ASC, end_date DESC')
+    @upcoming_challenges = Challenge.where('start_date > ?',
+                                           Date.current).order('start_date DESC, end_date DESC')
+    @completed_challenges = Challenge.where('end_date <= ?',
+                                            Date.current).order('start_date DESC, end_date DESC')
     unless logged_in_as_moderator
       @active_challenges = @active_challenges.where('soft_deleted = false')
       @upcoming_challenges = @upcoming_challenges.where('soft_deleted = false')
@@ -25,14 +28,16 @@ class ChallengesController < ApplicationController
   # GET
   def entries
     @entry_per_page = 25
-    @entries = base_submissions.includes(:challenge_entries).where("challenge_entries.challenge_id = #{@challenge.id}").order('challenge_entries.created_at DESC').paginate(page: params[:page], per_page: @entry_per_page)
+    @entries = base_submissions.includes(:challenge_entries).where("challenge_entries.challenge_id = #{@challenge.id}").order('challenge_entries.created_at DESC').paginate(
+      page: params[:page], per_page: @entry_per_page
+    )
   end
 
   # GET /challenge/1
   # GET /challenge/1.json
   def show
     if @challenge.soft_deleted && !logged_in_as_moderator
-      render_hidden("This challenge was hidden by moderation.")
+      render_hidden('This challenge was hidden by moderation.')
     end
 
     # You can't join or leave a challenge after the start date.
@@ -42,25 +47,33 @@ class ChallengesController < ApplicationController
         unless latest_ban.nil?
           render '/pages/banned', locals: { ban: latest_ban }, status: :forbidden
         end
-        Participation.find_or_create_by({ user_id: current_user.id, challenge_id: @challenge.id, score: 0, start_date: @challenge.start_date })
+        Participation.find_or_create_by({ user_id: current_user.id, challenge_id: @challenge.id,
+                                          score: 0, start_date: @challenge.start_date })
       end
 
       if params[:leave]
-        participation = Participation.find_by({ user_id: current_user.id, challenge_id: @challenge.id })
+        participation = Participation.find_by({ user_id: current_user.id,
+                                                challenge_id: @challenge.id })
         participation.destroy if participation.present?
       end
     end
 
     if Date.current >= @challenge.start_date && (@challenge.end_date.blank? || Date.current < @challenge.end_date)
-      @currentParticipants = Participation.where({ challenge_id: @challenge.id, active: true }).order('score DESC')
+      @currentParticipants = Participation.where({ challenge_id: @challenge.id,
+                                                   active: true }).order('score DESC')
     else
       @currentParticipants = Participation.where({ challenge_id: @challenge.id }).order('score DESC, created_at ASC')
     end
     if @challenge.streak_based
       if @challenge.id == 1
-        @latest_eliminations = Participation.where('challenge_id = 1 AND eliminated AND end_date <= :endDate AND end_date >= :startDate', {endDate: Date.current, startDate: (Date.current - 7.days) }).order('end_date DESC')
+        @latest_eliminations = Participation.where(
+          'challenge_id = 1 AND eliminated AND end_date <= :endDate AND end_date >= :startDate', {
+            endDate: Date.current, startDate: (Date.current - 7.days)
+          }
+        ).order('end_date DESC')
       else
-        @allEliminations = Participation.where({ challenge_id: @challenge.id, eliminated: true }).order('end_date DESC')
+        @allEliminations = Participation.where({ challenge_id: @challenge.id,
+                                                 eliminated: true }).order('end_date DESC')
       end
     end
   end
@@ -96,17 +109,19 @@ class ChallengesController < ApplicationController
 
       # specialized checks
       if @challenge.start_date - Date.today < 7
-        @challenge.errors.add(:start_date, ' should be at least a week out from today. Allow people to have sufficient advance notice to join!')
+        @challenge.errors.add(:start_date,
+                              ' should be at least a week out from today. Allow people to have sufficient advance notice to join!')
         failure = true
       end
-      if @challenge.streak_based && @challenge.postfrequency == 0
+      if @challenge.streak_based && @challenge.postfrequency.zero?
         @challenge.errors.add(:streak_based, " challenges cannot have a post frequency of 'None'.")
         failure = true
       end
       if @challenge.postfrequency != 0 && @badge_map.required_score.present?
         possibleScore = ((@challenge.end_date - @challenge.start_date) / @challenge.postfrequency).to_i
         if @badge_map.required_score > possibleScore
-          @badge_map.errors.add(:required_score, " is impossible to achieve within the dates and post frequency specified (only #{possibleScore} submissions possible).")
+          @badge_map.errors.add(:required_score,
+                                " is impossible to achieve within the dates and post frequency specified (only #{possibleScore} submissions possible).")
           failure = true
         end
       end
@@ -150,17 +165,19 @@ class ChallengesController < ApplicationController
 
       # specialized checks
       if Date.current < @challenge.start_date && new_challenge.start_date - Date.today < 7
-        @challenge.errors.add(:start_date, ' should be at least a week out from today. Allow people to have sufficient advance notice to join!')
+        @challenge.errors.add(:start_date,
+                              ' should be at least a week out from today. Allow people to have sufficient advance notice to join!')
         failure = true
       end
-      if new_challenge.streak_based && new_challenge.postfrequency == 0
+      if new_challenge.streak_based && new_challenge.postfrequency.zero?
         @challenge.errors.add(:streak_based, " challenges cannot have a post frequency of 'None'.")
         failure = true
       end
       if new_challenge.postfrequency != 0 && newBadgeMap.required_score.present?
         possibleScore = ((new_challenge.end_date - new_challenge.start_date) / new_challenge.postfrequency).to_i
         if newBadgeMap.required_score > possibleScore
-          @badge_map.errors.add(:required_score, " is impossible to achieve within the dates and post frequency specified (only #{possibleScore} submissions possible).")
+          @badge_map.errors.add(:required_score,
+                                " is impossible to achieve within the dates and post frequency specified (only #{possibleScore} submissions possible).")
           failure = true
         end
       end
@@ -191,26 +208,22 @@ class ChallengesController < ApplicationController
   # POST
   def mod_action
     # don't let mods mess with official site content
-    if @challenge.id != 1 && !@challenge.seasonal
-      if params.has_key?(:reason) && params[:reason].present?
-        if params.has_key? :toggle_soft_delete
-          @challenge.soft_deleted = !@challenge.soft_deleted
-          if @challenge.soft_deleted
-            @challenge.soft_deleted_by = current_user.id
-          end
-          ModeratorLog.create(user_id: current_user.id,
-                              target: @challenge,
-                              action: "#{current_user.username} has #{@challenge.soft_deleted ? 'soft deleted' : 'reverted soft deletion on'} #{@challenge.name} by #{@creator&.username}.",
-                              reason: params[:reason])
-        elsif params.has_key? :change_nsfw
-          @challenge.nsfw_level = params[:change_nsfw].to_i
-          ModeratorLog.create(user_id: current_user.id,
-                              target: @challenge,
-                              action: "#{current_user.username} has changed the content level of #{@challenge.name} by #{@creator&.username} to #{nsfw_string(@challenge.nsfw_level)}.",
-                              reason: params[:reason])
-        end
-        @challenge.save
+    if @challenge.id != 1 && !@challenge.seasonal && (params.key?(:reason) && params[:reason].present?)
+      if params.key? :toggle_soft_delete
+        @challenge.soft_deleted = !@challenge.soft_deleted
+        @challenge.soft_deleted_by = current_user.id if @challenge.soft_deleted
+        ModeratorLog.create(user_id: current_user.id,
+                            target: @challenge,
+                            action: "#{current_user.username} has #{@challenge.soft_deleted ? 'soft deleted' : 'reverted soft deletion on'} #{@challenge.name} by #{@creator&.username}.",
+                            reason: params[:reason])
+      elsif params.key? :change_nsfw
+        @challenge.nsfw_level = params[:change_nsfw].to_i
+        ModeratorLog.create(user_id: current_user.id,
+                            target: @challenge,
+                            action: "#{current_user.username} has changed the content level of #{@challenge.name} by #{@creator&.username} to #{nsfw_string(@challenge.nsfw_level)}.",
+                            reason: params[:reason])
       end
+      @challenge.save
     end
 
     redirect_to @challenge
@@ -232,7 +245,8 @@ class ChallengesController < ApplicationController
   end
 
   def allowed_challenge_params
-    params.require(:challenge).permit(:name, :description, :nsfw_level, :start_date, :end_date, :streak_based, :postfrequency)
+    params.require(:challenge).permit(:name, :description, :nsfw_level, :start_date, :end_date,
+                                      :streak_based, :postfrequency)
   end
 
   def allowed_badge_params

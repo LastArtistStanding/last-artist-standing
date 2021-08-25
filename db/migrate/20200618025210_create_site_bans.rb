@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateSiteBans < ActiveRecord::Migration[6.0]
   def change
     create_table :site_bans do |t|

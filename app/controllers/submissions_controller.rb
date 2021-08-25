@@ -14,37 +14,41 @@ class SubmissionsController < ApplicationController
   def index
     @date = Date.parse(params[:date] || Time.now.utc.strftime('%Y-%m-%d'))
     @submissions = bubble_followed_users(base_submissions)
-                     .includes(:user)
-                     .where(created_at: @date.midnight..@date.end_of_day)
-                     .order('submissions.created_at DESC')
+                   .includes(:user)
+                   .where(created_at: @date.midnight..@date.end_of_day)
+                   .order('submissions.created_at DESC')
   end
 
   # GET /submissions/1
   # GET /submissions/1.json
   def show
     if @submission.soft_deleted && !logged_in_as_moderator
-      render_hidden("This submission was hidden by moderation.")
+      render_hidden('This submission was hidden by moderation.')
     end
     unless @submission.approved || (logged_in_as_moderator || @submission.user_id == current_user&.id)
-      render_hidden("This submission has not been approved by moderation yet.")
+      render_hidden('This submission has not been approved by moderation yet.')
     end
 
     @challenge_entries = ChallengeEntry.where(submission_id: @submission.id)
-    @house = @submission.user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date).first&.house
+    @house = @submission.user.house_participations.where('join_date >=  ?',
+                                                         Time.now.utc.at_beginning_of_month.to_date).first&.house
   end
 
   # GET /submissions/new
   def new
     @submission = Submission.new
-    @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
+    @participations = Participation.where({ user_id: current_user.id,
+                                            active: true }).order('challenge_id ASC')
     # Inform the user of their houses score (if they are participating)
-    @house_participations = current_user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date).first
+    @house_participations = current_user.house_participations.where('join_date >=  ?',
+                                                                    Time.now.utc.at_beginning_of_month.to_date).first
     @time = @house_participations&.score || 0
   end
 
   # GET /submissions/1/edit
   def edit
-    @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
+    @participations = Participation.where({ user_id: current_user.id,
+                                            active: true }).order('challenge_id ASC')
   end
 
   # POST /submissions
@@ -56,7 +60,8 @@ class SubmissionsController < ApplicationController
     @submission.approved = current_user.approved
     artist_id = current_user.id
     @submission.user_id = artist_id
-    @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
+    @participations = Participation.where({ user_id: current_user.id,
+                                            active: true }).order('challenge_id ASC')
 
     respond_to do |format|
       if failure
@@ -69,7 +74,7 @@ class SubmissionsController < ApplicationController
 
         # Add points to their house when they create if it exists
         current_user.house_participations
-            .where('join_date >=  ?', Time.now.utc.at_beginning_of_month.to_date)
+                    .where('join_date >=  ?', Time.now.utc.at_beginning_of_month.to_date)
             &.first&.add_points(submission_params[:time].to_i)
 
         newFrequency = params[:postfrequency].to_i
@@ -78,19 +83,23 @@ class SubmissionsController < ApplicationController
         seasonalChallenge = Challenge.current_season
 
         # Add submission to DAD/Current Seasonal Challenge
-        dad_ce = ChallengeEntry.create({ challenge_id: 1, submission_id: @submission.id, user_id: artist_id })
+        dad_ce = ChallengeEntry.create({ challenge_id: 1, submission_id: @submission.id,
+                                         user_id: artist_id })
         dad_ce.created_at = initial_date_time
         dad_ce.save
-        season_ce = ChallengeEntry.create({ challenge_id: seasonalChallenge.id, submission_id: @submission.id, user_id: artist_id })
+        season_ce = ChallengeEntry.create({ challenge_id: seasonalChallenge.id,
+                                            submission_id: @submission.id, user_id: artist_id })
         season_ce.created_at = initial_date_time
         season_ce.save
 
         # Last, manage all custom challenge submissions selected (to do).
-        @participations = Participation.where({ user_id: artist_id, active: true }).order('challenge_id ASC')
+        @participations = Participation.where({ user_id: artist_id,
+                                                active: true }).order('challenge_id ASC')
         @participations.each do |p|
           next if params[p.challenge_id.to_s].blank?
 
-          ce = ChallengeEntry.create({ challenge_id: p.challenge_id, submission_id: @submission.id, user_id: artist_id })
+          ce = ChallengeEntry.create({ challenge_id: p.challenge_id, submission_id: @submission.id,
+                                       user_id: artist_id })
           ce.created_at = initial_date_time
           ce.save
         end
@@ -107,33 +116,32 @@ class SubmissionsController < ApplicationController
   # PATCH/PUT /submissions/1
   # PATCH/PUT /submissions/1.json
   def update
-    @participations = Participation.where({ user_id: current_user.id, active: true }).order('challenge_id ASC')
+    @participations = Participation.where({ user_id: current_user.id,
+                                            active: true }).order('challenge_id ASC')
     curr_user_id = current_user.id
 
     used_params = if @submission.created_at.to_date == Time.now.utc.to_date
-                   submission_params
-                 else
-                   limited_params
-                 end
+                    submission_params
+                  else
+                    limited_params
+                  end
 
     # If the drawing itself was updated by an unapproved user, reset the approval.
-    if used_params.has_key? :drawing
-      @submission.approved = current_user.approved
-    end
+    @submission.approved = current_user.approved if used_params.key? :drawing
 
     respond_to do |format|
       old_time = @submission.time || 0
       if @submission.update(used_params)
 
         # Modify their points if they change their time spent on a submission
-        if used_params.has_key? :time
+        if used_params.key? :time
           current_user.house_participations
-              .where('join_date >=  ?', Time.now.utc.at_beginning_of_month.to_date)
+                      .where('join_date >=  ?', Time.now.utc.at_beginning_of_month.to_date)
               &.first
               &.update_points(
-                  old_time,
-                  used_params[:time].to_i,
-                  @submission.created_at
+                old_time,
+                used_params[:time].to_i,
+                @submission.created_at
               )
         end
 
@@ -147,10 +155,12 @@ class SubmissionsController < ApplicationController
           @participations.each do |p|
             next unless p.challenge_id != 1 && !p.challenge.seasonal
 
-            entry = ChallengeEntry.find_by({ challenge_id: p.challenge_id, submission_id: @submission.id, user_id: curr_user_id })
+            entry = ChallengeEntry.find_by({ challenge_id: p.challenge_id,
+                                             submission_id: @submission.id, user_id: curr_user_id })
             # If we selected the checkbox, check if an extry exists before creating it.
             if params[p.challenge_id.to_s].present? && entry.blank?
-              ChallengeEntry.create({ challenge_id: p.challenge_id, submission_id: @submission.id, user_id: curr_user_id })
+              ChallengeEntry.create({ challenge_id: p.challenge_id, submission_id: @submission.id,
+                                      user_id: curr_user_id })
             # If we unchecked the box, check if an entry doesn't exist before deleting it.
             elsif params[p.challenge_id.to_s].blank? && entry.present?
               entry.destroy
@@ -175,7 +185,7 @@ class SubmissionsController < ApplicationController
 
     # Remove points for deleted submissions
     current_user.house_participations
-        .where('join_date >=  ?', Time.now.utc.at_beginning_of_month.to_date)
+                .where('join_date >=  ?', Time.now.utc.at_beginning_of_month.to_date)
         &.first&.remove_points(@submission.time.to_i)
 
     @submission.destroy
@@ -191,38 +201,36 @@ class SubmissionsController < ApplicationController
   def mod_action
     redirect_target = @submission
 
-    if params.has_key? :toggle_approve
+    if params.key? :toggle_approve
       @submission.approved = !@submission.approved
-        ModeratorLog.create(user_id: current_user.id,
-                            target: @submission,
-                            action: "#{current_user.username} has #{@submission.approved ? 'approved' : 'disapproved'} #{@submission.display_title} by #{@submission.user.username}.",
-                            reason: params[:reason])
+      ModeratorLog.create(user_id: current_user.id,
+                          target: @submission,
+                          action: "#{current_user.username} has #{@submission.approved ? 'approved' : 'disapproved'} #{@submission.display_title} by #{@submission.user.username}.",
+                          reason: params[:reason])
 
-      if params[:toggle_approve] == "next"
-        redirect_target = unapproved_submissions.where.not(id: @submission.id).order("submissions.created_at ASC").first
+      if params[:toggle_approve] == 'next'
+        redirect_target = unapproved_submissions.where.not(id: @submission.id).order('submissions.created_at ASC').first
 
         if redirect_target.nil?
-          flash[:success] = "No more submissions to approve! Great work!"
+          flash[:success] = 'No more submissions to approve! Great work!'
           redirect_target = moderation_path
         end
       end
-    elsif params.has_key?(:reason) && params[:reason].present?
-      if params.has_key? :toggle_soft_delete
+    elsif params.key?(:reason) && params[:reason].present?
+      if params.key? :toggle_soft_delete
         @submission.soft_deleted = !@submission.soft_deleted
-        if @submission.soft_deleted
-          @submission.soft_deleted_by = current_user.id
-        end
+        @submission.soft_deleted_by = current_user.id if @submission.soft_deleted
         ModeratorLog.create(user_id: current_user.id,
                             target: @submission,
                             action: "#{current_user.username} has #{@submission.soft_deleted ? 'soft deleted' : 'reverted soft deletion on'} #{@submission.display_title} by #{@submission.user.username}.",
                             reason: params[:reason])
-      elsif params.has_key? :change_nsfw
+      elsif params.key? :change_nsfw
         @submission.nsfw_level = params[:change_nsfw].to_i
         ModeratorLog.create(user_id: current_user.id,
                             target: @submission,
                             action: "#{current_user.username} has changed the content level of #{@submission.display_title} by #{@submission.user.username} to #{nsfw_string(@submission.nsfw_level)}.",
                             reason: params[:reason])
-      elsif params.has_key? :change_time
+      elsif params.key? :change_time
         # Allow moderators to update a users time
         User.find(@submission.user_id).house_participations
             .where('join_date >=  ?', Time.now.utc.at_beginning_of_month.to_date)
@@ -253,11 +261,11 @@ class SubmissionsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_submission
     @submission = Submission.find(params[:id])
-    if logged_in_as_moderator
-      @comments = Comment.where(source: @submission).includes(:user)
-    else
-      @comments = Comment.where(source: @submission, soft_deleted: false).includes(:user)
-    end
+    @comments = if logged_in_as_moderator
+                  Comment.where(source: @submission).includes(:user)
+                else
+                  Comment.where(source: @submission, soft_deleted: false).includes(:user)
+                end
     @comments = @comments.order(:id)
   end
 

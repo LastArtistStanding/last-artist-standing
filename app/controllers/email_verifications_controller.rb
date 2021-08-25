@@ -90,6 +90,6 @@ class EmailVerificationsController < ApplicationController
 
     flash[:danger] = 'You already sent an email confirmation too recently! '\
       'Please re-check your inbox or wait a few minutes and try again.'
-    render :new, status: 400
+    render :new, status: :bad_request
   end
 end

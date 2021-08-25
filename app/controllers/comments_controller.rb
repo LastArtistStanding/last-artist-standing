@@ -21,12 +21,10 @@ class CommentsController < ApplicationController
     @comment.user_id = current_user.id
     @comment.body = @comment.body.gsub(/ +/, ' ').strip
 
-    unless @target.allow_anon
-      @comment.anonymous = false
-    end
+    @comment.anonymous = false unless @target.allow_anon
 
     unless @comment.save
-      flash[:error] = 'Comment failed to post: ' + @comment.errors.full_messages.join(', ')
+      flash[:error] = "Comment failed to post: #{@comment.errors.full_messages.join(', ')}"
       redirect_back(fallback_location: '/')
       return
     end
@@ -46,11 +44,9 @@ class CommentsController < ApplicationController
   def destroy
     target = @comment.source
     @comment.destroy!
-    
+
     unless target.nil?
-      if target.is_a? Submission
-        target.num_comments -= 1
-      end
+      target.num_comments -= 1 if target.is_a? Submission
 
       target.save!
     end
@@ -60,12 +56,10 @@ class CommentsController < ApplicationController
 
   # POST
   def mod_action
-    if params.has_key?(:reason) && params[:reason].present?
-      if params.has_key? :toggle_soft_delete
+    if params.key?(:reason) && params[:reason].present?
+      if params.key? :toggle_soft_delete
         @comment.soft_deleted = !@comment.soft_deleted
-        if @comment.soft_deleted
-          @comment.soft_deleted_by = current_user.id
-        end
+        @comment.soft_deleted_by = current_user.id if @comment.soft_deleted
         ModeratorLog.create(user_id: current_user.id,
                             target: @comment,
                             action: "#{current_user.username} has #{@comment.soft_deleted ? 'soft deleted' : 'reverted soft deletion on'} a comment made by #{@comment.user.username}.",
@@ -106,7 +100,7 @@ class CommentsController < ApplicationController
 
   def send_notification(message, user_id)
     Notification.create(
-      body: format(message, poster: @comment.anonymous? ? "Anonymous" : current_user.username,
+      body: format(message, poster: @comment.anonymous? ? 'Anonymous' : current_user.username,
                             target: "#{@target.display_title} (ID: #{@target.id})"),
       source_type: 'Comment',
       source_id: @comment.id,

@@ -51,7 +51,8 @@ module SubmissionsHelper
   end
 
   def unapproved_submissions
-    Submission.includes(:user).where({submissions: { approved: false, soft_deleted: false }, users: {marked_for_death: false}})
+    Submission.includes(:user).where({ submissions: { approved: false, soft_deleted: false },
+                                       users: { marked_for_death: false } })
   end
 
   def base_submissions(only_safe = false)
@@ -92,15 +93,19 @@ module SubmissionsHelper
 
   def next_submission(submission)
     nsfw_level = current_user ? current_user.nsfw_level : 1
-    base_submissions.where('submissions.id > ? AND submissions.nsfw_level <= ?', submission.id, nsfw_level).first
+    base_submissions.where('submissions.id > ? AND submissions.nsfw_level <= ?', submission.id,
+                           nsfw_level).first
   end
 
   def prev_submission(submission)
     nsfw_level = current_user ? current_user.nsfw_level : 1
-    base_submissions.where('submissions.id < ? AND submissions.nsfw_level <= ?', submission.id, nsfw_level).last
+    base_submissions.where('submissions.id < ? AND submissions.nsfw_level <= ?', submission.id,
+                           nsfw_level).last
   end
 
   def random_safe_submission
-    base_submissions(only_safe = true).where('submissions.nsfw_level = 1 and submissions.created_at >= ?', Time.now.utc - 14.days).sample
+    base_submissions(only_safe = true).where(
+      'submissions.nsfw_level = 1 and submissions.created_at >= ?', Time.now.utc - 14.days
+    ).sample
   end
 end

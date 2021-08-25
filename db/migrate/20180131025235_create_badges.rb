@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Create Badgets table
 class CreateBadges < ActiveRecord::Migration[5.0]
   def change
     create_table :badges do |t|

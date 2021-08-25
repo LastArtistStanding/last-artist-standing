@@ -17,14 +17,19 @@ class PagesController < ApplicationController
     @forum_activity = forum_activity_rows
 
     # All lists to be displayed in home
-    @latest_awards = Award.where('date_received = ? AND badge_id <> 1', Date.today).order('prestige DESC, badge_id DESC').includes(:user)
-    @level_ups = Award.where('date_received = ? AND badge_id = 1', Date.today).order('prestige DESC').includes(:user)
-    @latest_eliminations = Participation.where('challenge_id = 1 AND eliminated AND end_date = ?', (Date.current - 1.day)).order('score DESC').includes(:user)
-    @seasonal_leaderboard = Participation.where('challenge_id = ?', @seasonal_challenge.id).order('score DESC').includes(:user)
+    @latest_awards = Award.where('date_received = ? AND badge_id <> 1',
+                                 Date.today).order('prestige DESC, badge_id DESC').includes(:user)
+    @level_ups = Award.where('date_received = ? AND badge_id = 1',
+                             Date.today).order('prestige DESC').includes(:user)
+    @latest_eliminations = Participation.where('challenge_id = 1 AND eliminated AND end_date = ?',
+                                               (Date.current - 1.day)).order('score DESC').includes(:user)
+    @seasonal_leaderboard = Participation.where('challenge_id = ?',
+                                                @seasonal_challenge.id).order('score DESC').includes(:user)
 
     if logged_in?
       @participations = Participation.includes(challenge: [:challenge_entries])
-                                     .where(participations: { user_id: current_user&.id, active: true }, challenges: {seasonal: false})
+                                     .where(participations: { user_id: current_user&.id,
+                                                              active: true }, challenges: { seasonal: false })
                                      .where.not(challenges: { id: 1 })
     end
   end
@@ -33,20 +38,21 @@ class PagesController < ApplicationController
 
   def news
     @latest_patch_note = PatchNote.last
-    @latest_patch_entries = PatchEntry.where('patchnote_id = ?', @latest_patch_note.id).order('importance DESC')
+    @latest_patch_entries = PatchEntry.where('patchnote_id = ?',
+                                             @latest_patch_note.id).order('importance DESC')
   end
 
   def moderation
-    @admins = User.where("is_admin = true")
-    @moderators = User.where("is_moderator = true")
+    @admins = User.where('is_admin = true')
+    @moderators = User.where('is_moderator = true')
     @moderator_logs = ModeratorLog.order('created_at DESC').limit(50)
-    @unapproved_submissions = unapproved_submissions.order("submissions.created_at ASC")
-    unapproved_users_objs = User.where("approved = false").includes(:participations)
+    @unapproved_submissions = unapproved_submissions.order('submissions.created_at ASC')
+    unapproved_users_objs = User.where('approved = false').includes(:participations)
 
     @unapproved_users = []
     unapproved_users_objs.each do |user|
-      days_posted = user.participations.includes(:challenge).where({challenges: { seasonal: true }}).sum(:score)
-      @unapproved_users.push({user: user, seasonal_score: days_posted}) if days_posted >= 10
+      days_posted = user.participations.includes(:challenge).where({ challenges: { seasonal: true } }).sum(:score)
+      @unapproved_users.push({ user: user, seasonal_score: days_posted }) if days_posted >= 10
     end
   end
 
@@ -56,7 +62,11 @@ class PagesController < ApplicationController
   def activity_feed
     activity_rows.map do |r|
       {
-        message: message(r.anonymous ? "Anonymous" : (r.display_name.present? ? r.display_name : r.name), r.type, r.sub_id, r.title), 
+        message: message(if r.anonymous
+                           'Anonymous'
+                         else
+                           (r.display_name.presence || r.name)
+                         end, r.type, r.sub_id, r.title),
         link: link(r.id, r.type, r.sub_id)
       }
     end
@@ -71,49 +81,47 @@ class PagesController < ApplicationController
   end
 
   def forum_activity_rows
-    discussion_posts = Discussion.order("created_at DESC").limit(10)
-    forum_posts = Comment.where(source_type: "Discussion").includes(:user).includes(:source).order("created_at DESC").limit(10)
+    discussion_posts = Discussion.order('created_at DESC').limit(10)
+    forum_posts = Comment.where(source_type: 'Discussion').includes(:user).includes(:source).order('created_at DESC').limit(10)
     preloader = ActiveRecord::Associations::Preloader.new
     preloader.preload(forum_posts.select { |p| p.source_type == 'Discussion' }, source: [:board])
 
     forum_activity = discussion_posts + forum_posts
-    forum_activity = forum_activity.sort_by(&:created_at).reverse!.first(10)
-
-    return forum_activity
+    forum_activity.sort_by(&:created_at).reverse!.first(10)
   end
 
   # returns the sql string used to get the recent challenges
   def challenge_act
-    """SELECT name, NULL as display_name, id, nsfw_level, created_at, 1 as sub_id, 'challenge' as type, '' as title, false as anonymous
-    FROM challenges WHERE creator_id > 0 AND soft_deleted = false"""
+    ''"SELECT name, NULL as display_name, id, nsfw_level, created_at, 1 as sub_id, 'challenge' as type, '' as title, false as anonymous
+    FROM challenges WHERE creator_id > 0 AND soft_deleted = false"''
   end
 
   # returns the sql string used to get the recent submissions
   def sub_act
-    """SELECT users.name as name, users.display_name as display_name, submissions.id as id, submissions.nsfw_level as nsfw_level,
+    ''"SELECT users.name as name, users.display_name as display_name, submissions.id as id, submissions.nsfw_level as nsfw_level,
     submissions.created_at as created_at, 1 as sub_id, 'submission' as type, submissions.title as title, false as anonymous
     FROM Submissions
     INNER JOIN users ON users.id = submissions.user_id
-    WHERE submissions.approved = true AND submissions.soft_deleted = false"""
+    WHERE submissions.approved = true AND submissions.soft_deleted = false"''
   end
 
   # returns the sql string used to get recent comments
   def comment_submission_act
-    """SELECT users.name as name, users.display_name as display_name, comments.id as id, submissions.nsfw_level as nsfw_level,
+    ''"SELECT users.name as name, users.display_name as display_name, comments.id as id, submissions.nsfw_level as nsfw_level,
     comments.created_at as created_at, comments.source_id as sub_id, 'comment' as type, submissions.title as title, comments.anonymous as anonymous
     FROM comments
     INNER JOIN users ON users.id = comments.user_id
     INNER JOIN submissions ON submissions.id = comments.source_id
-    WHERE comments.source_type='Submission'"""
+    WHERE comments.source_type='Submission'"''
   end
 
   # creates the message part of the feed based on the type of activity
-  def message(name, type, sub_id, title)
+  def message(name, type, _sub_id, title)
     return "Challenge '#{name}' was created." if type == 'challenge'
 
-    return "#{name} submitted #{title.present? ? title : "Untitled"}." if type == 'submission'
+    return "#{name} submitted #{title.presence || 'Untitled'}." if type == 'submission'
 
-    "#{name} posted a comment on #{title.present? ? title : "Untitled"}." if type == 'comment'
+    "#{name} posted a comment on #{title.presence || 'Untitled'}." if type == 'comment'
   end
 
   # creates the link part of the feed based on the type of activity
@@ -128,7 +136,9 @@ class PagesController < ApplicationController
   def challenge(type)
     c = base_challenge
 
-    return c.where('start_date <= ? AND (end_date > ? OR end_date IS NULL)', today, today) if type == 'active'
+    if type == 'active'
+      return c.where('start_date <= ? AND (end_date > ? OR end_date IS NULL)', today, today)
+    end
 
     return c.where('start_date > ?', today) if type == 'upcoming'
 

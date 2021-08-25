@@ -2,6 +2,79 @@ require:
   - rubocop-rails
   - rubocop-rspec
 
+AllCops:
+  Exclude:
+    - 'bin/*'
+    - 'db/*'
+    - 'db/**/*' # There is absolutely no need to curate the db code
+    - 'app/controllers/application_controller.rb'
+    - 'app/controllers/boards_controller.rb'
+    - 'app/controllers/challenges_controller.rb'
+    - 'app/controllers/comments_controller.rb'
+    - 'app/controllers/discussions_controller.rb'
+    - 'app/controllers/leaving_dad_controller.rb'
+    - 'app/controllers/moderator_applications_controller.rb'
+    - 'app/controllers/notifications_controller.rb'
+    - 'app/controllers/pages_controller.rb'
+    - 'app/controllers/password_resets_controller.rb'
+    - 'app/controllers/sessions_controller.rb'
+    - 'app/controllers/submissions_controller.rb'
+    - 'app/controllers/users_controller.rb'
+    - 'app/controllers/x_site_auth_controller.rb'
+    - 'app/helpers/application_helper.rb'
+    - 'app/helpers/challenges_helper.rb'
+    - 'app/helpers/comments_helper.rb'
+    - 'app/helpers/sessions_helper.rb'
+    - 'app/helpers/submissions_helper.rb'
+    - 'app/models/application_record.rb'
+    - 'app/models/award.rb'
+    - 'app/models/badge.rb'
+    - 'app/models/badge_map.rb'
+    - 'app/models/board.rb'
+    - 'app/models/challenge.rb'
+    - 'app/models/challenge_entry.rb'
+    - 'app/models/comment.rb'
+    - 'app/models/discussion.rb'
+    - 'app/models/moderator_application.rb'
+    - 'app/models/participation.rb'
+    - 'app/models/submission.rb'
+    - 'app/models/user.rb'
+    - 'app/uploaders/image_uploader.rb'
+    - 'config/application.rb'
+    - 'config/environments/production.rb'
+    - 'config/routes.rb'
+    - 'lib/migration_helper.rb'
+    - 'lib/tasks/dad_tasks.rake'
+    - 'spec/controllers/challenges_controller_spec.rb'
+    - 'spec/controllers/email_verifications_controller_spec.rb'
+    - 'spec/controllers/followers_controller_spec.rb'
+    - 'spec/controllers/houses_controller_spec.rb'
+    - 'spec/controllers/moderator_applications_controller_spec.rb'
+    - 'spec/controllers/submissions_controller_spec.rb'
+    - 'spec/helpers/challenges_helper_spec.rb'
+    - 'spec/helpers/markdown_helper_spec.rb'
+    - 'spec/helpers/sessions_helper_spec.rb'
+    - 'spec/helpers/submissions_helper_spec.rb'
+    - 'spec/mailers/usermailer_spec.rb'
+    - 'spec/models/comment_spec.rb'
+    - 'spec/models/house_participation_spec.rb'
+    - 'spec/models/house_spec.rb'
+    - 'spec/models/moderator_log_spec.rb'
+    - 'spec/models/notification_spec.rb'
+    - 'spec/models/patch_entry_spec.rb'
+    - 'spec/models/patch_note_spec.rb'
+    - 'spec/models/site_ban_spec.rb'
+    - 'spec/models/site_status_spec.rb'
+    - 'spec/models/submission_spec.rb'
+    - 'spec/models/user_session_spec.rb'
+    - 'spec/routing/submissions_routing_spec.rb'
+    - 'spec/views/challenges/destroy.html.erb_spec.rb'
+    - 'spec/views/challenges/edit.html.erb_spec.rb'
+    - 'spec/views/challenges/new.html.erb_spec.rb'
+    - 'spec/views/sessions/new.html.erb_spec.rb'
+    - 'test/models/challenge_test.rb'
+    - 'test/integration/password_reset_test.rb'
+    - 'test/integration/user_signup_test.rb'
 Layout/EmptyLinesAroundAttributeAccessor:
   Enabled: true
 Layout/LineLength:
@@ -17,6 +90,11 @@ Lint/RaiseException:
   Enabled: true
 Lint/StructNewOverride:
   Enabled: true
+Metrics/MethodLength:
+  Exclude:
+    - 'db/migrate/**'
+Rails/SkipsModelValidations:
+  AllowedMethods: ['update_all']
 Style/ExponentialNotation:
   Enabled: true
 Style/HashEachMethods:

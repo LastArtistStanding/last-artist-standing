@@ -62,15 +62,17 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
   gem 'dotenv-rails'
-  gem 'rspec-rails', '~> 4.0'
-  gem 'rubocop', '~> 0.88.0', require: false
-  gem 'rubocop-rails', '~> 2.5.2', require: false
-  gem 'rubocop-rspec', '~> 1.39.0', require: false
+  gem 'parallel', '= 1.20.1', require: false
+  gem 'rspec-rails', '>= 5.0.2'
+  gem 'rubocop', '>= 1.19.1', require: false
+  gem 'rubocop-rails', '>= 2.11.3', require: false
+  gem 'rubocop-rspec', '>= 2.4.0', require: false
 end
 
 group :test do
   gem 'database_cleaner-active_record', '~> 1.8.0'
   gem 'factory_bot', '~> 5.2'
+  gem 'simplecov', require: false
 end
 
 group :development do
@@ -94,13 +96,13 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 gem 'will_paginate', '>= 3.3.0', '< 3.4'
 
 ## Error Logging
-gem 'sentry-ruby'
 gem 'sentry-rails'
+gem 'sentry-ruby'
 
 ## Security updates
+gem 'addressable', '>= 2.8.0'
 gem 'excon', '>= 0.71.0'
 gem 'loofah', '>= 2.3.1'
 gem 'nokogiri', '>= 1.10.9', '< 2.0'
 gem 'rack', '>= 2.2.3'
 gem 'slim-rails'
-gem 'addressable', '>= 2.8.0'

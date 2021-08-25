@@ -26,7 +26,7 @@ class User < ApplicationRecord
   has_one :moderator_application
   has_many :house_participations, dependent: :nullify
   has_many :followers, class_name: 'Follower', foreign_key: 'following_id', dependent: :destroy
-  has_many :following, class_name: 'Follower', foreign_key: 'user_id', dependent: :destroy
+  has_many :following, class_name: 'Follower', dependent: :destroy
 
   before_save { self.email = email.downcase }
 
@@ -160,7 +160,7 @@ class User < ApplicationRecord
   end
 
   def get_latest_ban
-    return SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{id}")
+    SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{id}")
   end
 
   def can_make_comments
@@ -263,7 +263,16 @@ class User < ApplicationRecord
     unless marked_for_death
       # Find and update an existing ban.
       site_ban = SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{id}")
-      unless site_ban.nil?
+      if site_ban.nil?
+        # Or create a new one if not found.
+        SiteBan.create(user_id: id,
+                       expiration: Time.now.utc.to_date + duration.to_i.days,
+                       reason: reason)
+        ModeratorLog.create(user_id: moderator.id,
+                            target: self,
+                            action: "#{moderator.username} has banned #{username} for #{duration} days.",
+                            reason: reason)
+      else
         site_ban.expiration = Time.now.utc.to_date + duration.days
         site_ban.reason = reason
         site_ban.save
@@ -271,21 +280,12 @@ class User < ApplicationRecord
                             target: self,
                             action: "#{moderator.username} has adjusted #{username}'s ban to #{duration} days.",
                             reason: reason)
-      else
-        # Or create a new one if not found.
-        SiteBan.create(user_id: id,
-                      expiration: Time.now.utc.to_date + duration.to_i.days,
-                      reason: reason)
-        ModeratorLog.create(user_id: moderator.id,
-                            target: self,
-                            action: "#{moderator.username} has banned #{username} for #{duration} days.",
-                            reason: reason)
       end
     end
   end
 
   def mark_for_death(reason, moderator)
-    ban_user(99999, reason, moderator)
+    ban_user(99_999, reason, moderator)
     update_attribute(:marked_for_death, true)
     ModeratorLog.create(user_id: moderator.id,
                         target: self,

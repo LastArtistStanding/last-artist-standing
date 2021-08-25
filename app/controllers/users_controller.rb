@@ -13,22 +13,21 @@ class UsersController < ApplicationController
   # TODO: Also handle registration being closed for the registration form, i.e. :new.
   before_action :ensure_registration_open, only: %i[new create]
 
-
   def index
     @user_per_page = 25
     @users = User
-      .search(params)
-      .order('current_streak DESC, id DESC')
-      .paginate(page: params[:page], per_page: @user_per_page)
-      .includes(:house_participations)
+             .search(params)
+             .order('current_streak DESC, id DESC')
+             .paginate(page: params[:page], per_page: @user_per_page)
+             .includes(:house_participations)
   end
 
   def submissions
     @user_submissions_per_page = 25
     @user_submissions = base_submissions
-      .where(user_id: @user.id)
-      .order('submissions.created_at DESC')
-      .paginate(page: params[:page], per_page: @user_submissions_per_page)
+                        .where(user_id: @user.id)
+                        .order('submissions.created_at DESC')
+                        .paginate(page: params[:page], per_page: @user_submissions_per_page)
   end
 
   def show
@@ -36,7 +35,8 @@ class UsersController < ApplicationController
     @submissions = base_submissions.where(user_id: @user.id).order('submissions.created_at DESC').limit(10)
     @ban = SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{@user.id}")
     @all_bans = SiteBan.where(user_id: @user.id)
-    @house = @user.house_participations.where("join_date >=  ?", Time.now.utc.at_beginning_of_month.to_date).first&.house
+    @house = @user.house_participations.where('join_date >=  ?',
+                                              Time.now.utc.at_beginning_of_month.to_date).first&.house
   end
 
   def new
@@ -104,14 +104,14 @@ class UsersController < ApplicationController
   end
 
   def mod_action
-    if params.has_key?(:reason) && params[:reason].present?
-      if params.has_key?(:approve)
+    if params.key?(:reason) && params[:reason].present?
+      if params.key?(:approve)
         @user.approve(params[:reason], current_user)
-      elsif params.has_key?(:lift_ban)
+      elsif params.key?(:lift_ban)
         @user.lift_ban(params[:reason], current_user)
-      elsif params.has_key?(:ban)
+      elsif params.key?(:ban)
         @user.ban_user(params[:ban].to_i, params[:reason], current_user)
-      elsif params.has_key?(:mark_for_death)
+      elsif params.key?(:mark_for_death)
         @user.mark_for_death(params[:reason], current_user)
       end
     end
@@ -122,7 +122,7 @@ class UsersController < ApplicationController
   private
 
   def rerender_user_edit
-    @followers = Follower.where({ user: params[:id]}).includes(:following)
+    @followers = Follower.where({ user: params[:id] }).includes(:following)
     render 'edit'
   end
 
@@ -131,11 +131,13 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation, :avatar, :nsfw_level)
+    params.require(:user).permit(:name, :email, :password, :password_confirmation, :avatar,
+                                 :nsfw_level)
   end
 
   def user_edit_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation, :avatar, :nsfw_level, :display_name)
+    params.require(:user).permit(:name, :email, :password, :password_confirmation, :avatar,
+                                 :nsfw_level, :display_name)
   end
 
   def ensure_registration_open

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 namespace :dad_tasks do
-
   desc 'Nightly rollover script'
   task rollover_script: :environment do
     # The rollover script runs at 12:00 AM every night UTC.
@@ -18,9 +17,12 @@ namespace :dad_tasks do
 
     # STEP 1: Check the challenge entries, identify users that aren't participating in DAD/Seasonal Challenge, and create those participations.
     # Get the users that have posted on the current rollover date
-    user_ids = ChallengeEntry.where('created_at >= ? AND created_at < ? AND challenge_id = 1', yesterday, today).pluck(:user_id).uniq
+    user_ids = ChallengeEntry.where('created_at >= ? AND created_at < ? AND challenge_id = 1',
+                                    yesterday, today).pluck(:user_id).uniq
 
-    seasonal_challenge = Challenge.where(':yesterdays_date >= start_date AND :yesterdays_date < end_date AND seasonal = true', { yesterdays_date: yesterday }).first
+    seasonal_challenge = Challenge.where(
+      ':yesterdays_date >= start_date AND :yesterdays_date < end_date AND seasonal = true', { yesterdays_date: yesterday }
+    ).first
 
     # For each user, check if they have an active DAD or seasonal participation. If not, create it.
     user_ids.each do |uid|
@@ -39,7 +41,8 @@ namespace :dad_tasks do
                              })
       end
 
-      season_part = Participation.find_by(user_id: uid, challenge_id: seasonal_challenge.id, active: true)
+      season_part = Participation.find_by(user_id: uid, challenge_id: seasonal_challenge.id,
+                                          active: true)
       next if season_part.present?
 
       Participation.create({
@@ -56,22 +59,26 @@ namespace :dad_tasks do
     end
 
     # STEP 2, process all DAD particicpations if they haven't been updated to this date yet (due to the script not running/crashing).
-    dad_participations = Participation.where('active = true AND challenge_id = 1 AND processed = ?', yesterday - 1.day)
+    dad_participations = Participation.where(
+      'active = true AND challenge_id = 1 AND processed = ?', yesterday - 1.day
+    )
     dad_participations.each do |p|
       last_date = p.last_submission_date
       next_date = p.next_submission_date
       p_user = p.user
 
-      dad_entries = ChallengeEntry.where("challenge_id = 1 AND user_id = #{p.user_id} AND created_at >= ? AND created_at < ? AND created_at < ?", last_date, next_date, today)
+      dad_entries = ChallengeEntry.where(
+        "challenge_id = 1 AND user_id = #{p.user_id} AND created_at >= ? AND created_at < ? AND created_at < ?", last_date, next_date, today
+      )
 
-      if today == next_date && dad_entries.count == 0
+      if today == next_date && dad_entries.count.zero?
         p.active = false
         p.eliminated = true
         p.end_date = yesterday
         p_user.update_attribute(:new_frequency, nil)
         p_user.update_attribute(:current_streak, 0)
       else
-        if dad_entries.count > 0 && !p.submitted
+        if dad_entries.count.positive? && !p.submitted
           p.score += 1
           p.submitted = true
           p_user.update_attribute(:current_streak, p.score)
@@ -119,7 +126,9 @@ namespace :dad_tasks do
     end
 
     # STEP 3, process all other participations.
-    all_participations = Participation.where('active = true AND challenge_id != 1 AND processed = ?', yesterday - 1.day)
+    all_participations = Participation.where(
+      'active = true AND challenge_id != 1 AND processed = ?', yesterday - 1.day
+    )
 
     all_participations.each do |p|
       last_date = p.last_submission_date
@@ -128,15 +137,17 @@ namespace :dad_tasks do
       challenge = p.challenge
       score_changed = false
 
-      entries = ChallengeEntry.where("challenge_id = #{challenge.id} AND user_id = #{p.user_id} AND created_at >= ? AND created_at < ? AND created_at < ?", last_date, next_date, today)
+      entries = ChallengeEntry.where(
+        "challenge_id = #{challenge.id} AND user_id = #{p.user_id} AND created_at >= ? AND created_at < ? AND created_at < ?", last_date, next_date, today
+      )
 
-      if today == next_date && entries.count == 0 && challenge.streak_based
+      if today == next_date && entries.count.zero? && challenge.streak_based
         p.active = false
         p.eliminated = true
         p.end_date = yesterday
       else
-        if entries.count > 0
-          if challenge.postfrequency == 0
+        if entries.count.positive?
+          if challenge.postfrequency.zero?
             score_changed = p.score != entries.count
             p.score = entries.count
           elsif !p.submitted
@@ -193,13 +204,12 @@ namespace :dad_tasks do
       s.eliminated = false
       s.processed = yesterday
 
-      if challenge.postfrequency == 0
-        s.last_submission_date = challenge.start_date
-        s.next_submission_date = challenge.end_date
-      else
-        s.last_submission_date = challenge.start_date
-        s.next_submission_date = challenge.start_date + challenge.postfrequency.days
-      end
+      s.last_submission_date = challenge.start_date
+      s.next_submission_date = if challenge.postfrequency.zero?
+                                 challenge.end_date
+                               else
+                                 challenge.start_date + challenge.postfrequency.days
+                               end
 
       notification_text = "#{challenge.name} has started. It's time to start working on your submissions!"
       if challenge.streak_based
@@ -282,8 +292,10 @@ namespace :dad_tasks do
     e = Time.now.utc.to_date if e > Time.now.utc.to_date
 
     while s < e
-      entries = ChallengeEntry.where("challenge_id = #{challenge.id} AND user_id = #{user.id} AND created_at >= ? AND created_at < ?", s, s + 1.day)
-      score += 1 if entries.count > 0
+      entries = ChallengeEntry.where(
+        "challenge_id = #{challenge.id} AND user_id = #{user.id} AND created_at >= ? AND created_at < ?", s, s + 1.day
+      )
+      score += 1 if entries.count.positive?
       s += 1.day
     end
 
@@ -319,14 +331,16 @@ namespace :dad_tasks do
       patchNote = PatchNote.find_by(patch: noteDetails['patch'])
       next if patchNote.present?
 
-      patchNote = PatchNote.create({ before: noteDetails['before'], after: noteDetails['after'], patch: noteDetails['patch'] })
+      patchNote = PatchNote.create({ before: noteDetails['before'], after: noteDetails['after'],
+                                     patch: noteDetails['patch'] })
       if PatchNote.column_names.include?('title')
         patchNote.title = noteDetails['title']
         patchNote.save
       end
       patchEntriesData.each do |_currentPatchEntry, entryDetails|
         if patchNote.id == entryDetails['patchnote_id']
-          PatchEntry.create({ patchnote_id: entryDetails['patchnote_id'], body: entryDetails['body'], importance: entryDetails['importance'] })
+          PatchEntry.create({ patchnote_id: entryDetails['patchnote_id'],
+                              body: entryDetails['body'], importance: entryDetails['importance'] })
         end
       end
     end
@@ -348,7 +362,7 @@ namespace :dad_tasks do
     proceed = '?'
     until proceed.downcase == "y\n" || proceed.downcase == "n\n"
       puts 'Proceed? (y/n)'
-      proceed = STDIN.gets
+      proceed = $stdin.gets
     end
     if proceed.downcase == "n\n"
       puts 'Exiting...'
@@ -426,7 +440,8 @@ namespace :dad_tasks do
     badgeMapData.each do |_currentBadgeMap, details|
       challenge = Challenge.find_by(name: details['challenge_name'])
       badge = Badge.find_by(name: details['badge_name'])
-      newBadgeMap = BadgeMap.find_or_create_by(badge_id: badge.id, prestige: details['prestige'], challenge_id: challenge.id)
+      newBadgeMap = BadgeMap.find_or_create_by(badge_id: badge.id, prestige: details['prestige'],
+                                               challenge_id: challenge.id)
       newBadgeMap.description = details['description']
       newBadgeMap.required_score = details['required_score']
       newBadgeMap.save

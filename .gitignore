@@ -31,6 +31,7 @@
 /public/submissions
 /public/badges
 /public/users
+/public/coverage
 
 .env
 private/

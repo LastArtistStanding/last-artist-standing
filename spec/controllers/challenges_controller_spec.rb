@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe ChallengesController do
-  before(:each) do
+  before do
     @user = create(:user)
     @challenge = create(:challenge, creator_id: @user)
     @badge = create(:badge, challenge_id: @challenge)

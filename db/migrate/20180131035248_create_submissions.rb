@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Adds the submissions table
 class CreateSubmissions < ActiveRecord::Migration[5.0]
   def change
     create_table :submissions do |t|
