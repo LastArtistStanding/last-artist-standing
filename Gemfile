@@ -6,7 +6,7 @@ source 'https://rubygems.org'
 ruby '2.6.5'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '>= 6.0.3.4'
+gem 'rails', '>= 6.0.3.5'
 # Use Rails controller testing for testing stability and error-proneness of site.
 gem 'rails-controller-testing'
 # Use bcrypt for Password hashing to protect against attackers
@@ -84,7 +84,7 @@ end
 
 group :production do
   # "[...] configures Rails for CloudFlare so that request.remote_ip [... works] correctly."
-  gem 'cloudflare-rails', '~> 0.6.0'
+  gem 'cloudflare-rails', '>= 2.2.0'
   gem 'rails_12factor'
 end
 
@@ -94,10 +94,14 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 ## Gemfile for Rails 3+, Sinatra, or Merb
 gem 'will_paginate', '>= 3.3.0', '< 3.4'
 
+## Error Logging
+gem 'sentry-ruby'
+gem 'sentry-rails'
+
 ## Security updates
 gem 'excon', '>= 0.71.0'
 gem 'loofah', '>= 2.3.1'
 gem 'nokogiri', '>= 1.10.9', '< 2.0'
 gem 'rack', '>= 2.2.3'
-gem 'sentry-raven'
 gem 'slim-rails'
+gem 'addressable', '>= 2.8.0'
