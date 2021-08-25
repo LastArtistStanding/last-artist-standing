@@ -4,11 +4,15 @@ require 'test_helper'
 
 class BadgeMapTest < ActiveSupport::TestCase
   def setup
-    # The test challenge `id` must be set to a high value if the test environment contains the default challenges created by the various rake `dad_tasks`.
-    # Running at least some of the `dad_tasks` is necessary because some of the backend code requires the generated content (at least the patch notes) to be present.
-    # It may not be necessary to generate the seasonal and daily challenge, which would make the test valid with an id of `1`,
-    # but I think it may be valuable to have the test environment be closer to the production environment anyway.
-    @badge_map = BadgeMap.new(badge_id: 100, challenge_id: 100, required_score: 1, prestige: 1, description: 'This is a level 1 badge.')
+    # The test challenge `id` must be set to a high value if the test
+    # environment contains the default challenges created by the various rake `dad_tasks`.
+    # Running at least some of the `dad_tasks` is necessary because some of the backend code
+    # requires the generated content (at least the patch notes) to be present.
+    # It may not be necessary to generate the seasonal and daily challenge, which would make
+    # the test valid with an id of `1`, but I think it may be valuable to have the test
+    # environment be closer to the production environment anyway.
+    @badge_map = BadgeMap.new(badge_id: 100, challenge_id: 100, required_score: 1, prestige: 1,
+                              description: 'This is a level 1 badge.')
   end
 
   # VALID CASE

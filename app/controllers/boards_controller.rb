@@ -28,7 +28,11 @@ class BoardsController < ApplicationController
       end
     end
 
-    @pinned_hashes = @pinned_hashes.sort_by { |t| t[:last_reply].present? ? t[:last_reply].created_at : DateTime.new(2001, 2, 3, 4, 5, 6) }.reverse!
-    @thread_hashes = @thread_hashes.sort_by { |t| t[:last_reply].present? ? t[:last_reply].created_at : DateTime.new(2001, 2, 3, 4, 5, 6) }.reverse!
+    @pinned_hashes = @pinned_hashes
+                     .sort_by { |t| t[:last_reply].present? ? t[:last_reply].created_at : DateTime.new(2001, 2, 3, 4, 5, 6) }
+                     .reverse!
+    @thread_hashes = @thread_hashes
+                     .sort_by { |t| t[:last_reply].present? ? t[:last_reply].created_at : DateTime.new(2001, 2, 3, 4, 5, 6) }
+                     .reverse!
   end
 end

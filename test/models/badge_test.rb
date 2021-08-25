@@ -40,7 +40,8 @@ class BadgeTest < ActiveSupport::TestCase
   end
 
   test 'names should be unique' do
-    file2 = Rack::Test::UploadedFile.new(Rails.root.join('app/assets/images/lastan_2.png'), 'image/png')
+    file2 = Rack::Test::UploadedFile
+            .new(Rails.root.join('app/assets/images/lastan_2.png'), 'image/png')
     duplicate_badge = build(:badge, name: 'CHALLENGE BADGE', avatar: file2)
     @badge.save
     assert_not duplicate_badge.valid?
