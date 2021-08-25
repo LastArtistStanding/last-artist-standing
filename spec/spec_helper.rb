@@ -4,6 +4,21 @@ ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../config/environment', __dir__)
 require 'database_cleaner/active_record'
 require 'rspec/rails'
+require 'simplecov'
+
+SimpleCov.start do
+  add_filter '/spec/'
+  add_filter '/config/'
+  add_filter '/vendor/'
+
+  add_group 'Controllers', 'app/controllers'
+  add_group 'Models', 'app/models'
+  add_group 'Helpers', 'app/helpers'
+  add_group 'Mailers', 'app/mailers'
+end
+# This outputs the report to your public folder
+# You will want to add this to .gitignore
+SimpleCov.coverage_dir 'public/coverage'
 
 # Sets the logged-in user based on the individual example's configuration.
 # This is primarily intended to be used to write controller authorization tests.
