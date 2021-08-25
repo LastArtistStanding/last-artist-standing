@@ -22,13 +22,17 @@ SimpleCov.coverage_dir 'public/coverage'
 
 # Sets the logged-in user based on the individual example's configuration.
 # This is primarily intended to be used to write controller authorization tests.
+# rubocop:disable Metrics::AbcSize Metrics::CyclomaticComplexity Metrics::MethodLength
 def setup_session(example, user)
   return if example.metadata[:no_login]
 
-  if example.metadata[:incorrect_login] || example.metadata[:admin_login]
+  if example.metadata[:incorrect_login] ||
+     example.metadata[:admin_login] ||
+     example.metadata[:moderator_login]
     user = create(:user, name: 'user2', email: 'user2@example.com')
   end
 
+  user.update_retain_password(is_moderator: true) if example.metadata[:moderator_login]
   user.update_retain_password(is_admin: true) if example.metadata[:admin_login]
 
   if example.metadata[:unverified]
@@ -37,6 +41,7 @@ def setup_session(example, user)
 
   session[:user_id] = user.id
 end
+# rubocop:enable Metrics::AbcSize Metrics::CyclomaticComplexity Metrics::MethodLength
 
 def expect_successful_template(template)
   expect(response).to have_http_status(:successful).and render_template(template)

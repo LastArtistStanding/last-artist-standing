@@ -90,11 +90,18 @@ Lint/RaiseException:
   Enabled: true
 Lint/StructNewOverride:
   Enabled: true
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/*/*.rb'
 Metrics/MethodLength:
   Exclude:
     - 'db/migrate/**'
 Rails/SkipsModelValidations:
   AllowedMethods: ['update_all']
+RSpec/MultipleExpectations:
+  Enabled: false
+RSpec/ExampleLength:
+  Enabled: false
 Style/ExponentialNotation:
   Enabled: true
 Style/HashEachMethods:

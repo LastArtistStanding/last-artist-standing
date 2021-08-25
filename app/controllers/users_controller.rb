@@ -113,7 +113,11 @@ class UsersController < ApplicationController
         @user.ban_user(params[:ban].to_i, params[:reason], current_user)
       elsif params.key?(:mark_for_death)
         @user.mark_for_death(params[:reason], current_user)
+      else
+        flash[:danger] = "No action specified."
       end
+    else
+      flash[:danger] = "You must specify a reason."
     end
 
     redirect_to @user
