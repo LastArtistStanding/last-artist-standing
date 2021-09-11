@@ -73,6 +73,8 @@ a.disabled {
   max-width: 800px;
   left: 0;
   right: 0;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .house-finder {

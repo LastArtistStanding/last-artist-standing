@@ -5,17 +5,21 @@ javascript:
 
 div.house-container
 
-  = form_tag houses_path, method: :get, class: "house-form" do
-    div.house-finder
-      a.btn.btn-primary  href="#{houses_path(:date => @date.prev_month.strftime('%Y-%m'))}"
-        | Prev Month 
+  div.house-form
+    = form_with url: houses_path, method: :get
+      div style="display:none"
+        = select_date @date.prev_month, discard_day: true, start_year: 2020, end_year: 2030
+      = submit_tag 'Prev Month', class: "btn btn-primary"
+    = form_with url: houses_path, method: :get
       div.house-date-picker
         b DAD Houses for:
         = select_date(@date, discard_day: true, start_year: 2020, end_year: 2030)
         = submit_tag 'Select', class: "btn btn-primary"
-      a.btn.btn-primary href="#{houses_path(:date => @date.next_month.strftime('%Y-%m'))}"
-        | Next Month
-
+    = form_with url: houses_path, method: :get
+      div style="display:none"
+        = select_date @date.next_month, discard_day: true, start_year: 2020, end_year: 2030
+      = submit_tag 'Next Month', class: "btn btn-primary"
+      
   div.house-neighborhood
     - if @houses.any?
       - @houses.each_with_index do |h|
