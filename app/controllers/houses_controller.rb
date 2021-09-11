@@ -10,7 +10,7 @@ class HousesController < ApplicationController
   # @abstract sets up parameters for the houses main page
   def index
     @date = Date.parse(params[:date]&.values&.join('-') || Time.now.utc.strftime('%Y-%m-01'))
-    @houses = House.where('house_start = ?', @date).sort_by { |h| -h.total }
+    @houses = House.where(house_start: @date.at_beginning_of_month.to_date).sort_by { |h| -h.total }
   end
 
   # @function edit
