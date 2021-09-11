@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :challenge do
-    name { 'Challenge' }
+    sequence(:name) { |n| "Challenge#{n}" }
     description { 'A challenge.' }
     association :creator_id, factory: :user
     postfrequency { 1 }
@@ -11,7 +11,7 @@ FactoryBot.define do
   end
 
   factory :seasonal_challenge, parent: :challenge do
-    name { 'Seasonal challenge' }
+    sequence(:name) { |n| "Seasonal Challenge#{n}" }
     seasonal { true }
     start_date { Time.now.utc.to_date - 10 }
     end_date { Time.now.utc.to_date + 10 }

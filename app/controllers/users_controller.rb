@@ -3,9 +3,9 @@
 class UsersController < ApplicationController
   include SubmissionsHelper
 
-  before_action :set_curruser, only: %i[submissions show edit update mod_action]
-  before_action :ensure_logged_in, only: %i[edit update]
-  before_action -> { ensure_authorized @user.id }, only: %i[edit update]
+  before_action :set_curruser, only: %i[submissions show edit update mod_action delete]
+  before_action :ensure_logged_in, only: %i[edit update delete]
+  before_action -> { ensure_authorized @user.id }, only: %i[edit update delete]
   before_action :ensure_unbanned, only: %i[edit update]
   before_action :ensure_authenticated, only: %i[mod_action]
   before_action :ensure_moderator, only: %i[mod_action]
@@ -65,6 +65,22 @@ class UsersController < ApplicationController
 
   def edit
     @followers = Follower.where(user: params[:id]).includes(:following)
+  end
+
+  def delete
+    @user = User.find(params[:id])
+  end
+
+  def destroy
+    @user = User.find(params[:id])
+    unless @user.authenticate(params[:oldpassword])
+      @user.errors[:oldpassword][0] = 'Invalid password.'
+      render 'delete'
+      return
+    end
+    UserFeedback.create(title: 'Account Deleted', body: params[:body]) if params[:body].present?
+    @user.destroy
+    redirect_to root_url
   end
 
   def update

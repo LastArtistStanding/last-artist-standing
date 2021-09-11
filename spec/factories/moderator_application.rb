@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :application, class: 'ModeratorApplication' do
-    user
+  factory :moderator_application, class: 'ModeratorApplication' do
+    association :user
     time_zone { 'Pacific Time (US & Canada)' }
     active_hours { 'Placeholder' }
     why_mod { 'Placeholder' }

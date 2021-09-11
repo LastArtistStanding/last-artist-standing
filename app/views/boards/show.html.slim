@@ -7,7 +7,7 @@
     .col-lg-8
       p.h2
         = @board.title
-        - if current_user&.has_clearance?(@board.permission_level)
+        - if current_user&.clearance?(@board.permission_level)
           a.btn.btn-primary style="margin-left: 0.5rem; margin-bottom: 0.5rem;" href="#{new_discussion_path}?alias=#{@board.alias}"
             span.fa.fa-plus
             |  Create Thread

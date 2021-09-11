@@ -51,7 +51,7 @@ class ApplicationController < ActionController::Base
   end
 
   def ensure_clearance(permission_level)
-    render_unauthorized unless current_user&.has_clearance?(permission_level)
+    render_unauthorized unless current_user&.clearance?(permission_level)
   end
 
   def ensure_moderator

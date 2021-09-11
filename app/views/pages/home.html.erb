@@ -381,38 +381,6 @@
         </div>
         <% end %>
 
-        <% if !@seasonal_leaderboard.blank? %>
-        <div class="card homeCardStyle blueCard">
-          <div class="card-header"><b><%= link_to "#{@seasonal_challenge.name} Leaderboard", challenge_path(@seasonal_challenge.id), style: "color: white;" %></b></div>
-          <div class="card-body table-responsive">
-            <table class="table table-sm">
-              <thead class="thead-dark">
-                <tr>
-                  <th scope="col">Users</th>
-                  <th scope="col">Score</th>
-                </tr>
-              </thead>
-              <% seasonHash = @seasonal_leaderboard.group_by{|a| [a.score]} %>
-              <% seasonHash.each_with_index do |(partData, seasonParts), index| %>
-                <% currScore = partData[0] %>
-                <% if index >= 10 %>
-                  <% break %>
-                <% end %>
-                <tr><td>
-                  <% seasonParts.each do |seasonPart| %>
-                    <% user = seasonPart.user %>
-                    <% avatarURL = user.profile_picture %>
-                    <%= link_to image_tag(avatarURL, :title => "#{user.username}", :style => "width: 20px; margin: 0.125rem;", :data => { :toggle => "tooltip", :placement => "top" }, :alt => "#{user.username}"), user %>
-                  <% end %>
-                </td>
-                <td><%= currScore %></td></tr>
-              <% end %>
-            </table>
-          </div>
-        </div>
-        <% end %>
-
-      </div>
       <!-- Spacing Column -->
     <div class="col-lg-1"></div>
   </div>

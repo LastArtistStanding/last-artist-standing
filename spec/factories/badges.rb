@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :badge do
     association :challenge_id, factory: :challenge
-    name { 'Challenge Badge' }
+    sequence(:name) { |n| "Challenge Badge#{n}" }
     avatar do
       Rack::Test::UploadedFile.new(Rails.root.join('app/assets/images/lastan_1.png'), 'image/png')
     end

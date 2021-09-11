@@ -57,6 +57,7 @@ Rails.application.routes.draw do
       as: :edit_email_verification
   post 'users/:user_id/email_verification/:token' => 'email_verifications#update',
        as: :email_verification
+  get 'users/:id/delete' => 'users#delete'
 
   resources :houses
   post 'houses/:id/join' => 'houses#join'
