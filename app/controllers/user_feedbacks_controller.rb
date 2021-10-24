@@ -2,7 +2,7 @@
 
 # Controller for UserFeedback - TODO
 class UserFeedbacksController < ApplicationController
-  before_action :set_user_feedback, only: [:show, :edit, :update, :destroy]
+  before_action :set_user_feedback, only: %i[show edit update destroy]
 
   # GET /user_feedbacks
   # GET /user_feedbacks.json
@@ -12,8 +12,7 @@ class UserFeedbacksController < ApplicationController
 
   # GET /user_feedbacks/1
   # GET /user_feedbacks/1.json
-  def show
-  end
+  def show; end
 
   # GET /user_feedbacks/new
   def new
@@ -21,8 +20,7 @@ class UserFeedbacksController < ApplicationController
   end
 
   # GET /user_feedbacks/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /user_feedbacks
   # POST /user_feedbacks.json
@@ -31,7 +29,9 @@ class UserFeedbacksController < ApplicationController
 
     respond_to do |format|
       if @user_feedback.save
-        format.html { redirect_to @user_feedback, notice: 'User feedback was successfully created.' }
+        format.html do
+          redirect_to @user_feedback, notice: 'User feedback was successfully created.'
+        end
         format.json { render :show, status: :created, location: @user_feedback }
       else
         format.html { render :new }
@@ -45,7 +45,9 @@ class UserFeedbacksController < ApplicationController
   def update
     respond_to do |format|
       if @user_feedback.update(user_feedback_params)
-        format.html { redirect_to @user_feedback, notice: 'User feedback was successfully updated.' }
+        format.html do
+          redirect_to @user_feedback, notice: 'User feedback was successfully updated.'
+        end
         format.json { render :show, status: :ok, location: @user_feedback }
       else
         format.html { render :edit }
@@ -59,7 +61,9 @@ class UserFeedbacksController < ApplicationController
   def destroy
     @user_feedback.destroy
     respond_to do |format|
-      format.html { redirect_to user_feedbacks_url, notice: 'User feedback was successfully destroyed.' }
+      format.html do
+        redirect_to user_feedbacks_url, notice: 'User feedback was successfully destroyed.'
+      end
       format.json { head :no_content }
     end
   end

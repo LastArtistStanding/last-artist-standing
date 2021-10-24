@@ -8,4 +8,3 @@ FactoryBot.define do
     body { 'Test Body' }
   end
 end
-

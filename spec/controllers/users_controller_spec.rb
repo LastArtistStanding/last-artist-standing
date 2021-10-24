@@ -101,7 +101,7 @@ describe UsersController do
     end
 
     it 'does not destroy the user when given the incorrect password' do
-      delete :destroy, params: { id: user.id,  oldpassword: 'bad_password' }
+      delete :destroy, params: { id: user.id, oldpassword: 'bad_password' }
       expect(response).to render_template :delete
     end
   end

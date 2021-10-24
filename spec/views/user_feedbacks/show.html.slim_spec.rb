@@ -1,4 +1,4 @@
-
+# frozen_string_literal: true
 
 RSpec.describe 'user_feedbacks/show', type: :view, skip: 'TBD' do
   before do

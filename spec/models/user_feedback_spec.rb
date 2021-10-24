@@ -3,5 +3,4 @@
 # Test for the user feedback model - TODO
 
 describe UserFeedback, skip: 'This is placeholder for now' do
-
 end

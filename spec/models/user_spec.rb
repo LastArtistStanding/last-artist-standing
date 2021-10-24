@@ -169,11 +169,9 @@ describe User do
 
   context 'when using x-site auth', skip: 'Cross Site Auth is TBD' do
     it 'resets x site auth code' do
-
     end
 
     it 'validates x site code' do
-
     end
   end
 
@@ -282,23 +280,18 @@ describe User do
     end
 
     it 'checks if they are a developer', skip: 'TBD' do
-
     end
 
     it 'checks if they are a mod', skip: 'TBD' do
-
     end
 
     it 'checks if they are an admin', skip: 'TBD' do
-
     end
 
     it 'gets their profile picture if they have one', skip: 'TBD' do
-
     end
 
     it 'gets the default profile picture if they don not have one', skip: 'TBD' do
-
     end
   end
 
@@ -351,8 +344,6 @@ describe User do
     it 'creates moderator logs' do
       user = create :user
       user.create_mod_log(create(:user, :moderator), 'something', 'test')
-
     end
   end
-
 end

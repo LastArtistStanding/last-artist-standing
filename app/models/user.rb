@@ -41,20 +41,20 @@ class User < ApplicationRecord
   has_many :house_participations, dependent: :nullify
 
   before_save { self.email = email.downcase }
-  before_destroy { throw(:abort) if self.marked_for_death }
+  before_destroy { throw(:abort) if marked_for_death }
 
   validates :name, presence: true, length: { maximum: 50 },
-            format: { with: NO_EXCESS_WHITESPACE }, uniqueness: { case_sensitive: false }
+                   format: { with: NO_EXCESS_WHITESPACE }, uniqueness: { case_sensitive: false }
   validates :display_name, length: { maximum: 50 }, format: { with: NULLABLE_NO_EXCESS_WHITESPACE }
   validates :email, presence: true, length: { maximum: 255 }, format: { with: VALID_EMAIL_REGEX },
-            uniqueness: { case_sensitive: false }
+                    uniqueness: { case_sensitive: false }
 
   has_secure_password
   validates :password, presence: true, length: { minimum: 6, maximum: 30 },
-            unless: :retain_old_password?
+                       unless: :retain_old_password?
 
   validates :email_pending_verification, allow_nil: true, length: { maximum: 255 },
-            format: { with: VALID_EMAIL_REGEX }
+                                         format: { with: VALID_EMAIL_REGEX }
 
   def initialize(*args)
     super(*args)

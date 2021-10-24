@@ -1,4 +1,4 @@
-
+# frozen_string_literal: true
 
 RSpec.describe 'user_feedbacks/edit', type: :view, skip: 'TBD' do
   before do
@@ -12,7 +12,6 @@ RSpec.describe 'user_feedbacks/edit', type: :view, skip: 'TBD' do
     render
 
     assert_select 'form[action=?][method=?]', user_feedback_path(@user_feedback), 'post' do
-
       assert_select 'input[name=?]', 'user_feedback[title]'
 
       assert_select 'input[name=?]', 'user_feedback[body]'
