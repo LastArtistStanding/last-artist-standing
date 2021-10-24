@@ -3,9 +3,9 @@
 class UsersController < ApplicationController
   include SubmissionsHelper
 
-  before_action :set_curruser, only: %i[submissions show edit update mod_action delete]
-  before_action :ensure_logged_in, only: %i[edit update delete]
-  before_action -> { ensure_authorized @user.id }, only: %i[edit update delete]
+  before_action :set_curruser, only: %i[submissions show edit update mod_action delete destroy]
+  before_action :ensure_logged_in, only: %i[edit update delete destroy]
+  before_action -> { ensure_authorized @user.id }, only: %i[edit update delete destroy]
   before_action :ensure_unbanned, only: %i[edit update]
   before_action :ensure_authenticated, only: %i[mod_action]
   before_action :ensure_moderator, only: %i[mod_action]

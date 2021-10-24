@@ -4,10 +4,11 @@
 class Challenge < ApplicationRecord
   include MarkdownHelper
 
+  belongs_to :creator, class_name: 'User'
   has_many :badge_maps, dependent: :destroy
   has_many :participations, dependent: :destroy
   has_many :notifications, as: :source, dependent: :destroy
-  has_many :challenge_entries
+  has_many :challenge_entries, dependent: :destroy
   has_many :users, through: :participations
   has_many :badges, through: :badge_maps, dependent: :destroy
   has_many :moderator_logs, as: :target

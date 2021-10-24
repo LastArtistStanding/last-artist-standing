@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_04_192536) do
+ActiveRecord::Schema.define(version: 2021_10_24_071105) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -241,15 +241,8 @@ ActiveRecord::Schema.define(version: 2021_09_04_192536) do
 
   create_table "user_feedbacks", force: :cascade do |t|
     t.bigint "user_id"
-    t.string "owner", default: "LastArtistStanding", null: false
-    t.string "repo", default: "last-artist-standing", null: false
-    t.string "title", default: "Untitled User Feedback", null: false
+    t.string "title", null: false
     t.string "body", null: false
-    t.string "assignees", array: true
-    t.string "milestone"
-    t.string "labels"
-    t.string "number"
-    t.string "url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_user_feedbacks_on_user_id"
@@ -296,10 +289,13 @@ ActiveRecord::Schema.define(version: 2021_09_04_192536) do
     t.index ["name"], name: "index_users_on_name", unique: true
   end
 
+  add_foreign_key "challenges", "users", column: "creator_id"
   add_foreign_key "discussions", "boards"
   add_foreign_key "discussions", "users"
   add_foreign_key "house_participations", "users"
   add_foreign_key "moderator_applications", "users"
+  add_foreign_key "moderator_logs", "users"
   add_foreign_key "site_bans", "users"
+  add_foreign_key "user_feedbacks", "users"
   add_foreign_key "user_sessions", "users"
 end

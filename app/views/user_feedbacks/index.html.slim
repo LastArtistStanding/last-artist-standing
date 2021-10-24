@@ -1,0 +1,23 @@
+h1 Listing user_feedbacks
+
+table
+  thead
+    tr
+      th Title
+      th Body
+      th
+      th
+      th
+
+  tbody
+    - @user_feedbacks.each do |user_feedback|
+      tr
+        td = user_feedback.title
+        td = user_feedback.body
+        td = link_to 'Show', user_feedback
+        td = link_to 'Edit', edit_user_feedback_path(user_feedback)
+        td = link_to 'Destroy', user_feedback, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New User feedback', new_user_feedback_path

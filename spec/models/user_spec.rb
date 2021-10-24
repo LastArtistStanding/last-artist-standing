@@ -23,8 +23,6 @@ describe User do
       user = create :user
       ml = create :moderator_log, user: user
       user.destroy
-      puts ModeratorLog.find(ml.id).inspect
-      puts user.destroyed?
       expect(ModeratorLog.find(ml.id).user_id).to be_nil
     end
 
@@ -110,11 +108,197 @@ describe User do
       expect(UserSession.where(user_id: user.id)).to be_empty
     end
 
-    it 'nullifies their user feedback' do
+    it 'nullifies challenges they created' do
+      user = create :user
+      create :challenge, creator: user
+      user.destroy
+      expect(Challenge.where(creator_id: user.id)).to be_empty
+    end
+
+    it 'nullifies any feedback they submitted' do
       user = create :user
       create :user_feedback, user: user
       user.destroy
       expect(UserFeedback.where(user_id: user.id)).to be_empty
+    end
+  end
+
+  context 'when authenticating the user', skip: 'Auth is TBD' do
+    it 'create a digest' do
+    end
+
+    it 'sets the password reset attributes' do
+    end
+
+    it 'sends a password reset email' do
+    end
+
+    it 'creates a new token' do
+    end
+
+    it 'checks if the password is expired' do
+    end
+
+    it 'updates the user while retaining the password' do
+    end
+
+    it 'resets te email verification' do
+    end
+
+    it 'creates verifieds their email' do
+    end
+
+    it 'checks if they are verified' do
+    end
+
+    it 'checks if email verification is present' do
+    end
+
+    it 'checks that the email verification is valid' do
+    end
+
+    it 'checks that the email verification is too recent to resend' do
+    end
+
+    it 'checks if the email verification is expired' do
+    end
+
+    it 'checks that the email verification is correct' do
+    end
+  end
+
+  context 'when using x-site auth', skip: 'Cross Site Auth is TBD' do
+    it 'resets x site auth code' do
+
+    end
+
+    it 'validates x site code' do
+
+    end
+  end
+
+  context 'when getting user info' do
+    it 'gets the user\'s display name if available' do
+      user = create :user
+      user.display_name = 'Phil'
+      expect(user.username).to eq('Phil')
+    end
+
+    it 'gets the user\'s name if display name is not available' do
+      user = create :user
+      expect(user.username).to equal(user.name)
+    end
+
+    it 'gets their dad frequency if new_frequency is not available' do
+      user = create :user
+      user.dad_frequency = 500
+      expect(user.current_dad_frequency).to equal(user.dad_frequency)
+    end
+
+    it 'gets their new frequency if available' do
+      user = create :user
+      user.new_frequency = 123
+      expect(user.current_dad_frequency).to equal(user.new_frequency)
+    end
+
+    it 'invalidates their sessions' do
+      user = create :user
+      create :user_session, user: user
+      user.invalidate_sessions
+      expect(user.user_session.all.length).to eq(0)
+    end
+
+    it 'won\'t let the make comments if their email is not verified' do
+      user = create :user
+      expect(user.can_make_comments[0]).to equal(false)
+    end
+
+    it 'won\'t allow verified users to make comments if they haven\'t reached a certain level' do
+      user = create :user
+      user.verify_email
+      expect(user.can_make_comments[0]).to equal(false)
+    end
+
+    it 'allows sufficiently leveled users to make comments' do
+      user = create :user
+      user.verify_email
+      user.highest_level = 100
+      expect(user.can_make_comments[0]).to equal(true)
+    end
+
+    it 'sets their submission limit to one if they are new' do
+      user = create :user
+      expect(user.submission_limit).to equal(1)
+    end
+
+    it 'sets their submission limit to their highest level if they are not new' do
+      user = create :user
+      user.highest_level = 2
+      expect(user.submission_limit).to equal(user.highest_level)
+    end
+
+    it 'sets their submission limit to -1 if they have no limit' do
+      user = create :user
+      user.highest_level = 10
+      expect(user.submission_limit).to equal(-1)
+    end
+
+    it 'limits the number of submissions they can make until they reach a certain level' do
+      user = create :user
+      user.highest_level = 1
+      create :submission, user: user
+      expect(user.can_make_submissions[0]).to equal(false)
+    end
+
+    it 'allows them to make submissions if they have not reached their limit' do
+      user = create :user
+      user.highest_level = 2
+      create :submission, user: user
+      expect(user.can_make_submissions[0]).to equal(true)
+    end
+
+    it 'allows them to make unlimited submissions if they reach a certain level' do
+      user = create :user
+      user.highest_level = 10
+      create_list(:submission, 100, user: user)
+      expect(user.can_make_submissions[0]).to equal(true)
+    end
+
+    it 'does not allow low-leveled users to make challenges' do
+      user = create :user
+      expect(user.can_make_challenges[0]).to equal(false)
+    end
+
+    it 'does allow them to make challenges if they are of a high enough level' do
+      user = create :user
+      user.highest_level = 40
+      expect(user.can_make_challenges[0]).to equal(true)
+    end
+
+    it 'limits them to how many concurrent challenges they can have' do
+      user = create :user
+      create_list(:challenge, 100, creator_id: user)
+      expect(user.can_make_challenges[0]).to equal(false)
+    end
+
+    it 'checks if they are a developer', skip: 'TBD' do
+
+    end
+
+    it 'checks if they are a mod', skip: 'TBD' do
+
+    end
+
+    it 'checks if they are an admin', skip: 'TBD' do
+
+    end
+
+    it 'gets their profile picture if they have one', skip: 'TBD' do
+
+    end
+
+    it 'gets the default profile picture if they don not have one', skip: 'TBD' do
+
     end
   end
 
@@ -171,14 +355,4 @@ describe User do
     end
   end
 
-  context 'when checking user permissions' do
-  end
-
-  context 'when getting user info' do
-
-  end
-
-  context 'when authenticating the user' do
-
-  end
 end

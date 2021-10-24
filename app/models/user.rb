@@ -18,16 +18,20 @@ class User < ApplicationRecord
   has_many :submissions, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :notifications, dependent: :destroy
+  # user.followers will return all users that follow THIS user
   has_many :followers, class_name: 'Follower', foreign_key: 'following_id', dependent: :destroy
+  # user.following will return all users that THIS user follows
   has_many :following, class_name: 'Follower', dependent: :destroy
   has_many :user_session, dependent: :nullify
-  has_many :user_feedbacks, dependent: :nullify
 
   has_many :challenge_entries, dependent: :destroy
   has_many :participations, dependent: :destroy
   has_many :awards, dependent: :destroy
   has_many :badges, through: :awards
   has_many :challenges, through: :participations
+  has_many :created_challenges,
+           class_name: 'Challenge', foreign_key: 'creator_id', dependent: :nullify
+  has_many :user_feedbacks, dependent: :nullify
 
   has_one :moderator_application, dependent: :destroy
   has_many :site_ban, dependent: :destroy
@@ -57,6 +61,7 @@ class User < ApplicationRecord
     @retain_old_password = false
   end
 
+  ### Authentication ###
   # Returns the hash digest of the given string.
   def self.digest(string)
     cost = if ActiveModel::SecurePassword.min_cost
@@ -146,6 +151,7 @@ class User < ApplicationRecord
     BCrypt::Password.new(email_verification_digest) == code
   end
 
+  ### Cross site stuff ###
   def reset_x_site_auth_code
     token = User.new_token
 
@@ -162,6 +168,7 @@ class User < ApplicationRecord
     x_site_auth_digest.present? && BCrypt::Password.new(x_site_auth_digest) == code
   end
 
+  ### General user info ###
   def username
     display_name || name
   end
@@ -182,6 +189,15 @@ class User < ApplicationRecord
 
     [false, "You must have achieved DAD level #{COMMENT_CREATION_REQUIREMENT}\
      to write comments."]
+  end
+
+  def submission_limit
+    max_dad_level = highest_level
+    return 1 if max_dad_level.zero?
+
+    return max_dad_level if max_dad_level < UNLIMITED_SUBMISSIONS_REQUIREMENT
+
+    -1
   end
 
   def can_make_submissions
@@ -229,23 +245,14 @@ class User < ApplicationRecord
       (is_admin && admin_clearance)
   end
 
-  def submission_limit
-    max_dad_level = highest_level
-    return 1 if max_dad_level.zero?
-
-    return max_dad_level if max_dad_level < UNLIMITED_SUBMISSIONS_REQUIREMENT
-
-    -1
-  end
-
   def profile_picture
     avatar.thumb.url || 'https://s3.us-east-2.amazonaws.com/do-art-daily-public/Default+User+Thumb.png'
   end
 
-  # Moderation
+  ### Moderation ###
   def approve(reason, moderator)
     create_mod_log(moderator, "#{moderator.username} has approved #{username}.", reason)
-    update(approved: true)
+    update_retain_password(approved: true)
   end
 
   def latest_ban
@@ -274,7 +281,7 @@ class User < ApplicationRecord
 
   def mark_for_death(reason, moderator)
     ban_user(99_999, reason, moderator)
-    update(marked_for_death: true)
+    update_retain_password(marked_for_death: true)
     action = "#{moderator.username} has marked #{username} for death!".upcase
     create_mod_log(moderator, action, reason)
   end
