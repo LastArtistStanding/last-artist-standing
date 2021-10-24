@@ -1,0 +1,2 @@
+module UserFeedbacksHelper
+end
