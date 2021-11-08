@@ -3,7 +3,7 @@
 class Discussion < ApplicationRecord
   belongs_to :user
   belongs_to :board
-  has_many :comments, as: :source
+  has_many :comments, as: :source, dependent: :destroy
 
   validates :title, length: { maximum: 100 }, presence: true
   validates :nsfw_level, presence: true, numericality: {
@@ -16,7 +16,7 @@ class Discussion < ApplicationRecord
     return [false, 'You must be logged in to comment.'] if user.blank?
     return [false, 'This thread has been locked.'] if locked
 
-    ban = user.get_latest_ban
+    ban = user.latest_ban
     unless ban.nil?
       return [false, "You have an active ban until #{date_string_short(ban.expiration)}."]
     end

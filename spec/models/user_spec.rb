@@ -82,6 +82,13 @@ describe User do
       expect(HouseParticipation.find(hp.id).user_id).to be_nil
     end
 
+    it 'nullifies their discussions' do
+      user = create :user
+      d = create :discussion, user: user
+      user.destroy
+      expect(Discussion.find(d.id).user_id).to be_nil
+    end
+
     it 'deletes their mod application' do
       user = create :user, :mod_applicant
       user.destroy

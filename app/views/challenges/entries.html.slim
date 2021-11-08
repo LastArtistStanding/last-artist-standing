@@ -1,34 +1,5 @@
 - provide(:title, "Entries for #{@challenge.name}")
 
-javascript:
-  $(function () {
-    $('[data-toggle="popover"]').popover()
-    $('[data-toggle="tooltip"]').tooltip()
-    $(".submissionThumbnail").click((e) => {
-			e.preventDefault();
-			$('#spinner').show()
-			$('#modalContent').hide()
-			$('#submissionModal').modal('toggle')
-      $('#drawing').attr("src", e.target.dataset.drawing)
-			$('#fullSize').attr("href", e.target.dataset.drawing)
-      $('#details').attr("href", e.target.dataset.details)
-    })
-		$('#drawing').load(() => {
-			$('#spinner').hide()
-			$('#modalContent').show()
-			var width = $("#drawing").get(0).naturalWidth < 150 ? 150 : $("#drawing").get(0).naturalWidth;
-			var height = $("#drawing").get(0).naturalHeight < 150 ? 150 : $("#drawing").get(0).naturalHeight;
-
-			if (width > 800) {
-				$('#modalDialog').css("max-width", "")
-				$('#modalDialog').addClass('modal-lg')
-			} else {
-				$('#modalDialog').css("max-width", width)
-				$('#modalDialog').removeClass('modal-lg')
-			}
-		})
-  })
-
 .container-fluid style="margin-top: 2rem;"
   .row
     .col-lg-1
@@ -61,7 +32,7 @@ javascript:
                         a.submissionAuthor href="/users/#{submission.user.id}" class="#{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''}"
                           img src="#{ submission.user.profile_picture }"
                           = submission.user.username
-                        a.submissionThumbnail href="/submissions/#{submission.id}" style="cursor: zoom-in;"
+                        a.submissionThumbnail href="/submissions/#{submission.id}"
                           img.submissionThumbnail { 
                             src="#{safe_submission_thumb(submission)}"
                             alt="#{submission.display_title}" 
@@ -96,17 +67,3 @@ javascript:
         |  Back
 
     .col-lg-1
-
-.modal.fade#submissionModal style="background-color:rgba(0,0,0,.7)" tabindex="-1" role="dialog"
-  .modal-dialog.modal-dialog-centered#modalDialog role="document" style="margin: auto;"
-    div#spinner style="margin: auto;"
-			span.fa.fa-spinner.fa-spin.fa-5x style="color: white;"
-    .modal-content#modalContent
-      .modal-body.m-0.p-0
-        img.w-100#drawing data-dismiss="modal" style="image-rendering: crisp-edges;"
-        .row
-					.button-group.position-absolute.mt-2.mr-2#detailButtons style="top:0;right:0;"
-						a.btn.btn-dark.mr-2#details type="button"
-							span.fa.fa-external-link 
-						a.btn.btn-dark#fullSize type="button" target="_blank"
-							span.fa.fa-arrows-alt

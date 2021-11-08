@@ -37,7 +37,7 @@ class Submission < ApplicationRecord
     return [false, 'You must be logged in to comment.'] if user.blank?
     return [false, 'The artist has locked comments for this submission.'] unless commentable
 
-    ban = user.get_latest_ban
+    ban = user.latest_ban
     unless ban.nil?
       return [false, "You have an active ban until #{date_string_short(ban.expiration)}."]
     end

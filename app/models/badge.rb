@@ -5,8 +5,8 @@
 class Badge < ApplicationRecord
   mount_uploader :avatar, ImageUploader
 
-  has_many :awards
-  has_many :badge_maps
+  has_many :awards, dependent: :destroy
+  has_many :badge_maps, dependent: :destroy
   has_many :users, through: :awards
   has_many :challenges, through: :badge_maps
 

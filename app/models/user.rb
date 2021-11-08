@@ -32,6 +32,7 @@ class User < ApplicationRecord
   has_many :created_challenges,
            class_name: 'Challenge', foreign_key: 'creator_id', dependent: :nullify
   has_many :user_feedbacks, dependent: :nullify
+  has_many :discussions, dependent: :nullify
 
   has_one :moderator_application, dependent: :destroy
   has_many :site_ban, dependent: :destroy

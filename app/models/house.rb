@@ -6,7 +6,7 @@ class House < ApplicationRecord
   validates :house_name, :house_start, presence: true, allow_blank: false
   validate :house_name_unique
   validate :house_not_old
-  has_many :house_participations, dependent: :nullify
+  has_many :house_participations, dependent: :destroy
 
   # @function add_user
   # @abstract adds the current user
