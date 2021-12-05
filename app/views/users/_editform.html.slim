@@ -89,8 +89,12 @@
           b Delete Account 
         .card-body style='display: flex; justify-content: center;'
           = link_to "/users/#{@user.id}/delete", class: "btn btn-danger"
-            i.fa.fa-user-times
-            |  Nuke My Account
+            - unless @user.marked_for_death
+              i.fa.fa-user-times
+              |  Nuke My Account
+            - else
+              i.fa.fa-user-times
+              |  Cancel Account Deletion
 
 .card
   .card-header

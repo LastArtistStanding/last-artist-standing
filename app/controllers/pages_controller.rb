@@ -31,6 +31,7 @@ class PagesController < ApplicationController
                                      .where(participations: { user_id: current_user&.id,
                                                               active: true }, challenges: { seasonal: false })
                                      .where.not(challenges: { id: 1 })
+      @user = current_user
     end
   end
 

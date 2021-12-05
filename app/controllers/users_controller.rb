@@ -79,8 +79,17 @@ class UsersController < ApplicationController
       return
     end
     UserFeedback.create(title: 'Account Deleted', body: params[:body]) if params[:body].present?
-    @user.destroy
+    @user.update_retain_password(marked_for_deletion: true, deletion_date: 14.days.from_now.to_date)
     redirect_to root_url
+  end
+
+  def cancel_delete
+    @user = params[:id].blank? ? current_user : User.find(params[:id])
+    return unless @user.marked_for_deletion
+
+    @user.update_retain_password(marked_for_deletion: false, deletion_date: nil)
+    flash[:success] = 'Your account is no longer marked for deletion.'
+    redirect_back fallback_location: root_path
   end
 
   def update

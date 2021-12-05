@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_24_071105) do
+ActiveRecord::Schema.define(version: 2021_12_05_074007) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -285,6 +285,8 @@ ActiveRecord::Schema.define(version: 2021_10_24_071105) do
     t.boolean "marked_for_death", default: false, null: false
     t.string "bio"
     t.boolean "is_developer", default: false, null: false
+    t.boolean "marked_for_deletion", default: false, null: false
+    t.date "deletion_date"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["name"], name: "index_users_on_name", unique: true
   end
