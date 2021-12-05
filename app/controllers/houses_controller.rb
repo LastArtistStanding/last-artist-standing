@@ -5,11 +5,12 @@ class HousesController < ApplicationController
   include HousesHelper
   before_action :ensure_moderator, only: %i[edit update]
   before_action :ensure_unbanned, only: %i[join]
+  before_action :date_fixer, only: %i[index]
 
   # @function index
   # @abstract sets up parameters for the houses main page
   def index
-    @date = Date.parse(params[:date]&.values&.join('-') || Time.now.utc.strftime('%Y-%m-01'))
+    @date = params[:date] > Time.now.utc ? Time.now.utc.to_date : params[:date]
     @houses = House.where(house_start: @date.at_beginning_of_month.to_date).sort_by { |h| -h.total }
   end
 
@@ -73,5 +74,11 @@ class HousesController < ApplicationController
                    " to #{house_params[:house_name]}"
       log.reason = mod_params[:reason]
     end
+  end
+
+  def date_fixer
+    params[:date] = Date.parse(params[:date]&.values&.join('-') || '')
+  rescue ArgumentError
+    params[:date] = Time.now.utc.at_beginning_of_month.to_date
   end
 end

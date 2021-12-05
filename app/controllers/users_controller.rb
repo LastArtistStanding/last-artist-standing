@@ -12,6 +12,7 @@ class UsersController < ApplicationController
   before_action :ensure_verified_to_upload_avatar, only: %i[create update]
   # TODO: Also handle registration being closed for the registration form, i.e. :new.
   before_action :ensure_registration_open, only: %i[new create]
+  before_action :date_fixer, only: %i[submissions]
 
   def index
     @user_per_page = 25
@@ -23,11 +24,15 @@ class UsersController < ApplicationController
   end
 
   def submissions
-    @user_submissions_per_page = 25
+    @date = params[:date] > Time.current ? Time.current : params[:date]
+    count = base_submissions.where(user_id: @user.id, created_at: @date..@date.end_of_month).count
     @user_submissions = base_submissions
-                        .where(user_id: @user.id)
-                        .order('submissions.created_at DESC')
-                        .paginate(page: params[:page], per_page: @user_submissions_per_page)
+                        .select("WHERE user_id = #{@user.id} ORDER BY (case when submissions.created_at between #{@date} and #{@date.end_of_month} then 0 else 1 end),
+                                                                                      submissions.created_at DESC")
+                        # .where(user_id: @user.id)
+                        # .order("(case when extract(epoch from submissions.created_at) between #{@date} and #{@date.end_of_month} then 0 else 1 end),
+                        #        submissions.created_at DESC")
+                        # .limit(count > 30 ? count : 30)
   end
 
   def show
@@ -171,5 +176,11 @@ class UsersController < ApplicationController
 
     flash[:danger] = 'You must verify your account before changing your avatar!'
     render_unverified
+  end
+
+  def date_fixer
+    params[:date] = Date.parse(params[:date]&.values&.join('-') || '').beginning_of_month
+  rescue ArgumentError
+    params[:date] = Time.current.beginning_of_month
   end
 end

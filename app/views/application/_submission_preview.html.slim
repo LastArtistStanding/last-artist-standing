@@ -1,0 +1,33 @@
+div.submission-preview
+  a.submission-link href="/submissions/#{submission.id}"
+    img.submission-card {
+      src="#{safe_submission_thumb(submission)}"
+      alt="#{submission.display_title}"
+      data-drawing="#{safe_submission_drawing(submission)}"
+      data-details="/submissions/#{submission.id}"
+    }
+    div.submission-details class="#{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''}"
+      b
+        | #{submission.title}
+        br
+        | #{submission.created_at.strftime("%m/%d/%y")}
+        br
+        | #{submission.created_at.strftime("%H:%M:%S")}
+        br
+        - if submission.soft_deleted
+          i.fa.fa-minus-circle title="Soft Deleted"
+          | &nbsp
+        - unless submission.approved
+          i.fa.fa-warning title="Unapproved"
+          | &nbsp
+        - if submission.is_animated_gif
+          i.fa.fa-film title="Animated"
+          | &nbsp;
+        - if submission.num_comments > 0
+          i.fa.fa-comments-o title="Has Comments"
+          | &nbsp;
+          = submission.num_comments
+  - if user_badge
+    a.user-badge href="/users/#{submission.user.id}" class="#{follows?(submission.user_id) && show_follows ? 'followed-user' : ''}"
+      = image_tag submission.user.profile_picture, title: submission.user.username
+    

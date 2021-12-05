@@ -1,73 +1,41 @@
 - provide(:title, "#{@user.username}'s Submissions")
 
-javascript:
-  $(function () {
-    $('[data-toggle="popover"]').popover()
-    $('[data-toggle="tooltip"]').tooltip()
-  })
-
-.container-fluid style="margin-top: 2rem;"
-  .row
-    .col-lg-1
-
-    .col-lg-10
-      .card
-        .card-body
-          = page_entries_info @user_submissions
-
-      - if @user_submissions.count > @user_submissions_per_page
-        .card
-          .card-body
-            .digg_pagination
-              = will_paginate @user_submissions, container: false
-
-      .row
-        .col-lg-12
-          .card
-            .card-header
-              b = "#{@user.username} - Submissions"
-
-            .card-body
-              - if @user_submissions.count == 0
-                | This user has no submissions!
-              - else
-                ul.submissionrow
-                  - @user_submissions.each do |submission|
-                    li
-                      .submissionIcon
-                        .submissionTitle = submission.display_title
-                        a.submissionThumbnail href="/submissions/#{submission.id}"
-                          img.submissionThumbnail { 
-                            src="#{safe_submission_thumb(submission)}"
-                            alt="#{submission.display_title}"
-                            data-drawing="#{safe_submission_drawing(submission)}"
-                            data-details="/submissions/#{submission.id}"
-                          }
-                        .submissionNotes class="#{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''}"
-                          = submission.created_at.strftime("%b %-d")
-                          | &nbsp;
-                          - unless submission.approved
-                            i.fa.fa-warning data-toggle="tooltip" data-placement="top" title="Unapproved"
-                            | &nbsp;
-                          - if submission.soft_deleted
-                            i.fa.fa-minus-circle data-toggle="tooltip" data-placement="top" title="Soft Deleted"
-                            | &nbsp;
-                          - if submission.is_animated_gif
-                            i.fa.fa-film data-toggle="tooltip" data-placement="top" title="Animated"
-                            | &nbsp;
-                          - if submission.num_comments > 0
-                            i.fa.fa-comments-o data-toggle="tooltip" data-placement="top" title="Has Comments"
-                            | &nbsp;
-                            = submission.num_comments
-
-      - if @user_submissions.count > @user_submissions_per_page
-        .card
-          .card-body
-            .digg_pagination
-              = will_paginate @user_submissions, container: false
-
-      a.btn.btn-primary href="/users/#{@user.id}"
-        span.fa.fa-undo
-        |  Back
-
-    .col-lg-1
+.container-fluid
+  .card
+    .card-body.date-nav
+      a.btn.btn-primary href="/users/#{@user.id}" style="white-space: nowrap"
+        | Return 
+        span.fa.fa-level-up
+      .spacer
+      = render partial: "application/date_selector", locals: { source_path: "submissions", min_year: 2020, max_year: 2030, current_date: @date, selector_type: 'month' }
+      .spacer
+  - if @user_submissions.empty?
+    .card.submission-container.centered
+      .card-header
+        b #{@user.username}'s Submissions
+      .card-body
+        b This user doesn't have any submissions
+  - else
+    .card.submission-container.centered
+      .card-header
+        b #{@user.username}'s Submissions - #{@date.strftime("%B, %Y")}
+      .card-body.centered style="display: flex; flex-wrap: wrap;"
+        - if @user_submissions.empty?
+          b This user doesn't have any submission for this month
+        - @user_submissions.each do |submission|
+          = render partial: "application/submission_preview", locals: { submission: submission, user_badge: false, show_follows: false }
+    - unless @extra_submissions.nil? || @extra_submissions.empty?
+      .card.submission-container.centered style="display: flex; flex-wrap: wrap;"
+        .card-header
+          b More submissions by #{@user.username}
+        .card-body.submission-container.centered
+          - @extra_submissions.each do |submission|
+            = render partial: "application/submission_preview", locals: { submission: submission, user_badge: false, show_follows: false }
+  .card
+    .card-body.date-nav
+      a.btn.btn-primary href="/users/#{@user.id}" style="white-space: nowrap"
+        | Return 
+        span.fa.fa-level-up
+      .spacer
+      = render partial: "application/date_selector", locals: { source_path: "submissions", min_year: 2020, max_year: 2030, current_date: @date, selector_type: 'month' }
+      .spacer

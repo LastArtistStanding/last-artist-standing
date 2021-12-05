@@ -8,11 +8,12 @@ class SubmissionsController < ApplicationController
   before_action :ensure_moderator, only: %i[mod_action]
   before_action -> { ensure_authorized @submission.user_id }, only: %i[edit update destroy]
   before_action :ensure_unbanned, only: %i[new create edit update destroy]
+  before_action :date_fixer, only: %i[index]
 
   # GET /submissions
   # GET /submissions.json
   def index
-    @date = Date.parse(params[:date] || Time.now.utc.strftime('%Y-%m-%d'))
+    @date = params[:date] > Time.now.utc ? Time.now.utc.to_date : params[:date]
     @submissions = bubble_followed_users(base_submissions)
                    .includes(:user)
                    .where(created_at: @date.midnight..@date.end_of_day)
@@ -277,5 +278,11 @@ class SubmissionsController < ApplicationController
 
   def limited_params
     params.require(:submission).permit(:nsfw_level, :title, :description, :commentable, :allow_anon)
+  end
+
+  def date_fixer
+    params[:date] = Date.parse(params[:date]&.values&.join('-') || '')
+  rescue ArgumentError
+    params[:date] = Time.now.utc.to_date
   end
 end

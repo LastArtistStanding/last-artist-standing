@@ -1,58 +1,19 @@
-- provide(:title, 'Submissions')
+- provide(:title, "Submissions for #{Date::MONTHNAMES[@date.month]} #{@date.day.ordinalize}, #{@date.year}")
 
-javascript:
-  $(function () {
-    $('[data-toggle="popover"]').popover()
-    $('[data-toggle="tooltip"]').tooltip()
-  })
-
-.container-fluid
-  .row
-    .col-lg-2
-
-    .col-lg-8
-      div style="margin-bottom: 1rem;"
-        h2 = "#{@date == Time.now.utc.to_date ? "Today's" : @date.strftime("%B %e, %Y")} Submissions"
-
-      = form_tag submissions_path, method: :get do
-        = date_field_tag :date, @date, class: "form-control", style: "width: 150px; display: inline-block; vertical-align: middle;", max: "#{Time.now.utc.to_date}"
-        = submit_tag 'Select', class: "btn btn-primary", style: "width: 100px; margin-left: 5px;"
-        a.btn.btn-primary style="margin-left: 5px; width: 100px; vertical-align: top;" href="#{submissions_path(:date => @date - 1.day)}"
-          | Prev Day
-        - unless @date == Time.now.utc.to_date
-          a.btn.btn-primary style="margin-left: 5px; width: 100px; vertical-align: top;" href="#{submissions_path(:date => @date + 1.day)}"
-            | Next Day
-
-      .row
-        ul.submissionrow
-          - @submissions.each do |submission|
-            li
-              .submissionIcon
-                a.submissionAuthor href="/users/#{submission.user.id}" class="#{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''} #{follows?(submission.user_id) ? 'followed-user' : ''}"
-                  img src="#{ submission.user.profile_picture }"
-                  = submission.user.username
-                a.submissionThumbnail href="/submissions/#{submission.id}"
-                  img { 
-                    src="#{safe_submission_thumb(submission)}"
-                    alt="#{submission.display_title}" 
-                    data-drawing="#{safe_submission_drawing(submission)}" 
-                    data-details="/submissions/#{submission.id}"
-                  }
-                .submissionNotes class="#{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''} #{follows?(submission.user_id) ? 'followed-user' : ''}"
-                  = submission.created_at.strftime("%H:%M:%S")
-                  | &nbsp;
-                  - unless submission.approved
-                    i.fa.fa-warning data-toggle="tooltip" data-placement="top" title="Unapproved"
-                    | &nbsp;
-                  - if submission.soft_deleted
-                    i.fa.fa-minus-circle data-toggle="tooltip" data-placement="top" title="Soft Deleted"
-                    | &nbsp;
-                  - if submission.is_animated_gif
-                    i.fa.fa-film data-toggle="tooltip" data-placement="top" title="Animated"
-                    | &nbsp;
-                  - if submission.num_comments > 0
-                    i.fa.fa-comments-o data-toggle="tooltip" data-placement="top" title="Has Comments"
-                    | &nbsp;
-                    = submission.num_comments
-
-    .col-lg-2
+div.container-fluid
+  .card
+    .card-body.date-nav
+      .spacer
+      = render partial: "application/date_selector", locals: { source_path: "submissions", min_year: 2018, max_year: 2030, current_date: @date, selector_type: 'date' }
+      .spacer
+  .card
+    .card-header
+      b Submissions for #{Date::MONTHNAMES[@date.month]} #{@date.day.ordinalize}, #{@date.year}
+    .card-body.submission-container.centered
+      - @submissions.each do |submission|
+        = render partial: "application/submission_preview", locals: { submission: submission, user_badge: true, show_follows: true }
+  .card
+    .card-body.date-nav
+      .spacer
+      = render partial: "application/date_selector", locals: { source_path: "submissions", min_year: 2018, max_year: 2030, current_date: @date, selector_type: 'date' }
+      .spacer

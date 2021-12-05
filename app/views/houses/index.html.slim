@@ -1,25 +1,8 @@
-javascript:
-  $(function () {
-    $('[data-toggle="tooltip"]').tooltip()
-  })
+- provide(:title, "DAD Houses for #{Date::MONTHNAMES[@date.month]}, #{@date.year}")
 
-div.house-container
-
-  div.house-form
-    = form_with url: houses_path, method: :get
-      div style="display:none"
-        = select_date @date.prev_month, discard_day: true, start_year: 2020, end_year: 2030
-      = submit_tag 'Prev Month', class: "btn btn-primary"
-    = form_with url: houses_path, method: :get
-      div.house-date-picker
-        b DAD Houses for:
-        = select_date(@date, discard_day: true, start_year: 2020, end_year: 2030)
-        = submit_tag 'Select', class: "btn btn-primary"
-    = form_with url: houses_path, method: :get
-      div style="display:none"
-        = select_date @date.next_month, discard_day: true, start_year: 2020, end_year: 2030
-      = submit_tag 'Next Month', class: "btn btn-primary"
-      
+div.house-index
+  div style="margin: 2em 0; width: 100%; display: flex; justify-content:center;"
+    = render partial: "application/date_selector", locals: { source_path: houses_path, min_year: 2020, max_year: 2030, current_date: @date, selector_type: 'month' }
   div.house-neighborhood
     - if @houses.any?
       - @houses.each_with_index do |h|
@@ -29,7 +12,7 @@ div.house-container
             b #{"🥇" if h.place == '1st'} #{"🥈" if h.place == '2nd'} #{"🥉" if h.place == '3rd'}
             - unless !logged_in? || in_a_house?(current_user.id) || h.old_house?
               = form_with(url: "/houses/#{h.id}/join", method: 'post', id: "join--#{h.id}") do |form|
-                = form.button type: "submit", id: "join-house"
+                = form.button type: "submit", id: "join-house", style: "background: transparent;", title: "Join House"
                   i.fa.fa-user-plus
             - if logged_in_as_moderator && !h.old_house?
               a.house-icon href="#{edit_house_path(h)}" title="Edit House"
@@ -44,7 +27,7 @@ div.house-container
                 b User Avg: 0 hr 0 min
             div.house-table-cell
               p.house-title User
-              div.house-spacer
+              div.spacer
               p.house-title Score
             - h.users.each do |u|
               div.house-participant
@@ -57,8 +40,10 @@ div.house-container
                     = image_tag u.user.profile_picture
                   a href="/users/#{u.user.id}"
                     p #{u.user.username}
-                div.house-spacer
+                div.spacer
                 p #{u[:score] / 60} hr #{u[:score] % 60}min
     - else
       h1 There are no houses for this month #{'(yet)' if @date > Time.now.utc}
+  div style="margin: 2em 0; width: 100%; display: flex; justify-content:center;"
+    = render partial: "application/date_selector", locals: { source_path: houses_path, min_year: 2020, max_year: 2030, current_date: @date, selector_type: 'month' }
 

@@ -1,0 +1,21 @@
+div.date-selector
+  - if selector_type == "month"
+    a.btn.btn-primary href="#{source_path}?date[year]=#{current_date.prev_month.year}&date[month]=#{current_date.prev_month.month}&date[day]=1" style="white-space: nowrap"
+      i.fa.fa-arrow-left
+      |  Prev Month
+    = form_with url: source_path, method: :get, class: "date-selector-form"
+      = select_date(current_date, discard_day: true, start_year: min_year, end_year: max_year)
+      = submit_tag "Select", class: "btn btn-primary", name: "select"
+    a.btn.btn-primary class="#{current_date.next_month > Time.now.utc ? "disabled" : ''}" href="#{source_path}?date[year]=#{current_date.next_month.year}&date[month]=#{current_date.next_month.month}&date[day]=1" style="white-space: nowrap"
+      | Next Month 
+      i.fa.fa-arrow-right
+  - if selector_type == "date"
+    a.btn.btn-primary href="#{source_path}?date[year]=#{current_date.prev_day.year}&date[month]=#{current_date.prev_day.month}&date[day]=#{current_date.prev_day.day}" style="white-space: nowrap"
+      i.fa.fa-arrow-left
+      |  Prev Day
+    = form_with url: source_path, method: :get, class: "date-selector-form"
+      = select_date(current_date, start_year: min_year, end_year: max_year)
+      = submit_tag "Select", class: "btn btn-primary", name: "select"
+    a.btn.btn-primary class="#{current_date.next_day > Time.now.utc ? "disabled" : ''}" href="#{source_path}?date[year]=#{current_date.next_day.year}&date[month]=#{current_date.next_day.month}&date[day]=#{current_date.next_day.day}" style="white-space: nowrap"
+      | Next Day 
+      i.fa.fa-arrow-right

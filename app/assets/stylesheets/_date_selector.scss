@@ -1,0 +1,59 @@
+.date-selector {
+  display: flex;
+  width: calc(100% - 3em);
+  max-width: 800px;
+
+  & > * {
+    margin: 0 .5em;
+  }
+}
+
+.date-selector-form {
+  padding: 0 3em;
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  justify-content: space-evenly;
+
+  & > * {
+    margin: 0 .5em;
+  }
+
+  & > .btn {
+    width: unset;
+  }
+}
+
+.btn.disabled {
+  pointer-events: none;
+}
+
+// this is here so i don't break the whole site
+.card-body.centered {
+  justify-content: center;
+}
+
+// iPad
+@media only screen and (max-width: 875px) {
+  .date-selector {
+    flex-direction: column;
+    min-width: 300px;
+
+    & > * {
+      margin: .5em 0;
+    }
+  }
+  .date-selector-form {
+    flex-direction: column;
+    min-width: 300px;
+    padding: 0;
+
+    & > * {
+      margin: .5em 0;
+    }
+
+    & > .btn {
+      width: 100%;
+    }
+  }
+}

@@ -1,0 +1,93 @@
+/*
+ *= require_self
+ */
+
+.submission-preview {
+  max-width: fit-content;
+  position: relative;
+}
+
+.submission-link {
+  border-radius: 3px;
+  margin: 10px;
+  width: 138px;
+  height: 138px;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+}
+
+.submission-details {
+  color: rgb(256, 256, 256);
+  background-color: rgba(0,0,0, .3);
+  transition: opacity 200ms;
+  opacity: 0;
+  padding: 10px;
+  position: absolute;
+  width: 102%;
+  height: 102%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+
+  &:hover {
+    opacity: 100;
+  }
+
+  &.unapproved {
+    background-color: rgba(255, 243, 160, 0.6);
+    color: rgb(117, 84, 4);
+  }
+
+  &.softDeleted {
+    background-color: rgba(255, 176, 176, .6);
+    color: rgb(114, 28, 36);
+  }
+}
+
+.submission-card {
+  border-radius: 3px;
+  background-color: #e7e7e7;
+  opacity: 100%;
+  position: absolute;
+}
+
+.user-badge {
+  position: absolute;
+  display: flex;
+  right: 4px;
+  bottom: 11px;
+  width: 24px;
+  height: 24px;
+  transition: transform 200ms;
+  border: black solid 2px;
+  border-radius: 50%;
+  overflow: hidden;
+  &:hover {
+    transform: scale(2)
+  }
+  &.followed-user {
+    width: 32px;
+    height: 32px;
+    border: rgb(29, 155, 240) solid 4px;
+    transition: transform 150ms;
+    &:hover {
+      transform: scale(1.75)
+    }
+  }
+}
+
+// iPad
+@media only screen and (max-width: 875px) {
+  // make user badges bigger by default on small screens (for fingers)
+  .user-badge, .user-badge.followed-user {
+    right: -6px;
+    bottom: -3px;
+    width: 48px;
+    height: 48px;
+    border-width: 2px;
+    &:hover {
+      transform: unset;
+    }
+  }
+}

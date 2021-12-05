@@ -8,3 +8,8 @@
 //= link submissions/keyboard_navigation.js
 //= link submissions/view_size_change.js
 //= link application.css
+
+$(function () {
+  $('[data-toggle="popover"]').popover()
+  $('[data-toggle="tooltip"]').tooltip()
+})

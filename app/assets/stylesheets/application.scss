@@ -20,6 +20,12 @@
 @import 'houses';
 @import 'submissions';
 @import 'leaving_dad';
+@import 'submission_preview';
+@import 'date_selector';
+
+.spacer {
+  flex: 1;
+}
 
 html, body {
   height: 100%;
@@ -364,125 +370,6 @@ p {
   }
 }
 
-.submissionIcon {
-  display: inline-block;
-  position: relative;
-  width: 150px;
-  height: 150px;
-  text-align: center;
-  margin: 15px;
-  img {
-    width: 150px;
-    height: 150px;
-    border-radius: 10px;
-  }
-}
-
-.submissionTitle {
-  text-align: left;
-  position: absolute;
-  background: rgba(51, 52, 50, 0.5);
-  color: white;
-  width: 100%;
-  border-radius: 10px 10px 0 0;
-  height: 30px;
-  font-size: 10pt;
-  font-weight: 600;
-  overflow: hidden;
-  white-space: nowrap;
-  padding-top: 5px;
-  padding-left: 5px;
-  text-overflow: ellipsis;
-}
-
-.submissionAuthor {
-  text-align: left;
-  position: absolute;
-  background: rgba(51, 52, 50, 0.5);
-  color: white;
-  width: 100%;
-  border-radius: 10px 10px 0 0;
-  height: 30px;
-  font-size: 10pt;
-  font-weight: 600;
-  overflow: hidden;
-  white-space: nowrap;
-
-  &.followed-user {
-    background: rgba(11, 118, 184, 0.5);
-  }
-
-  &.softDeleted {
-    background: #ffb0b0;
-    color: #721c24;
-  }
-
-  &.unapproved {
-    background: #fff3a0;
-    color: #755404;
-  }
-
-  > img {
-    height: 30px;
-    width: 30px;
-    border-radius: 0;
-    display: inline-block;
-  }
-
-  &:hover {
-    color: #AAAAAA;
-    text-decoration: none;
-  }
-}
-
-.submissionNotes {
-  text-align: right;
-  position: absolute;
-  top: 120px;
-  background: rgba(51, 52, 50, 0.5);
-  color: white;
-  width: 100%;
-  border-radius: 0 0 10px 10px;
-  height: 30px;
-  font-size: 12pt;
-  font-weight: 600;
-  padding-top: 1px;
-  padding-right: 10px;
-  -webkit-user-select: none;  /* Chrome all / Safari all */
-  -moz-user-select: none;     /* Firefox all */
-  -ms-user-select: none;      /* IE 10+ */
-  user-select: none;          /* Likely future */
-
-  &.followed-user {
-    background: rgba(11, 118, 184, 0.5);
-  }
-
-  &.softDeleted {
-    background: #ffb0b0;
-    color: #721c24;
-  }
-
-  &.unapproved {
-    background: #fff3a0;
-    color: #755404;
-  }
-}
-
-.submissionTime {
-  text-align: right;
-  position: absolute;
-  background: rgba(9, 87, 139, 0.8);
-  color: white;
-  width: 100%;
-  top: 170px;
-  height: 30px;
-  border-radius: 0 0 10px 10px;
-  padding: 2px;
-  padding-top: 4px;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
 /* Dropdown Button */
 .drophover {
     color: yellow;
@@ -608,5 +495,20 @@ p {
 
   p {
     margin: 1em 0px;
+  }
+}
+
+// iPad
+@media only screen and (max-width: 875px) {
+  .container-fluid {
+    padding: 0;
+    width: 84%
+  }
+}
+
+// Phones
+@media only screen and (max-width: 412px) {
+  .container-fluid {
+    width: unset;
   }
 }

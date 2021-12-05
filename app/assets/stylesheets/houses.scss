@@ -2,10 +2,6 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
-.house-container > h3 {
-  margin-top: 2em;
-}
-
 .house-card {
   width: 28%;
   min-width: 300px;
@@ -39,20 +35,19 @@
   align-items: baseline;
 }
 
-.house-spacer {
-  flex: 1;
-}
-
 .house-table-cell {
   display: flex;
   justify-content: space-between;
 }
 
-.house-container {
+.house-index {
   display: flex;
   flex-direction: column;
   align-items: center;
   min-width: 348px;
+  & > h3 {
+    margin-top: 2em;
+  }
 }
 
 .house-neighborhood {

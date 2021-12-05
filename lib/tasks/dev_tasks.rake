@@ -117,21 +117,25 @@ namespace :dev_tasks do
   end
 
   task generate_submissions: :environment do
-    500.times do
-      File.open("#{pwd}/app/assets/images/g#{rand(1..5)}.png", 'rb') do |f|
-        Submission.create(
-          user_id: User.all.sample.id,
-          created_at: rand(1.week.ago.utc..Time.now.utc),
-          time: rand(0..60 * 24),
-          soft_deleted: rand(0..1).zero?,
-          approved: rand(0..1).zero?,
-          description: 'Test Description',
-          commentable: rand(0..1).zero?,
-          allow_anon: rand(0..1).zero?,
-          nsfw_level: rand(1..3),
-          title: 'Test Title',
-          drawing: f
-        )
+    User.all.each do |u|
+      rand(0..100).times do
+        File.open("#{pwd}/app/assets/images/g#{rand(1..5)}.png", 'rb') do |f|
+          Submission.create(
+            user_id: u.id,
+            created_at: Time.at(rand(3.months.ago.utc.to_i..Time.now.utc.to_i)).utc,
+            time: rand(0..60 * 24),
+            soft_deleted: rand(0..1).zero?,
+            approved: rand(0..1).zero?,
+            description: 'Test Description',
+            commentable: rand(0..1).zero?,
+            allow_anon: rand(0..1).zero?,
+            nsfw_level: rand(1..3),
+            title: 'Test Title',
+            drawing: f,
+            num_comments: rand(0..5),
+            is_animated_gif: rand(0..1).zero?
+          )
+        end
       end
     end
   end
@@ -252,7 +256,7 @@ namespace :dev_tasks do
   end
 
   task generate_comments: :environment do
-    1000.times do
+    500.times do
       r = rand(0..2)
       if r.zero?
         st = 'Discussion'
@@ -278,10 +282,10 @@ namespace :dev_tasks do
 
   task generate_houses: :environment do
     12.times do |i|
-      House.create(
+      House.new(
         house_name: "House ##{i}",
-        house_start: (i / 3).months.from_now.at_beginning_of_month
-      )
+        house_start: (i / 3).months.ago.at_beginning_of_month
+      ).save(validate: false)
     end
   end
 

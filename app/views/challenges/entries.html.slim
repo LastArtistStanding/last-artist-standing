@@ -1,5 +1,5 @@
 - provide(:title, "Entries for #{@challenge.name}")
-
+// TODO fix:
 .container-fluid style="margin-top: 2rem;"
   .row
     .col-lg-1
@@ -21,40 +21,12 @@
             .card-header
               b Challenge Entries
 
-            .card-body
+            .card-body style="display:flex; flex-wrap: wrap;"
               - if @entries.count == 0
                 | No entries made yet!
               - else
-              ul.submissionrow
-                  - @entries.each do |submission|
-                    li
-                      .submissionIcon
-                        a.submissionAuthor href="/users/#{submission.user.id}" class="#{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''}"
-                          img src="#{ submission.user.profile_picture }"
-                          = submission.user.username
-                        a.submissionThumbnail href="/submissions/#{submission.id}"
-                          img.submissionThumbnail { 
-                            src="#{safe_submission_thumb(submission)}"
-                            alt="#{submission.display_title}" 
-                            data-drawing="#{safe_submission_drawing(submission)}" 
-                            data-details="/submissions/#{submission.id}"
-                          }
-                        .submissionNotes class="#{submission.approved ? '' : 'unapproved'} #{submission.soft_deleted ? 'softDeleted' : ''}"
-                          = submission.created_at.strftime("%H:%M:%S")
-                          | &nbsp;
-                          - unless submission.approved
-                            i.fa.fa-warning data-toggle="tooltip" data-placement="top" title="Unapproved"
-                            | &nbsp;
-                          - if submission.soft_deleted
-                            i.fa.fa-minus-circle data-toggle="tooltip" data-placement="top" title="Soft Deleted"
-                            | &nbsp;
-                          - if submission.is_animated_gif
-                            i.fa.fa-film data-toggle="tooltip" data-placement="top" title="Animated"
-                            | &nbsp;
-                          - if submission.num_comments > 0
-                            i.fa.fa-comments-o data-toggle="tooltip" data-placement="top" title="Has Comments"
-                            | &nbsp;
-                            = submission.num_comments
+                - @entries.each do |submission|
+                  = render partial: "application/submission_preview", locals: { submission: submission, user_badge: true, show_follows: true }
 
       - if @entries.count > @entry_per_page
         .card
