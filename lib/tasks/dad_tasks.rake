@@ -266,7 +266,7 @@ namespace :dad_tasks do
     end
 
     # STEP 9: Process account deletions:
-    User.where(marked_for_deletion: true, deletion_date: Time.current.to_date).each(&:destroy)
+    User.where(marked_for_deletion: true, deletion_date: Time.now.utc.to_date).each(&:destroy)
 
     # STEP 10: Now that the daily job is complete, update.
     SiteStatus.first.update_attribute(:current_rollover, today)

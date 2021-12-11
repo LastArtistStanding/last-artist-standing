@@ -293,7 +293,7 @@
         </div>
         <% end %>
 
-        <% unless !logged_in? or @user.nil? or @user.nil? or !@user.marked_for_deletion %>
+        <% unless !logged_in? or @user.nil? or !@user.marked_for_deletion %>
           <%= form_with url: "/users/#{@user.id}/cancel_delete", method: "post" do |f| %>
             <%= f.submit "Your account will be deleted on #{@user.deletion_date}. Click here to cancel.",
                          class: "btn btn-danger", style: "white-space: normal; font-size: larger; height: 5em;" %>
