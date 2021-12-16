@@ -1,0 +1,12 @@
+p#notice = notice
+
+p
+  strong Title:
+  = @user_feedback.title
+p
+  strong Body:
+  = @user_feedback.body
+
+=> link_to 'Edit', edit_user_feedback_path(@user_feedback)
+'|
+=< link_to 'Back', user_feedbacks_path

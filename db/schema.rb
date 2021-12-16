@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_22_135112) do
+ActiveRecord::Schema.define(version: 2021_12_05_074007) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -239,6 +239,15 @@ ActiveRecord::Schema.define(version: 2021_08_22_135112) do
     t.boolean "allow_anon", default: false
   end
 
+  create_table "user_feedbacks", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "title", null: false
+    t.string "body", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_user_feedbacks_on_user_id"
+  end
+
   create_table "user_sessions", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.string "ip_address"
@@ -274,16 +283,21 @@ ActiveRecord::Schema.define(version: 2021_08_22_135112) do
     t.boolean "is_moderator", default: false, null: false
     t.boolean "approved", default: false, null: false
     t.boolean "marked_for_death", default: false, null: false
+    t.string "bio"
     t.boolean "is_developer", default: false, null: false
+    t.boolean "marked_for_deletion", default: false, null: false
+    t.date "deletion_date"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["name"], name: "index_users_on_name", unique: true
   end
 
+  add_foreign_key "challenges", "users", column: "creator_id"
   add_foreign_key "discussions", "boards"
   add_foreign_key "discussions", "users"
   add_foreign_key "house_participations", "users"
   add_foreign_key "moderator_applications", "users"
   add_foreign_key "moderator_logs", "users"
   add_foreign_key "site_bans", "users"
+  add_foreign_key "user_feedbacks", "users"
   add_foreign_key "user_sessions", "users"
 end

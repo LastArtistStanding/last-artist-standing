@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 describe HouseParticipation do
-  it 'adds points to a users participation record' do
+  it 'adds points to a users participation.rb record' do
     user = create(:user)
     hp = create(:house_participation, user_id: user.id)
     hp.add_points(1)
     expect(hp.score).to eq(1)
   end
 
-  it 'removes points from a users participation record' do
+  it 'removes points from a users participation.rb record' do
     user = create(:user)
     hp = create(:house_participation, user_id: user.id)
     hp.add_points(1)
@@ -16,7 +16,7 @@ describe HouseParticipation do
     expect(hp.score).to eq(0)
   end
 
-  it 'updates points from a users participation record' do
+  it 'updates points from a users participation.rb record' do
     user = create(:user)
     hp = create(:house_participation, user_id: user.id)
     hp.add_points(2)

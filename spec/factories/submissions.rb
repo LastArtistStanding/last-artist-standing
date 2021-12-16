@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :submission, class: 'Submission' do
-    user
+    association :user
     drawing do
       Rack::Test::UploadedFile.new(Rails.root.join('app/assets/images/lastan_1.png'), 'image/png')
     end

@@ -84,6 +84,18 @@
           - if @user.errors.key?(:nsfw_level)
             .invalid-feedback-rails
               | NSFW Level #{@user.errors[:nsfw_level][0]}
+      .card
+        .card-header
+          b Delete Account 
+        .card-body style='display: flex; justify-content: center;'
+          = link_to "/users/#{@user.id}/delete", class: "btn btn-danger"
+            - unless @user.marked_for_death
+              i.fa.fa-user-times
+              |  Nuke My Account
+            - else
+              i.fa.fa-user-times
+              |  Cancel Account Deletion
+
 .card
   .card-header
     b Following

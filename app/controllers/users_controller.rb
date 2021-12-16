@@ -3,9 +3,9 @@
 class UsersController < ApplicationController
   include SubmissionsHelper
 
-  before_action :set_curruser, only: %i[submissions show edit update mod_action]
-  before_action :ensure_logged_in, only: %i[edit update]
-  before_action -> { ensure_authorized @user.id }, only: %i[edit update]
+  before_action :set_curruser, only: %i[submissions show edit update mod_action delete destroy]
+  before_action :ensure_logged_in, only: %i[edit update delete destroy]
+  before_action -> { ensure_authorized @user.id }, only: %i[edit update delete destroy]
   before_action :ensure_unbanned, only: %i[edit update]
   before_action :ensure_authenticated, only: %i[mod_action]
   before_action :ensure_moderator, only: %i[mod_action]
@@ -67,6 +67,31 @@ class UsersController < ApplicationController
     @followers = Follower.where(user: params[:id]).includes(:following)
   end
 
+  def delete
+    @user = User.find(params[:id])
+  end
+
+  def destroy
+    @user = User.find(params[:id])
+    unless @user.authenticate(params[:oldpassword])
+      @user.errors[:oldpassword][0] = 'Invalid password.'
+      render 'delete'
+      return
+    end
+    UserFeedback.create(title: 'Account Deleted', body: params[:body]) if params[:body].present?
+    @user.update_retain_password(marked_for_deletion: true, deletion_date: 14.days.from_now.to_date)
+    redirect_to root_url
+  end
+
+  def cancel_delete
+    @user = params[:id].blank? ? current_user : User.find(params[:id])
+    return unless @user.marked_for_deletion
+
+    @user.update_retain_password(marked_for_deletion: false, deletion_date: nil)
+    flash[:success] = 'Your account is no longer marked for deletion.'
+    redirect_back fallback_location: root_path
+  end
+
   def update
     oldpassword = params[:oldpassword]
     @followers = Follower.where(user: params[:id]).includes(:following)
@@ -114,10 +139,10 @@ class UsersController < ApplicationController
       elsif params.key?(:mark_for_death)
         @user.mark_for_death(params[:reason], current_user)
       else
-        flash[:danger] = "No action specified."
+        flash[:danger] = 'No action specified.'
       end
     else
-      flash[:danger] = "You must specify a reason."
+      flash[:danger] = 'You must specify a reason.'
     end
 
     redirect_to @user

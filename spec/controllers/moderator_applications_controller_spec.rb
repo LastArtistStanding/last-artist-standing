@@ -32,7 +32,7 @@ describe ModeratorApplicationsController do
     @user = create(:user)
     setup_session(example, @user)
 
-    @application = build(:application, user: @user)
+    @application = build(:moderator_application, user: @user)
     @application.save! unless example.metadata[:does_not_exist]
   end
 

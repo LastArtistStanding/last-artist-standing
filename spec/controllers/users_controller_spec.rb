@@ -51,6 +51,61 @@ describe UsersController do
     end
   end
 
+  describe 'GET :delete' do
+    before do |example|
+      setup_session(example, user)
+      get :delete, params: { id: user.id }
+    end
+
+    it 'renders the delete page' do
+      expect_successful_template :delete
+    end
+
+    it 'requires login', :no_login do
+      expect_unauthenticated
+    end
+
+    it 'requires correct login', :incorrect_login do
+      expect_unauthorized
+    end
+  end
+
+  describe 'DELETE :destroy' do
+    before do |example|
+      setup_session(example, user)
+    end
+
+    it 'destroys the user when given the right password' do
+      delete :destroy, params: { id: user.id,  oldpassword: user.password }
+      expect(response).to redirect_to root_url
+    end
+
+    it 'creates feedback if provided' do
+      expect do
+        delete :destroy, params: {
+          id: user.id,
+          oldpassword: user.password,
+          title: 'whatever',
+          body: 'this site sucks'
+        }
+      end.to change(UserFeedback, :count).by(1)
+    end
+
+    it 'does not create user feedback if no body was provided' do
+      expect do
+        delete :destroy, params: {
+          id: user.id,
+          oldpassword: user.password
+        }
+      end.not_to change(UserFeedback, :count)
+    end
+
+    it 'does not destroy the user when given the incorrect password' do
+      delete :destroy, params: { id: user.id, oldpassword: 'bad_password' }
+      expect(response).to render_template :delete
+    end
+  end
+
   describe ':create' do
     it 'returns a success message' do
       post_create_user
@@ -201,7 +256,6 @@ describe UsersController do
         post :mod_action, params: { id: user.id, reason: 'reason', lift_ban: true }
       end
         .to change(ModeratorLog, :count).by(1)
-        .and change(SiteBan, :count).by(-1)
     end
 
     it 'can mark for death', :moderator_login do

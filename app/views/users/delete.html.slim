@@ -1,0 +1,46 @@
+javascript:
+  function verify() {
+    let confirmationString = document.getElementById('confirmation').value.toString();
+    if (confirmationString === 'I understand that deleting my account is permanent, and I will not be able to recover any data after 14 days.') {
+      document.getElementById('del-account-button').removeAttribute('disabled');
+    } else {
+      document.getElementById('del-account-button').setAttribute('disabled', 'true');
+    }
+  }
+  
+.card.delete-container
+  - unless @user.marked_for_deletion
+    .card-header
+      b Are you sure?
+    .card-body
+      p
+        | We're sorry to see you go. If you would like to explain, we would like to know what made you decide to leave.
+        |  If you need or want a response, please provide contact information so we can reach out to you.
+      br
+        = form_with(url: "/users/#{@user.id}", method: 'delete') do |form|
+          = label_tag :body 
+            b Submit Feedback (optional)
+          = form.text_area :body
+          = label_tag :oldpassword 
+            b Verify your password 
+            -if @user.errors.any?
+              br
+                b style="color: red" Invalid Password
+          = form.password_field :oldpassword
+          label for="confirmation" 
+            b Please type the following exactly as it is written to confirm deletion:
+          p style="user-select: none;"
+            i I understand that deleting my account is permanent, and I will not be able to recover any data after 14 days.
+          input#confirmation type="text" oninput="javascript:verify();"
+          p style="font-size: smaller; text-align: right;"
+            i Note: you will have 14 days to cancel account deletion.
+          div.buttons-row style="display: flex; justify-content: space-around"
+            = link_to "Cancel", :edit_user, class: "btn btn-primary", style: "width: 124px; margin-bottom: 15px"
+            div style="flex: 1"
+            = form.submit "Delete", disabled: true, class: "btn btn-danger", id: "del-account-button", style: "width: 124px"
+  - else
+    .card-header
+      b Click here to cancel account deletion
+    .card-body
+      = form_with url: "/users/#{@user.id}/cancel_delete", method: "post" do |g|
+        = g.submit "Cancel Deleting Your Account.", class: "btn btn-danger"

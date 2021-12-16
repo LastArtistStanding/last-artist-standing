@@ -15,20 +15,34 @@ class User < ApplicationRecord
 
   attr_accessor :remember_token, :reset_token
 
-  has_many :awards
-  has_many :submissions
-  has_many :participations
+  has_many :submissions, dependent: :destroy
+  has_many :comments, dependent: :destroy
+  has_many :notifications, dependent: :destroy
+  # user.followers will return all users that follow THIS user
+  has_many :followers, class_name: 'Follower', foreign_key: 'following_id', dependent: :destroy
+  # user.following will return all users that THIS user follows
+  has_many :following, class_name: 'Follower', dependent: :destroy
+  has_many :user_session, dependent: :nullify
+
+  has_many :challenge_entries, dependent: :destroy
+  has_many :participations, dependent: :destroy
+  has_many :awards, dependent: :destroy
   has_many :badges, through: :awards
   has_many :challenges, through: :participations
-  has_many :comments
-  has_many :moderator_logs
-  has_many :moderator_logs, as: :target
-  has_one :moderator_application
+  has_many :created_challenges,
+           class_name: 'Challenge', foreign_key: 'creator_id', dependent: :nullify
+  has_many :user_feedbacks, dependent: :nullify
+  has_many :discussions, dependent: :nullify
+
+  has_one :moderator_application, dependent: :destroy
+  has_many :site_ban, dependent: :destroy
+
+  has_many :created_logs, class_name: 'ModeratorLog', dependent: :nullify
+  has_many :moderator_logs, as: :target, dependent: :nullify
   has_many :house_participations, dependent: :nullify
-  has_many :followers, class_name: 'Follower', foreign_key: 'following_id', dependent: :destroy
-  has_many :following, class_name: 'Follower', dependent: :destroy
 
   before_save { self.email = email.downcase }
+  before_destroy { throw(:abort) if marked_for_death }
 
   validates :name, presence: true, length: { maximum: 50 },
                    format: { with: NO_EXCESS_WHITESPACE }, uniqueness: { case_sensitive: false }
@@ -48,6 +62,7 @@ class User < ApplicationRecord
     @retain_old_password = false
   end
 
+  ### Authentication ###
   # Returns the hash digest of the given string.
   def self.digest(string)
     cost = if ActiveModel::SecurePassword.min_cost
@@ -61,7 +76,7 @@ class User < ApplicationRecord
   # Sets the password reset attributes.
   def create_reset_digest
     self.reset_token = User.new_token
-    update_attribute(:reset_digest,  User.digest(reset_token))
+    update_attribute(:reset_digest, User.digest(reset_token))
     update_attribute(:reset_sent_at, Time.zone.now)
   end
 
@@ -137,6 +152,7 @@ class User < ApplicationRecord
     BCrypt::Password.new(email_verification_digest) == code
   end
 
+  ### Cross site stuff ###
   def reset_x_site_auth_code
     token = User.new_token
 
@@ -153,14 +169,18 @@ class User < ApplicationRecord
     x_site_auth_digest.present? && BCrypt::Password.new(x_site_auth_digest) == code
   end
 
+  ### General user info ###
   def username
-    return display_name if display_name.present?
-
-    name
+    display_name || name
   end
 
-  def get_latest_ban
-    SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{id}")
+  # Shows current frequency, accounting for a change that may have happened at submit-time.
+  def current_dad_frequency
+    new_frequency || dad_frequency
+  end
+
+  def invalidate_sessions
+    user_session.each { |us| us.update(user_id: nil) }
   end
 
   def can_make_comments
@@ -170,6 +190,15 @@ class User < ApplicationRecord
 
     [false, "You must have achieved DAD level #{COMMENT_CREATION_REQUIREMENT}\
      to write comments."]
+  end
+
+  def submission_limit
+    max_dad_level = highest_level
+    return 1 if max_dad_level.zero?
+
+    return max_dad_level if max_dad_level < UNLIMITED_SUBMISSIONS_REQUIREMENT
+
+    -1
   end
 
   def can_make_submissions
@@ -188,7 +217,7 @@ class User < ApplicationRecord
   def can_make_challenges
     if highest_level < CHALLENGE_CREATION_REQUIREMENT
       return [false, "You must have achieved DAD level\
-              #{CHALLENGE_CREATION_REQUIREMENT} before you can make a challenge."]
+      #{CHALLENGE_CREATION_REQUIREMENT} before you can make a challenge."]
     end
 
     active_challenges_made = Challenge.where('end_date > ? AND creator_id = ?',
@@ -200,123 +229,72 @@ class User < ApplicationRecord
      challenges. Please wait until they are completed before you create another."]
   end
 
-  def has_clearance?(permission_level)
+  def clearance?(permission_level)
     # for each group (devs, mods, admins) there is a bit in the permission_level
     # indicating whether that group has clearance.
     # a user has clearance if they are a member of any of the groups which has clearance.
     # if all bits are set, then everyone has clearance (including users not in any group);
     # if no bits are set, then no-one has clearance.
     everyone_clearance = permission_level == ~0
-    admin_clearance    = permission_level.anybits?(1 << 0)
-    mod_clearance      = permission_level.anybits?(1 << 1)
-    dev_clearance      = permission_level.anybits?(1 << 2)
+    admin_clearance = permission_level.anybits?(1 << 0)
+    mod_clearance = permission_level.anybits?(1 << 1)
+    dev_clearance = permission_level.anybits?(1 << 2)
 
     everyone_clearance ||
       (is_developer && dev_clearance) ||
       (is_moderator && mod_clearance) ||
-      (is_admin     && admin_clearance)
-  end
-
-  def submission_limit
-    max_dad_level = highest_level
-    return 1 if max_dad_level.zero?
-
-    return max_dad_level if max_dad_level < UNLIMITED_SUBMISSIONS_REQUIREMENT
-
-    -1
+      (is_admin && admin_clearance)
   end
 
   def profile_picture
-    profile_picture = avatar.thumb.url unless avatar.nil?
-
-    if profile_picture.blank?
-      return 'https://s3.us-east-2.amazonaws.com/do-art-daily-public/Default+User+Thumb.png'
-    end
-
-    profile_picture
+    avatar.thumb.url || 'https://s3.us-east-2.amazonaws.com/do-art-daily-public/Default+User+Thumb.png'
   end
 
+  ### Moderation ###
   def approve(reason, moderator)
-    ModeratorLog.create(user_id: moderator.id,
-                        target: self,
-                        action: "#{moderator.username} has approved #{username}.",
-                        reason: reason)
-    update_attribute(:approved, true)
+    create_mod_log(moderator, "#{moderator.username} has approved #{username}.", reason)
+    update_retain_password(approved: true)
+  end
+
+  def latest_ban
+    site_ban.find_by("'#{Time.now.utc}' < expiration")
   end
 
   def lift_ban(reason, moderator)
     # Do not lift bans on users marked for death.
-    unless marked_for_death
-      site_ban = SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{id}")
-      unless site_ban.nil?
-        ModeratorLog.create(user_id: moderator.id,
-                            target: self,
-                            action: "#{moderator.username} has lifted #{username}'s ban (original expiry: #{ApplicationController.helpers.date_string_short(site_ban.expiration)}).",
-                            reason: reason)
-        site_ban.destroy
-      end
-    end
+    return if marked_for_death || latest_ban.nil?
+
+    action = "#{moderator.username} has lifted #{username}'s ban " \
+              "(original expiry: #{latest_ban.expiration})."
+    create_mod_log(moderator, action, reason)
+    latest_ban.update(expiration: Time.now.utc.to_date)
   end
 
   def ban_user(duration, reason, moderator)
     # Bans cannot be modified after a user has been marked for death.
-    unless marked_for_death
-      # Find and update an existing ban.
-      site_ban = SiteBan.find_by("'#{Time.now.utc}' < expiration AND user_id = #{id}")
-      if site_ban.nil?
-        # Or create a new one if not found.
-        SiteBan.create(user_id: id,
-                       expiration: Time.now.utc.to_date + duration.to_i.days,
-                       reason: reason)
-        ModeratorLog.create(user_id: moderator.id,
-                            target: self,
-                            action: "#{moderator.username} has banned #{username} for #{duration} days.",
-                            reason: reason)
-      else
-        site_ban.expiration = Time.now.utc.to_date + duration.days
-        site_ban.reason = reason
-        site_ban.save
-        ModeratorLog.create(user_id: moderator.id,
-                            target: self,
-                            action: "#{moderator.username} has adjusted #{username}'s ban to #{duration} days.",
-                            reason: reason)
-      end
-    end
+    return if marked_for_death
+
+    sb = latest_ban || site_ban.new
+    action = sb.new_record? ? " was banned for #{duration}" : "'s ban was adjusted to #{duration}"
+    create_mod_log(moderator, username + action + "days by #{moderator.username}", reason)
+    sb.update(expiration: duration.to_i.days.from_now.to_date, reason: reason)
   end
 
   def mark_for_death(reason, moderator)
     ban_user(99_999, reason, moderator)
-    update_attribute(:marked_for_death, true)
-    ModeratorLog.create(user_id: moderator.id,
-                        target: self,
-                        action: "#{moderator.username} has marked #{username} for death!".upcase,
-                        reason: reason)
+    update_retain_password(marked_for_death: true)
+    action = "#{moderator.username} has marked #{username} for death!".upcase
+    create_mod_log(moderator, action, reason)
   end
 
-  # Shows current frequency, accounting for a change that may have happened at submit-time.
-  def current_dad_frequency
-    return new_frequency if new_frequency.present?
-
-    return dad_frequency if dad_frequency.present?
-
-    nil
-  end
-
-  def invalidate_sessions
-    user_sessions = UserSession.where(user_id: id)
-    user_sessions.each do |us|
-      us.name = name
-      us.user_id = nil
-      us.save
-    end
+  def create_mod_log(moderator, action, reason)
+    moderator_logs.create(user_id: moderator.id, action: action, reason: reason)
   end
 
   def self.search(params)
-    users = all # for not existing params args
-    if params[:searchname]
-      users = users.where('lower(name) like lower(?) OR lower(display_name) like lower(?)',
-                          "%#{params[:searchname]}%", "%#{params[:searchname]}%")
-    end
-    users
+    return all if params[:searchname].blank?
+
+    where('lower(name) like lower(?) OR lower(display_name) like lower(?)',
+          "%#{params[:searchname]}%", "%#{params[:searchname]}%")
   end
 end
