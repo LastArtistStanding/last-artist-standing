@@ -23,8 +23,10 @@ class PagesController < ApplicationController
                              Date.today).order('prestige DESC').includes(:user)
     @latest_eliminations = Participation.where('challenge_id = 1 AND eliminated AND end_date = ?',
                                                (Date.current - 1.day)).order('score DESC').includes(:user)
-    @seasonal_leaderboard = Participation.where('challenge_id = ?',
+    unless @seasonal_challenge.nil?
+      @seasonal_leaderboard = Participation.where('challenge_id = ?',
                                                 @seasonal_challenge.id).order('score DESC').includes(:user)
+    end
 
     if logged_in?
       @participations = Participation.includes(challenge: [:challenge_entries])

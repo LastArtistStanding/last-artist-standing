@@ -149,18 +149,20 @@
           <% end %>
           <span><i class="fa fa-clock-o"></i> <span id="TimeDisplay"></span></span><br>
           <% currentSeason = Challenge.current_season %>
-          <span>
-            <% if currentSeason.name.include? "Spring" %>
-            <i class="fa fa-leaf"></i>
-            <% elsif currentSeason.name.include? "Summer" %>
-            <i class="fa fa-sun-o"></i>
-            <% elsif currentSeason.name.include? "Autumn" %>
-            <i class="fa fa-cloud"></i>
-            <% elsif currentSeason.name.include? "Winter" %>
-            <i class="fa fa-snowflake-o"></i>
-            <% end %>
-            <%= currentSeason.name %>: <%= pluralize((currentSeason.end_date - Date.current).to_i, "day") %> left.
-          </span>
+          <% unless currentSeason.nil? %>
+            <span>
+              <% if currentSeason.name.include? "Spring" %>
+              <i class="fa fa-leaf"></i>
+              <% elsif currentSeason.name.include? "Summer" %>
+              <i class="fa fa-sun-o"></i>
+              <% elsif currentSeason.name.include? "Autumn" %>
+              <i class="fa fa-cloud"></i>
+              <% elsif currentSeason.name.include? "Winter" %>
+              <i class="fa fa-snowflake-o"></i>
+              <% end %>
+              <%= currentSeason.name %>: <%= pluralize((currentSeason.end_date - Date.current).to_i, "day") %> left.
+            </span>
+          <% end %>
         </div>
       </div>
 
