@@ -8,6 +8,13 @@ javascript:
     $('[data-toggle="tooltip"]').tooltip()
   })
 
+= content_for :head do
+  - unless SiteBan.where(user_id: @user.id).exists? || !@user.approved
+    meta property="og:title" content="Do Art Daily! #{@user.username}"
+    meta property="og:description" content="User page of #{@user.username}"
+    meta property="og:image" content="#{@user.profile_picture}"
+    meta property="og:url" content="#{request.original_url}"
+    
 .container-fluid style="margin-top: 2rem;"
   .row
     .col-lg-1
