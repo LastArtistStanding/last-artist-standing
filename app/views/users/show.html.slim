@@ -9,7 +9,7 @@ javascript:
   })
 
 = content_for :head do
-  - unless SiteBan.where(user_id: @user.id).exists? || !@user.approved
+  - unless SiteBan.where("user_id = #{@user.id} AND expiration > '#{Time.now.utc.to_date}'").exists? || !@user.approved
     meta property="og:title" content="Do Art Daily! #{@user.username}"
     meta property="og:description" content="User page of #{@user.username}"
     meta property="og:image" content="#{@user.profile_picture}"
