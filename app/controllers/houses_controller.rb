@@ -9,8 +9,8 @@ class HousesController < ApplicationController
   # @function index
   # @abstract sets up parameters for the houses main page
   def index
-    @date = Date.parse(sane_date&.concat('-01') || Time.now.utc.strftime('%Y-%m-01'))
-    @houses = House.where('house_start = ?', @date).sort_by { |h| -h.total }
+    @date = Date.parse(params[:date]&.values&.join('-') || Time.now.utc.strftime('%Y-%m-01'))
+    @houses = House.where(house_start: @date.at_beginning_of_month.to_date).sort_by { |h| -h.total }
   end
 
   # @function edit
@@ -55,21 +55,11 @@ class HousesController < ApplicationController
   # @function house_params
   # @abstract requires the house parameter and allows the house_name parameter for :edit
   def house_params
-    params.require(:house).permit(:house_name, :reason)
+    params.require(:house).permit(:house_name, :reason, :date)
   end
 
   def mod_params
     params.require(:reason).permit(:reason)
-  end
-
-  # @function sane_date
-  # @abstract this handles the date_selector returning a hash rather than a string
-  # If the user uses the dropdown, it converts the date hash to a string.
-  # If the user uses the buttons or doesn't pass anything, it just uses the string or nothing.
-  def sane_date
-    return params[:date] unless params[:date].is_a?(ActionController::Parameters)
-
-    params[:date] = "#{params[:date][:year]}-#{params[:date][:month]}"
   end
 
   # @function log_update
