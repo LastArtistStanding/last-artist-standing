@@ -13,6 +13,14 @@ html
     = csrf_meta_tags
 
     title = yield(:title)
+    - if content_for?(:head)
+      = yield :head
+    - else
+      // yield some default head params
+      meta property="og:title" content="Do Art Daily! A habit tracker for artists."
+      meta property="og:description" content="Do Art Daily is a site for developing artists to track their art progress and make a habit of drawing."
+      meta property="og:image" content="https://s3.us-east-2.amazonaws.com/do-art-daily-public/DAD+Badge.png"
+      meta property="og:url" content="#{request.original_url}"
 
   body
     #wrapper

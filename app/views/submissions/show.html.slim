@@ -1,5 +1,13 @@
 - provide(:title, "#{@submission.user.username} - #{@submission.display_title}")
 
+= content_for :head do
+  - if @submission.approved && !@submission.soft_deleted
+    meta property="og:title" content="Do Art Daily! #{@submission.display_title} by #{@submission.user.username}."
+    meta property="og:description" content="#{@submission.description}"
+    meta property="og:image" content="http://#{ENV["DAD_DOMAIN"]}#{@submission.drawing.url}"
+    meta property="og:url" content="#{request.original_url}"
+
+
 - psub = prev_submission(@submission)
 - apsub = prev_user_submission(@submission)
 - ansub = next_user_submission(@submission)
