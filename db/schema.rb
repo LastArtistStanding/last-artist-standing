@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(version: 2021_12_05_074007) do
     t.integer "nsfw_level", default: 1, null: false
     t.boolean "soft_deleted", default: false, null: false
     t.integer "soft_deleted_by"
+    t.boolean "is_site_challenge", default: false, null: false
     t.index ["name"], name: "index_challenges_on_name"
   end
 
@@ -283,7 +284,6 @@ ActiveRecord::Schema.define(version: 2021_12_05_074007) do
     t.boolean "is_moderator", default: false, null: false
     t.boolean "approved", default: false, null: false
     t.boolean "marked_for_death", default: false, null: false
-    t.string "bio"
     t.boolean "is_developer", default: false, null: false
     t.boolean "marked_for_deletion", default: false, null: false
     t.date "deletion_date"
