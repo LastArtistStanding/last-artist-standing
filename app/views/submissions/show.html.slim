@@ -4,7 +4,7 @@
   - if @submission.approved && !@submission.soft_deleted
     meta property="og:title" content="Do Art Daily! #{@submission.display_title} by #{@submission.user.username}."
     meta property="og:description" content="#{@submission.description}"
-    meta property="og:image" content="http://#{ENV["DAD_DOMAIN"]}#{@submission.drawing.url}"
+    meta property="og:image" content="#{@submission.drawing.url}"
     meta property="og:url" content="#{request.original_url}"
 
 
