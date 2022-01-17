@@ -384,7 +384,8 @@ namespace :dad_tasks do
     challenges = Challenge.where(creator_id: user_id)
     puts "Updating #{challenges.count} challenges..."
     challenges.each do |c|
-      c.creator_id = -1
+      c.creator_id = nil
+      c.is_site_challenge = true
       c.save
     end
 
@@ -428,6 +429,7 @@ namespace :dad_tasks do
       newChallenge.rejoinable = details['rejoinable']
       newChallenge.seasonal = details['seasonal']
       newChallenge.postfrequency = details['postfrequency']
+      newChallenge.is_site_challenge = true
       newChallenge.save
     end
 
