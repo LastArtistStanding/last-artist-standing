@@ -56,7 +56,6 @@ module MarkdownHelper
   # @param body - the body of text from the submission description, challenge description or comment
   # @return - the body of text with the markdown link substituted in for the quote
   def parse_quotes(body)
-    body.gsub! "\r\n", "\r\n\r\n"
     body.gsub!(/(?<=.)(?<=[>|\s])>/, '\\>')
     body.gsub!(/^>/, '>\\>')
   end

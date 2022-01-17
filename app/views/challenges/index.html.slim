@@ -38,7 +38,7 @@
               td = date_string_short(challenge.end_date)
               td = frequency_string(challenge.postfrequency, false)
               td = challenge.streak_based ? "Yes" : "No"
-              td = challenge_creator_link(challenge.creator_id)
+              td = challenge_creator_link(challenge)
               - if logged_in? && !challenge.creator_id.nil? && challenge.creator_id == current_user.id
                 td = link_to '<span class="fa fa-pencil"></span>'.html_safe, edit_challenge_path(challenge), class: "btn btn-primary"
               - else
@@ -55,7 +55,7 @@
               td = date_string_short(challenge.end_date)
               td = frequency_string(challenge.postfrequency, false)
               td = challenge.streak_based ? "Yes" : "No"
-              td = challenge_creator_link(challenge.creator_id)
+              td = challenge_creator_link(challenge)
               - if logged_in? && challenge.creator_id == current_user.id
                 td = link_to '<span class="fa fa-pencil"></span>'.html_safe, edit_challenge_path(challenge), class: "btn btn-primary"
                 - if challenge.can_delete?
@@ -74,7 +74,7 @@
               td = date_string_short(challenge.end_date)
               td = frequency_string(challenge.postfrequency, false)
               td = challenge.streak_based ? "Yes" : "No"
-              td = challenge_creator_link(challenge.creator_id)
+              td = challenge_creator_link(challenge)
               td
               td
 

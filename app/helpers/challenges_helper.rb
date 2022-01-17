@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 module ChallengesHelper
-  def challenge_creator_link(id)
-    return 'Site Challenge' if id.blank?
+  def challenge_creator_link(challenge)
+    if challenge.creator_id.blank?
+      return 'Site Challenge' if challenge.is_site_challenge
 
-    return 'User Account Deleted' if id == -1
+      return 'User Account Deleted'
+    end
 
-    user = User.find(id)
+    user = User.find(challenge.creator_id)
     link_to(user.username, user)
   end
 
