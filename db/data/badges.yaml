@@ -49,3 +49,6 @@ Badge16:
 Badge17:
     name: "Winter 2021 Participation Badge"
     direct_image: "https://do-art-daily-public.s3.us-east-2.amazonaws.com/Winter+Badge+2021.png"
+Badge18:
+    name: "Spring 2022 Participation Badge"
+    direct_image: "https://do-art-daily-public.s3.us-east-2.amazonaws.com/Spring+Badge+2022.png"
