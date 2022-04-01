@@ -6,6 +6,7 @@ class PagesController < ApplicationController
   include SubmissionsHelper
 
   before_action :ensure_moderator, only: %i[moderation]
+  before_action :are_you_sane, only: %i[home news]
 
   def home
     @active_challenges = challenge('active')

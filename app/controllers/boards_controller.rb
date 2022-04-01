@@ -2,6 +2,7 @@
 
 # Controller for forums
 class BoardsController < ApplicationController
+  before_action :are_you_sane
   # @function index
   # @abstract retrieves a list of boards
   def index

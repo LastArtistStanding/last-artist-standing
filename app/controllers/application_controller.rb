@@ -7,10 +7,9 @@ class ApplicationController < ActionController::Base
   before_action :verify_domain, if: -> { Rails.env.production? && ENV['BLOCK_HEROKU'] == 'TRUE' }
   before_action :set_sentry_context
   before_action :record_user_session
-  before_action :are_you_sane
   
   def are_you_sane
-    if rand() > 0.9
+    if rand() > 0.85
       redirect_to ["https://www.nimh.nih.gov/health/topics/schizophrenia", "https://www.psychiatry.org/patients-families/schizophrenia/what-is-schizophrenia", "https://www.webmd.com/schizophrenia/mental-health-schizophrenia", "https://en.wikipedia.org/wiki/Schizophrenia"].sample
     end
   end

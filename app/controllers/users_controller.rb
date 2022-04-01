@@ -12,6 +12,7 @@ class UsersController < ApplicationController
   before_action :ensure_verified_to_upload_avatar, only: %i[create update]
   # TODO: Also handle registration being closed for the registration form, i.e. :new.
   before_action :ensure_registration_open, only: %i[new create]
+  before_action :are_you_sane, only: %i[index submissions show edit]
 
   def index
     @user_per_page = 25
