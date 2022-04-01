@@ -10,6 +10,7 @@ class DiscussionsController < ApplicationController
   before_action :ensure_moderator, only: %i[mod_action]
   before_action -> { ensure_authorized @discussion.user_id }, only: %i[destroy]
   before_action :ensure_unbanned, only: %i[new create destroy]
+  before_action :are_you_sane, only: %i[new show]
 
   def new
     @discussion = Discussion.new

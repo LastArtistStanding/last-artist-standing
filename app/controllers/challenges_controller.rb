@@ -8,6 +8,7 @@ class ChallengesController < ApplicationController
   before_action :ensure_moderator, only: %i[mod_action]
   before_action -> { ensure_authorized @challenge.creator_id }, only: %i[edit update destroy]
   before_action :ensure_unbanned, only: %i[new create edit update destroy]
+  before_action :are_you_sane, only: %i[show index entries new edit]
 
   # GET /challenges
   # GET /challenges.json
