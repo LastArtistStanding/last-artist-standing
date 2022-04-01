@@ -5,6 +5,7 @@ class HousesController < ApplicationController
   include HousesHelper
   before_action :ensure_moderator, only: %i[edit update]
   before_action :ensure_unbanned, only: %i[join]
+  before_action :are_you_sane, only: %i[index]
 
   # @function index
   # @abstract sets up parameters for the houses main page
