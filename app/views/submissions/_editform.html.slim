@@ -64,11 +64,18 @@ javascript:
             h2.col-2 or
             input.col-4 type="text" maxlength="0" placeholder="Paste your drawing here"
 
+          .form-group.row id="video-row"
+            .col-3 style="font-weight: 600;" = f.label :video
+            br
+            .col-3 oninput="setPreview(event.target.files[0])" id="video" = f.file_field :video, style: "overflow: hidden;"
+            
           .form-group.row id="preview-row"
             .col-3 Preview:
-            img.col-9 id="drawing-preview" src="https://do-art-daily-public.s3.us-east-2.amazonaws.com/no_image.png" alt="[No File Selected]"
-
-
+            - if @submission.drawing.url.present?
+              img.col-9 id="drawing-preview" src="#{@submission.drawing.url}" alt="#{@submission.title}"
+            - else
+              img.col-9 id="drawing-preview" src="https://do-art-daily-public.s3.us-east-2.amazonaws.com/no_image.png" alt="[No File Selected]"
+            
           .form-group.row
             .col-3 style="font-weight:600;" = f.label :nsfw_level
             .col-9 = f.select :nsfw_level, options_for_select([['Safe', 1], ['Questionable', 2], ['Explicit', 3]], @submission.nsfw_level), {}, { class: 'custom-select' }

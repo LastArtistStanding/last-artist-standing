@@ -34,6 +34,7 @@ gem 'jbuilder', '~> 2.0'
 # Gems for assisting with Image Upload on the site.
 gem 'carrierwave'
 gem 'mini_magick', '>= 4.9.4'
+gem 'carrierwave-video-thumbnailer'
 # Formating timestamps for site
 gem 'strftime', '~>1.0.0'
 

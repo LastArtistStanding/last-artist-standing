@@ -6,6 +6,7 @@ class Submission < ApplicationRecord
   include MarkdownHelper
 
   mount_uploader :drawing, ImageUploader
+  mount_uploader :video, VideoUploader
 
   belongs_to :user
   has_many :challenge_entries, dependent: :destroy
@@ -19,7 +20,7 @@ class Submission < ApplicationRecord
   has_many :moderator_logs, as: :target
 
   validates :user_id, presence: true
-  validates :drawing, presence: true
+  validate :video_xor_drawing
   validates :title, length: { maximum: 100 }
   validates :description, length: { maximum: 2000 }
   validates :time, numericality: { only_integer: true, greater_than: 0, allow_nil: true }
@@ -62,5 +63,13 @@ class Submission < ApplicationRecord
     return 'No description provided.' if description.blank?
 
     description
+  end
+
+  private
+
+  def video_xor_drawing
+    return unless [drawing.file, video.file].compact.count != 1
+
+    errors.add(:base, 'You must upload either a drawing or a video (but not both).')
   end
 end

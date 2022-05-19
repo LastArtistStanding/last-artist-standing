@@ -18,36 +18,48 @@ module SubmissionsHelper
     unless logged_in?
       return NSFW_THUMB if submission.nsfw_level > 1
 
-      return submission.drawing.thumb.url
+      return submission.drawing.thumb.url unless submission.drawing.thumb.url.nil?
+
+      return submission.video.thumb.url
     end
 
     return NSFW_THUMB if current_user.nsfw_level < submission.nsfw_level
 
-    submission.drawing.thumb.url
+    return submission.drawing.thumb.url unless submission.drawing.thumb.url.nil?
+
+    submission.video.thumb.url
   end
 
   def safe_submission_avatar(submission)
     unless logged_in?
       return NSFW_AVATAR if submission.nsfw_level > 1
 
-      return submission.drawing.avatar.url
+      return submission.drawing.avatar.url unless submission.drawing.avatar.url.nil?
+
+      return submission.video.avatar.url
     end
 
     return NSFW_AVATAR if current_user.nsfw_level < submission.nsfw_level
 
-    submission.drawing.avatar.url
+    return submission.drawing.avatar.url unless submission.drawing.avatar.url.nil?
+
+    submission.video.avatar.url
   end
 
   def safe_submission_drawing(submission)
     unless logged_in?
       return NSFW_THUMB if submission.nsfw_level > 1
 
-      return submission.drawing.url
+      return submission.drawing.url unless submission.drawing.url.nil?
+
+      submission.video.url
     end
 
     return NSFW_THUMB if current_user.nsfw_level < submission.nsfw_level
 
-    submission.drawing.url
+    return submission.drawing.url unless submission.drawing.url.nil?
+
+    submission.video.url
   end
 
   def unapproved_submissions
@@ -105,7 +117,8 @@ module SubmissionsHelper
 
   def random_safe_submission
     base_submissions(only_safe = true).where(
-      'submissions.nsfw_level = 1 and submissions.created_at >= ?', Time.now.utc - 14.days
+      'submissions.nsfw_level = 1 and submissions.created_at >= ? and drawing is not null',
+      Time.now.utc - 14.days
     ).sample
   end
 end

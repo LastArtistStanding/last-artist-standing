@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_05_074007) do
+ActiveRecord::Schema.define(version: 2022_05_19_025348) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,7 +77,6 @@ ActiveRecord::Schema.define(version: 2021_12_05_074007) do
     t.integer "nsfw_level", default: 1, null: false
     t.boolean "soft_deleted", default: false, null: false
     t.integer "soft_deleted_by"
-    t.boolean "is_site_challenge", default: false, null: false
     t.index ["name"], name: "index_challenges_on_name"
   end
 
@@ -238,6 +237,7 @@ ActiveRecord::Schema.define(version: 2021_12_05_074007) do
     t.boolean "approved", default: true, null: false
     t.integer "soft_deleted_by"
     t.boolean "allow_anon", default: false
+    t.string "video"
   end
 
   create_table "user_feedbacks", force: :cascade do |t|
@@ -287,6 +287,7 @@ ActiveRecord::Schema.define(version: 2021_12_05_074007) do
     t.boolean "is_developer", default: false, null: false
     t.boolean "marked_for_deletion", default: false, null: false
     t.date "deletion_date"
+    t.string "bio", default: ""
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["name"], name: "index_users_on_name", unique: true
   end

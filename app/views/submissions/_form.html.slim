@@ -152,6 +152,11 @@ javascript:
             .col-3 oninput="setPreview(event.target.files[0])" id="drawing" = f.file_field :drawing, style: "overflow: hidden;"
             h2.col-2 or
             input.col-4 type="text" maxlength="0"  placeholder="Paste your drawing here"
+            
+          .form-group.row id="video-row"
+            .col-3 style="font-weight: 600;" = f.label :video
+            br
+            .col-3 id="video" = f.file_field :video, style: "overflow: hidden;"
 
           .form-group.row id="preview-row"
             .col-3 Preview:
