@@ -54,7 +54,7 @@ class CommentsController < ApplicationController
       comment.anonymous = anon
       comment
         .history
-        .push("#{Time.now.utc}: <#{anon == '1' ? 'Became' : 'Removed'} Anonymous>")
+        .push("#{Time.now.utc}: <#{anon ? 'Became' : 'Removed'} Anonymous>")
     end
 
     if comment.save
