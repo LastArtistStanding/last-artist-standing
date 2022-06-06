@@ -44,7 +44,7 @@ class CommentsController < ApplicationController
   def update
     comment = Comment.find(params[:id])
     new_body = params[:comment][:body]
-    anon = params[:comment][:anonymous]
+    anon = params[:comment][:anonymous] == '1'
     if comment.body != new_body
       comment.history.push("#{comment.updated_at.utc}: #{comment.body}")
       comment.body = params[:comment][:body]
