@@ -160,3 +160,12 @@ Challenge18:
     rejoinable: true
     seasonal: true
     postfrequency: 1
+Challenge19:
+    name: "Summer Challenge 2022"
+    description: "Can you draw every day of the summer?\r\nUnlike the DAD challenge, these seasonal challenges are not streak based. Feel free to submit as much as you can this season, up to a maximum of once per day. You will receive a rotating season badge based on your peformance."
+    start_date: 2022-06-21
+    end_date: 2022-09-22
+    streak_based: false
+    rejoinable: true
+    seasonal: true
+    postfrequency: 1
