@@ -676,3 +676,34 @@ Spring2022BadgeMap5:
     required_score: 93
     prestige: 5
     description: "FLAWLESS - This artist submitted daily this season!"
+#Summer 2022 Badges
+Summer2022BadgeMap1:
+    badge_name: "Summer 2022 Participation Badge"
+    challenge_name: "Summer Challenge 2022"
+    required_score: 13
+    prestige: 1
+    description: "WEEKLY - This artist submitted at least once a week this season."
+Summer2022BadgeMap2:
+    badge_name: "Summer 2022 Participation Badge"
+    challenge_name: "Summer Challenge 2022"
+    required_score: 39
+    prestige: 2
+    description: "HOBBYIST - This artist submitted at least once a day on the weekends."
+Summer2022BadgeMap3:
+    badge_name: "Summer 2022 Participation Badge"
+    challenge_name: "Summer Challenge 2022"
+    required_score: 66
+    prestige: 3
+    description: "BUSINESS - This artist submitted at least once a business day."
+Summer2022BadgeMap4:
+    badge_name: "Summer 2022 Participation Badge"
+    challenge_name: "Summer Challenge 2022"
+    required_score: 79
+    prestige: 4
+    description: "ELITE - This artist submitted almost daily this season!"
+Summer2022BadgeMap5:
+    badge_name: "Summer 2022 Participation Badge"
+    challenge_name: "Summer Challenge 2022"
+    required_score: 93
+    prestige: 5
+    description: "FLAWLESS - This artist submitted daily this season!"
