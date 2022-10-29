@@ -9,18 +9,56 @@ javascript:
 
   // Paste image data from clipboard into submission
   window.addEventListener('paste', function (event) {
-    if ((event.clipboardData || event.originalEvent.clipboardData).files[0] instanceof Blob) {
-      document.getElementById('submission_drawing').files = (event.clipboardData || event.originalEvent.clipboardData).files
-      setPreview((event.clipboardData || event.originalEvent.clipboardData).files[0])
+    if ((event.clipboardData || event.originalEvent.clipboardData).files[0] instanceof Blob &&
+      (event.clipboardData || event.originalEvent.clipboardData).files[0].type.includes("image")) {
+      document.getElementById('drawing').files = (event.clipboardData || event.originalEvent.clipboardData).files
+      setDrawingPreview((event.clipboardData || event.originalEvent.clipboardData).files[0])
     }
   }, false);
 
-  function setPreview(blob) {
+  function setDrawingPreview(blob) {
     let reader = new FileReader();
     reader.onload = function (event) {
-      document.getElementById('drawing-preview').src = event.target.result
+      document.getElementById('upload-section').classList.add('hidden');
+      document.getElementById('video-preview').classList.add('hidden');
+      document.getElementById('drawing-preview').classList.remove('hidden');
+      document.getElementById('back-button').classList.remove('hidden');
+      const imageObjectUrl = document.getElementById('video-preview').currentSrc;
+      document.getElementById('video-preview').currentSrc = "";
+      URL.revokeObjectURL(imageObjectUrl);
+      document.getElementById('drawing-preview').src = event.target.result;
     };
     reader.readAsDataURL(blob);
+  }
+
+  function setVideoPreview(blob) {
+    document.getElementById('upload-section').classList.add('hidden');
+    document.getElementById('drawing-preview').classList.add('hidden');
+    document.getElementById('video-preview').classList.remove('hidden');
+    document.getElementById('back-button').classList.remove('hidden');
+    const newObjectUrl = URL.createObjectURL(blob);
+    const oldObjectUrl = document.getElementById('video-preview').currentSrc;
+    document.getElementById('video-preview').currentSrc = "";
+    URL.revokeObjectURL(oldObjectUrl);
+    document.getElementById('video-preview').src = newObjectUrl;
+    document.getElementById('video-preview').load();
+
+  }
+
+  function resetPreviews() {
+    document.getElementsByTagName("form")[0].reset()
+    document.getElementById('upload-section').classList.remove('hidden');
+    document.getElementById('drawing-preview').classList.add('hidden');
+    document.getElementById('video-preview').classList.add('hidden');
+    document.getElementById('back-button').classList.add('hidden');
+
+    const videoObjectUrl = document.getElementById('video-preview').currentSrc;
+    document.getElementById('video-preview').currentSrc = "";
+    URL.revokeObjectURL(videoObjectUrl);
+
+    const imageObjectUrl = document.getElementById('video-preview').currentSrc;
+    document.getElementById('video-preview').currentSrc = "";
+    URL.revokeObjectURL(imageObjectUrl);
   }
   
 
@@ -57,17 +95,21 @@ javascript:
           br
           br
 
-          .form-group.row id="drawing-row"
-            .col-3 style="font-weight: 600;" = f.label :drawing
-            br
-            .col-3 oninput="setPreview(event.target.files[0])" id="drawing" = f.file_field :drawing, style: "overflow: hidden;"
-            h2.col-2 or
-            input.col-4 type="text" maxlength="0" placeholder="Paste your drawing here"
+          #upload-section.form-group.row class="hidden"
+            label.label.not-selectable
+              span Paste a Drawing
+            label.label
+              = f.file_field :drawing, style: "overflow: hidden;", oninput: "setDrawingPreview(event.target.files[0])", id: "drawing"
+              span Upload a Drawing
+            label.label
+              = f.file_field :video, style: "overflow: hidden;", oninput: "setVideoPreview(event.target.files[0])", id: "video"
+              span Upload a Video
 
-          .form-group.row id="preview-row"
-            .col-3 Preview:
-            img.col-9 id="drawing-preview" src="https://do-art-daily-public.s3.us-east-2.amazonaws.com/no_image.png" alt="[No File Selected]"
+          img#drawing-preview.form-group.row class="#{submission.drawing.url.nil? ? 'hidden' : ''}" src="#{@submission.drawing.url}" alt=""
+          video#video-preview.form-group.row class="#{submission.video.url.nil? ? 'hidden' : ''}" src="#{@submission.video.url}" alt="" controls="true"
 
+          #back-button.form-group.row
+            span.btn.btn-primary onclick="resetPreviews()" Go Back
 
           .form-group.row
             .col-3 style="font-weight:600;" = f.label :nsfw_level

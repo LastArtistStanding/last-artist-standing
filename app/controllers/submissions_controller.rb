@@ -129,6 +129,12 @@ class SubmissionsController < ApplicationController
     # If the drawing itself was updated by an unapproved user, reset the approval.
     @submission.approved = current_user.approved if used_params.key? :drawing
 
+    # in case users switch from video to drawing or whatever
+    if used_params.key?(:drawing) || used_params.key?(:video)
+      @submission.drawing = nil
+      @submission.video = nil
+    end
+
     respond_to do |format|
       old_time = @submission.time || 0
       if @submission.update(used_params)
@@ -272,7 +278,7 @@ class SubmissionsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def submission_params
     params.require(:submission)
-          .permit(:drawing, :user_id, :nsfw_level, :title, :description, :time, :commentable, :allow_anon)
+          .permit(:video, :drawing, :user_id, :nsfw_level, :title, :description, :time, :commentable, :allow_anon)
   end
 
   def limited_params
