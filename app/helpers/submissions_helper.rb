@@ -43,7 +43,7 @@ module SubmissionsHelper
 
     return submission.drawing.avatar.url unless submission.drawing.avatar.url.nil?
 
-    submission.video.avatar.url
+    submission.video.thumb.url
   end
 
   def safe_submission_drawing(submission)
