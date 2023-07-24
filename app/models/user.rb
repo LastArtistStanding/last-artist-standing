@@ -171,7 +171,7 @@ class User < ApplicationRecord
 
   ### General user info ###
   def username
-    display_name || name
+    display_name.present? ? display_name : name
   end
 
   # Shows current frequency, accounting for a change that may have happened at submit-time.
