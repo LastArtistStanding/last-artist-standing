@@ -78,7 +78,7 @@ module SubmissionsHelper
     submissions
       .joins("LEFT JOIN (SELECT * FROM followers where user_id = #{current_user&.id})" \
              ' AS my_followers ON my_followers.following_id = submissions.user_id')
-      .order('following_id IS NULL')
+      .order('following_id DESC NULLS LAST')
   end
 
   def next_user_submission(submission)
