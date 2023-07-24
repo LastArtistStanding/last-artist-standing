@@ -419,7 +419,7 @@ namespace :dad_tasks do
 
   desc 'Update site challenges and badges.'
   task update_database: :environment do
-    challengeData = YAML.load_file('db/data/challenges.yaml')
+    challengeData = YAML.load_file('db/data/challenges.yaml', permitted_classes: [Date])
     challengeData.each do |_currentChallenge, details|
       newChallenge = Challenge.find_or_create_by(name: details['name'])
       newChallenge.description = details['description']
