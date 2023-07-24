@@ -3,16 +3,16 @@
 source 'https://rubygems.org'
 
 # Prerequisite for upgraded heroku stack
-ruby '2.6.5'
+ruby '3.1.4'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '>= 6.0.3.5'
+gem 'rails', '>= 6.0.3.5', '< 7.0'
 # Use Rails controller testing for testing stability and error-proneness of site.
 gem 'rails-controller-testing'
 # Use bcrypt for Password hashing to protect against attackers
 gem 'bcrypt', '~> 3.1'
 
-gem 'bootstrap', '>= 4.3.1'
+gem 'bootstrap', '>= 4.3.1', '< 4.9'
 # For popovers
 gem 'autoprefixer-rails'
 gem 'popper_js', '>= 1.12.9'
