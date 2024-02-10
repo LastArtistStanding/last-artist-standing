@@ -41,6 +41,30 @@ class CommentsController < ApplicationController
     redirect_back(fallback_location: '/')
   end
 
+  def update
+    comment = Comment.find(params[:id])
+    new_body = params[:comment][:body]
+    anon = params[:comment][:anonymous] == '1'
+    if comment.body != new_body
+      comment.history.push("#{comment.updated_at.utc}: #{comment.body}")
+      comment.body = params[:comment][:body]
+    end
+
+    if comment.anonymous != anon
+      comment.anonymous = anon
+      comment
+        .history
+        .push("#{Time.now.utc}: <#{anon ? 'Became' : 'Removed'} Anonymous>")
+    end
+
+    if comment.save
+      flash[:success] = 'Comment updated successfully!'
+    else
+      flash[:error] = "Comment failed to update: #{comment.errors.full_messages.join(', ')}"
+    end
+    redirect_back(fallback_location: '/')
+  end
+
   def destroy
     target = @comment.source
     @comment.destroy!

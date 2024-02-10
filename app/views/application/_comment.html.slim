@@ -1,3 +1,20 @@
+javascript:
+  edit_comment = id => {
+    if (document.getElementById('edit-form-' + id).hasAttribute('hidden')) {
+      document.getElementById('edit-form-' + id).removeAttribute('hidden')
+    } else {
+      document.getElementById('edit-form-' + id).setAttribute('hidden', '')
+    }
+  }
+
+  view_edits = id => {
+    if (document.getElementById('history-of-' + id).hasAttribute('hidden')) {
+      document.getElementById('history-of-' + id).removeAttribute('hidden')
+    } else {
+      document.getElementById('history-of-' + id).setAttribute('hidden', '')
+    }
+  }
+  
 .card.comment-card id="#{comment.id}" style="padding: 0px;"
   .card-header
     - if comment.anonymous
@@ -8,12 +25,22 @@
         b Anonymous
     - else
       b = link_to comment.user.username, comment.user
-    = comment.created_at.strftime(" %H:%M, %b %-d, %Y") 
+    = comment.created_at.strftime(" %H:%M, %b %-d, %Y")
+    - unless comment.history.empty?
+      span style="font-style: italic; opacity: 0.7;"
+        |  - Edited at #{comment.updated_at.strftime(" %H:%M, %b %-d, %Y") }
     span.quote-id onclick=("quote(#{comment.id});" if has_permissions)
       = " No. #{comment.id}"
     - if comment.soft_deleted
       b  - Removed by #{safe_username(comment.soft_deleted_by)} -
     = link_to ' <span class="fa fa-trash"></span>'.html_safe, target_comment_path, method: :delete, data: { confirm: 'Are you sure?' } if comment.user_id == current_user&.id
+    - if comment.user_id == current_user&.id
+      a.house-icon href="" onclick="javascript:edit_comment(#{comment.id}); return false;" title="Edit Comment"
+        i.fa.fa-edit
+    - if logged_in_as_moderator && !comment.history.empty?
+      a.house-icon href="" onclick="javascript:view_edits(#{comment.id}); return false;" title="Edit Comment"
+        | Show Edits
+
     | &nbsp;
     - if logged_in_as_moderator
       = form_with url: "#{target_comment_path}/mod_action", html: { style: 'width: auto; display: inline-block;' } do |f|
@@ -28,3 +55,20 @@
       |  for more information.
     - else
       = simple_format(comment.link_form)
+      div style="margin-top:1em" id="edit-form-#{comment.id}" hidden=""
+        b Edit your comment
+        = form_for comment, url: "#{comment.source_id}/comments/#{comment.id}" do |f|
+          = f.text_area :body
+          - if comment.source.allow_anon
+            .form-group
+              = f.check_box :anonymous, style: "width: auto; margin-right: 0.5rem;", checked: comment.anonymous
+              = f.label "Become Anonymous"
+
+          = f.submit "Update Comment"
+    - if logged_in_as_moderator && !comment.history.empty?
+      div style="margin-top:1em" id="history-of-#{comment.id}" hidden=""
+        b Previous Edits:
+        ul
+          - comment.history.each_with_index do |i|
+            li "#{i}"
+      
