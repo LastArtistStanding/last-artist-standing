@@ -50,12 +50,11 @@ class PagesController < ApplicationController
     @moderators = User.where('is_moderator = true')
     @moderator_logs = ModeratorLog.order('created_at DESC').limit(50)
     @unapproved_submissions = unapproved_submissions.order('submissions.created_at ASC')
-    unapproved_users_objs = User.where('approved = false').includes(:participations)
+    unapproved_users_objs = User.where('approved = false').joins(:submissions).select('users.*, COUNT(submissions.id) as submission_count').group('users.id').having('COUNT(submissions.id) >= 10')
 
     @unapproved_users = []
     unapproved_users_objs.each do |user|
-      days_posted = user.participations.includes(:challenge).where({ challenges: { seasonal: true } }).sum(:score)
-      @unapproved_users.push({ user: user, seasonal_score: days_posted }) if days_posted >= 10
+      @unapproved_users.push({ user: user, seasonal_score: user.submission_count })
     end
   end
 
