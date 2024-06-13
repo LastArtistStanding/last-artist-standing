@@ -50,7 +50,7 @@ class PagesController < ApplicationController
     @moderators = User.where('is_moderator = true')
     @moderator_logs = ModeratorLog.order('created_at DESC').limit(50)
     @unapproved_submissions = unapproved_submissions.order('submissions.created_at ASC')
-    unapproved_users_objs = User.where('approved = false').joins(:submissions).select('users.*, COUNT(submissions.id) as submission_count').group('users.id').having('COUNT(submissions.id) >= 10')
+    unapproved_users_objs = User.where('users.approved = false').joins(:submissions).select('users.*, COUNT(submissions.id) as submission_count').group('users.id').having('COUNT(submissions.id) >= 10')
 
     @unapproved_users = []
     unapproved_users_objs.each do |user|
