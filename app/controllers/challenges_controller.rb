@@ -131,6 +131,7 @@ class ChallengesController < ApplicationController
       else
         @challenge.creator_id = current_user.id
         @challenge.save
+        @badge.challenge_id = @challenge.id
         @badge.save
         @badge_map.challenge_id = @challenge.id
         @badge_map.badge_id = @badge.id
