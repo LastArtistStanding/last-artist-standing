@@ -260,7 +260,12 @@ class SubmissionsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_submission
-    @submission = Submission.find(params[:id])
+    @submission = Submission.find_by(id: params[:id])
+    if @submission.nil?
+      render_not_found
+      return
+    end
+
     @comments = if logged_in_as_moderator
                   Comment.where(source: @submission).includes(:user)
                 else

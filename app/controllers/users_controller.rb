@@ -156,7 +156,9 @@ class UsersController < ApplicationController
   end
 
   def set_curruser
-    @user = User.find(params[:id])
+    @user = User.find_by(id: params[:id])
+
+    render_not_found if @user.nil?
   end
 
   def user_params

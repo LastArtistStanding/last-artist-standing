@@ -10,6 +10,10 @@ class BoardsController < ApplicationController
 
   def show
     @board = Board.find_by(alias: params[:alias])
+    if @board.nil?
+      render_not_found
+      return
+    end
     thread_query = Discussion.where(board_id: @board.id).includes(:comments)
 
     @pinned_hashes = []
