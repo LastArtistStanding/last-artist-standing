@@ -21,21 +21,29 @@ You will need to install this software to build and run the site:
 * ImageMagick
 * NodeJS
 
-You will need to install Ruby 2.6.5. The easiest way to do this with [RVM](https://rvm.io/), the Ruby Version Manager.
+Before proceeding, install these libraries:
+* Debian: `libpq-dev`
+* Fedora: `openssl-devel readline-devel gdbm-devel libpq-devel g++`
+
+You will need to install Ruby 3.1.4. The easiest way to do this with [RVM](https://rvm.io/), the Ruby Version Manager.
 
 First, install RVM:
 
 ```console
-$ gpg2 --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+$ gpg2 --keyserver keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 $ curl -sSL https://get.rvm.io | bash -s stable
 ```
 
-Next, install Ruby 2.6.5 using RVM and set it to be used
+If this results in `gpg: keyserver receive failed: General error`,
+add `nameserver 1.1.1.1` to `/etc/resolv.conf`. On Fedora, if `rvm install` hangs,
+run `dnf list installed bash` to accept the keys for any new repositories rvm added.
+
+Next, install Ruby 3.1.4 using RVM and set it to be used
 in preference to any version which may already be installed on your system:
 
 ```console
-$ rvm install 2.6.5
-$ rvm --default use 2.6.5
+$ rvm install 3.1.4
+$ rvm --default use 3.1.4
 ```
 
 Next, install Bundler: `gem install bundler`.
@@ -99,6 +107,7 @@ AWS_S3_BUCKET=<your bucket id>
 AWS_REGION=<the region your bucket is in, or us-east-2 by default>
 ```
 
+Allow public access and [enable ACLs](https://www.learnaws.org/2023/08/26/aws-s3-bucket-does-not-allow-acls/),
 You will need to add this permission policy to your bucket:
 
 ```JSON
@@ -138,7 +147,7 @@ Simply set this environment variable:
 REDIRECT_MAIL=unix
 ```
 
-The `REDIRECT_MAIL` environment variable only affects the development environment; not production or testing.
+The `REDIRECT_MAIL` environment variable only affects the development environment, not production or testing.
 
 #### Additional options
 To set your DAD account as an administrator: `UPDATE users SET is_admin = TRUE ;`.
@@ -171,7 +180,6 @@ X_AUTH_SECRET=shared HMAC secret
 You may choose to run the test suite to make sure everything was set up properly:
 
 ```console
-$ bin/rake test
 $ bin/rspec
 ```
 

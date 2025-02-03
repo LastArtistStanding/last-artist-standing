@@ -234,7 +234,11 @@ class ChallengesController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_challenge
-    @challenge = Challenge.find(params[:id])
+    @challenge = Challenge.find_by(id: params[:id])
+    if @challenge.nil?
+      render_not_found
+      return
+    end
     @creator = User.find_by(id: @challenge.creator_id)
     @badge_map = BadgeMap.find_by(challenge_id: @challenge.id)
     @badge_maps = BadgeMap.where(challenge_id: @challenge.id).order(:prestige)
