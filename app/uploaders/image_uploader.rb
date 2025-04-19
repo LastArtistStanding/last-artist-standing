@@ -16,6 +16,8 @@ class ImageUploader < CarrierWave::Uploader::Base
       "badges/#{model.id}/#{mounted_as}"
     when User
       "users/#{model.name}/#{mounted_as}"
+    when Comment
+      "comments/#{model.id}"
     end
     # FIXME: There should probably be error handling for an undefined case.
   end
@@ -29,6 +31,10 @@ class ImageUploader < CarrierWave::Uploader::Base
 
   version :avatar, from_version: :thumb do
     process resize_to_fill: [50, 50]
+  end
+
+  version :thumb_no_crop, if: :is_comment? do
+    process resize_to_fit: [250, 250]
   end
 
   protected
@@ -85,5 +91,10 @@ class ImageUploader < CarrierWave::Uploader::Base
 
   def size_range
     0..10.megabytes
+  end
+
+  def is_comment?(file)
+    width, height = ::MiniMagick::Image.open(file.file)[:dimensions]
+    model.instance_of?(Comment) && (width > 250 || height > 250)
   end
 end
