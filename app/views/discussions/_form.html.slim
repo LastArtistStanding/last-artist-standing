@@ -64,6 +64,9 @@ javascript:
             .form-group.row
               .col-3 = u.label :body
               .col-9 = u.text_area :body
+            .form-group.row
+              .col-3 = u.label :image
+              .col-9 = u.file_field :image
           
           .form-group.row
             .offset-sm-6.col-sm-6 = f.submit "Create Thread", class: 'btn btn-primary', style: "margin-bottom: 0;"
