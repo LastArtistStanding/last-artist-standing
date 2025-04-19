@@ -32,6 +32,6 @@ jQuery.fn.extend({
 });
 
 function quote(id) {
-  $("#comment-box").insertAtCaret(">>" + id.toString());
+  $("#comment-box").insertAtCaret(">>" + id.toString() + '\n');
   charcountupdate($("#comment-box").val());
 }

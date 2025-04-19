@@ -24,4 +24,8 @@ class Discussion < ApplicationRecord
 
     user.can_make_comments
   end
+
+  def display_title
+    title
+  end
 end

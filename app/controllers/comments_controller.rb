@@ -36,6 +36,8 @@ class CommentsController < ApplicationController
     end
 
     send_notifications
+    notify_replied_to
+
 
     flash[:success] = 'Comment posted successfully!'
     redirect_back(fallback_location: '/')
@@ -107,6 +109,20 @@ class CommentsController < ApplicationController
       user_id: user_id,
       url: comment_html_path(@comment)
     )
+  end
+
+  def notify_replied_to
+    user_ids = []
+    @comment.body.scan(/(?<=\>\>)\d+/).each do |c_id|
+
+      user_ids.append(Comment.find(c_id.to_i).user_id) if Comment.exists?(c_id.to_i)
+    end
+    user_ids.uniq.each do |user_id|
+      # Don't send notifications to ourselves.
+      next if user_id == current_user.id
+
+      send_notification('%<poster>s replied to your comment', user_id)
+    end
   end
 
   def send_notifications
