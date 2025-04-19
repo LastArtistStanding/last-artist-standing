@@ -22,6 +22,7 @@ class CommentsController < ApplicationController
     @comment.body = @comment.body.gsub(/ +/, ' ').strip
 
     @comment.anonymous = false unless @target.allow_anon
+    @comment.anonymous = true if @target.instance_of?(Discussion) && @target.force_anon
 
     unless @comment.save
       flash[:error] = "Comment failed to post: #{@comment.errors.full_messages.join(', ')}"
