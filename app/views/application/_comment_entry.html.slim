@@ -15,6 +15,7 @@
       = form_for Comment.new, url: target_comments_path do |f|
         = f.text_area :body, placeholder: "Please keep site rules in mind when posting.", onkeyup: "charcountupdate(this.value)", id: "comment-box"
         span#charcount 0/2000
+        = f.file_field :image
 
         - if target.allow_anon
           .form-group

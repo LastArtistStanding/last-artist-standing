@@ -27,4 +27,12 @@
       a href="/help" the help page
       |  for more information.
     - else
-      = simple_format(comment.link_form)
+      .div style = "display: flex; flex-direction: row"
+        - if comment.image?
+          .div style = "margin-right: 2em"
+            a href="#{comment.image.url}"
+              - if comment.image.thumb_no_crop.url 
+                = image_tag comment.image.thumb_no_crop.url
+              - else
+                = image_tag comment.image.url
+        = simple_format(comment.link_form)
