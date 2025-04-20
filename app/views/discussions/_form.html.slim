@@ -7,7 +7,22 @@ javascript:
         document.getElementById('AnonymousRow').hidden = true
       }
     })
+    document.getElementById('ForceAnonCheckbox').addEventListener('change', (event) => {
+      set_checkbox(event.target.checked)
+    })
+    
+    set_checkbox(document.getElementById('ForceAnonCheckbox').checked)
   })
+  
+  function set_checkbox(checked) {
+    document.getElementById('AllowAnonCheckbox').checked = checked
+    document.getElementById('AllowAnonCheckbox').disabled = checked
+    document.getElementById('AnonymousRow').hidden = !checked
+    document.getElementById('discussion_anonymous').checked = checked
+    document.getElementById('discussion_anonymous').disabled = checked
+  }
+  
+
 
 = form_for @discussion, html: { multipart: true } do |f|
   .row
@@ -43,6 +58,10 @@ javascript:
           .form-group.row
             .col-3 = f.label :allow_anon, "Allow Anonymous Replies?"
             .col-9 = f.check_box :allow_anon, id: "AllowAnonCheckbox", style: "width: auto;"
+
+          .form-group.row
+            .col-3 = f.label :force_anon, "Force Replies to be Anonymous?"
+            .col-9 = f.check_box :force_anon, id: "ForceAnonCheckbox", style: "width: auto;"
 
           #AnonymousRow.form-group.row hidden=true
             .col-3 = f.label :anonymous, "Create Thread Anonymously?"

@@ -32,6 +32,11 @@ class DiscussionsController < ApplicationController
       @comment.anonymous = false
     end
 
+    if @discussion.force_anon
+      @discussion.anonymous = true
+      @comment.anonymous = true
+    end
+
     respond_to do |format|
       if @comment.valid? && @discussion.valid?
         @discussion.save
@@ -91,7 +96,7 @@ class DiscussionsController < ApplicationController
   end
 
   def discussion_params
-    params.require(:discussion).permit(:title, :nsfw_level, :allow_anon, :anonymous)
+    params.require(:discussion).permit(:title, :nsfw_level, :allow_anon, :anonymous, :force_anon)
   end
 
   def comment_params
