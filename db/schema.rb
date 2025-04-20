@@ -91,7 +91,6 @@ ActiveRecord::Schema.define(version: 2025_04_19_200259) do
     t.boolean "soft_deleted", default: false, null: false
     t.integer "soft_deleted_by"
     t.boolean "anonymous", default: false
-    t.string "image"
     t.index ["source_type", "source_id"], name: "index_comments_on_source_type_and_source_id"
   end
 
